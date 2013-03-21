@@ -2,6 +2,7 @@
 #   This file is part of Magnum.
 #
 #   Copyright © 2010, 2011, 2012, 2013 Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -22,9 +23,5 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CORRADE_CXX_FLAGS}")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${MAGNUM_INCLUDE_DIRS})
-
-add_subdirectory(BulletIntegration)
+corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
+corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
