@@ -2,6 +2,7 @@
 #   This file is part of Magnum.
 #
 #   Copyright © 2010, 2011, 2012, 2013 Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -22,9 +23,31 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED)
+find_package(Magnum REQUIRED SceneGraph Physics)
+find_package(Bullet REQUIRED)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CORRADE_CXX_FLAGS}")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${MAGNUM_INCLUDE_DIRS})
+include_directories(${MAGNUM_INCLUDE_DIRS} SYSTEM ${BULLET_INCLUDE_DIRS})
 
-add_subdirectory(BulletIntegration)
+set(MagnumBulletIntegration_SRCS
+    ConvertShape.cpp
+    MotionState.cpp)
+
+set(MagnumBulletIntegration_HEADERS
+    magnumBulletIntegrationVisibility.h
+    Integration.h
+    ConvertShape.h
+    MotionState.h)
+
+add_library(MagnumBulletIntegration SHARED ${MagnumBulletIntegration_SRCS})
+target_link_libraries(MagnumBulletIntegration
+    ${MAGNUM_LIBRARIES}
+    ${MAGNUM_PHYSICS_LIBRARIES}
+    ${MAGNUM_SCENEGRAPH_LIBRARIES}
+    ${BULLET_LIBRARIES})
+
+install(TARGETS MagnumBulletIntegration DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR})
+install(FILES ${MagnumBulletIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/BulletIntegration)
+
+if(BUILD_TESTS)
+    add_subdirectory(Test)
+endif()
