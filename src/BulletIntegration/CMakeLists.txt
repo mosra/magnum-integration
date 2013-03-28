@@ -26,7 +26,8 @@
 find_package(Magnum REQUIRED SceneGraph Physics)
 find_package(Bullet REQUIRED)
 
-include_directories(${MAGNUM_INCLUDE_DIRS} SYSTEM ${BULLET_INCLUDE_DIRS})
+# Silence pedantic warnings in Bullet headers
+include_directories(SYSTEM ${BULLET_INCLUDE_DIRS})
 
 set(MagnumBulletIntegration_SRCS
     ConvertShape.cpp
