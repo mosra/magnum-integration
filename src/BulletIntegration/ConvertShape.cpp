@@ -51,7 +51,7 @@ Physics::AbstractShape3D* convertShape(const btCollisionShape* shape) {
 }
 
 Physics::Box3D* convertShape(const btBoxShape* box) {
-    return new Physics::Box3D(Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())*2));
+    return new Physics::Box3D(Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())));
 }
 
 Physics::Sphere3D* convertShape(const btSphereShape* sphere) {
