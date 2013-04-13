@@ -22,18 +22,6 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-# CMake 2.8.8 required for OBJECT library target
-cmake_minimum_required(VERSION 2.8.8)
-project(MagnumIntegration)
-
-option(BUILD_TESTS "Build unit tests." OFF)
-if(BUILD_TESTS)
-    enable_testing()
+if(NOT CMAKE_CROSSCOMPILING)
+    install(FILES FindMagnumIntegration.cmake DESTINATION ${MAGNUM_CMAKE_MODULE_INSTALL_DIR})
 endif()
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/")
-
-find_package(Magnum REQUIRED)
-
-add_subdirectory(modules)
-add_subdirectory(src)
