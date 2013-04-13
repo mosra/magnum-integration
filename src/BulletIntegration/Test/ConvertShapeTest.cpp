@@ -48,7 +48,7 @@ ConvertShapeTest::ConvertShapeTest() {
 void ConvertShapeTest::box() {
     btBoxShape btBox({0.5f, 1.0f, 1.5f});
     Physics::Box3D* box = convertShape(&btBox);
-    CORRADE_COMPARE(box->transformation(), Matrix4::scaling({1.0f, 2.0f, 3.0f}));
+    CORRADE_COMPARE(box->transformation(), Matrix4::scaling({0.5f, 1.0f, 1.5f}));
 }
 
 void ConvertShapeTest::sphere() {
