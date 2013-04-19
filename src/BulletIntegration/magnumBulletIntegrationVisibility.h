@@ -25,16 +25,13 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#ifdef _WIN32
-    #ifdef MagnumBulletIntegration_EXPORTS
-        #define MAGNUM_BULLETINTEGRATION_EXPORT __declspec(dllexport)
-    #else
-        #define MAGNUM_BULLETINTEGRATION_EXPORT __declspec(dllimport)
-    #endif
-    #define MAGNUM_BULLETINTEGRATION_LOCAL
+#include <Utility/Visibility.h>
+
+#ifdef MagnumBulletIntegration_EXPORTS
+    #define MAGNUM_BULLETINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
 #else
-    #define MAGNUM_BULLETINTEGRATION_EXPORT __attribute__ ((visibility ("default")))
-    #define MAGNUM_BULLETINTEGRATION_LOCAL __attribute__ ((visibility ("hidden")))
+    #define MAGNUM_BULLETINTEGRATION_EXPORT CORRADE_VISIBILITY_IMPORT
 #endif
+#define MAGNUM_BULLETINTEGRATION_LOCAL CORRADE_VISIBILITY_LOCAL
 
 #endif
