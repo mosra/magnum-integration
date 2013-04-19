@@ -47,7 +47,9 @@ Physics::AbstractShape3D* convertShape(const btCollisionShape* shape) {
             return convertShape(static_cast<const btSphereShape*>(shape));
             break;
     }
-    CORRADE_INTERNAL_ASSERT(false);
+
+    Error() << "BulletIntegration::convertShape(): shape type" << type << "is not supported";
+    return nullptr;
 }
 
 Physics::Box3D* convertShape(const btBoxShape* box) {
