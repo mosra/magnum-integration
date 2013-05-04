@@ -27,10 +27,16 @@
 #include <TestSuite/Tester.h>
 #include <Physics/Box.h>
 #include <Physics/Sphere.h>
+#include <Physics/Shape.h>
+#include <SceneGraph/MatrixTransformation3D.h>
+#include <BulletIntegration/MotionState.h>
+#include <BulletIntegration/MotionState.h>
 
 #include "BulletIntegration/ConvertShape.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
+
+typedef SceneGraph::Object<SceneGraph::MatrixTransformation3D<btScalar>> Object3D;
 
 class ConvertShapeTest: public Corrade::TestSuite::Tester {
     public:
@@ -46,16 +52,18 @@ ConvertShapeTest::ConvertShapeTest() {
 }
 
 void ConvertShapeTest::box() {
+    Object3D object;
     btBoxShape btBox({0.5f, 1.0f, 1.5f});
-    Physics::Box3D* box = convertShape(&btBox);
-    CORRADE_COMPARE(box->transformation(), Matrix4::scaling({0.5f, 1.0f, 1.5f}));
+    Physics::Shape<Physics::Box3D>* box = convertShape(&object, &btBox);
+    CORRADE_COMPARE(box->shape().transformation(), Matrix4::scaling({0.5f, 1.0f, 1.5f}));
 }
 
 void ConvertShapeTest::sphere() {
+    Object3D object;
     btSphereShape btSphereShape(42.f);
-    Physics::Sphere3D* sphere = convertShape(&btSphereShape);
-    CORRADE_COMPARE(sphere->radius(), 42.f);
-    CORRADE_COMPARE(sphere->position(), Vector3());
+    Physics::Shape<Physics::Sphere3D>* sphere = convertShape(&object, &btSphereShape);
+    CORRADE_COMPARE(sphere->shape().radius(), 42.f);
+    CORRADE_COMPARE(sphere->shape().position(), Vector3());
 }
 
 }}}

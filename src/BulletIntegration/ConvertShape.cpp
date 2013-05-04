@@ -30,21 +30,22 @@
 #include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
 #include <Utility/Assert.h>
 #include <Physics/Box.h>
+#include <Physics/Shape.h>
 #include <Physics/Sphere.h>
 
 #include "Integration.h"
 
 namespace Magnum { namespace BulletIntegration {
 
-Physics::AbstractShape3D* convertShape(const btCollisionShape* shape) {
+Physics::AbstractShape3D* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btCollisionShape* shape) {
     int type = shape->getShapeType();
 
     switch (type) {
         case BOX_SHAPE_PROXYTYPE:
-            return convertShape(static_cast<const btBoxShape*>(shape));
+            return convertShape(object, static_cast<const btBoxShape*>(shape));
             break;
         case SPHERE_SHAPE_PROXYTYPE:
-            return convertShape(static_cast<const btSphereShape*>(shape));
+            return convertShape(object, static_cast<const btSphereShape*>(shape));
             break;
     }
 
@@ -52,12 +53,12 @@ Physics::AbstractShape3D* convertShape(const btCollisionShape* shape) {
     return nullptr;
 }
 
-Physics::Box3D* convertShape(const btBoxShape* box) {
-    return new Physics::Box3D(Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())));
+Physics::Shape<Physics::Box3D>* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btBoxShape* box) {
+    return new Physics::Shape<Physics::Box3D>(object, Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())));
 }
 
-Physics::Sphere3D* convertShape(const btSphereShape* sphere) {
-    return new Physics::Sphere3D({}, sphere->getRadius());
+Physics::Shape<Physics::Sphere3D>* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btSphereShape* sphere) {
+    return new Physics::Shape<Physics::Sphere3D>(object, {{}, sphere->getRadius()});
 }
 
 }}

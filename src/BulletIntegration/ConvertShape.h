@@ -26,6 +26,8 @@
 */
 
 #include <Physics/Physics.h>
+#include <SceneGraph/SceneGraph.h>
+#include <LinearMath/btScalar.h>
 
 #include "magnumBulletIntegrationVisibility.h"
 
@@ -35,9 +37,9 @@ class btSphereShape;
 
 namespace Magnum { namespace BulletIntegration {
 
-Physics::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(const btCollisionShape* shape);
-Physics::Box3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(const btBoxShape* box);
-Physics::Sphere3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(const btSphereShape* sphere);
+Physics::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btCollisionShape* shape);
+Physics::Shape<Physics::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btBoxShape* box);
+Physics::Shape<Physics::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btSphereShape* sphere);
 
 }}
 
