@@ -45,7 +45,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractFe
         SceneGraph::AbstractTranslationRotation3D<>* transformation;
 };
 
-template<class T> MotionState::MotionState(T* object): SceneGraph::AbstractFeature<3, btScalar>(object), transformation(transformation) {}
+template<class T> MotionState::MotionState(T* object): SceneGraph::AbstractFeature<3, btScalar>(object), transformation(object) {}
 
 }}
 
