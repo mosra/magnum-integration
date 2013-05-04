@@ -42,7 +42,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractFe
         void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
         void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
 
-        SceneGraph::AbstractTranslationRotation3D<>* transformation;
+        SceneGraph::AbstractTranslationRotation3D<btScalar>* transformation;
 };
 
 template<class T> MotionState::MotionState(T* object): SceneGraph::AbstractFeature<3, btScalar>(object), transformation(object) {}
