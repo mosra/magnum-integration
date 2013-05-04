@@ -25,8 +25,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <LinearMath/btVector3.h>
-#include <Math/Vector.h>
+#include <LinearMath/btMatrix3x3.h>
+#include <Math/RectangularMatrix.h>
 
 #include "magnumBulletIntegrationVisibility.h"
 
@@ -40,6 +40,20 @@ template<> struct VectorConverter<3, btScalar, btVector3> {
 
     inline static btVector3 to(const Vector<3, Float>& other) {
         return {other[0], other[1], other[2]};
+    }
+};
+
+template<> struct RectangularMatrixConverter<3, 3, btScalar, btMatrix3x3> {
+    inline static RectangularMatrix<3, 3, Float> from(const btMatrix3x3& other) {
+        return {Vector<3, Float>(other[0]),
+                Vector<3, Float>(other[1]),
+                Vector<3, Float>(other[2])};
+    }
+
+    inline static btMatrix3x3 to(const RectangularMatrix<3, 3, Float>& other) {
+        return {other[0][0], other[0][1], other[0][2],
+                other[1][0], other[1][1], other[1][2],
+                other[2][0], other[2][1], other[2][2]};
     }
 };
 

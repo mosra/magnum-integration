@@ -30,16 +30,19 @@
 namespace Magnum { namespace BulletIntegration { namespace Test {
 
 typedef Math::Vector<3, btScalar> Vector3;
+typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
 
 class IntegrationTest: public Corrade::TestSuite::Tester {
     public:
         IntegrationTest();
 
         void vector();
+        void matrix();
 };
 
 IntegrationTest::IntegrationTest() {
-    addTests({&IntegrationTest::vector});
+    addTests({&IntegrationTest::vector,
+              &IntegrationTest::matrix});
 }
 
 void IntegrationTest::vector() {
@@ -48,6 +51,18 @@ void IntegrationTest::vector() {
 
     CORRADE_COMPARE(Vector3(b), a);
     CORRADE_VERIFY(btVector3(a) == b);
+}
+
+void IntegrationTest::matrix() {
+    constexpr Matrix3 a(Vector3(3.0f,  5.0f, 8.0f),
+                        Vector3(4.5f,  4.0f, 7.0f),
+                        Vector3(7.9f, -1.0f, 8.0f));
+    btMatrix3x3 b(3.0f,  5.0f, 8.0f,
+                  4.5f,  4.0f, 7.0f,
+                  7.9f, -1.0f, 8.0f);
+
+    CORRADE_COMPARE(Matrix3(b), a);
+    CORRADE_VERIFY(btMatrix3x3(a) == b);
 }
 
 }}}
