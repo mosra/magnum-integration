@@ -25,12 +25,16 @@
 
 #include "MotionState.h"
 
+#include <Math/Matrix4.h>
+
 #include "Integration.h"
 
 namespace Magnum { namespace BulletIntegration {
 
 void MotionState::getWorldTransform(btTransform& worldTrans) const {
-    worldTrans.setOrigin(btVector3(object->transformation().translation()));
+    const Matrix4 transformation = object()->transformationMatrix();
+    worldTrans.setOrigin(btVector3(transformation.translation()));
+    worldTrans.setBasis(btMatrix3x3(transformation.rotationScaling()));
 }
 
 void MotionState::setWorldTransform(const btTransform& worldTrans) {
@@ -38,11 +42,10 @@ void MotionState::setWorldTransform(const btTransform& worldTrans) {
     btVector3 bAxis = worldTrans.getRotation().getAxis();
     Rad bRotation(worldTrans.getRotation().getAngle());
 
-    CORRADE_ASSERT(object->parent()->isScene(), "MotionState: object must be direct child of scene", );
-    object->setTransformation(
-        Matrix4::translation(Vector3(bPosition))
-        * Matrix4::rotation(bRotation, Vector3(bAxis).normalized())
-    );
+    /** @todo Verify that all objects have common parent */
+    transformation->resetTransformation()
+        ->rotate(bRotation, Vector3(bAxis).normalized())
+        ->translate(Vector3(bPosition));
 }
 
 }}

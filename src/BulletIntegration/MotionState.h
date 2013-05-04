@@ -27,25 +27,25 @@
 
 #include <LinearMath/btMotionState.h>
 #include <SceneGraph/Object.h>
-#include <SceneGraph/MatrixTransformation3D.h>
+#include <SceneGraph/AbstractTranslationRotation3D.h>
 
 #include "magnumBulletIntegrationVisibility.h"
 
 namespace Magnum { namespace BulletIntegration {
 
-typedef SceneGraph::Object<SceneGraph::MatrixTransformation3D<>> Object3D;
-
 class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractFeature<3, btScalar>, private btMotionState {
     public:
-        inline MotionState(Object3D* object): SceneGraph::AbstractFeature<3, btScalar>(object), object(object) {}
+        template<class T> MotionState(T* object);
         inline btMotionState* btMotionState() { return this; }
 
     private:
         void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
         void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
 
-        Object3D* object;
+        SceneGraph::AbstractTranslationRotation3D<>* transformation;
 };
+
+template<class T> MotionState::MotionState(T* object): SceneGraph::AbstractFeature<3, btScalar>(object), transformation(transformation) {}
 
 }}
 
