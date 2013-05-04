@@ -47,7 +47,7 @@ void IntegrationTest::vector() {
     btVector3 b{1.0f, 2.0f, 3.0f};
 
     CORRADE_COMPARE(Vector3(b), a);
-    CORRADE_COMPARE(btVector3(a), b);
+    CORRADE_VERIFY(btVector3(a) == b);
 }
 
 }}}
