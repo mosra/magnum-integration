@@ -25,7 +25,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <Physics/Physics.h>
+#include <Shapes/Shapes.h>
 #include <SceneGraph/SceneGraph.h>
 #include <LinearMath/btScalar.h>
 
@@ -37,9 +37,9 @@ class btSphereShape;
 
 namespace Magnum { namespace BulletIntegration {
 
-Physics::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btCollisionShape* shape);
-Physics::Shape<Physics::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btBoxShape* box);
-Physics::Shape<Physics::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btSphereShape* sphere);
+Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btCollisionShape* shape, Shapes::ShapeGroup3D* shapes = nullptr);
+Shapes::Shape<Shapes::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btBoxShape* box, Shapes::ShapeGroup3D* shapes = nullptr);
+Shapes::Shape<Shapes::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btSphereShape* sphere, Shapes::ShapeGroup3D* shapes = nullptr);
 
 }}
 

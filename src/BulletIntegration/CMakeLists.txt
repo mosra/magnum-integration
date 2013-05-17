@@ -23,7 +23,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED SceneGraph Physics)
+find_package(Magnum REQUIRED SceneGraph Shapes)
 find_package(Bullet REQUIRED)
 
 # Silence pedantic warnings in Bullet headers
@@ -42,8 +42,8 @@ set(MagnumBulletIntegration_HEADERS
 add_library(MagnumBulletIntegration SHARED ${MagnumBulletIntegration_SRCS})
 target_link_libraries(MagnumBulletIntegration
     ${MAGNUM_LIBRARIES}
-    ${MAGNUM_PHYSICS_LIBRARIES}
     ${MAGNUM_SCENEGRAPH_LIBRARIES}
+    ${MAGNUM_SHAPES_LIBRARIES}
     ${BULLET_LIBRARIES})
 
 install(TARGETS MagnumBulletIntegration DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR})

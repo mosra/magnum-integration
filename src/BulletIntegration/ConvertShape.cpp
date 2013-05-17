@@ -29,23 +29,23 @@
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
 #include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
 #include <Utility/Assert.h>
-#include <Physics/Box.h>
-#include <Physics/Shape.h>
-#include <Physics/Sphere.h>
+#include <Shapes/Box.h>
+#include <Shapes/Shape.h>
+#include <Shapes/Sphere.h>
 
 #include "Integration.h"
 
 namespace Magnum { namespace BulletIntegration {
 
-Physics::AbstractShape3D* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btCollisionShape* shape) {
+Shapes::AbstractShape3D* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btCollisionShape* shape, Shapes::ShapeGroup3D* shapes) {
     int type = shape->getShapeType();
 
     switch (type) {
         case BOX_SHAPE_PROXYTYPE:
-            return convertShape(object, static_cast<const btBoxShape*>(shape));
+            return convertShape(object, static_cast<const btBoxShape*>(shape), shapes);
             break;
         case SPHERE_SHAPE_PROXYTYPE:
-            return convertShape(object, static_cast<const btSphereShape*>(shape));
+            return convertShape(object, static_cast<const btSphereShape*>(shape), shapes);
             break;
     }
 
@@ -53,12 +53,12 @@ Physics::AbstractShape3D* convertShape(SceneGraph::AbstractObject3D<btScalar>* o
     return nullptr;
 }
 
-Physics::Shape<Physics::Box3D>* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btBoxShape* box) {
-    return new Physics::Shape<Physics::Box3D>(object, Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())));
+Shapes::Shape<Shapes::Box3D>* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btBoxShape* box, Shapes::ShapeGroup3D* shapes) {
+    return new Shapes::Shape<Shapes::Box3D>(object, Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())), shapes);
 }
 
-Physics::Shape<Physics::Sphere3D>* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btSphereShape* sphere) {
-    return new Physics::Shape<Physics::Sphere3D>(object, {{}, sphere->getRadius()});
+Shapes::Shape<Shapes::Sphere3D>* convertShape(SceneGraph::AbstractObject3D<btScalar>* object, const btSphereShape* sphere, Shapes::ShapeGroup3D* shapes) {
+    return new Shapes::Shape<Shapes::Sphere3D>(object, {{}, sphere->getRadius()}, shapes);
 }
 
 }}

@@ -25,9 +25,9 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <TestSuite/Tester.h>
-#include <Physics/Box.h>
-#include <Physics/Sphere.h>
-#include <Physics/Shape.h>
+#include <Shapes/Box.h>
+#include <Shapes/Sphere.h>
+#include <Shapes/Shape.h>
 #include <SceneGraph/MatrixTransformation3D.h>
 #include <BulletIntegration/MotionState.h>
 #include <BulletIntegration/MotionState.h>
@@ -54,14 +54,14 @@ ConvertShapeTest::ConvertShapeTest() {
 void ConvertShapeTest::box() {
     Object3D object;
     btBoxShape btBox({0.5f, 1.0f, 1.5f});
-    Physics::Shape<Physics::Box3D>* box = convertShape(&object, &btBox);
+    Shapes::Shape<Shapes::Box3D>* box = convertShape(&object, &btBox);
     CORRADE_COMPARE(box->shape().transformation(), Matrix4::scaling({0.5f, 1.0f, 1.5f}));
 }
 
 void ConvertShapeTest::sphere() {
     Object3D object;
     btSphereShape btSphereShape(42.f);
-    Physics::Shape<Physics::Sphere3D>* sphere = convertShape(&object, &btSphereShape);
+    Shapes::Shape<Shapes::Sphere3D>* sphere = convertShape(&object, &btSphereShape);
     CORRADE_COMPARE(sphere->shape().radius(), 42.f);
     CORRADE_COMPARE(sphere->shape().position(), Vector3());
 }
