@@ -25,6 +25,7 @@
 
 #include <TestSuite/Tester.h>
 
+#include "Magnum.h"
 #include "BulletIntegration/Integration.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
@@ -32,7 +33,7 @@ namespace Magnum { namespace BulletIntegration { namespace Test {
 typedef Math::Vector<3, btScalar> Vector3;
 typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
 
-class IntegrationTest: public Corrade::TestSuite::Tester {
+class IntegrationTest: public TestSuite::Tester {
     public:
         IntegrationTest();
 
