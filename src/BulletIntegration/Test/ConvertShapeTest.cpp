@@ -36,7 +36,7 @@
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
 
-typedef SceneGraph::Object<SceneGraph::MatrixTransformation3D<btScalar>> Object3D;
+typedef SceneGraph::Object<SceneGraph::BasicMatrixTransformation3D<btScalar>> Object3D;
 
 class ConvertShapeTest: public TestSuite::Tester {
     public:

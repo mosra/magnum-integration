@@ -33,7 +33,7 @@
 
 namespace Magnum { namespace BulletIntegration {
 
-class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractFeature<3, btScalar>, private btMotionState {
+class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
     public:
         template<class T> MotionState(T* object);
         inline btMotionState* btMotionState() { return this; }
@@ -42,10 +42,10 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractFe
         void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
         void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
 
-        SceneGraph::AbstractTranslationRotation3D<btScalar>* transformation;
+        SceneGraph::AbstractBasicTranslationRotation3D<btScalar>* transformation;
 };
 
-template<class T> MotionState::MotionState(T* object): SceneGraph::AbstractFeature<3, btScalar>(object), transformation(object) {}
+template<class T> MotionState::MotionState(T* object): SceneGraph::AbstractBasicFeature3D<btScalar>(object), transformation(object) {}
 
 }}
 
