@@ -37,9 +37,9 @@ class btSphereShape;
 
 namespace Magnum { namespace BulletIntegration {
 
-Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>* object, const btCollisionShape* shape, Shapes::ShapeGroup3D* shapes = nullptr);
-Shapes::Shape<Shapes::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>* object, const btBoxShape* box, Shapes::ShapeGroup3D* shapes = nullptr);
-Shapes::Shape<Shapes::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>* object, const btSphereShape* sphere, Shapes::ShapeGroup3D* shapes = nullptr);
+Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes = nullptr);
+Shapes::Shape<Shapes::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btBoxShape& box, Shapes::ShapeGroup3D* shapes = nullptr);
+Shapes::Shape<Shapes::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btSphereShape& sphere, Shapes::ShapeGroup3D* shapes = nullptr);
 
 }}
 

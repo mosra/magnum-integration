@@ -37,15 +37,15 @@
 
 namespace Magnum { namespace BulletIntegration {
 
-Shapes::AbstractShape3D* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>* object, const btCollisionShape* shape, Shapes::ShapeGroup3D* shapes) {
-    int type = shape->getShapeType();
+Shapes::AbstractShape3D* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes) {
+    int type = shape.getShapeType();
 
     switch (type) {
         case BOX_SHAPE_PROXYTYPE:
-            return convertShape(object, static_cast<const btBoxShape*>(shape), shapes);
+            return convertShape(object, static_cast<const btBoxShape&>(shape), shapes);
             break;
         case SPHERE_SHAPE_PROXYTYPE:
-            return convertShape(object, static_cast<const btSphereShape*>(shape), shapes);
+            return convertShape(object, static_cast<const btSphereShape&>(shape), shapes);
             break;
     }
 
@@ -53,12 +53,12 @@ Shapes::AbstractShape3D* convertShape(SceneGraph::AbstractBasicObject3D<btScalar
     return nullptr;
 }
 
-Shapes::Shape<Shapes::Box3D>* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>* object, const btBoxShape* box, Shapes::ShapeGroup3D* shapes) {
-    return new Shapes::Shape<Shapes::Box3D>(object, Matrix4::scaling(Vector3(box->getHalfExtentsWithMargin())), shapes);
+Shapes::Shape<Shapes::Box3D>* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btBoxShape& box, Shapes::ShapeGroup3D* shapes) {
+    return new Shapes::Shape<Shapes::Box3D>(object, Matrix4::scaling(Vector3(box.getHalfExtentsWithMargin())), shapes);
 }
 
-Shapes::Shape<Shapes::Sphere3D>* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>* object, const btSphereShape* sphere, Shapes::ShapeGroup3D* shapes) {
-    return new Shapes::Shape<Shapes::Sphere3D>(object, {{}, sphere->getRadius()}, shapes);
+Shapes::Shape<Shapes::Sphere3D>* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btSphereShape& sphere, Shapes::ShapeGroup3D* shapes) {
+    return new Shapes::Shape<Shapes::Sphere3D>(object, {{}, sphere.getRadius()}, shapes);
 }
 
 }}

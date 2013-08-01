@@ -32,7 +32,7 @@
 namespace Magnum { namespace BulletIntegration {
 
 void MotionState::getWorldTransform(btTransform& worldTrans) const {
-    const Matrix4 transformation = object()->transformationMatrix();
+    const Matrix4 transformation = object().transformationMatrix();
     worldTrans.setOrigin(btVector3(transformation.translation()));
     worldTrans.setBasis(btMatrix3x3(transformation.rotationScaling()));
 }
@@ -43,9 +43,9 @@ void MotionState::setWorldTransform(const btTransform& worldTrans) {
     Rad bRotation(worldTrans.getRotation().getAngle());
 
     /** @todo Verify that all objects have common parent */
-    transformation->resetTransformation()
-        ->rotate(bRotation, Vector3(bAxis).normalized())
-        ->translate(Vector3(bPosition));
+    transformation.resetTransformation()
+        .rotate(bRotation, Vector3(bAxis).normalized())
+        .translate(Vector3(bPosition));
 }
 
 }}
