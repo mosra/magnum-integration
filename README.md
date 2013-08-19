@@ -1,32 +1,33 @@
-This is integration library for Magnum OpenGL 3 graphics engine, providing
+This is integration library for Magnum C++11 OpenGL graphics engine, providing
 integration of various math and physics libraries into the engine itself. If
 you don't know what Magnum is, see https://github.com/mosra/magnum.
 
 INSTALLATION
 ============
 
-You can either use packaging scripts, which are stored in package/
-subdirectory, or compile and install everything manually. The building
-process is similar to Magnum itself - see Magnum documentation for more
-comprehensive guide for building, packaging and crosscompiling.
+You can either use packaging scripts, which are stored in `package/`
+subdirectory, or compile and install everything manually. The building process
+is similar to Magnum itself - see [Magnum documentation](http://mosra.cz/blog/magnum-doc/)
+for more comprehensive guide for building, packaging and crosscompiling.
 
 Minimal dependencies
 --------------------
 
- * C++ compiler with good C++11 support. Currently there are two compilers
-   which are tested to support everything needed: **GCC** >= 4.6 and **Clang**
-   >= 3.1.
- * **CMake** >= 2.8.8 (needed for `OBJECT` library target)
- * **Magnum** - The engine itself
+*   C++ compiler with good C++11 support. Currently there are two compilers
+    which are tested to support everything needed: **GCC** >= 4.6 and **Clang**
+    >= 3.1. On Windows you can use **MinGW**, Visual Studio compiler still
+    lacks some needed features.
+*   **CMake** >= 2.8.8
+*   **Magnum** - The engine itself
 
 Compilation, installation
 -------------------------
 
 The integration library can be built and installed using these four commands:
 
-    mkdir -p build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make
+    mkdir -p build && cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    make
     make install
 
 Building and running unit tests

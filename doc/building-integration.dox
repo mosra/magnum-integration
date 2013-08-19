@@ -1,0 +1,52 @@
+/*
+    This file is part of Magnum.
+
+    Copyright © 2010, 2011, 2012, 2013 Vladimír Vondruš <mosra@centrum.cz>
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+*/
+
+namespace Magnum {
+/** @page building-integration Downloading and building integration libraries
+@brief Guide how to download and build integration libraries for %Magnum engine.
+
+Integration repository provides integration of various math and physics
+libraries with %Magnum engine. This is not needed for essential usage, but it
+might get handy if you want to use something other than builtin components and
+seamlessly integrate them with the rest of the engine.
+
+The source is available on GitHub: https://github.com/mosra/magnum-integration.
+Building integration libraries is very similar to building %Magnum itself. See
+@ref building for additonal information about building and running tests,
+crosscompiling and platform-specific issues.
+
+Similarly to %Magnum, the libraries are build as shared by default. If you are
+developing for platform which doesn't support shared libraries or if you just
+want to link them statically, enable `BUILD_STATIC` to build the libraries as
+static. If you plan to use them with shared libraries later, enable also
+position-independent code with `BUILD_STATIC_PIC`.
+
+By default no integration libraries are built and you need to select them
+manually:
+
+-   `WITH_BULLET` -- @ref BulletIntegration "BulletIntegration" library.
+    Requires **Bullet Physics** library.
+
+*/
+}
