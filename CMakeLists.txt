@@ -26,14 +26,25 @@
 cmake_minimum_required(VERSION 2.8.8)
 project(MagnumIntegration)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/")
+
+find_package(Magnum REQUIRED)
+
+# Parts of the library
+option(WITH_BULLET "Build BulletIntegration library" OFF)
+
+option(BUILD_STATIC "Build static libraries (default are shared)" OFF)
+cmake_dependent_option(BUILD_STATIC_PIC "Build static libraries with position-independent code" OFF "BUILD_STATIC" OFF)
 option(BUILD_TESTS "Build unit tests." OFF)
+
 if(BUILD_TESTS)
     enable_testing()
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/")
-
-find_package(Magnum REQUIRED)
+# Newlib toolchain supports only static linking
+if(CORRADE_TARGET_NACL_NEWLIB)
+    set(BUILD_STATIC ON)
+endif()
 
 add_subdirectory(modules)
 add_subdirectory(src)
