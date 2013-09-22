@@ -42,6 +42,10 @@ want to link them statically, enable `BUILD_STATIC` to build the libraries as
 static. If you plan to use them with shared libraries later, enable also
 position-independent code with `BUILD_STATIC_PIC`.
 
+The library by default does not install `FindMagnumIntegration.cmake`, as you
+should bundle the module with your code instead of depending on it being in
+system location. You can install it by enabling `WITH_FIND_MODULE`.
+
 By default no integration libraries are built and you need to select them
 manually:
 
