@@ -36,13 +36,17 @@ Basic usage is:
 
     find_package(MagnumIntegration [REQUIRED])
 
-This command tries to find Magnum integration library and then defines:
+This command tries to find %Magnum integration library and then defines:
 
 -   `MAGNUMINTEGRATION_FOUND` -- Whether the library was found
 
 This command alone is useless without specifying the components:
 
 -   `Bullet` -- @ref BulletIntegration library
+
+Note that [each <tt>*Integration</tt> namespace](namespaces.html) contains more
+detailed information about dependencies, availability on particular platform
+and also guide how to enable given library in build and use it with CMake.
 
 Example usage with specifying additional components is:
 

@@ -33,4 +33,10 @@
 @brief Integration with Bullet Physics
 
 Conversion of matrix and vector classes, wrappers for rigid body dynamics.
+
+This library depends on **Bullet Physics** library and it is built if
+`WITH_BULLETINTEGRATION` is enabled in CMake. To use this library, you need to
+request `%Bullet` component in CMake, add `${MAGNUM_BULLETINTEGRATION_INCLUDE_DIRS}`
+to include path and link to `${MAGNUM_BULLETINTEGRATION_LIBRARIES}`. See
+@ref building-integration and @ref cmake-integration for more information.
 */
