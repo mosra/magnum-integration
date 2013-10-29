@@ -23,6 +23,8 @@
 #   mode for GCC 4.7
 #  CORRADE_GCC46_COMPATIBILITY  - Defined if compiled with compatibility
 #   mode for GCC 4.6
+#  CORRADE_BUILD_DEPRECATED     - Defined if compiled with deprecated APIs
+#   included
 #  CORRADE_BUILD_STATIC         - Defined if compiled as static libraries
 #  CORRADE_TARGET_NACL          - Defined if compiled for Google Chrome
 #   Native Client
@@ -124,8 +126,13 @@ find_path(CORRADE_INCLUDE_DIR
 # CMake module dir
 find_path(_CORRADE_MODULE_DIR
     NAMES UseCorrade.cmake CorradeLibSuffix.cmake
-    PATHS ${CMAKE_ROOT}/Modules
     PATH_SUFFIXES share/cmake/Corrade)
+
+# If not found, try system module dir
+find_path(_CORRADE_MODULE_DIR
+    NAMES UseCorrade.cmake CorradeLibSuffix.cmake
+    PATHS ${CMAKE_ROOT}/Modules
+    NO_CMAKE_FIND_ROOT_PATH)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Corrade DEFAULT_MSG
@@ -152,6 +159,10 @@ endif()
 string(FIND "${_corradeConfigure}" "#define CORRADE_GCC47_COMPATIBILITY" _GCC47_COMPATIBILITY)
 if(NOT _GCC47_COMPATIBILITY EQUAL -1)
     set(CORRADE_GCC47_COMPATIBILITY 1)
+endif()
+string(FIND "${_corradeConfigure}" "#define CORRADE_BUILD_DEPRECATED" _BUILD_DEPRECATED)
+if(NOT _BUILD_DEPRECATED EQUAL -1)
+    set(CORRADE_BUILD_DEPRECATED 1)
 endif()
 string(FIND "${_corradeConfigure}" "#define CORRADE_BUILD_STATIC" _BUILD_STATIC)
 if(NOT _BUILD_STATIC EQUAL -1)
