@@ -25,6 +25,10 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+/** @file
+ * @brief Class @ref Magnum::BulletIntegration::MotionState
+ */
+
 #include <LinearMath/btMotionState.h>
 #include <SceneGraph/Object.h>
 #include <SceneGraph/AbstractTranslationRotation3D.h>
@@ -33,9 +37,22 @@
 
 namespace Magnum { namespace BulletIntegration {
 
+/**
+@brief Bullet Physics motion state
+
+Encapsulates `btMotionState` as @ref SceneGraph feature.
+
+@todoc Usage...
+*/
 class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
     public:
+        /**
+         * @brief Constructor
+         * @param object    Object this motion state belongs to
+         */
         template<class T> MotionState(T& object);
+
+        /** @brief Motion state */
         inline btMotionState& btMotionState() { return *this; }
 
     private:

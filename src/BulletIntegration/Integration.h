@@ -25,12 +25,15 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+/** @file
+ * @brief Integration of Bullet math classes
+ */
+
 #include <LinearMath/btMatrix3x3.h>
 #include <Math/RectangularMatrix.h>
 
 #include "magnumBulletIntegrationVisibility.h"
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace Math { namespace Implementation {
 
 template<> struct VectorConverter<3, btScalar, btVector3> {
@@ -58,6 +61,5 @@ template<> struct RectangularMatrixConverter<3, 3, btScalar, btMatrix3x3> {
 };
 
 }}}
-#endif
 
 #endif
