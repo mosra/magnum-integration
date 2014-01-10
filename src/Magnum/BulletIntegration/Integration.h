@@ -30,7 +30,7 @@
  */
 
 #include <LinearMath/btMatrix3x3.h>
-#include <Math/RectangularMatrix.h>
+#include <Magnum/Math/RectangularMatrix.h>
 
 #include "magnumBulletIntegrationVisibility.h"
 

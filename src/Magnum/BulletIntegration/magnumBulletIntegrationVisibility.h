@@ -25,7 +25,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <Utility/Visibility.h>
+#include <Corrade/Utility/VisibilityMacros.h>
 
 #ifdef MagnumBulletIntegration_EXPORTS
     #define MAGNUM_BULLETINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT

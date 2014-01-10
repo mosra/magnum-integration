@@ -28,10 +28,10 @@
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
 #include <BulletCollision/BroadphaseCollision/btBroadphaseProxy.h>
-#include <Utility/Assert.h>
-#include <Shapes/Box.h>
-#include <Shapes/Shape.h>
-#include <Shapes/Sphere.h>
+#include <Corrade/Utility/Assert.h>
+#include <Magnum/Shapes/Box.h>
+#include <Magnum/Shapes/Shape.h>
+#include <Magnum/Shapes/Sphere.h>
 
 #include "Integration.h"
 

@@ -24,15 +24,14 @@
 */
 
 #include <btBulletDynamicsCommon.h>
-#include <TestSuite/Tester.h>
-#include <Shapes/Box.h>
-#include <Shapes/Sphere.h>
-#include <Shapes/Shape.h>
-#include <SceneGraph/MatrixTransformation3D.h>
-#include <BulletIntegration/MotionState.h>
-#include <BulletIntegration/MotionState.h>
+#include <Corrade/TestSuite/Tester.h>
+#include <Magnum/Shapes/Box.h>
+#include <Magnum/Shapes/Sphere.h>
+#include <Magnum/Shapes/Shape.h>
+#include <Magnum/SceneGraph/MatrixTransformation3D.h>
 
-#include "BulletIntegration/ConvertShape.h"
+#include "Magnum/BulletIntegration/ConvertShape.h"
+#include "Magnum/BulletIntegration/MotionState.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
 

@@ -25,9 +25,9 @@
 
 #include "MotionState.h"
 
-#include <Math/Matrix4.h>
+#include <Magnum/Math/Matrix4.h>
 
-#include "Integration.h"
+#include "Magnum/BulletIntegration/Integration.h"
 
 namespace Magnum { namespace BulletIntegration {
 

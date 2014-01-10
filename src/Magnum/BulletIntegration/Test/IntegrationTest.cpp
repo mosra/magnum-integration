@@ -23,10 +23,10 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <TestSuite/Tester.h>
+#include <Corrade/TestSuite/Tester.h>
 
-#include "Magnum.h"
-#include "BulletIntegration/Integration.h"
+#include "Magnum/Magnum.h"
+#include "Magnum/BulletIntegration/Integration.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
 

@@ -29,8 +29,8 @@
  * @brief Function @ref Magnum::BulletIntegration::convertShape()
  */
 
-#include <Shapes/Shapes.h>
-#include <SceneGraph/SceneGraph.h>
+#include <Magnum/Shapes/Shapes.h>
+#include <Magnum/SceneGraph/SceneGraph.h>
 #include <LinearMath/btScalar.h>
 
 #include "magnumBulletIntegrationVisibility.h"
