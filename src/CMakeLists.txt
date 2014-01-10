@@ -22,6 +22,8 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CORRADE_CXX_FLAGS}")
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${MAGNUM_INCLUDE_DIRS})
+
+add_subdirectory(Magnum)
