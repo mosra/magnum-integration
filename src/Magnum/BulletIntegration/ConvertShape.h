@@ -33,7 +33,7 @@
 #include <Magnum/SceneGraph/SceneGraph.h>
 #include <LinearMath/btScalar.h>
 
-#include "magnumBulletIntegrationVisibility.h"
+#include "Magnum/BulletIntegration/visibility.h"
 
 class btCollisionShape;
 class btBoxShape;

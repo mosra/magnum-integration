@@ -1,5 +1,5 @@
-#ifndef Magnum_BulletIntegration_magnumBulletIntegrationVisibility_h
-#define Magnum_BulletIntegration_magnumBulletIntegrationVisibility_h
+#ifndef Magnum_BulletIntegration_visibility_h
+#define Magnum_BulletIntegration_visibility_h
 /*
     This file is part of Magnum.
 

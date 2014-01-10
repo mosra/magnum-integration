@@ -32,7 +32,7 @@
 #include <LinearMath/btMatrix3x3.h>
 #include <Magnum/Math/RectangularMatrix.h>
 
-#include "magnumBulletIntegrationVisibility.h"
+#include "Magnum/BulletIntegration/visibility.h"
 
 namespace Magnum { namespace Math { namespace Implementation {
 

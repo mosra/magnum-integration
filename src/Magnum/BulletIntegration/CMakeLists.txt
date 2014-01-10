@@ -34,10 +34,11 @@ set(MagnumBulletIntegration_SRCS
     MotionState.cpp)
 
 set(MagnumBulletIntegration_HEADERS
-    magnumBulletIntegrationVisibility.h
-    Integration.h
     ConvertShape.h
-    MotionState.h)
+    Integration.h
+    MotionState.h
+
+    visibility.h)
 
 add_library(MagnumBulletIntegration SHARED ${MagnumBulletIntegration_SRCS})
 target_link_libraries(MagnumBulletIntegration

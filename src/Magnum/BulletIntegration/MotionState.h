@@ -33,7 +33,7 @@
 #include <Magnum/SceneGraph/Object.h>
 #include <Magnum/SceneGraph/AbstractTranslationRotation3D.h>
 
-#include "magnumBulletIntegrationVisibility.h"
+#include "Magnum/BulletIntegration/visibility.h"
 
 namespace Magnum { namespace BulletIntegration {
 
