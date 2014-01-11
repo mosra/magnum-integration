@@ -22,6 +22,10 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+/** @dir magnum-integration/src/Magnum
+ * @brief Namespace Magnum (part of @ref building-integration "Magnum Integration library")
+ */
+
 /** @dir Magnum/BulletIntegration
  * @brief Namespace Magnum::BulletIntegration
  */
