@@ -22,11 +22,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-/** @dir magnum-integration
- * @brief Integration libraries for %Magnum
- */
-
-/** @dir BulletIntegration
+/** @dir Magnum/BulletIntegration
  * @brief Namespace Magnum::BulletIntegration
  */
 /** @namespace Magnum::BulletIntegration
