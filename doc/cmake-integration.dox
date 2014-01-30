@@ -33,6 +33,9 @@ project and add path to the files to `CMAKE_MODULE_PATH`. Otherwise, if CMake
 won't be able to find this file in predefined locations, it will error out even
 if %Magnum integration libraries might be installed on the system.
 
+Note that the module file is updated as the library evolves, you are encouraged
+to update your copy from time to time to avoid strange building issues.
+
 Basic usage is:
 
     find_package(MagnumIntegration [REQUIRED])
