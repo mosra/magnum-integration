@@ -1,0 +1,25 @@
+Source: magnum-integration
+Priority: optional
+Maintainer: Vladimír Vondruš <mosra@centrum.cz>
+Build-Depends: debhelper (>= 9), cmake (>= 2.8.8)
+Standards-Version: 3.9.2
+Section: libs
+Homepage: http://mosra.cz/blog/magnum.php
+Vcs-Git: git://github.com/mosra/magnum-integration.git
+Vcs-Browser: https://github.com/mosra/magnum-integration
+
+Package: magnum-integration-dev
+Section: libdevel
+Architecture: any
+Depends: magnum-integration (= ${binary:Version}), magnum-dev, libbullet-dev
+Description: Magnum Integration development files
+ Headers and tools needed for developing with Magnum Integration libraries.
+
+Package: magnum-integration
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, magnum, libbulletcollision2.81
+Description: Integration libraries for Magnum OpenGL graphics engine
+ Magnum is 2D/3D graphics engine written in C++11 and modern OpenGL. Its goal
+ is to simplify low-level graphics development and interaction with OpenGL
+ using recent C++11 features and to abstract away platform-specific issues.
