@@ -56,5 +56,14 @@ Note that [each <tt>*Integration</tt> namespace](namespaces.html) contains more
 detailed information about dependencies, availability on particular platform
 and also guide how to enable given library in build and use it with CMake.
 
+@section building-integration-arch Building ArchLinux packages
+
+In `package/archlinux` directory is currently one development PKGBUILD, which
+allows you to build and install the package directly from source tree without
+downloading anything. It also contains `check()` function which will run all
+unit tests before packaging. You need to build it from project root:
+
+    makepkg -p package/archlinux/PKGBUILD
+
 */
 }
