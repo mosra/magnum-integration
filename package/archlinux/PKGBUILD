@@ -2,7 +2,7 @@
 pkgname=magnum-integration
 pkgver=dev
 pkgrel=1
-pkgdesc="Integration library for Magnum OpenGL 3 graphics engine"
+pkgdesc="Integration libraries for Magnum OpenGL graphics engine"
 arch=('i686' 'x86_64')
 url="http://mosra.cz/blog/magnum.php"
 license=('MIT')
