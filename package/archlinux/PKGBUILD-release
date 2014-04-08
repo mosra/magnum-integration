@@ -1,0 +1,52 @@
+# Author: mosra <mosra@centrum.cz>
+pkgname=magnum-integration
+pkgver=dev.release
+pkgrel=1
+pkgdesc="Integration libraries for Magnum OpenGL graphics engine (debug+release libs)"
+arch=('i686' 'x86_64')
+url="http://mosra.cz/blog/magnum.php"
+license=('MIT')
+depends=('magnum' 'bullet')
+makedepends=('cmake' 'ninja')
+options=('!strip')
+provides=('magnum-integration-git')
+
+build() {
+    mkdir -p "$startdir/build"
+    cd "$startdir/build"
+
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_BULLET=ON \
+        -DBUILD_TESTS=ON  \
+        -G Ninja
+    ninja
+
+    mkdir -p "$startdir/build-release"
+    cd "$startdir/build-release"
+
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_BULLET=ON \
+        -DBUILD_TESTS=ON  \
+        -G Ninja
+    ninja
+}
+
+check() {
+    cd "$startdir/build"
+    ctest --output-on-failure
+
+    cd "$startdir/build-release"
+    ctest --output-on-failure
+}
+
+package() {
+    cd "$startdir/build"
+    DESTDIR="$pkgdir/" ninja install
+
+    cd "$startdir/build-release"
+    DESTDIR="$pkgdir/" ninja install/strip
+}
