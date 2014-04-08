@@ -62,9 +62,10 @@ For each component is then defined:
 -   `MAGNUM_*INTEGRATION_LIBRARIES` -- Component library and dependent
     libraries
 
-Additionally these variables are defined for internal usage:
-
--   `MAGNUM_*INTEGRATION_LIBRARY` -- Component library (w/o dependencies)
+The package is found if either debug or release version of each requested
+library is found. If both debug and release libraries are found, proper version
+is chosen based on actual build configuration of the project (i.e. `Debug`
+build is linked to debug libraries, `Release` build to release libraries).
 
 See also @ref cmake "Magnum usage with CMake" for more information.
 
