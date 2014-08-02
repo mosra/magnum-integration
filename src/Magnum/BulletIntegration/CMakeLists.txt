@@ -41,7 +41,9 @@ set(MagnumBulletIntegration_HEADERS
 
     visibility.h)
 
-add_library(MagnumBulletIntegration SHARED ${MagnumBulletIntegration_SRCS})
+add_library(MagnumBulletIntegration SHARED
+    ${MagnumBulletIntegration_SRCS}
+    ${MagnumBulletIntegration_HEADERS})
 set_target_properties(MagnumBulletIntegration PROPERTIES DEBUG_POSTFIX "-d")
 target_link_libraries(MagnumBulletIntegration
     ${MAGNUM_LIBRARIES}
