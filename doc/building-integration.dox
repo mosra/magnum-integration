@@ -69,6 +69,10 @@ unit tests before packaging. You need to build it from project root:
 
     makepkg -p package/archlinux/PKGBUILD
 
+@section building-integration-gentoo Gentoo ebuilds
+
+Gentoo Git ebuild is available in `package/gentoo` directory.
+
 @section building-integration-deb Building DEB packages
 
 There is also `package/debian/` directory with all files needed for building
