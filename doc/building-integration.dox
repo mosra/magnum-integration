@@ -27,6 +27,8 @@ namespace Magnum {
 /** @page building-integration Downloading and building integration libraries
 @brief Guide how to download and build integration libraries for %Magnum engine.
 
+@tableofcontents
+
 Integration repository provides integration of various math and physics
 libraries with %Magnum engine. This is not needed for essential usage, but it
 might get handy if you want to use something other than builtin components and
