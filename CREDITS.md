@@ -1,3 +1,9 @@
+Third-party components
+----------------------
+
+*   The `BulletIntegration` library uses Bullet physics engine -- http://bulletphysics.org/,
+    licensed under [ZLIB license](http://zlib.net/zlib_license.html)
+
 Contributors to Magnum Integration library
 --------------------------------------
 
