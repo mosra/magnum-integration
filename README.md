@@ -18,7 +18,7 @@ Minimal dependencies
     >= 3.1. On Windows you can use **MinGW**. GCC 4.5, 4.4 and **MSVC** 2013
     are supported if you use `compatibility` branch of Corrade and Magnum
     libraries.
-*   **CMake** >= 2.8.8
+*   **CMake** >= 2.8.9
 *   **Corrade**, **Magnum** -- The engine itself
 
 Compilation, installation
