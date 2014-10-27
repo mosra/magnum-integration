@@ -43,7 +43,7 @@ class btSphereShape;
 namespace Magnum { namespace BulletIntegration {
 
 /**
-@brief Convert generic Bullet collision shape to %Magnum shape
+@brief Convert generic Bullet collision shape to Magnum shape
 @param object   Object the shape belongs to
 @param shape    Shape to convert
 @param shapes   Optional shape group to add the shape to
@@ -53,7 +53,7 @@ Returns `nullptr` if given shape is not supported.
 Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes = nullptr);
 
 /**
-@brief Convert box Bullet collision shape to %Magnum shape
+@brief Convert box Bullet collision shape to Magnum shape
 
 See @ref convertShape(SceneGraph::AbstractBasicObject3D<btScalar>&, const btCollisionShape&, Shapes::ShapeGroup3D*)
 for more information.
@@ -61,7 +61,7 @@ for more information.
 Shapes::Shape<Shapes::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btBoxShape& box, Shapes::ShapeGroup3D* shapes = nullptr);
 
 /**
-@brief Convert sphere Bullet collision shape to %Magnum shape
+@brief Convert sphere Bullet collision shape to Magnum shape
 
 See @ref convertShape(SceneGraph::AbstractBasicObject3D<btScalar>&, const btCollisionShape&, Shapes::ShapeGroup3D*)
 for more information.

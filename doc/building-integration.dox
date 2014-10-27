@@ -25,21 +25,21 @@
 
 namespace Magnum {
 /** @page building-integration Downloading and building integration libraries
-@brief Guide how to download and build integration libraries for %Magnum engine.
+@brief Guide how to download and build integration libraries for Magnum engine.
 
 @tableofcontents
 
 Integration repository provides integration of various math and physics
-libraries with %Magnum engine. This is not needed for essential usage, but it
+libraries with Magnum engine. This is not needed for essential usage, but it
 might get handy if you want to use something other than builtin components and
 seamlessly integrate them with the rest of the engine.
 
 The source is available on GitHub: https://github.com/mosra/magnum-integration.
-Building integration libraries is very similar to building %Magnum itself. See
+Building integration libraries is very similar to building Magnum itself. See
 @ref building for additonal information about building and running tests,
 crosscompiling and platform-specific issues.
 
-Similarly to %Magnum, the libraries are build as shared by default. If you are
+Similarly to Magnum, the libraries are build as shared by default. If you are
 developing for platform which doesn't support shared libraries or if you just
 want to link them statically, enable `BUILD_STATIC` to build the libraries as
 static. If you plan to use them with shared libraries later, enable also
