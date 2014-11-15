@@ -30,8 +30,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/")
 
 find_package(Magnum REQUIRED)
 
-option(WITH_FIND_MODULE "Install FindMagnumIntegration.cmake module into CMake's module dir (might require admin privileges)" OFF)
-
 # Parts of the library
 option(WITH_BULLET "Build BulletIntegration library" OFF)
 
@@ -48,6 +46,8 @@ endif()
 if(CORRADE_TARGET_NACL_NEWLIB)
     set(BUILD_STATIC ON)
 endif()
+
+set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/cmake/MagnumIntegration)
 
 add_subdirectory(modules)
 add_subdirectory(src)

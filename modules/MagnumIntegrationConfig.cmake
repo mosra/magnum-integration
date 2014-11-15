@@ -23,8 +23,4 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-set(MagnumIntegration_MODULES
-    FindMagnumIntegration.cmake
-    MagnumIntegrationConfig.cmake)
-
-install(FILES ${MagnumIntegration_MODULES} DESTINATION ${MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR})
+include(${CMAKE_CURRENT_LIST_DIR}/FindMagnumIntegration.cmake)

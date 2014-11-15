@@ -49,10 +49,6 @@ Libraries built in `Debug` configuration (e.g. with `CMAKE_BUILD_TYPE` set
 to `Debug`) have `-d` suffix, similarly to what is done when
 @ref building "building Magnum itself".
 
-The library by default does not install `FindMagnumIntegration.cmake`, as you
-should bundle the module with your code instead of depending on it being in
-system location. You can install it by enabling `WITH_FIND_MODULE`.
-
 By default no integration libraries are built and you need to select them
 manually:
 
