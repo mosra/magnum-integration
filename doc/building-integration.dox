@@ -60,12 +60,13 @@ and also guide how to enable given library in build and use it with CMake.
 
 @section building-integration-arch Building ArchLinux packages
 
-In `package/archlinux` directory is currently one development PKGBUILD, which
-allows you to build and install the package directly from source tree without
-downloading anything. It also contains `check()` function which will run all
-unit tests before packaging. You need to build it from project root:
+In `package/archlinux` directory is currently one package for Git development
+build. The package is also in AUR under the same name.
 
-    makepkg -p package/archlinux/PKGBUILD
+There are also a few development PKGBUILDs in `package/archlinux`, which allow
+you to build and install the package directly from source tree without
+downloading anything. The native PKGBUILDs also contain `check()` function
+which will run all unit tests before packaging.
 
 @section building-integration-gentoo Gentoo ebuilds
 
