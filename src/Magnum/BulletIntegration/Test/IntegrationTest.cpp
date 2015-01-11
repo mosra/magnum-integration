@@ -34,12 +34,11 @@ namespace Magnum { namespace BulletIntegration { namespace Test {
 typedef Math::Vector<3, btScalar> Vector3;
 typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
 
-class IntegrationTest: public TestSuite::Tester {
-    public:
-        IntegrationTest();
+struct IntegrationTest: TestSuite::Tester {
+    explicit IntegrationTest();
 
-        void vector();
-        void matrix();
+    void vector();
+    void matrix();
 };
 
 IntegrationTest::IntegrationTest() {

@@ -38,12 +38,11 @@ namespace Magnum { namespace BulletIntegration { namespace Test {
 
 typedef SceneGraph::Object<SceneGraph::BasicMatrixTransformation3D<btScalar>> Object3D;
 
-class ConvertShapeTest: public TestSuite::Tester {
-    public:
-        ConvertShapeTest();
+struct ConvertShapeTest: TestSuite::Tester {
+    explicit ConvertShapeTest();
 
-        void box();
-        void sphere();
+    void box();
+    void sphere();
 };
 
 ConvertShapeTest::ConvertShapeTest() {
