@@ -24,11 +24,11 @@
 */
 
 /** @dir magnum-integration/src/Magnum
- * @brief Namespace Magnum (part of @ref building-integration "Magnum Integration library")
+ * @brief Namespace @ref Magnum (part of @ref building-integration "Magnum Integration library")
  */
 
 /** @dir Magnum/BulletIntegration
- * @brief Namespace Magnum::BulletIntegration
+ * @brief Namespace @ref Magnum::BulletIntegration
  */
 /** @namespace Magnum::BulletIntegration
 @brief Integration with Bullet Physics
