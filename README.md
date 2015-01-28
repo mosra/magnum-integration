@@ -1,6 +1,6 @@
-This is integration library for Magnum C++11 OpenGL graphics engine, providing
-integration of various math and physics libraries into the engine itself. If
-you don't know what Magnum is, see https://github.com/mosra/magnum.
+This is integration library for Magnum C++11/C++14 OpenGL graphics engine,
+providing integration of various math and physics libraries into the engine
+itself. If you don't know what Magnum is, see https://github.com/mosra/magnum.
 
 INSTALLATION
 ============
