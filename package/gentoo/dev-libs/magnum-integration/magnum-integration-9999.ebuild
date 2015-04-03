@@ -27,6 +27,8 @@ src_configure() {
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_PREFIX="${EPREFIX}/usr"
 		-DCMAKE_BUILD_TYPE=Release
-    )
+	)
 	cmake-utils_src_configure
 }
+
+# kate: replace-tabs off;
