@@ -84,7 +84,7 @@ package root, copy `package/debian` directory there and run `dpkg-buildpackage`:
 
 This will compile binary and development packages, which will then appear in
 parent directory. If you need to modify CMake flags (enabling/disabling some
-plugins, for example), modify the last entry in `debian/rules`.
+libraries, for example), modify the last entry in `debian/rules`.
 
 @section building-integration-ci-jenkins Jenkins Continuous Integration
 
@@ -103,8 +103,8 @@ replace `localhost:8080` with your server name, replace `update-job` with
 
 Build is done using **Ninja** build system and everything possible is enabled,
 thus you need also **Bullet** libraries. It expects that **GCC** >= 4.8.1, 4.7
-and **Clang** are installed and there are **OpenGL**, **OpenGL ES 2.0** and
-**OpenGL ES 3.0** librares as it tries to compile the library with every
+and **Clang** are installed and there are **OpenGL**, **OpenGL ES 2.0**
+and **OpenGL ES 3.0** librares as it tries to compile the library with every
 combination of them. You can add/remove the axes in `axes/hudson.matrix.TextAxis`
 or via the web interface later.
 
