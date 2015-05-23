@@ -63,11 +63,10 @@ cmake .. \
     -DCMAKE_TOOLCHAIN_FILE="../toolchains/generic/Emscripten.cmake" \
     -DCMAKE_FIND_ROOT_PATH="${JENKINS_HOME}/filesystem/emscripten-${compatibility}" \
     -DCMAKE_INSTALL_PREFIX=${JENKINS_HOME}/filesystem/emscripten-${compatibility} \
-  `#-DWITH_BULLET=ON` \
-    -G Ninja
+  `#-DWITH_BULLET=ON`
 
-ninja
-#ninja install
+make -j
+#make -j install
 ]]>
     </command>
     </hudson.tasks.Shell>
