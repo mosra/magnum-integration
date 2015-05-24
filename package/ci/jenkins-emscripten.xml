@@ -74,7 +74,7 @@ cmake .. \
   `#-DWITH_BULLET=ON`
 
 make -j
-#make -j install
+make -j install
 ]]>
     </command>
     </hudson.tasks.Shell>

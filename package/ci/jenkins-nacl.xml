@@ -74,7 +74,7 @@ cmake .. \
     -G Ninja
 
 ninja
-#ninja install/strip
+ninja install/strip
 ]]>
     </command>
     </hudson.tasks.Shell>
