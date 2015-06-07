@@ -47,23 +47,23 @@ IntegrationTest::IntegrationTest() {
 }
 
 void IntegrationTest::vector() {
-    constexpr Vector3 a(1.0f, 2.0f, 3.0f);
+    Vector3 a{1.0f, 2.0f, 3.0f};
     btVector3 b{1.0f, 2.0f, 3.0f};
 
-    CORRADE_COMPARE(Vector3(b), a);
-    CORRADE_VERIFY(btVector3(a) == b);
+    CORRADE_COMPARE(Vector3{b}, a);
+    CORRADE_VERIFY(btVector3{a} == b);
 }
 
 void IntegrationTest::matrix() {
-    constexpr Matrix3 a(Vector3(3.0f,  5.0f, 8.0f),
-                        Vector3(4.5f,  4.0f, 7.0f),
-                        Vector3(7.9f, -1.0f, 8.0f));
-    btMatrix3x3 b(3.0f,  5.0f, 8.0f,
+    Matrix3 a{Vector3{3.0f,  5.0f, 8.0f},
+              Vector3{4.5f,  4.0f, 7.0f},
+              Vector3{7.9f, -1.0f, 8.0f}};
+    btMatrix3x3 b{3.0f,  5.0f, 8.0f,
                   4.5f,  4.0f, 7.0f,
-                  7.9f, -1.0f, 8.0f);
+                  7.9f, -1.0f, 8.0f};
 
-    CORRADE_COMPARE(Matrix3(b), a);
-    CORRADE_VERIFY(btMatrix3x3(a) == b);
+    CORRADE_COMPARE(Matrix3{b}, a);
+    CORRADE_VERIFY(btMatrix3x3{a} == b);
 }
 
 }}}
