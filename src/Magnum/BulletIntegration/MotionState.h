@@ -54,7 +54,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBa
         template<class T> MotionState(T& object);
 
         /** @brief Motion state */
-        inline btMotionState& btMotionState() { return *this; }
+        btMotionState& btMotionState() { return *this; }
 
     private:
         void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
