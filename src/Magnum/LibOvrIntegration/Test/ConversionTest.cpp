@@ -1,0 +1,183 @@
+/*
+    This file is part of Magnum.
+
+    Copyright © 2010, 2011, 2012, 2013, 2014, 2015
+              Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2015
+              Jonathan Hale <squareys@googlemail.com>
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+*/
+
+#include <Corrade/TestSuite/Tester.h>
+
+#include "Magnum/Magnum.h"
+#include "Magnum/Math/Matrix3.h"
+#include "Magnum/Math/DualQuaternion.h"
+
+#include "Magnum/LibOVRIntegration/Conversion.h"
+
+namespace Magnum { namespace LibOvrIntegration { namespace Test {
+
+struct ConversionTest: TestSuite::Tester {
+    explicit ConversionTest();
+
+    void sizei();
+    void vector2i();
+    void vector2f();
+    void vector3f();
+    void recti();
+    void matrix4f();
+    void quatf();
+    void posef();
+};
+
+ConversionTest::ConversionTest() {
+    addTests({&ConversionTest::sizei,
+              &ConversionTest::vector2i,
+              &ConversionTest::vector2f,
+              &ConversionTest::vector3f,
+              &ConversionTest::recti,
+              &ConversionTest::matrix4f,
+              &ConversionTest::quatf,
+              &ConversionTest::posef});
+}
+
+void ConversionTest::sizei() {
+    constexpr Vector2i a(1, 2);
+    ovrSizei b{1, 2};
+
+    CORRADE_COMPARE(Vector2i(b), a);
+
+    ovrSizei c(a);
+    CORRADE_COMPARE(c.w, b.w);
+    CORRADE_COMPARE(c.h, b.h);
+}
+
+void ConversionTest::vector2i() {
+    constexpr Vector2i a(1, 2);
+    ovrVector2i b{1, 2};
+
+    CORRADE_COMPARE(Vector2i(b), a);
+
+    ovrVector2i c(a);
+    CORRADE_COMPARE(c.x, b.x);
+    CORRADE_COMPARE(c.y, b.y);
+}
+
+void ConversionTest::vector2f() {
+    constexpr Vector2 a(1.0f, 2.0f);
+    ovrVector2f b{1.0f, 2.0f};
+
+    CORRADE_COMPARE(Vector2(b), a);
+
+    ovrVector2f c(a);
+    CORRADE_COMPARE(c.x, b.x);
+    CORRADE_COMPARE(c.y, b.y);
+}
+
+void ConversionTest::vector3f() {
+    constexpr Vector3 a(1.0f, 2.0f, 3.0f);
+    ovrVector3f b{1.0f, 2.0f, 3.0f};
+
+    CORRADE_COMPARE(Vector3(b), a);
+
+    ovrVector3f c(a);
+    CORRADE_COMPARE(c.x, b.x);
+    CORRADE_COMPARE(c.y, b.y);
+    CORRADE_COMPARE(c.z, b.z);
+}
+
+void ConversionTest::recti() {
+    constexpr Range2Di a{{2, 2}, {42, 42}};
+    ovrRecti b{{2, 2}, {40, 40}};
+
+    CORRADE_COMPARE(Range2Di(b), a);
+
+    ovrRecti c(a);
+    CORRADE_COMPARE(c.Pos.x, b.Pos.x);
+    CORRADE_COMPARE(c.Pos.y, b.Pos.y);
+
+    CORRADE_COMPARE(c.Size.w, b.Size.w);
+    CORRADE_COMPARE(c.Size.h, b.Size.h);
+}
+
+void ConversionTest::matrix4f() {
+    constexpr Matrix4 a = Matrix4{
+        {1.1f, 1.2f, 1.3f, 1.4f},
+        {2.1f, 2.2f, 2.3f, 2.4f},
+        {3.1f, 3.2f, 3.3f, 3.4f},
+        {4.1f, 4.2f, 4.3f, 4.4f}};
+    ovrMatrix4f b = {{
+        {1.1f, 1.2f, 1.3f, 1.4f},
+        {2.1f, 2.2f, 2.3f, 2.4f},
+        {3.1f, 3.2f, 3.3f, 3.4f},
+        {4.1f, 4.2f, 4.3f, 4.4f}}};
+
+    /* transposing accomodates for the sdk storing matrices in
+     * colum-major form. */
+    CORRADE_COMPARE(Matrix4(b).transposed(), a);
+
+    ovrMatrix4f c(a.transposed());
+    float *pa = reinterpret_cast<float*>(c.M),
+          *pb = reinterpret_cast<float*>(b.M);
+
+    for(int i = 0; i < 16; ++i, ++pa, ++pb) {
+        CORRADE_COMPARE(*pa, *pb);
+    }
+
+}
+
+void ConversionTest::quatf() {
+    Quaternion a = Quaternion{{0.1, 0.2, 0.3}, 1.0};
+    ovrQuatf b = {0.1, 0.2, 0.3, 1.0};
+
+    CORRADE_COMPARE(Quaternion(b), a);
+
+    ovrQuatf c(a);
+    CORRADE_COMPARE(c.x, b.x);
+    CORRADE_COMPARE(c.y, b.y);
+    CORRADE_COMPARE(c.z, b.z);
+    CORRADE_COMPARE(c.w, b.w);
+}
+
+
+void ConversionTest::posef() {
+    Quaternion q = Quaternion{{0.1, 0.2, 0.3}, 1.0}.normalized();
+    DualQuaternion a = DualQuaternion::translation({1.0f, 2.0f, 3.0f}) * DualQuaternion{q};
+    ovrPosef b = {
+        ovrQuatf(q),
+        {1.0f, 2.0f, 3.0f}};
+
+    CORRADE_COMPARE(DualQuaternion(b), a);
+
+    ovrPosef c(a);
+    CORRADE_COMPARE(c.Orientation.x, b.Orientation.x);
+    CORRADE_COMPARE(c.Orientation.y, b.Orientation.y);
+    CORRADE_COMPARE(c.Orientation.z, b.Orientation.z);
+    CORRADE_COMPARE(c.Orientation.w, b.Orientation.w);
+
+    CORRADE_COMPARE(c.Position.x, b.Position.x);
+    CORRADE_COMPARE(c.Position.y, b.Position.y);
+    CORRADE_COMPARE(c.Position.z, b.Position.z);
+}
+
+}}}
+
+CORRADE_TEST_MAIN(Magnum::LibOvrIntegration::Test::ConversionTest)
