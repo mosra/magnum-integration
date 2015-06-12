@@ -47,6 +47,12 @@ if(CORRADE_TARGET_NACL_NEWLIB)
     set(BUILD_STATIC ON)
 endif()
 
+if(NOT BUILD_STATIC)
+    set(SHARED_OR_STATIC SHARED)
+else()
+    set(SHARED_OR_STATIC STATIC)
+endif()
+
 set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/cmake/MagnumIntegration)
 
 add_subdirectory(modules)
