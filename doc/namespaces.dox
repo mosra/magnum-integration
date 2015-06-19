@@ -36,7 +36,7 @@
 Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
 This library depends on **Bullet Physics** library and it is built if
-`WITH_BULLETINTEGRATION` is enabled when building Magnum Integration. To use
+`WITH_BULLET` is enabled when building Magnum Integration. To use
 this library, you need to request `Bullet` component of `MagnumIntegration`
 package in CMake, add `${MAGNUM_BULLETINTEGRATION_INCLUDE_DIRS}` to include
 path and link to `${MAGNUM_BULLETINTEGRATION_LIBRARIES}`. See
