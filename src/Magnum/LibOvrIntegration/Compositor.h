@@ -132,16 +132,16 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Layer {
 };
 
 /**
- * @brief Wrapper around ovrLayerEveFov.
+ * @brief Wrapper around ovrLayerDirect.
  * @author Jonathan Hale (Squareys)
  */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
+class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
     public:
         /** @brief Constructor. */
+        explicit LayerDirect();
 
-    explicit LayerEyeFov();
         /** @brief Copying is not allowed. */
-        LayerEyeFov(const LayerEyeFov& context) = delete;
+        LayerDirect(const LayerDirect&) = delete;
 
         /**
          * @brief Set color texture.
@@ -149,7 +149,37 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
          * @param textureSet @ref SwapTextureSet to set as color texture.
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setColorTexture(const int eye, SwapTextureSet& textureSet);
+        LayerDirect& setColorTexture(const int eye, const SwapTextureSet& textureSet);
+
+        /**
+         * @brief Set the viewport.
+         * @param eye Eye index to set the viewport for.
+         * @param viewport Viewport to set to.
+         * @return Reference to self (for method chaining)
+         */
+        LayerDirect& setViewport(const int eye, const Range2Di& viewport);
+
+};
+
+/**
+ * @brief Wrapper around ovrLayerEveFov.
+ * @author Jonathan Hale (Squareys)
+ */
+class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
+    public:
+        /** @brief Constructor. */
+        explicit LayerEyeFov();
+
+        /** @brief Copying is not allowed. */
+        LayerEyeFov(const LayerEyeFov&) = delete;
+
+        /**
+         * @brief Set color texture.
+         * @param eye Index of the eye the color texture is set for.
+         * @param textureSet @ref SwapTextureSet to set as color texture.
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFov& setColorTexture(const int eye, const SwapTextureSet& textureSet);
 
         /**
          * @brief Set the viewport.
@@ -172,6 +202,121 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
          * @return Reference to self (for method chaining)
          */
         LayerEyeFov& setFov(const Hmd& hmd);
+
+};
+
+class MAGNUM_LIBOVRINTEGRATION_EXPORT TimewarpProjectionDescription {
+    public:
+        explicit TimewarpProjectionDescription(const Matrix4& projectionMatrix);
+
+        const ovrTimewarpProjectionDesc& getOvrTimewarpProjectionDesc() const {
+            return _projectionDesc;
+        }
+
+    private:
+        ovrTimewarpProjectionDesc _projectionDesc;
+};
+
+/**
+ * @brief Wrapper around ovrLayerEveFovDepth.
+ * @author Jonathan Hale (Squareys)
+ */
+class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
+    public:
+        /** @brief Constructor. */
+        explicit LayerEyeFovDepth();
+
+        /** @brief Copying is not allowed. */
+        LayerEyeFovDepth(const LayerEyeFovDepth&) = delete;
+
+        /**
+         * @brief Set color texture.
+         * @param eye Index of the eye the color texture is set for.
+         * @param textureSet @ref SwapTextureSet to set as color texture.
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFovDepth& setColorTexture(const int eye, const SwapTextureSet& textureSet);
+
+        /**
+         * @brief Set the viewport.
+         * @param eye Eye index to set the viewport for.
+         * @param viewport Viewport to set to.
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFovDepth& setViewport(const int eye, const Range2Di& viewport);
+
+        /**
+         * @brief Set the render pose.
+         * @param hmd Hmd to get the render pose from.
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFovDepth& setRenderPoses(const Hmd& hmd);
+
+        /**
+         * @brief Set fov for this layer.
+         * @param hmd Hmd to get the default eye fov to set to.
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFovDepth& setFov(const Hmd& hmd);
+
+        /**
+         * @brief Set depth texture.
+         * @param eye Index of the eye the depth texture is set for.
+         * @param textureSet @ref SwapTextureSet to set as depth texture.
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFovDepth& setDepthTexture(const int eye, const SwapTextureSet& textureSet);
+
+        /**
+         * @brief setTimewarpProjectionDesc
+         * @return Reference to self (for method chaining)
+         */
+        LayerEyeFovDepth& setTimewarpProjDesc(const TimewarpProjectionDescription& desc);
+};
+
+/**
+ * @brief Wrapper around ovrLayerQuad.
+ * @author Jonathan Hale (Squareys)
+ * @see @ref ovrLayerQuad
+ */
+class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerQuad: public Layer {
+    public:
+        /** @brief Constructor. */
+        explicit LayerQuad(bool headLocked = false);
+
+        /** @brief Copying is not allowed. */
+        LayerQuad(const LayerQuad&) = delete;
+
+        /**
+         * @brief Set color texture.
+         * @param textureSet @ref SwapTextureSet to set as color texture.
+         * @return Reference to self (for method chaining)
+         */
+        LayerQuad& setColorTexture(const SwapTextureSet& textureSet);
+
+        /**
+         * @brief Set the viewport.
+         * @param viewport Viewport to set to.
+         * @return Reference to self (for method chaining)
+         */
+        LayerQuad& setViewport(const Range2Di& viewport);
+
+        /**
+         * @brief Set position and orientation of the center of the quad.
+         *
+         * Position is specified in meters.
+         *
+         * @param pose Center pose of the quad.
+         * @return Reference to self (for method chaining)
+         */
+        LayerQuad& setCenterPose(DualQuaternion pose);
+
+        /**
+         * @brief Set width and heigh of the quad in meters.
+         * @param size Size of the quad.
+         * @return Reference to self (for method chaining)
+         */
+        LayerQuad& setQuadSize(Vector2 size);
 
 };
 
@@ -200,10 +345,34 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
         Layer& addLayer(const LayerType type);
 
         /**
+         * @brief Create a @ref LayerDirect.
+         * @return Reference to the created layer.
+         */
+        LayerDirect& addLayerDirect();
+
+        /**
          * @brief Create a @ref LayerEyeFov.
          * @return Reference to the created layer.
          */
         LayerEyeFov& addLayerEyeFov();
+
+        /**
+         * @brief Create a @ref LayerEyeFovDepth.
+         * @return Reference to the created layer.
+         */
+        LayerEyeFovDepth& addLayerEyeFovDepth();
+
+        /**
+         * @brief Create a @ref LayerQuad with @ref LayerType::QuadHeadLocked.
+         * @return Reference to the created layer.
+         */
+        LayerQuad& addLayerQuadHeadLocked();
+
+        /**
+         * @brief Create a @ref LayerQuad with @ref LayerType::QuadInWorld.
+         * @return Reference to the created layer.
+         */
+        LayerQuad& addLayerQuadInWorld();
 
         /**
          * @brief Submit the frame to the compositor.
@@ -215,6 +384,8 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
     private:
 
         explicit Compositor();
+
+        Layer& addLayer(std::unique_ptr<Layer> layer);
 
         std::vector<const ovrLayerHeader*> _layers;
         std::vector<std::unique_ptr<Layer>> _wrappedLayers;

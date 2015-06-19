@@ -76,7 +76,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT SwapTextureSet {
         }
 
         /** @brief The underlying ovrSwapTextureSet. */
-        ovrSwapTextureSet& getOvrSwapTextureSet() {
+        ovrSwapTextureSet& getOvrSwapTextureSet() const {
             return *_swapTextureSet;
         }
 
@@ -248,7 +248,6 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
 
         friend class SwapTextureSet;
         friend class LibOvrContext;
-        friend class LayerEyeFov;
 };
 
 }}

@@ -31,6 +31,7 @@
 #include "Magnum/LibOVRIntegration/Hmd.h"
 
 #include <OVR_CAPI_GL.h>
+#include <OVR_CAPI_Util.h>
 
 namespace Magnum { namespace LibOvrIntegration {
 
@@ -49,11 +50,27 @@ Layer& Layer::setEnabled(bool enabled) {
 }
 
 //----------------------------------------------------------------
+LayerDirect::LayerDirect(): Layer(LayerType::Direct) {
+}
+
+LayerDirect& LayerDirect::setColorTexture(const int eye, const SwapTextureSet& textureSet) {
+    _layer.Direct.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
+
+    return *this;
+}
+
+LayerDirect& LayerDirect::setViewport(const int eye, const Range2Di& viewport) {
+    _layer.Direct.Viewport[eye] = ovrRecti(viewport);
+
+    return *this;
+}
+
+//----------------------------------------------------------------
 
 LayerEyeFov::LayerEyeFov(): Layer(LayerType::EyeFov) {
 }
 
-LayerEyeFov& LayerEyeFov::setColorTexture(const int eye, SwapTextureSet& textureSet) {
+LayerEyeFov& LayerEyeFov::setColorTexture(const int eye, const SwapTextureSet& textureSet) {
     _layer.EyeFov.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
 
     return *this;
@@ -66,18 +83,101 @@ LayerEyeFov& LayerEyeFov::setViewport(const int eye, const Range2Di& viewport) {
 }
 
 LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
-    _layer.EyeFov.RenderPose[0] = hmd._ovrPoses[0];
-    _layer.EyeFov.RenderPose[1] = hmd._ovrPoses[1];
+    const ovrPosef* poses = hmd.getOvrEyePoses();
+    _layer.EyeFov.RenderPose[0] = poses[0];
+    _layer.EyeFov.RenderPose[1] = poses[1];
 
     return *this;
 }
 
 LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
-    _layer.EyeFov.Fov[0] = hmd._hmd->DefaultEyeFov[0];
-    _layer.EyeFov.Fov[1] = hmd._hmd->DefaultEyeFov[1];
+    const ovrFovPort* fov = hmd.getOvrHmd()->DefaultEyeFov;
+    _layer.EyeFov.Fov[0] = fov[0];
+    _layer.EyeFov.Fov[1] = fov[1];
 
     return *this;
 }
+
+//----------------------------------------------------------------
+
+TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& projectionMatrix) {
+    _projectionDesc = ovrTimewarpProjectionDesc_FromProjection(ovrMatrix4f(projectionMatrix));
+}
+
+LayerEyeFovDepth::LayerEyeFovDepth(): Layer(LayerType::EyeFovDepth) {
+}
+
+LayerEyeFovDepth& LayerEyeFovDepth::setColorTexture(const int eye, const SwapTextureSet& textureSet) {
+    _layer.EyeFovDepth.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
+
+    return *this;
+}
+
+LayerEyeFovDepth& LayerEyeFovDepth::setViewport(const int eye, const Range2Di& viewport) {
+    _layer.EyeFovDepth.Viewport[eye] = ovrRecti(viewport);
+
+    return *this;
+}
+
+LayerEyeFovDepth& LayerEyeFovDepth::setRenderPoses(const Hmd& hmd) {
+    const ovrPosef* poses = hmd.getOvrEyePoses();
+    _layer.EyeFov.RenderPose[0] = poses[0];
+    _layer.EyeFov.RenderPose[1] = poses[1];
+
+    return *this;
+}
+
+LayerEyeFovDepth& LayerEyeFovDepth::setFov(const Hmd& hmd) {
+    const ovrFovPort* fov = hmd.getOvrHmd()->DefaultEyeFov;
+    _layer.EyeFov.Fov[0] = fov[0];
+    _layer.EyeFov.Fov[1] = fov[1];
+
+    return *this;
+}
+
+LayerEyeFovDepth& LayerEyeFovDepth::setDepthTexture(const int eye, const SwapTextureSet& textureSet) {
+    _layer.EyeFovDepth.DepthTexture[eye] = &textureSet.getOvrSwapTextureSet();
+
+    return *this;
+}
+
+LayerEyeFovDepth& LayerEyeFovDepth::setTimewarpProjDesc(const TimewarpProjectionDescription& desc) {
+    _layer.EyeFovDepth.ProjectionDesc = desc.getOvrTimewarpProjectionDesc();
+
+    return *this;
+}
+
+//----------------------------------------------------------------
+
+LayerQuad::LayerQuad(bool headLocked):
+    Layer((headLocked) ? LayerType::QuadHeadLocked : LayerType::QuadInWorld)
+{
+}
+
+LayerQuad& LayerQuad::setColorTexture(const SwapTextureSet& textureSet) {
+    _layer.Quad.ColorTexture = &textureSet.getOvrSwapTextureSet();
+
+    return *this;
+}
+
+LayerQuad& LayerQuad::setViewport(const Range2Di& viewport) {
+    _layer.Quad.Viewport = ovrRecti(viewport);
+
+    return *this;
+}
+
+LayerQuad& LayerQuad::setCenterPose(DualQuaternion pose) {
+    _layer.Quad.QuadPoseCenter = ovrPosef(pose);
+
+    return *this;
+}
+
+LayerQuad& LayerQuad::setQuadSize(Vector2 size) {
+    _layer.Quad.QuadSize = ovrVector2f(size);
+
+    return *this;
+}
+
 
 //----------------------------------------------------------------
 
@@ -89,28 +189,44 @@ typedef Corrade::Containers::EnumSet<LayerType> LayerTypes;
 Layer& Compositor::addLayer(const LayerType type) {
     switch (type) {
         case LayerType::Direct:
-            CORRADE_ASSERT(false, "LayerType::Direct is not implemented.", addLayerEyeFov());
-            break;
+            return addLayerDirect();
         case LayerType::EyeFov:
             return addLayerEyeFov();
         case LayerType::EyeFovDepth:
-            CORRADE_ASSERT(false, "LayerType::EyeFovDepth is not implemented.", addLayerEyeFov());
-            break;
+            return addLayerEyeFovDepth();
         case LayerType::QuadHeadLocked:
-            CORRADE_ASSERT(false, "LayerType::QuadHeadLocked is not implemented.", addLayerEyeFov());
-            break;
+            return addLayerQuadHeadLocked();
         case LayerType::QuadInWorld:
-            CORRADE_ASSERT(false, "LayerType::QuadInWorld is not implemented.", addLayerEyeFov());
-            break;
+            return addLayerQuadInWorld();
     }
     CORRADE_ASSERT_UNREACHABLE();
 }
 
-LayerEyeFov& Compositor::addLayerEyeFov() {
-    _wrappedLayers.push_back(std::move(std::unique_ptr<Layer>(new LayerEyeFov())));
+Layer& Compositor::addLayer(std::unique_ptr<Layer> layer) {
+    _wrappedLayers.push_back(std::move(layer));
     _layers.emplace_back(&_wrappedLayers.back().get()->layerHeader());
 
-    return *static_cast<LayerEyeFov*>(_wrappedLayers.back().get());
+    return *_wrappedLayers.back().get();
+}
+
+LayerDirect& Compositor::addLayerDirect() {
+    return static_cast<LayerDirect&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerDirect()))));
+}
+
+LayerEyeFov& Compositor::addLayerEyeFov() {
+    return static_cast<LayerEyeFov&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
+}
+
+LayerEyeFovDepth& Compositor::addLayerEyeFovDepth() {
+    return static_cast<LayerEyeFovDepth&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
+}
+
+LayerQuad& Compositor::addLayerQuadHeadLocked() {
+    return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerQuad(true)))));
+}
+
+LayerQuad& Compositor::addLayerQuadInWorld() {
+    return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
 }
 
 Compositor& Compositor::submitFrame(const Hmd& hmd) {
