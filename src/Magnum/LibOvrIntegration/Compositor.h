@@ -30,7 +30,11 @@
 /** @file
  * @brief Class @ref Magnum::LibOvrIntegration::Compositor,
  *        class @ref Magnum::LibOvrIntegration::Layer,
- *        class @ref Magnum::LibOvrIntegration::EyeFovLayer,
+ *        class @ref Magnum::LibOvrIntegration::LayerEyeDirect,
+ *        class @ref Magnum::LibOvrIntegration::LayerEyeFov,
+ *        class @ref Magnum::LibOvrIntegration::LayerEyeFovDepth,
+ *        class @ref Magnum::LibOvrIntegration::LayerQuad,
+ *        class @ref Magnum::LibOvrIntegration::TimewarpProjectionDescription,
  *        enum @ref Magnum::LibOvrIntegration::LayerType
  *
  * @author Jonathan Hale (Squareys)
@@ -68,10 +72,11 @@ enum class LayerType: UnsignedByte {
 };
 
 /**
- * @brief Wrapper around an ovrLayerHeader.
+ * @brief Wrapper around an @ref ovrLayerHeader.
  *
- * If you need to be able to change the layer, use one of the type specific
- * layer classes instead: @ref LayerEyeFov
+ * If you need to be able to change layer specific data, use one of the
+ * layer classes instead: @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFov,
+ * @ref LayerQuad.
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -132,7 +137,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Layer {
 };
 
 /**
- * @brief Wrapper around ovrLayerDirect.
+ * @brief Wrapper around @ref ovrLayerDirect.
  * @author Jonathan Hale (Squareys)
  */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
@@ -162,7 +167,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
 };
 
 /**
- * @brief Wrapper around ovrLayerEveFov.
+ * @brief Wrapper around @ref ovrLayerEveFov.
  * @author Jonathan Hale (Squareys)
  */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
@@ -205,10 +210,20 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
 
 };
 
+/**
+ * @brief Timewarp projection description required by @ref LayerEyeFovDepth.
+ * @author Jonathan Hale (Squareys)
+ */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT TimewarpProjectionDescription {
     public:
+
+        /**
+         * @brief Construct a TimewarpProjectionDescription from a projection matrix.
+         * @param projectionMatrix The projection matrix.
+         */
         explicit TimewarpProjectionDescription(const Matrix4& projectionMatrix);
 
+        /** @brief Get a corresponding @ref ovrTimewarpProjectionDesc. */
         const ovrTimewarpProjectionDesc& getOvrTimewarpProjectionDesc() const {
             return _projectionDesc;
         }
@@ -218,7 +233,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT TimewarpProjectionDescription {
 };
 
 /**
- * @brief Wrapper around ovrLayerEveFovDepth.
+ * @brief Wrapper around @ref ovrLayerEveFovDepth.
  * @author Jonathan Hale (Squareys)
  */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
@@ -275,9 +290,8 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
 };
 
 /**
- * @brief Wrapper around ovrLayerQuad.
+ * @brief Wrapper around @ref ovrLayerQuad.
  * @author Jonathan Hale (Squareys)
- * @see @ref ovrLayerQuad
  */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerQuad: public Layer {
     public:
@@ -325,9 +339,46 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerQuad: public Layer {
 
 Wraps compositing related functions of LibOVR.
 
-@todoc Usage...
+## Usage
+
+The compositor handles distortion, chromatic abberation, timewarp and sending
+images to a Hmd's display.
+
+The compositor may contain a set of layers with different sizes and different properties.
+See @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFovDepth and @ref LayerQuad.
+
+Setup of a distortion layer may look as follows:
+
+@code
+
+// setup SwapTextureSets etc
+LibOvrContext context;
+Hmd& hmd = // ...
+std::unique_ptr<SwapTextureSet> textureSet[2] = // ...
+Vector2i textureSize[2] = // ...
+
+// setup compositor layers
+LayerEyeFov& layer = LibOvrContext::get().compositor().addLayerEyeFov();
+layer.setFov(hmd.get());
+layer.setHighQuality(true);
+
+for(int eye = 0; eye < 2; ++eye) {
+    layer.setColorTexture(eye, *textureSet[eye]);
+    layer.setViewport(eye, {{}, textureSize[eye]});
+}
+@endcode
+
+After that you need to render every frame by first rendering to the texture sets and then submitting
+the compositor frame via @ref Compositor::submitFrame().
+
+@code
+    layer.setRenderPoses(hmd);
+
+    LibOvrContext::get().compositor().submitFrame(hmd);
+@endcode
 
 @author Jonathan Hale (Squareys)
+@see @ref Hmd, @ref SwapTextureSet, @ref LibOvrContext::compositor().
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
     public:

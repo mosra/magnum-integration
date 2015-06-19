@@ -48,14 +48,26 @@ namespace Magnum { namespace LibOvrIntegration {
 /**
 @brief Singleton class LibOvrContext.
 
-Context for the LibOvrIntegration, gateway to connecting devices and
-creating @ref Hmd.
+LibOvrContext handles connection to devices, creation of debug Hmds and provides
+access to the oculus SDK compositor.
 
-@see @ref Hmd, @ref SwapTextureSet
+## Usage
 
-@todoc Usage...
+There should always only be one instance of LibOvrContext. As soon as this one
+instance is created, you can access it via @ref LibOvrContext::get().compositor()
+
+Example:
+
+@code
+LibOvrContext context;
+
+// ...
+
+LibOvrContext::get().detect();
+@endcode
 
 @author Jonathan Hale (Squareys)
+@see @ref Hmd, @ref Compositor
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT LibOvrContext {
     public:

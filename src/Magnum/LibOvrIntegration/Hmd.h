@@ -45,12 +45,10 @@ namespace Magnum { namespace LibOvrIntegration {
 /**
 @brief SwapTextureSet
 
-Contains an array of texture which can be rendered to an hmd display by the
-libOVR compositor after applying distortion to it.
+Contains an array of textures which can be rendered to an hmd display by the
+oculus sdk @ref Compositor.
 
-@todoc
-
-@see @ref Hmd
+@see @ref Hmd, @ref Layer
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT SwapTextureSet {
     public:
@@ -96,19 +94,96 @@ Wraps ovrHmd_* methods.
 
 ## Usage
 
-Instances of Hmd are created by @ref LibOvrContext.
+Instances of @ref Hmd are created by @ref LibOvrContext.
 
 @code
 std::unique_ptr<Hmd> hmd = LibOvrContext::get().initialize().createHmd(0, HmdType::DK2);
-hmd->setEnabledCaps({HmdCapability::LowPersistence, HmdCapability::DynamicPrediction});
-hmd->configureTracking({HmdTrackingCapability::Orientation,
-                        HmdTrackingCapability::MagYawCorrection,
-                        HmdTrackingCapability::Position}, {});
+hmd->setEnabledCaps(HmdCapability::LowPersistence | HmdCapability::DynamicPrediction);
+hmd->configureTracking(HmdTrackingCapability::Orientation |
+                       HmdTrackingCapability::MagYawCorrection |
+                       HmdTrackingCapability::Position, {});
+hmd->configureRendering();
+
 // ...
-LibOvrContext::get().shutdown();
 @endcode
 
-@todoc hmdpose, mirror texture, swaptextureset
+Once the hmd is configured, you can poll an get the head pose.
+
+@code
+std::unique_ptr<DualQuaternion> poses = hmd->pollEyePoses().getEyePoses();
+
+DualQuaternion leftPose = poses.get()[0];
+DualQuaternion rightPose = poses.get()[1];
+@endcode
+
+### Rendering to Hmd
+
+Rendering to an @ref Hmd is done via the @ref Compositor. It's results are rendered directly to the rift.
+The compositor layers usually require you to render to a set of textures which are then rendered to the
+rift with distortion, chromatic abberation and possibly timewarp.
+
+A setup for such a @ref SwapTextureSet for an eye could look like this:
+
+@code
+const int eye = 0; // left eye
+Vector2i textureSize = hmd.getFovTextureSize(eye);
+std::unique_ptr<SwapTextureSet> textureSet = hmd.createSwapTextureSet(TextureFormat::RGBA, textureSize);
+
+// create the framebuffer which will be used to render to the current texture
+// of the texture set later.
+Framebuffer framebuffer{{}, textureSize};
+framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
+
+// setup depth attachment
+Image2D image(ColorFormat::DepthComponent, ColorType::UnsignedInt, textureSize, nullptr);
+
+Texture2D* depth = new Texture2D();
+depth->setMinificationFilter(Sampler::Filter::Linear)
+      .setMagnificationFilter(Sampler::Filter::Linear)
+      .setWrapping(Sampler::Wrapping::ClampToEdge)
+      .setStorage(1, TextureFormat::DepthComponent24, textureSize)
+      .subImage(0, {{}, textureSize}, image);
+
+// ...
+
+// render to the SwapTextureSet
+textureSet->increment();
+
+// switch to framebuffer and attach textures
+framebuffer.bind();
+framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureSet->getActiveTexture(), 0)
+           .attachTexture(Framebuffer::BufferAttachment::Depth, *_depth, 0)
+           .clear(FramebufferClear::Color | FramebufferClear::Depth);
+
+// ... render scene
+
+framebuffer.detach(Framebuffer::ColorAttachment(0))
+           .detach(Framebuffer::BufferAttachment::Depth);
+
+@endcode
+
+Usually, especially for debugging, you will want to have a *mirror* of the @ref Compositor result displayed to a window.
+
+@code
+
+Texture2D& mirrorTexture = hmd->createMirrorTexture(TextureFormat::RGBA, resolution);
+Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
+mirrorFramebuffer.attachTexture(Framebuffer::ColorAttachment(0), mirrorTexture, 0)
+                 .mapForRead(Framebuffer::ColorAttachment(0));
+
+// ...
+
+// blit mirror texture to defaultFramebuffer.
+const Vector2i size = mirrorTexture->imageSize(0);
+Framebuffer::blit(mirrorFramebuffer,
+                  defaultFramebuffer,
+                  {{0, size.y()}, {size.x(), 0}},
+                  {{}, size},
+                  FramebufferBlit::Color, FramebufferBlitFilter::Nearest);
+@endcode
+
+@see @ref LibOvrContext, @ref SwapTextureSet, @ref Compositor
+
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
     public:
@@ -200,6 +275,14 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
 
         /**
          * @brief Tan of the fov for an eye.
+         *
+         * Can be used to create a perspective projection matrix for a camera:
+         * @code
+         * const Float near = 0.001f;
+         * const Float far = 100.0f;
+         * camera.setPerspective(_hmd.defaultEyeFov(eye) * near, near, far);
+         * @endcode
+         *
          * @param eye Eye index.
          * @return Vector of eye fovs, x being horizontal and y vertical.
          */

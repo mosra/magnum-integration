@@ -52,6 +52,7 @@ This command tries to find Magnum integration library and then defines:
 This command alone is useless without specifying the components:
 
 -   `Bullet` -- @ref BulletIntegration library
+-   `LibOvr` -- @ref LibOvrIntegration library
 
 Note that [each <tt>*Integration</tt> namespace](namespaces.html) contains more
 detailed information about dependencies, availability on particular platform
