@@ -430,7 +430,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
          * @param hmd Hmd to render to.
          * @return Reference to self (for method chaining)
          */
-        Compositor& submitFrame(const Hmd& hmd);
+        Compositor& submitFrame(Hmd& hmd);
 
     private:
 

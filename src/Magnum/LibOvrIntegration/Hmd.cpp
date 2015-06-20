@@ -140,7 +140,10 @@ std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, 
 }
 
 Hmd& Hmd::pollEyePoses() {
-    ovrHmd_GetEyePoses(_hmd, 0, _hmdToEyeViewOffset, _ovrPoses, &_trackingState);
+    _frameTiming = ovrHmd_GetFrameTiming(_hmd, _frameIndex);
+    _trackingState = ovrHmd_GetTrackingState(_hmd, _frameTiming.DisplayMidpointSeconds);
+    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeViewOffset, _ovrPoses);
+
     return *this;
 }
 

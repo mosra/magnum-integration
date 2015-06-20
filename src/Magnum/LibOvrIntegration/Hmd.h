@@ -314,6 +314,19 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
             return _ovrPoses;
         }
 
+        /** @brief Get the current frame index. */
+        UnsignedInt getCurrentFrameIndex() const {
+            return _frameIndex;
+        }
+
+        /**
+         * @brief Increment the frame index. This method is called by @ref Compositor::submitFrame().
+         * @return The new index value.
+         */
+        UnsignedInt incFrameIndex() {
+            return ++_frameIndex;
+        }
+
     private:
         explicit Hmd(ovrHmd hmd, HmdStatusFlags flags);
 
@@ -322,7 +335,10 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
         ovrVector3f _hmdToEyeViewOffset[2];
         ovrViewScaleDesc _viewScale;
 
+        ovrFrameTiming _frameTiming;
         ovrTrackingState _trackingState;
+
+        UnsignedInt _frameIndex;
 
         ovrTexture* _ovrMirrorTexture;
         std::unique_ptr<Texture2D> _mirrorTexture;

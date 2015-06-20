@@ -229,8 +229,8 @@ LayerQuad& Compositor::addLayerQuadInWorld() {
     return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
 }
 
-Compositor& Compositor::submitFrame(const Hmd& hmd) {
-    ovrHmd_SubmitFrame(hmd.getOvrHmd(), 0, &hmd.getOvrViewScale(), _layers.data(), _layers.size());
+Compositor& Compositor::submitFrame(Hmd& hmd) {
+    ovrHmd_SubmitFrame(hmd.getOvrHmd(), hmd.incFrameIndex(), &hmd.getOvrViewScale(), _layers.data(), _layers.size());
 
     return *this;
 }
