@@ -275,21 +275,44 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
 
         /**
          * @brief Tan of the fov for an eye.
-         *
-         * Can be used to create a perspective projection matrix for a camera:
-         * @code
-         * const Float near = 0.001f;
-         * const Float far = 100.0f;
-         * camera.setPerspective(_hmd.defaultEyeFov(eye) * near, near, far);
-         * @endcode
-         *
          * @param eye Eye index.
          * @return Vector of eye fovs, x being horizontal and y vertical.
          */
-        Vector2 defaultEyeFov(int eye) const {
+        Vector2 defaultEyeFov(const int eye) const {
             const ovrFovPort fov = _hmd->DefaultEyeFov[eye];
             return {fov.RightTan + fov.LeftTan, fov.UpTan + fov.DownTan};
         }
+
+        /**
+         * @brief Get the projection matrix.
+         *
+         * Get the projection matrix for an eye index for which should be used for
+         * prespective rendering to this hmd.
+         *
+         * @param eye The eye index.
+         * @param near Distance to near frustrum plane.
+         * @param far Distance to far frustrum plane.
+         * @return The projection matrix for eye.
+         *
+         * @ref Hmd::orthoSubProjectionMatrix().
+         */
+        Matrix4 projectionMatrix(const unsigned int eye, Float n, Float f) const;
+
+        /**
+         * @brief Get a projection matrix for projection to an orthogonal plane.
+         *
+         * Get a projection matrix which can be used for projection onto a 2D plane orthogonal
+         * to the hmds view/screen with distance from hmds position.
+         *
+         * @param eye The eye index.
+         * @param proj Projection matrix. Usually created by @ref Hmd::projectionMatrix().
+         * @param scale Scale for the 2D plane.
+         * @param distance Distance of the plane from hmd position.
+         * @return The projection matrix for eye.
+         *
+         * @ref Hmd::projectionMatrix().
+         */
+        Matrix4 orthoSubProjectionMatrix(const unsigned int eye, const Matrix4& proj, Vector2 scale, Float distance) const;
 
         /** @brief Get the underlying ovrHmd. */
         ovrHmd getOvrHmd() const {

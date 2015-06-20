@@ -34,6 +34,7 @@
 #include <Magnum/TextureFormat.h>
 
 #include <OVR_CAPI_GL.h>
+#include <OVR_CAPI_Util.h>
 
 namespace Magnum { namespace LibOvrIntegration {
 
@@ -137,6 +138,18 @@ std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, 
 
 std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Vector2i size) {
     return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, size));
+}
+
+Matrix4 Hmd::projectionMatrix(const unsigned int eye, Float n, Float f) const {
+    ovrMatrix4f proj = ovrMatrix4f_Projection(_hmd->DefaultEyeFov[eye], n, f,
+                                              ovrProjection_RightHanded | ovrProjection_ClipRangeOpenGL);
+    return Matrix4(proj);
+}
+
+Matrix4 Hmd::orthoSubProjectionMatrix(const unsigned int eye, const Matrix4& proj, Vector2 scale, Float distance) const {
+    ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
+                                                      _hmdToEyeViewOffset[eye].x);
+    return Matrix4(sub);
 }
 
 Hmd& Hmd::pollEyePoses() {
