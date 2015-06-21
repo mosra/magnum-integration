@@ -5,8 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -28,7 +27,7 @@
 */
 
 /** @file
- * @brief Forward declarations for the Magnum::LibOvrIntegration namespace.
+ * @brief Forward declarations for the @ref Magnum::LibOvrIntegration namespace.
  *
  * @author Jonathan Hale (Squareys)
  */

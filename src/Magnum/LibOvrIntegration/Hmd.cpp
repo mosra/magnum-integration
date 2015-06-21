@@ -3,8 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -38,13 +37,13 @@
 
 namespace Magnum { namespace LibOvrIntegration {
 
-SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, Vector2i size) : _hmd(hmd), _format(format), _size(size) {
+SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size) : _hmd(hmd), _format(format), _size(size) {
     ovrHmd_CreateSwapTextureSetGL(_hmd._hmd, Containers::EnumSet<TextureFormat>::UnderlyingType(_format), _size.x(), _size.y(), &_swapTextureSet);
 
     /* wrap the texture set for magnum */
     _textures = new Texture2D*[_swapTextureSet->TextureCount];
 
-    for(int i = 0; i < _swapTextureSet->TextureCount; ++i) {
+    for(Int i = 0; i < _swapTextureSet->TextureCount; ++i) {
         _textures[i] = new Texture2D(wrap(_swapTextureSet->Textures[i]));
         _textures[i]->setMinificationFilter(Sampler::Filter::Linear)
                     .setMagnificationFilter(Sampler::Filter::Linear)
@@ -53,11 +52,11 @@ SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, Vector2i si
 }
 
 SwapTextureSet::~SwapTextureSet() {
-    int numTextures = _swapTextureSet->TextureCount;
+    Int numTextures = _swapTextureSet->TextureCount;
 
     ovrHmd_DestroySwapTextureSet(_hmd._hmd, _swapTextureSet);
 
-    for(int i = 0; i < numTextures; ++i) {
+    for(Int i = 0; i < numTextures; ++i) {
         delete _textures[i];
     }
     delete _textures;
@@ -105,7 +104,7 @@ Hmd& Hmd::configureRendering() {
     return *this;
 }
 
-Vector2i Hmd::getFovTextureSize(const unsigned int eye) {
+Vector2i Hmd::getFovTextureSize(const Int eye) {
     return Vector2i(ovrHmd_GetFovTextureSize(_hmd, ovrEyeType(eye), _hmd->DefaultEyeFov[eye], 1.0));
 }
 
@@ -132,7 +131,7 @@ Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& 
     return *_mirrorTexture;
 }
 
-std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const int eye) {
+std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Int eye) {
     return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, getFovTextureSize(eye)));
 }
 
@@ -140,13 +139,13 @@ std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, 
     return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, size));
 }
 
-Matrix4 Hmd::projectionMatrix(const unsigned int eye, Float n, Float f) const {
-    ovrMatrix4f proj = ovrMatrix4f_Projection(_hmd->DefaultEyeFov[eye], n, f,
+Matrix4 Hmd::projectionMatrix(const Int eye, Float near, Float far) const {
+    ovrMatrix4f proj = ovrMatrix4f_Projection(_hmd->DefaultEyeFov[eye], near, far,
                                               ovrProjection_RightHanded | ovrProjection_ClipRangeOpenGL);
     return Matrix4(proj);
 }
 
-Matrix4 Hmd::orthoSubProjectionMatrix(const unsigned int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
+Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
                                                       _hmdToEyeViewOffset[eye].x);
     return Matrix4(sub);

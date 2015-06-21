@@ -5,8 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -28,14 +27,12 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::LibOvrIntegration::OVRTextureUtil,
- *        enum @ref Magnum::LibOvrIntegration::LibOvrContextStatusFlag
+ * @brief Class @ref Magnum::LibOvrIntegration::LibOvrContext
  *
  * @author Jonathan Hale (Squareys)
  */
 
 #include <memory>
-
 #include <Magnum/Texture.h>
 
 #include "Magnum/LibOVRIntegration/visibility.h"
@@ -46,15 +43,15 @@
 namespace Magnum { namespace LibOvrIntegration {
 
 /**
-@brief Singleton class LibOvrContext.
+@brief Context singleton
 
-LibOvrContext handles connection to devices, creation of debug Hmds and provides
-access to the oculus SDK compositor.
+Handles connection to devices, creation of debug HMDs and provides access to
+the Oculus SDK compositor.
 
 ## Usage
 
-There should always only be one instance of LibOvrContext. As soon as this one
-instance is created, you can access it via @ref LibOvrContext::get().compositor()
+There should always only be one instance of @ref LibOvrContext. As soon as this
+one instance is created, you can access it via @ref LibOvrContext::get().
 
 Example:
 
@@ -66,60 +63,59 @@ LibOvrContext context;
 LibOvrContext::get().detect();
 @endcode
 
-@author Jonathan Hale (Squareys)
 @see @ref Hmd, @ref Compositor
+@author Jonathan Hale (Squareys)
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT LibOvrContext {
     public:
-
-        /** @brief Constructor. */
         explicit LibOvrContext();
 
-        /** @brief Copying is not allowed. */
-        LibOvrContext(const LibOvrContext& context) = delete;
+        /** @brief Copying is not allowed */
+        LibOvrContext(const LibOvrContext&) = delete;
 
-        /** @brief Moving is not allowed. */
-        LibOvrContext(LibOvrContext&& context) = delete;
+        /** @brief Moving is not allowed */
+        LibOvrContext(LibOvrContext&&) = delete;
 
-        /** @brief Destructor. */
         ~LibOvrContext();
 
-        /**
-         * @brief Get the instance of the LibOvrContext.
-         * @return the context.
-         */
-         static LibOvrContext& get();
+        /** @brief Copying is not allowed */
+        LibOvrContext& operator=(const LibOvrContext&) = delete;
+
+        /** @brief Moving is not allowed */
+        LibOvrContext& operator=(LibOvrContext&&) = delete;
 
         /**
-         * @brief Detect how many devices are currently connected.
-         * @return number of connected devices.
+         * @brief Global context instance
+         *
+         * Expects that the instance is created.
          */
-        int detect() const;
+        static LibOvrContext& get();
+
+        /** @brief Detect how many devices are currently connected */
+        Int detect() const;
 
         /**
-         * @brief Create a handle to a connected hmd device.
-         * @param index Index of the device, must be greater than 0 and smaller than @ref #detect()
-         * @param debugType If not @ref HmdType::None, this device type will be used for a debug hmd
-         *        in case a real connection cannot be established.
-         * @return A @ref std::unique_pointer to the hmd at the given index (if exists), or a debug hmd,
-         *         if debugType is not specified as @ref HmdType::None, in which case the alternate return
-         *         value is an empty @ref std::unique_pointer.
+         * @brief Create a handle to a connected HMD device
+         * @param index         Index of the device, must be greater than `0`
+         *      and smaller than @ref detect()
+         * @param debugType     If not @ref HmdType::None, this device type
+         *      will be used for a debug HMD in case a real connection cannot
+         *      be established.
+         *
+         * Returns instance of the HMD at the given index (if exists), or a
+         * debug HMD, if @p debugType is not specified as @ref HmdType::None,
+         * in which case returns `nullptr`.
          */
-        std::unique_ptr<Hmd> createHmd(int index, HmdType debugType);
+        std::unique_ptr<Hmd> createHmd(Int index, HmdType debugType);
 
         /**
-         * @brief Create a hmd handle which is not connected to an actual device.
-         * @param debugType Type of device to create a debug handle to.
-         * @return A @ref std::unique_pointer to the debug hmd.
+         * @brief Create a HMD handle which is not connected to an actual device
+         * @param debugType     Type of device to create a debug handle to
          */
         std::unique_ptr<Hmd> createDebugHmd(HmdType debugType);
 
-        /**
-         * @return Reference to the compositor.
-         */
-        Compositor& compositor() {
-            return _compositor;
-        }
+        /** @return Reference to the compositor */
+        Compositor& compositor() { return _compositor; }
 
     private:
         static LibOvrContext* _instance;

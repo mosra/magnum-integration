@@ -3,8 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -53,13 +52,13 @@ Layer& Layer::setEnabled(bool enabled) {
 LayerDirect::LayerDirect(): Layer(LayerType::Direct) {
 }
 
-LayerDirect& LayerDirect::setColorTexture(const int eye, const SwapTextureSet& textureSet) {
+LayerDirect& LayerDirect::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
     _layer.Direct.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
 
     return *this;
 }
 
-LayerDirect& LayerDirect::setViewport(const int eye, const Range2Di& viewport) {
+LayerDirect& LayerDirect::setViewport(const Int eye, const Range2Di& viewport) {
     _layer.Direct.Viewport[eye] = ovrRecti(viewport);
 
     return *this;
@@ -70,13 +69,13 @@ LayerDirect& LayerDirect::setViewport(const int eye, const Range2Di& viewport) {
 LayerEyeFov::LayerEyeFov(): Layer(LayerType::EyeFov) {
 }
 
-LayerEyeFov& LayerEyeFov::setColorTexture(const int eye, const SwapTextureSet& textureSet) {
+LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
     _layer.EyeFov.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
 
     return *this;
 }
 
-LayerEyeFov& LayerEyeFov::setViewport(const int eye, const Range2Di& viewport) {
+LayerEyeFov& LayerEyeFov::setViewport(const Int eye, const Range2Di& viewport) {
     _layer.EyeFov.Viewport[eye] = ovrRecti(viewport);
 
     return *this;
@@ -107,13 +106,13 @@ TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& proj
 LayerEyeFovDepth::LayerEyeFovDepth(): Layer(LayerType::EyeFovDepth) {
 }
 
-LayerEyeFovDepth& LayerEyeFovDepth::setColorTexture(const int eye, const SwapTextureSet& textureSet) {
+LayerEyeFovDepth& LayerEyeFovDepth::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
     _layer.EyeFovDepth.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
 
     return *this;
 }
 
-LayerEyeFovDepth& LayerEyeFovDepth::setViewport(const int eye, const Range2Di& viewport) {
+LayerEyeFovDepth& LayerEyeFovDepth::setViewport(const Int eye, const Range2Di& viewport) {
     _layer.EyeFovDepth.Viewport[eye] = ovrRecti(viewport);
 
     return *this;
@@ -135,7 +134,7 @@ LayerEyeFovDepth& LayerEyeFovDepth::setFov(const Hmd& hmd) {
     return *this;
 }
 
-LayerEyeFovDepth& LayerEyeFovDepth::setDepthTexture(const int eye, const SwapTextureSet& textureSet) {
+LayerEyeFovDepth& LayerEyeFovDepth::setDepthTexture(const Int eye, const SwapTextureSet& textureSet) {
     _layer.EyeFovDepth.DepthTexture[eye] = &textureSet.getOvrSwapTextureSet();
 
     return *this;
@@ -183,8 +182,6 @@ LayerQuad& LayerQuad::setQuadSize(const Vector2& size) {
 
 Compositor::Compositor(): _layers(), _wrappedLayers() {
 }
-
-typedef Corrade::Containers::EnumSet<LayerType> LayerTypes;
 
 Layer& Compositor::addLayer(const LayerType type) {
     switch (type) {

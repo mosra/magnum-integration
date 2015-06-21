@@ -5,8 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -28,85 +27,112 @@
 */
 
 /** @file
- * @brief Wrapped libOVR enums HmdType, HmdCapability, HmdTrackingCapability and HmdStatusFlag.
+ * @brief Enum @ref Magnum::LibOvrIntegration::HmdType, @ref Magnum::LibOvrIntegration::HmdCapability, @ref Magnum::LibOvrIntegration::HmdTrackingCapability, @ref Magnum::LibOvrIntegration::HmdStatusFlag, enum class @ref Magnum::LibOvrIntegration::HmdCapabilities, @ref Magnum::LibOvrIntegration::HmdTrackingCapabilities, @ref Magnum::LibOvrIntegration::HmdStatusFlags
  *
  * @author Jonathan Hale (Squareys)
  */
 
 #include <memory>
-
 #include <Magnum/Texture.h>
 #include <Magnum/Magnum.h>
-
 #include <OVR_CAPI.h>
 
 #include "Magnum/LibOvrIntegration/visibility.h"
 
-
 namespace Magnum { namespace LibOvrIntegration {
 
+/**
+@brief HMD type
+
+@see @ref LibOvrContext::createHmd()
+*/
 enum class HmdType: UnsignedByte {
-    None = ovrHmd_None, /**< Absence of an hmd type. */
-    DK1 = ovrHmd_DK1, /**< Developer Kit 1. */
-    DKHD = ovrHmd_DKHD, /**< HD prototype, aka Crystal Cove. */
-    DK2 = ovrHmd_DK2, /**< Developer Kit 2. */
-    BlackStar = ovrHmd_BlackStar, /**< Black Star Prototype. */
-    CB = ovrHmd_CB, /**< Crescent Bay prototype. */
-    Other = ovrHmd_Other /**< Unknown type. */
+    None = ovrHmd_None,             /**< Absence of an HMD type */
+    DK1 = ovrHmd_DK1,               /**< Developer Kit 1 */
+    DKHD = ovrHmd_DKHD,             /**< HD prototype, aka Crystal Cove */
+    DK2 = ovrHmd_DK2,               /**< Developer Kit 2 */
+    BlackStar = ovrHmd_BlackStar,   /**< Black Star Prototype */
+    CB = ovrHmd_CB,                 /**< Crescent Bay prototype */
+    Other = ovrHmd_Other            /**< Unknown type */
 };
 
+/**
+@brief HMD capability
+
+@see @ref HmdCapabilities, @ref Hmd::setEnabledCaps()
+*/
 enum class HmdCapability: UnsignedInt {
     /**
-     *  @brief Toggles low persistence mode on or off.
-     *  @details This setting reduces eye-tracking based motion blur. Eye-tracking based motion blur is caused by the viewer's focal point
-     *  moving more pixels than have refreshed in the same period of time.\n
-     *  The disadvantage of this setting is that this reduces the average brightness of the display and causes some users to perceive flicker.\n
-     *  <I>There is no performance cost for this option. Oculus recommends exposing it to the user as an optional setting.</I> */
+     * Toggles low persistence mode on or off.
+     *
+     * This setting reduces eye-tracking based motion blur. Eye-tracking based
+     * motion blur is caused by the viewer's focal point moving more pixels
+     * than have refreshed in the same period of time.
+     *
+     * The disadvantage of this setting is that this reduces the average
+     * brightness of the display and causes some users to perceive flicker.
+     *
+     * @note There is no performance cost for this option. Oculus recommends
+     *      exposing it to the user as an optional setting.
+     */
     LowPersistence = ovrHmdCap_LowPersistence,
 
-    /** @brief Adjusts prediction dynamically based on internally measured latency. */
+    /** Adjusts prediction dynamically based on internally measured latency */
     DynamicPrediction = ovrHmdCap_DynamicPrediction,
 
-    /** @brief Supports rendering without VSync for debugging. */
+    /** Supports rendering without VSync for debugging */
     NoVSync = ovrHmdCap_NoVSync
 };
 
 /**
-@brief Hmd capabilities flags
+@brief HMD capabilities
+
+@see @ref Hmd::setEnabledCaps()
 */
 typedef Containers::EnumSet<HmdCapability> HmdCapabilities;
+
 CORRADE_ENUMSET_OPERATORS(HmdCapabilities)
 
+/**
+@brief HMD tracking capability
+
+@see @ref HmdTrackingCapabilities, @ref Hmd::configureTracking()
+*/
 enum class HmdTrackingCapability: UnsignedInt {
-    /** @brief Supports orientation tracking (IMU). */
+    /** Supports orientation tracking (IMU) */
     Orientation = ovrTrackingCap_Orientation,
 
-    /** @brief Supports yaw drift correction via a magnetometer or other means. */
+    /** Supports yaw drift correction via a magnetometer or other means */
     MagYawCorrection = ovrTrackingCap_MagYawCorrection,
 
-    /** @brief Supports positional tracking. */
+    /** Supports positional tracking */
     Position = ovrTrackingCap_Position,
 };
 
 /**
-@brief Hmd tracking capabilities flags
+@brief HMD tracking capabilities
+
+@see @ref Hmd::configureTracking()
 */
 typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
+
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
+/** @brief HMD status flag */
 enum class HmdStatusFlag: UnsignedByte {
-    /** A mirror texture was created for the hmd and needs to
-     * be destoryed on destruction of the hmd.  */
+    /**
+     * A mirror texture was created for the hmd and needs to be destroyed on
+     * destruction of the HMD
+     */
     HasMirrorTexture = 1 << 0,
 
-    /** The hmd was created as a debug hmd (without real hardware). */
+    /** The HMD was created as a debug HMD (without real hardware) */
     Debug = 1 << 1
 };
 
-/**
-@brief Hmd tracking capabilities flags
-*/
+/** @brief HMD status flags */
 typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
+
 CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 
 }}

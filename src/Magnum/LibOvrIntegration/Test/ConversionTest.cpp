@@ -3,8 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -138,7 +137,7 @@ void ConversionTest::matrix4f() {
     float *pa = reinterpret_cast<float*>(c.M),
           *pb = reinterpret_cast<float*>(b.M);
 
-    for(int i = 0; i < 16; ++i, ++pa, ++pb) {
+    for(Int i = 0; i < 16; ++i, ++pa, ++pb) {
         CORRADE_COMPARE(*pa, *pb);
     }
 

@@ -5,8 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -28,14 +27,12 @@
 */
 
 /** @file
- * @brief Converters and conversion methods.
+ * @brief Converters and conversion methods
  *
- * This header contains tools for converting libOVR types to magnum types.
+ * Tools for converting libOVR math and texture types to Magnum types and back.
  *
  * @author Jonathan Hale (Squareys)
  */
-
-#include <OVR_CAPI.h>
 
 #include <Magnum/Magnum.h>
 #include <Magnum/Texture.h>
@@ -44,6 +41,7 @@
 #include <Magnum/Math/Matrix4.h>
 #include <Magnum/Math/Quaternion.h>
 #include <Magnum/Math/DualQuaternion.h>
+#include <OVR_CAPI.h>
 
 namespace Magnum { namespace Math { namespace Implementation {
 
@@ -57,7 +55,6 @@ template<> struct VectorConverter<2, Int, ovrSizei> {
         return {other[0], other[1]};
     }
 };
-
 
 /* ovrVector2i */
 template<> struct VectorConverter<2, Int, ovrVector2i> {
@@ -92,10 +89,8 @@ template<> struct VectorConverter<3, Float, ovrVector3f> {
     }
 };
 
-/* ovrMatrix4
- *
- * The oculus SDK stores matrices in row-major form. We transpose to get column-major
- * form for magnum and opengl. */
+/* ovrMatrix4 -- The oculus SDK stores matrices in row-major form. We transpose
+   to get column-major form for Magnum and OpenGL. */
 template<> struct RectangularMatrixConverter<4, 4, Float, ovrMatrix4f> {
     static RectangularMatrix<4, 4, Float> from(const ovrMatrix4f& other) {
         return Matrix4<Float>::from(reinterpret_cast<const Float*>(other.M)).transposed();
@@ -144,12 +139,7 @@ template<> struct RangeConverter<2, Int, ovrRecti> {
 
 namespace LibOvrIntegration {
 
-/* ovrTexture */
-/**
- * @brief Wrap an ovrTexture as @ref Texture2D.
- * @param texture @ref ovrTexture to wrap.
- * @return texture as @ref Texture2D.
- */
+/** @brief Wrap an `ovrTexture` as @ref Texture2D */
 Texture2D wrap(const ovrTexture& texture);
 
 }}

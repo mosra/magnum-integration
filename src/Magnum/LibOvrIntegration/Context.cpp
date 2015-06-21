@@ -3,8 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015
-              Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -57,11 +56,11 @@ LibOvrContext& LibOvrContext::get() {
     return *LibOvrContext::_instance;
 }
 
-int LibOvrContext::detect() const {
+Int LibOvrContext::detect() const {
     return ovrHmd_Detect();
 }
 
-std::unique_ptr<Hmd> LibOvrContext::createHmd(int index, HmdType debugType) {
+std::unique_ptr<Hmd> LibOvrContext::createHmd(Int index, HmdType debugType) {
     /* check if index is valid */
     if(index >= 0 && detect() > index) {
         ovrHmd hmd;
