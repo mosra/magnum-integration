@@ -53,6 +53,7 @@ By default no integration libraries are built and you need to select them
 manually:
 
 -   `WITH_BULLET` -- @ref BulletIntegration "BulletIntegration" library.
+-   `WITH_OVR` -- @ref LibOvrIntegration "LibOvrIntegration" library.
 
 Note that [each <tt>*Integration</tt> namespace](namespaces.html) contains more
 detailed information about dependencies, availability on particular platform

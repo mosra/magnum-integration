@@ -3,6 +3,8 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2015
+#             Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -23,10 +25,45 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
-endif()
+cmake_minimum_required(VERSION 3.2)
+project(MagnumLibOvrIntegration LANGUAGES CXX)
 
-if(WITH_OVR)
-    add_subdirectory(LibOvrIntegration)
+find_package(Magnum REQUIRED)
+find_package(OVR REQUIRED)
+
+set(MagnumLibOvrIntegration_SRCS
+    Conversion.cpp
+    Context.cpp
+    Hmd.cpp
+    Compositor.cpp)
+
+set(MagnumLibOvrIntegration_HEADERS
+    LibOvrIntegration.h
+    Conversion.h
+    HmdEnum.h
+    Context.h
+    Hmd.h
+    Compositor.h
+
+    visibility.h)
+
+# LibOvrIntegration library
+add_library(MagnumLibOvrIntegration SHARED
+    ${MagnumLibOvrIntegration_SRCS}
+    ${MagnumLibOvrIntegration_HEADERS})
+set_target_properties(MagnumLibOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
+if(BUILD_STATIC_PIC)
+    set_target_properties(MagnumLibOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
+target_link_libraries(MagnumLibOvrIntegration
+    ${MAGNUM_LIBRARIES}
+    ${OVR_LIBRARY})
+
+install(TARGETS MagnumLibOvrIntegration DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR}
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib)
+install(FILES ${MagnumLibOvrIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/LibOvrIntegration)
+
+if(BUILD_TESTS)
+    add_subdirectory(Test)
 endif()

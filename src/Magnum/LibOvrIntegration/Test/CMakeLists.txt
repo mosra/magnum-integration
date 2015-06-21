@@ -3,6 +3,8 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2015
+#             Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -23,10 +25,4 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
-endif()
-
-if(WITH_OVR)
-    add_subdirectory(LibOvrIntegration)
-endif()
+corrade_add_test(LibOvrConversionTest ConversionTest.cpp LIBRARIES ${MAGNUM_LIBRARY})

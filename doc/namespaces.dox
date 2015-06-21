@@ -36,9 +36,25 @@
 Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
 This library depends on **Bullet Physics** library and it is built if
-`WITH_BULLETINTEGRATION` is enabled when building Magnum Integration. To use
+`WITH_BULLET` is enabled when building Magnum Integration. To use
 this library, you need to request `Bullet` component of `MagnumIntegration`
 package in CMake, add `${MAGNUM_BULLETINTEGRATION_INCLUDE_DIRS}` to include
 path and link to `${MAGNUM_BULLETINTEGRATION_LIBRARIES}`. See
 @ref building-integration and @ref cmake-integration for more information.
+*/
+
+/** @dir Magnum/LibOvrIntegration
+ * @brief Namespace @ref Magnum::LibOvrIntegration
+ */
+/** @namespace Magnum::LibOvrIntegration
+@brief Integration with the Oculus SDK (LibOVR)
+
+Conversion of math classes, wrappers for most OVR CAPI structures and functions.
+
+This library depends on **Oculus SDK 0.6.0.0-beta** and is built if `WITH_OVR`
+is enabled when building Magnum Integration. To use this library, you need to
+request `LibOvr` component of `MagnumIntegration` package in CMake, add
+`${MAGNUM_LIBOVRINTEGRATION_INCLUDE_DIRS}` to include path and link to
+`${MAGNUM_LIBOVRINTEGRATION_LIBRARIES}`. See @ref building-integration and
+@ref cmake-integration for more information.
 */
