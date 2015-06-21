@@ -39,7 +39,7 @@
 namespace Magnum { namespace BulletIntegration {
 
 Shapes::AbstractShape3D* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes) {
-    int type = shape.getShapeType();
+    Int type = shape.getShapeType();
 
     switch (type) {
         case BOX_SHAPE_PROXYTYPE:
