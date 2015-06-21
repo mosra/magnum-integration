@@ -219,7 +219,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          * @param eye Eye index to get the texture size for.
          * @return Size for textures.
          */
-        Vector2i getFovTextureSize(const unsigned int eye);
+        Vector2i getFovTextureSize(unsigned int eye);
 
         /**
          * @brief Create a mirror texture.
@@ -231,7 +231,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          * @param size Size for the mirror texture.
          * @return Pointer to the created mirror texture. Its destruction is handled by the Hmd.
          */
-        Texture2D& createMirrorTexture(TextureFormat format, Vector2i size);
+        Texture2D& createMirrorTexture(TextureFormat format, const Vector2i& size);
 
         /**
          * @brief Convenience method to create a @ref SwapTextureSet for this Hmd.
@@ -251,7 +251,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          *
          * @see createSwapTextureSet(format,eye)
          */
-        std::unique_ptr<SwapTextureSet> createSwapTextureSet(TextureFormat format, const Vector2i size);
+        std::unique_ptr<SwapTextureSet> createSwapTextureSet(TextureFormat format, const Vector2i& size);
 
         /**
          * @brief getEyePoses Get the current translation for the eyes from the
@@ -279,7 +279,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          * @return Vector of eye fovs, x being horizontal and y vertical.
          */
         Vector2 defaultEyeFov(const int eye) const {
-            const ovrFovPort fov = _hmd->DefaultEyeFov[eye];
+            const ovrFovPort& fov = _hmd->DefaultEyeFov[eye];
             return {fov.RightTan + fov.LeftTan, fov.UpTan + fov.DownTan};
         }
 
@@ -296,7 +296,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          *
          * @ref Hmd::orthoSubProjectionMatrix().
          */
-        Matrix4 projectionMatrix(const unsigned int eye, Float n, Float f) const;
+        Matrix4 projectionMatrix(unsigned int eye, Float n, Float f) const;
 
         /**
          * @brief Get a projection matrix for projection to an orthogonal plane.
@@ -312,7 +312,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          *
          * @ref Hmd::projectionMatrix().
          */
-        Matrix4 orthoSubProjectionMatrix(const unsigned int eye, const Matrix4& proj, Vector2 scale, Float distance) const;
+        Matrix4 orthoSubProjectionMatrix(unsigned int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
 
         /** @brief Get the underlying ovrHmd. */
         ovrHmd getOvrHmd() const {

@@ -109,7 +109,7 @@ Vector2i Hmd::getFovTextureSize(const unsigned int eye) {
     return Vector2i(ovrHmd_GetFovTextureSize(_hmd, ovrEyeType(eye), _hmd->DefaultEyeFov[eye], 1.0));
 }
 
-Texture2D& Hmd::createMirrorTexture(TextureFormat format, Vector2i size) {
+Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& size) {
     CORRADE_ASSERT(!(_flags & HmdStatusFlag::HasMirrorTexture),
            "Hmd::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
@@ -132,11 +132,11 @@ Texture2D& Hmd::createMirrorTexture(TextureFormat format, Vector2i size) {
     return *_mirrorTexture;
 }
 
-std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, int eye) {
+std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const int eye) {
     return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, getFovTextureSize(eye)));
 }
 
-std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Vector2i size) {
+std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Vector2i& size) {
     return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, size));
 }
 
@@ -146,7 +146,7 @@ Matrix4 Hmd::projectionMatrix(const unsigned int eye, Float n, Float f) const {
     return Matrix4(proj);
 }
 
-Matrix4 Hmd::orthoSubProjectionMatrix(const unsigned int eye, const Matrix4& proj, Vector2 scale, Float distance) const {
+Matrix4 Hmd::orthoSubProjectionMatrix(const unsigned int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
                                                       _hmdToEyeViewOffset[eye].x);
     return Matrix4(sub);

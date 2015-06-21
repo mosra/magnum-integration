@@ -154,7 +154,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
          * @param textureSet @ref SwapTextureSet to set as color texture.
          * @return Reference to self (for method chaining)
          */
-        LayerDirect& setColorTexture(const int eye, const SwapTextureSet& textureSet);
+        LayerDirect& setColorTexture(int eye, const SwapTextureSet& textureSet);
 
         /**
          * @brief Set the viewport.
@@ -162,7 +162,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
          * @param viewport Viewport to set to.
          * @return Reference to self (for method chaining)
          */
-        LayerDirect& setViewport(const int eye, const Range2Di& viewport);
+        LayerDirect& setViewport(int eye, const Range2Di& viewport);
 
 };
 
@@ -184,7 +184,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
          * @param textureSet @ref SwapTextureSet to set as color texture.
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setColorTexture(const int eye, const SwapTextureSet& textureSet);
+        LayerEyeFov& setColorTexture(int eye, const SwapTextureSet& textureSet);
 
         /**
          * @brief Set the viewport.
@@ -192,7 +192,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
          * @param viewport Viewport to set to.
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setViewport(const int eye, const Range2Di& viewport);
+        LayerEyeFov& setViewport(int eye, const Range2Di& viewport);
 
         /**
          * @brief Set the render pose.
@@ -250,7 +250,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
          * @param textureSet @ref SwapTextureSet to set as color texture.
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFovDepth& setColorTexture(const int eye, const SwapTextureSet& textureSet);
+        LayerEyeFovDepth& setColorTexture(int eye, const SwapTextureSet& textureSet);
 
         /**
          * @brief Set the viewport.
@@ -258,7 +258,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
          * @param viewport Viewport to set to.
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFovDepth& setViewport(const int eye, const Range2Di& viewport);
+        LayerEyeFovDepth& setViewport(int eye, const Range2Di& viewport);
 
         /**
          * @brief Set the render pose.
@@ -280,7 +280,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
          * @param textureSet @ref SwapTextureSet to set as depth texture.
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFovDepth& setDepthTexture(const int eye, const SwapTextureSet& textureSet);
+        LayerEyeFovDepth& setDepthTexture(int eye, const SwapTextureSet& textureSet);
 
         /**
          * @brief setTimewarpProjectionDesc
@@ -323,14 +323,14 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerQuad: public Layer {
          * @param pose Center pose of the quad.
          * @return Reference to self (for method chaining)
          */
-        LayerQuad& setCenterPose(DualQuaternion pose);
+        LayerQuad& setCenterPose(const DualQuaternion& pose);
 
         /**
          * @brief Set width and heigh of the quad in meters.
          * @param size Size of the quad.
          * @return Reference to self (for method chaining)
          */
-        LayerQuad& setQuadSize(Vector2 size);
+        LayerQuad& setQuadSize(const Vector2& size);
 
 };
 
@@ -393,7 +393,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
          * @param type Layer type.
          * @return Reference to the created layer.
          */
-        Layer& addLayer(const LayerType type);
+        Layer& addLayer(LayerType type);
 
         /**
          * @brief Create a @ref LayerDirect.

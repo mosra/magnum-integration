@@ -166,13 +166,13 @@ LayerQuad& LayerQuad::setViewport(const Range2Di& viewport) {
     return *this;
 }
 
-LayerQuad& LayerQuad::setCenterPose(DualQuaternion pose) {
+LayerQuad& LayerQuad::setCenterPose(const DualQuaternion& pose) {
     _layer.Quad.QuadPoseCenter = ovrPosef(pose);
 
     return *this;
 }
 
-LayerQuad& LayerQuad::setQuadSize(Vector2 size) {
+LayerQuad& LayerQuad::setQuadSize(const Vector2& size) {
     _layer.Quad.QuadSize = ovrVector2f(size);
 
     return *this;
