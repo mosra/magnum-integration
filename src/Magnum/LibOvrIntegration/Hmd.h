@@ -32,6 +32,7 @@
  * @author Jonathan Hale (Squareys)
  */
 
+#include <array>
 #include <memory>
 #include <OVR_CAPI.h>
 #include <Magnum/Texture.h>
@@ -248,9 +249,9 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
         /**
          * @brief Get the current translation for the eyes from the head pose tracked by the HMD
          *
-         * Returns array of two transformationsm, one for each eye.
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
          */
-        std::unique_ptr<DualQuaternion> eyePoses();
+        std::array<DualQuaternion, 2> eyePoses();
 
         /**
          * @brief Refresh cached eye poses

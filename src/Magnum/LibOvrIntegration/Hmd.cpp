@@ -165,10 +165,8 @@ bool Hmd::isDebugHmd() const {
     return (_flags & HmdStatusFlag::Debug) != HmdStatusFlags{};
 }
 
-std::unique_ptr<DualQuaternion> Hmd::eyePoses() {
-    DualQuaternion* poses = new DualQuaternion[2]{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])};
-
-    return std::unique_ptr<DualQuaternion>(poses);
+std::array<DualQuaternion, 2> Hmd::eyePoses() {
+    return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
 }
 
 
