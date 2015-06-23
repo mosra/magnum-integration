@@ -64,13 +64,13 @@ SwapTextureSet::~SwapTextureSet() {
     delete _textures;
 }
 
-Texture2D& SwapTextureSet::getActiveTexture() const {
+Texture2D& SwapTextureSet::activeTexture() const {
     return *_textures[_swapTextureSet->CurrentIndex];
 }
 
 //----------------------------------------------------------------
 
-Hmd::Hmd(ovrHmd hmd, HmdStatusFlags flags) : _hmd(hmd), _flags(flags) {
+Hmd::Hmd(::ovrHmd hmd, HmdStatusFlags flags) : _hmd(hmd), _flags(flags) {
 }
 
 Hmd::~Hmd() {
@@ -106,7 +106,7 @@ Hmd& Hmd::configureRendering() {
     return *this;
 }
 
-Vector2i Hmd::getFovTextureSize(const Int eye) {
+Vector2i Hmd::fovTextureSize(const Int eye) {
     return Vector2i(ovrHmd_GetFovTextureSize(_hmd, ovrEyeType(eye), _hmd->DefaultEyeFov[eye], 1.0));
 }
 
@@ -134,7 +134,7 @@ Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& 
 }
 
 std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Int eye) {
-    return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, getFovTextureSize(eye)));
+    return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, fovTextureSize(eye)));
 }
 
 std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Vector2i& size) {
@@ -165,7 +165,7 @@ bool Hmd::isDebugHmd() const {
     return (_flags & HmdStatusFlag::Debug) != HmdStatusFlags{};
 }
 
-std::unique_ptr<DualQuaternion> Hmd::getEyePoses() {
+std::unique_ptr<DualQuaternion> Hmd::eyePoses() {
     DualQuaternion* poses = new DualQuaternion[2]{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])};
 
     return std::unique_ptr<DualQuaternion>(poses);

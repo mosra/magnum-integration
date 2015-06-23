@@ -229,12 +229,12 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT TimewarpProjectionDescription {
         explicit TimewarpProjectionDescription(const Matrix4& projectionMatrix);
 
         /** @brief Corresponding `ovrTimewarpProjectionDesc` */
-        const ovrTimewarpProjectionDesc& getOvrTimewarpProjectionDesc() const {
+        const ::ovrTimewarpProjectionDesc& ovrTimewarpProjectionDesc() const {
             return _projectionDesc;
         }
 
     private:
-        ovrTimewarpProjectionDesc _projectionDesc;
+        ::ovrTimewarpProjectionDesc _projectionDesc;
 };
 
 /**

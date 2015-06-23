@@ -53,7 +53,7 @@ LayerDirect::LayerDirect(): Layer(LayerType::Direct) {
 }
 
 LayerDirect& LayerDirect::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.Direct.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
+    _layer.Direct.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
 
     return *this;
 }
@@ -70,7 +70,7 @@ LayerEyeFov::LayerEyeFov(): Layer(LayerType::EyeFov) {
 }
 
 LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFov.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
+    _layer.EyeFov.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
 
     return *this;
 }
@@ -82,7 +82,7 @@ LayerEyeFov& LayerEyeFov::setViewport(const Int eye, const Range2Di& viewport) {
 }
 
 LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
-    const ovrPosef* poses = hmd.getOvrEyePoses();
+    const ovrPosef* poses = hmd.ovrEyePoses();
     _layer.EyeFov.RenderPose[0] = poses[0];
     _layer.EyeFov.RenderPose[1] = poses[1];
 
@@ -90,7 +90,7 @@ LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
 }
 
 LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
-    const ovrFovPort* fov = hmd.getOvrHmd()->DefaultEyeFov;
+    const ovrFovPort* fov = hmd.ovrHmd()->DefaultEyeFov;
     _layer.EyeFov.Fov[0] = fov[0];
     _layer.EyeFov.Fov[1] = fov[1];
 
@@ -107,7 +107,7 @@ LayerEyeFovDepth::LayerEyeFovDepth(): Layer(LayerType::EyeFovDepth) {
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFovDepth.ColorTexture[eye] = &textureSet.getOvrSwapTextureSet();
+    _layer.EyeFovDepth.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
 
     return *this;
 }
@@ -119,7 +119,7 @@ LayerEyeFovDepth& LayerEyeFovDepth::setViewport(const Int eye, const Range2Di& v
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setRenderPoses(const Hmd& hmd) {
-    const ovrPosef* poses = hmd.getOvrEyePoses();
+    const ovrPosef* poses = hmd.ovrEyePoses();
     _layer.EyeFov.RenderPose[0] = poses[0];
     _layer.EyeFov.RenderPose[1] = poses[1];
 
@@ -127,7 +127,7 @@ LayerEyeFovDepth& LayerEyeFovDepth::setRenderPoses(const Hmd& hmd) {
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setFov(const Hmd& hmd) {
-    const ovrFovPort* fov = hmd.getOvrHmd()->DefaultEyeFov;
+    const ovrFovPort* fov = hmd.ovrHmd()->DefaultEyeFov;
     _layer.EyeFov.Fov[0] = fov[0];
     _layer.EyeFov.Fov[1] = fov[1];
 
@@ -135,13 +135,13 @@ LayerEyeFovDepth& LayerEyeFovDepth::setFov(const Hmd& hmd) {
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setDepthTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFovDepth.DepthTexture[eye] = &textureSet.getOvrSwapTextureSet();
+    _layer.EyeFovDepth.DepthTexture[eye] = &textureSet.ovrSwapTextureSet();
 
     return *this;
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setTimewarpProjDesc(const TimewarpProjectionDescription& desc) {
-    _layer.EyeFovDepth.ProjectionDesc = desc.getOvrTimewarpProjectionDesc();
+    _layer.EyeFovDepth.ProjectionDesc = desc.ovrTimewarpProjectionDesc();
 
     return *this;
 }
@@ -154,7 +154,7 @@ LayerQuad::LayerQuad(bool headLocked):
 }
 
 LayerQuad& LayerQuad::setColorTexture(const SwapTextureSet& textureSet) {
-    _layer.Quad.ColorTexture = &textureSet.getOvrSwapTextureSet();
+    _layer.Quad.ColorTexture = &textureSet.ovrSwapTextureSet();
 
     return *this;
 }
@@ -227,7 +227,7 @@ LayerQuad& Compositor::addLayerQuadInWorld() {
 }
 
 Compositor& Compositor::submitFrame(Hmd& hmd) {
-    ovrHmd_SubmitFrame(hmd.getOvrHmd(), hmd.incFrameIndex(), &hmd.getOvrViewScale(), _layers.data(), _layers.size());
+    ovrHmd_SubmitFrame(hmd.ovrHmd(), hmd.incFrameIndex(), &hmd.ovrViewScaleDesc(), _layers.data(), _layers.size());
 
     return *this;
 }

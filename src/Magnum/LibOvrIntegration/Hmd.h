@@ -62,7 +62,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT SwapTextureSet {
         ~SwapTextureSet();
 
         /** @brief Currently active texture in the set */
-        Texture2D& getActiveTexture() const;
+        Texture2D& activeTexture() const;
 
         /**
          * @brief Increment to use the next texture in the set
@@ -74,7 +74,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT SwapTextureSet {
         }
 
         /** @brief The underlying `ovrSwapTextureSet` */
-        ovrSwapTextureSet& getOvrSwapTextureSet() const {
+        ::ovrSwapTextureSet& ovrSwapTextureSet() const {
             return *_swapTextureSet;
         }
 
@@ -83,7 +83,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT SwapTextureSet {
         TextureFormat _format;
         Vector2i _size;
 
-        ovrSwapTextureSet* _swapTextureSet;
+        ::ovrSwapTextureSet* _swapTextureSet;
         Texture2D** _textures;
 };
 
@@ -110,7 +110,7 @@ hmd->configureRendering();
 Once the HMD is configured, you can poll and get the head pose.
 
 @code
-std::unique_ptr<DualQuaternion> poses = hmd->pollEyePoses().getEyePoses();
+std::unique_ptr<DualQuaternion> poses = hmd->pollEyePoses().eyePoses();
 
 DualQuaternion leftPose = poses.get()[0];
 DualQuaternion rightPose = poses.get()[1];
@@ -127,7 +127,7 @@ A setup for such a @ref SwapTextureSet for an eye could look like this:
 
 @code
 const Int eye = 0; // left eye
-Vector2i textureSize = hmd.getFovTextureSize(eye);
+Vector2i textureSize = hmd.fovTextureSize(eye);
 std::unique_ptr<SwapTextureSet> textureSet = hmd.createSwapTextureSet(TextureFormat::RGBA, textureSize);
 
 // create the framebuffer which will be used to render to the current texture
@@ -152,7 +152,7 @@ textureSet->increment();
 
 // switch to framebuffer and attach textures
 framebuffer.bind();
-framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureSet->getActiveTexture(), 0)
+framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureSet->activeTexture(), 0)
            .attachTexture(Framebuffer::BufferAttachment::Depth, *depth, 0)
            .clear(FramebufferClear::Color | FramebufferClear::Depth);
 
@@ -212,7 +212,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          * @brief Get preferred size for textures used for rendering to this HMD
          * @param eye       Eye index to get the texture size for
          */
-        Vector2i getFovTextureSize(Int eye);
+        Vector2i fovTextureSize(Int eye);
 
         /**
          * @brief Create a mirror texture
@@ -250,13 +250,13 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          *
          * Returns array of two transformationsm, one for each eye.
          */
-        std::unique_ptr<DualQuaternion> getEyePoses();
+        std::unique_ptr<DualQuaternion> eyePoses();
 
         /**
          * @brief Refresh cached eye poses
          * @return Reference to self (for method chaining)
          *
-         * Use @ref getEyePoses() to access the result.
+         * Use @ref eyePoses() to access the result.
          */
         Hmd& pollEyePoses();
 
@@ -306,10 +306,10 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
         Matrix4 orthoSubProjectionMatrix(Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
 
         /** @brief Get the underlying `ovrHmd` */
-        ovrHmd getOvrHmd() const { return _hmd; }
+        ::ovrHmd ovrHmd() const { return _hmd; }
 
         /** @brief Get the `ovrViewScale` */
-        const ovrViewScaleDesc& getOvrViewScale() const { return _viewScale; }
+        const ::ovrViewScaleDesc& ovrViewScaleDesc() const { return _viewScale; }
 
         /** @brief Whether this HMD is a debug or connection to a real device */
         bool isDebugHmd() const;
@@ -321,10 +321,10 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          * polled eye poses.
          * @see @ref pollEyePoses()
          */
-        const ovrPosef* getOvrEyePoses() const { return _ovrPoses; }
+        const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
 
         /** @brief Get the current frame index */
-        UnsignedInt getCurrentFrameIndex() const { return _frameIndex; }
+        UnsignedInt currentFrameIndex() const { return _frameIndex; }
 
         /**
          * @brief Increment the frame index
@@ -337,12 +337,12 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
         }
 
     private:
-        explicit Hmd(ovrHmd hmd, HmdStatusFlags flags);
+        explicit Hmd(::ovrHmd hmd, HmdStatusFlags flags);
 
-        ovrHmd _hmd;
+        ::ovrHmd _hmd;
         ovrPosef _ovrPoses[2];
         ovrVector3f _hmdToEyeViewOffset[2];
-        ovrViewScaleDesc _viewScale;
+        ::ovrViewScaleDesc _viewScale;
 
         ovrFrameTiming _frameTiming;
         ovrTrackingState _trackingState;
