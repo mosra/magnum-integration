@@ -44,7 +44,7 @@ namespace Magnum { namespace LibOvrIntegration {
 /**
 @brief HMD type
 
-@see @ref LibOvrContext::createHmd()
+@see @ref Context::createHmd()
 */
 enum class HmdType: UnsignedByte {
     None = ovrHmd_None,             /**< Absence of an HMD type */

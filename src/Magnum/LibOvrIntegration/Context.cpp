@@ -33,34 +33,34 @@
 
 namespace Magnum { namespace LibOvrIntegration {
 
-LibOvrContext* LibOvrContext::_instance = nullptr;
+Context* Context::_instance = nullptr;
 
-LibOvrContext::LibOvrContext() : _compositor() {
-    CORRADE_ASSERT(_instance == nullptr, "Another instance of LibOvrContext already exists.", );
+Context::Context() : _compositor() {
+    CORRADE_ASSERT(_instance == nullptr, "Another instance of Context already exists.", );
 
     _instance = this;
     ovr_Initialize(nullptr);
 }
 
-LibOvrContext::~LibOvrContext() {
+Context::~Context() {
     ovr_Shutdown();
 
     _instance = nullptr;
 }
 
-LibOvrContext& LibOvrContext::get() {
+Context& Context::get() {
     CORRADE_ASSERT(_instance != nullptr,
-                   "No instance of LibOvrContext for ::get() exists.",
-                   *LibOvrContext::_instance);
+                   "No instance of Context for ::get() exists.",
+                   *Context::_instance);
 
-    return *LibOvrContext::_instance;
+    return *Context::_instance;
 }
 
-Int LibOvrContext::detect() const {
+Int Context::detect() const {
     return ovrHmd_Detect();
 }
 
-std::unique_ptr<Hmd> LibOvrContext::createHmd(Int index, HmdType debugType) {
+std::unique_ptr<Hmd> Context::createHmd(Int index, HmdType debugType) {
     /* check if index is valid */
     if(index >= 0 && detect() > index) {
         ovrHmd hmd;
@@ -74,7 +74,7 @@ std::unique_ptr<Hmd> LibOvrContext::createHmd(Int index, HmdType debugType) {
     return std::unique_ptr<Hmd>();
 }
 
-std::unique_ptr<Hmd> LibOvrContext::createDebugHmd(HmdType debugType) {
+std::unique_ptr<Hmd> Context::createDebugHmd(HmdType debugType) {
     ovrHmd hmd;
     ovrHmd_CreateDebug(ovrHmdType(Corrade::Containers::EnumSet<HmdType>::UnderlyingType(debugType)), &hmd);
 

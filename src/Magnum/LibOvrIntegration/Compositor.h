@@ -350,13 +350,13 @@ Setup of a distortion layer may look as follows:
 
 @code
 // setup SwapTextureSets etc
-LibOvrContext context;
+Context context;
 Hmd& hmd = // ...
 std::unique_ptr<SwapTextureSet> textureSet[2] = // ...
 Vector2i textureSize[2] = // ...
 
 // setup compositor layers
-LayerEyeFov& layer = LibOvrContext::get().compositor().addLayerEyeFov();
+LayerEyeFov& layer = Context::get().compositor().addLayerEyeFov();
 layer.setFov(hmd.get());
 layer.setHighQuality(true);
 
@@ -372,10 +372,10 @@ sets and then submitting the compositor frame via @ref Compositor::submitFrame()
 @code
 layer.setRenderPoses(hmd);
 
-LibOvrContext::get().compositor().submitFrame(hmd);
+Context::get().compositor().submitFrame(hmd);
 @endcode
 
-@see @ref Hmd, @ref SwapTextureSet, @ref LibOvrContext::compositor()
+@see @ref Hmd, @ref SwapTextureSet, @ref Context::compositor()
 @author Jonathan Hale (Squareys)
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
@@ -451,7 +451,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
         std::vector<const ovrLayerHeader*> _layers;
         std::vector<std::unique_ptr<Layer>> _wrappedLayers;
 
-        friend class LibOvrContext;
+        friend class Context;
 };
 
 }}

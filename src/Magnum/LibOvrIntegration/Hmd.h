@@ -94,10 +94,10 @@ Wraps `ovrHmd_*` methods.
 
 ## Usage
 
-Instances of @ref Hmd are created by @ref LibOvrContext.
+Instances of @ref Hmd are created by @ref Context.
 
 @code
-std::unique_ptr<Hmd> hmd = LibOvrContext::get().initialize().createHmd(0, HmdType::DK2);
+std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd(0, HmdType::DK2);
 hmd->setEnabledCaps(HmdCapability::LowPersistence | HmdCapability::DynamicPrediction);
 hmd->configureTracking(HmdTrackingCapability::Orientation |
                        HmdTrackingCapability::MagYawCorrection |
@@ -182,7 +182,7 @@ Framebuffer::blit(mirrorFramebuffer,
                   FramebufferBlit::Color, FramebufferBlitFilter::Nearest);
 @endcode
 
-@see @ref LibOvrContext, @ref SwapTextureSet, @ref Compositor
+@see @ref Context, @ref SwapTextureSet, @ref Compositor
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
     public:
@@ -355,7 +355,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
         HmdStatusFlags _flags;
 
         friend class SwapTextureSet;
-        friend class LibOvrContext;
+        friend class Context;
 };
 
 }}

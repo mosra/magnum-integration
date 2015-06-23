@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::LibOvrIntegration::LibOvrContext
+ * @brief Class @ref Magnum::LibOvrIntegration::Context
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -50,46 +50,46 @@ the Oculus SDK compositor.
 
 ## Usage
 
-There should always only be one instance of @ref LibOvrContext. As soon as this
-one instance is created, you can access it via @ref LibOvrContext::get().
+There should always only be one instance of @ref Context. As soon as this
+one instance is created, you can access it via @ref Context::get().
 
 Example:
 
 @code
-LibOvrContext context;
+Context context;
 
 // ...
 
-LibOvrContext::get().detect();
+Context::get().detect();
 @endcode
 
 @see @ref Hmd, @ref Compositor
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT LibOvrContext {
+class MAGNUM_LIBOVRINTEGRATION_EXPORT Context {
     public:
-        explicit LibOvrContext();
+        explicit Context();
 
         /** @brief Copying is not allowed */
-        LibOvrContext(const LibOvrContext&) = delete;
+        Context(const Context&) = delete;
 
         /** @brief Moving is not allowed */
-        LibOvrContext(LibOvrContext&&) = delete;
+        Context(Context&&) = delete;
 
-        ~LibOvrContext();
+        ~Context();
 
         /** @brief Copying is not allowed */
-        LibOvrContext& operator=(const LibOvrContext&) = delete;
+        Context& operator=(const Context&) = delete;
 
         /** @brief Moving is not allowed */
-        LibOvrContext& operator=(LibOvrContext&&) = delete;
+        Context& operator=(Context&&) = delete;
 
         /**
          * @brief Global context instance
          *
          * Expects that the instance is created.
          */
-        static LibOvrContext& get();
+        static Context& get();
 
         /** @brief Detect how many devices are currently connected */
         Int detect() const;
@@ -118,7 +118,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LibOvrContext {
         Compositor& compositor() { return _compositor; }
 
     private:
-        static LibOvrContext* _instance;
+        static Context* _instance;
         Compositor _compositor;
 };
 
