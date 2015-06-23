@@ -68,6 +68,13 @@ Context::get().detect();
 */
 class MAGNUM_LIBOVRINTEGRATION_EXPORT Context {
     public:
+        /**
+         * @brief Global context instance
+         *
+         * Expects that the instance is created.
+         */
+        static Context& get();
+
         explicit Context();
 
         /** @brief Copying is not allowed */
@@ -83,13 +90,6 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Context {
 
         /** @brief Moving is not allowed */
         Context& operator=(Context&&) = delete;
-
-        /**
-         * @brief Global context instance
-         *
-         * Expects that the instance is created.
-         */
-        static Context& get();
 
         /** @brief Detect how many devices are currently connected */
         Int detect() const;
