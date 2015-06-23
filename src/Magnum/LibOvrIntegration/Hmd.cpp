@@ -34,6 +34,8 @@
 
 #include <OVR_CAPI_GL.h>
 #include <OVR_CAPI_Util.h>
+#undef near
+#undef far
 
 namespace Magnum { namespace LibOvrIntegration {
 
