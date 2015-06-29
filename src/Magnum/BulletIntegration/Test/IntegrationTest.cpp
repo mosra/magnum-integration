@@ -51,7 +51,8 @@ void IntegrationTest::vector() {
     btVector3 b{1.0f, 2.0f, 3.0f};
 
     CORRADE_COMPARE(Vector3{b}, a);
-    CORRADE_VERIFY(btVector3{a} == b);
+    /* Clang can't handle {} (huh?) */
+    CORRADE_VERIFY(btVector3(a) == b);
 }
 
 void IntegrationTest::matrix() {
@@ -63,7 +64,8 @@ void IntegrationTest::matrix() {
                   7.9f, -1.0f, 8.0f};
 
     CORRADE_COMPARE(Matrix3{b}, a);
-    CORRADE_VERIFY(btMatrix3x3{a} == b);
+    /* Clang can't handle {} (huh?) */
+    CORRADE_VERIFY(btMatrix3x3(a) == b);
 }
 
 }}}
