@@ -47,7 +47,7 @@ namespace Magnum { namespace LibOvrIntegration {
 
 @see @ref Layer, @ref Compositor::addLayer()
 */
-enum class LayerType: UnsignedByte {
+enum class LayerType: Int {
     /**
      * Described by `ovrLayerEyeFov`.
      * @see @ref LayerEyeFov, @ref Compositor::addLayerEyeFov()

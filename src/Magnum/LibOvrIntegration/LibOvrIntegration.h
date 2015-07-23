@@ -47,11 +47,11 @@ class LayerEyeFovDepth;
 class LayerQuad;
 class TimewarpProjectionDescription;
 
-enum class HmdType: UnsignedByte;
-enum class HmdCapability: UnsignedInt;
-enum class HmdTrackingCapability: UnsignedInt;
+enum class HmdType: Int;
+enum class HmdCapability: Int;
+enum class HmdTrackingCapability: Int;
 enum class HmdStatusFlag: UnsignedByte;
-enum class LayerType: UnsignedByte;
+enum class LayerType: Int;
 
 typedef Containers::EnumSet<HmdCapability> HmdCapabilities;
 typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;

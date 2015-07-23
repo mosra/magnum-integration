@@ -46,7 +46,7 @@ namespace Magnum { namespace LibOvrIntegration {
 
 @see @ref Context::createHmd()
 */
-enum class HmdType: UnsignedByte {
+enum class HmdType: Int {
     None = ovrHmd_None,             /**< Absence of an HMD type */
     DK1 = ovrHmd_DK1,               /**< Developer Kit 1 */
     DKHD = ovrHmd_DKHD,             /**< HD prototype, aka Crystal Cove */
@@ -61,7 +61,7 @@ enum class HmdType: UnsignedByte {
 
 @see @ref HmdCapabilities, @ref Hmd::setEnabledCaps()
 */
-enum class HmdCapability: UnsignedInt {
+enum class HmdCapability: Int {
     /**
      * Toggles low persistence mode on or off.
      *
@@ -98,7 +98,7 @@ CORRADE_ENUMSET_OPERATORS(HmdCapabilities)
 
 @see @ref HmdTrackingCapabilities, @ref Hmd::configureTracking()
 */
-enum class HmdTrackingCapability: UnsignedInt {
+enum class HmdTrackingCapability: Int {
     /** Supports orientation tracking (IMU) */
     Orientation = ovrTrackingCap_Orientation,
 
