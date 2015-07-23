@@ -59,7 +59,7 @@ ConversionTest::ConversionTest() {
 }
 
 void ConversionTest::sizei() {
-    constexpr Vector2i a(1, 2);
+    Vector2i a{1, 2};
     ovrSizei b{1, 2};
 
     CORRADE_COMPARE(Vector2i(b), a);
@@ -70,7 +70,7 @@ void ConversionTest::sizei() {
 }
 
 void ConversionTest::vector2i() {
-    constexpr Vector2i a(1, 2);
+    Vector2i a{1, 2};
     ovrVector2i b{1, 2};
 
     CORRADE_COMPARE(Vector2i(b), a);
@@ -81,7 +81,7 @@ void ConversionTest::vector2i() {
 }
 
 void ConversionTest::vector2f() {
-    constexpr Vector2 a(1.0f, 2.0f);
+    Vector2 a{1.0f, 2.0f};
     ovrVector2f b{1.0f, 2.0f};
 
     CORRADE_COMPARE(Vector2(b), a);
@@ -92,7 +92,7 @@ void ConversionTest::vector2f() {
 }
 
 void ConversionTest::vector3f() {
-    constexpr Vector3 a(1.0f, 2.0f, 3.0f);
+    Vector3 a{1.0f, 2.0f, 3.0f};
     ovrVector3f b{1.0f, 2.0f, 3.0f};
 
     CORRADE_COMPARE(Vector3(b), a);
@@ -104,7 +104,7 @@ void ConversionTest::vector3f() {
 }
 
 void ConversionTest::recti() {
-    constexpr Range2Di a{{2, 2}, {42, 42}};
+    Range2Di a{{2, 2}, {42, 42}};
     ovrRecti b{{2, 2}, {40, 40}};
 
     CORRADE_COMPARE(Range2Di(b), a);
@@ -112,40 +112,33 @@ void ConversionTest::recti() {
     ovrRecti c(a);
     CORRADE_COMPARE(c.Pos.x, b.Pos.x);
     CORRADE_COMPARE(c.Pos.y, b.Pos.y);
-
     CORRADE_COMPARE(c.Size.w, b.Size.w);
     CORRADE_COMPARE(c.Size.h, b.Size.h);
 }
 
 void ConversionTest::matrix4f() {
-    constexpr Matrix4 a = Matrix4{
-        {1.1f, 1.2f, 1.3f, 1.4f},
-        {2.1f, 2.2f, 2.3f, 2.4f},
-        {3.1f, 3.2f, 3.3f, 3.4f},
-        {4.1f, 4.2f, 4.3f, 4.4f}};
-    ovrMatrix4f b = {{
-        {1.1f, 1.2f, 1.3f, 1.4f},
-        {2.1f, 2.2f, 2.3f, 2.4f},
-        {3.1f, 3.2f, 3.3f, 3.4f},
-        {4.1f, 4.2f, 4.3f, 4.4f}}};
+    Matrix4 a{{1.1f, 1.2f, 1.3f, 1.4f},
+              {2.1f, 2.2f, 2.3f, 2.4f},
+              {3.1f, 3.2f, 3.3f, 3.4f},
+              {4.1f, 4.2f, 4.3f, 4.4f}};
+    ovrMatrix4f b{{{1.1f, 1.2f, 1.3f, 1.4f},
+                   {2.1f, 2.2f, 2.3f, 2.4f},
+                   {3.1f, 3.2f, 3.3f, 3.4f},
+                   {4.1f, 4.2f, 4.3f, 4.4f}}};
 
-    /* transposing accomodates for the sdk storing matrices in
-     * colum-major form. */
+    /* Transposing accomodates for the sdk storing matrices in colum-major form */
     CORRADE_COMPARE(Matrix4(b).transposed(), a);
 
     ovrMatrix4f c(a.transposed());
-    float *pa = reinterpret_cast<float*>(c.M),
-          *pb = reinterpret_cast<float*>(b.M);
-
-    for(Int i = 0; i < 16; ++i, ++pa, ++pb) {
-        CORRADE_COMPARE(*pa, *pb);
-    }
-
+    float* pb = &b.M[0][0];
+    float* pc = &c.M[0][0];
+    for(std::size_t i = 0; i != 16; ++i, ++pb, ++pc)
+        CORRADE_COMPARE(*pc, *pb);
 }
 
 void ConversionTest::quatf() {
-    Quaternion a = Quaternion{{0.1, 0.2, 0.3}, 1.0};
-    ovrQuatf b = {0.1, 0.2, 0.3, 1.0};
+    Quaternion a{{0.1f, 0.2f, 0.3f}, 1.0f};
+    ovrQuatf b{0.1f, 0.2f, 0.3f, 1.0f};
 
     CORRADE_COMPARE(Quaternion(b), a);
 
@@ -156,13 +149,10 @@ void ConversionTest::quatf() {
     CORRADE_COMPARE(c.w, b.w);
 }
 
-
 void ConversionTest::posef() {
-    Quaternion q = Quaternion{{0.1, 0.2, 0.3}, 1.0}.normalized();
-    DualQuaternion a = DualQuaternion::translation({1.0f, 2.0f, 3.0f}) * DualQuaternion{q};
-    ovrPosef b = {
-        ovrQuatf(q),
-        {1.0f, 2.0f, 3.0f}};
+    Quaternion q = Quaternion{{0.1f, 0.2f, 0.3f}, 1.0}.normalized();
+    DualQuaternion a = DualQuaternion::translation({1.0f, 2.0f, 3.0f})*DualQuaternion{q};
+    ovrPosef b{ovrQuatf(q), {1.0f, 2.0f, 3.0f}};
 
     CORRADE_COMPARE(DualQuaternion(b), a);
 
