@@ -25,10 +25,6 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
-project(MagnumLibOvrIntegration LANGUAGES CXX)
-
-find_package(Magnum REQUIRED)
 find_package(OVR REQUIRED)
 
 set(MagnumLibOvrIntegration_SRCS
