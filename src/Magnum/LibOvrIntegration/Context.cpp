@@ -76,7 +76,7 @@ std::unique_ptr<Hmd> Context::createHmd(Int index, HmdType debugType) {
 
 std::unique_ptr<Hmd> Context::createDebugHmd(HmdType debugType) {
     ovrHmd hmd;
-    ovrHmd_CreateDebug(ovrHmdType(Corrade::Containers::EnumSet<HmdType>::UnderlyingType(debugType)), &hmd);
+    ovrHmd_CreateDebug(ovrHmdType(Int(debugType)), &hmd);
 
     return std::unique_ptr<Hmd>(new Hmd(hmd, HmdStatusFlag::Debug));
 }

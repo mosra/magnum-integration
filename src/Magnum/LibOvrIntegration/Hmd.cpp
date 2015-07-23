@@ -40,7 +40,7 @@
 namespace Magnum { namespace LibOvrIntegration {
 
 SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size) : _hmd(hmd), _format(format), _size(size) {
-    ovrHmd_CreateSwapTextureSetGL(_hmd._hmd, Containers::EnumSet<TextureFormat>::UnderlyingType(_format), _size.x(), _size.y(), &_swapTextureSet);
+    ovrHmd_CreateSwapTextureSetGL(_hmd._hmd, GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
 
     /* wrap the texture set for magnum */
     _textures = new Texture2D*[_swapTextureSet->TextureCount];
@@ -117,7 +117,7 @@ Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& 
 
     ovrResult result = ovrHmd_CreateMirrorTextureGL(
                 _hmd,
-                Containers::EnumSet<TextureFormat>::UnderlyingType(format),
+                GLenum(format),
                 size.x(),
                 size.y(),
                 &_ovrMirrorTexture);

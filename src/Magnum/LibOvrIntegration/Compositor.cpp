@@ -35,13 +35,13 @@
 namespace Magnum { namespace LibOvrIntegration {
 
 Layer::Layer(const LayerType type): _layer(), _type(type) {
-    _layer.Header.Type = ovrLayerType(Corrade::Containers::EnumSet<LayerType>::UnderlyingType(_type));
+    _layer.Header.Type = ovrLayerType(Int(_type));
     _layer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;
 }
 
 Layer& Layer::setEnabled(bool enabled) {
     if(enabled) {
-        _layer.Header.Type = ovrLayerType(Corrade::Containers::EnumSet<LayerType>::UnderlyingType(_type));
+        _layer.Header.Type = ovrLayerType(Int(_type));
     } else {
         _layer.Header.Type = ovrLayerType_Disabled;
     }
