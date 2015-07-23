@@ -27,6 +27,8 @@
 
 find_package(OVR REQUIRED)
 
+include_directories(${OVR_INCLUDE_DIR})
+
 set(MagnumLibOvrIntegration_SRCS
     Conversion.cpp
     Context.cpp
