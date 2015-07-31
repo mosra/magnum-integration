@@ -51,7 +51,6 @@ enum class HmdType: Int {
     DK1 = ovrHmd_DK1,               /**< Developer Kit 1 */
     DKHD = ovrHmd_DKHD,             /**< HD prototype, aka Crystal Cove */
     DK2 = ovrHmd_DK2,               /**< Developer Kit 2 */
-    BlackStar = ovrHmd_BlackStar,   /**< Black Star Prototype */
     CB = ovrHmd_CB,                 /**< Crescent Bay prototype */
     Other = ovrHmd_Other            /**< Unknown type */
 };
@@ -78,10 +77,8 @@ enum class HmdCapability: Int {
     LowPersistence = ovrHmdCap_LowPersistence,
 
     /** Adjusts prediction dynamically based on internally measured latency */
-    DynamicPrediction = ovrHmdCap_DynamicPrediction,
+    DynamicPrediction = ovrHmdCap_DynamicPrediction
 
-    /** Supports rendering without VSync for debugging */
-    NoVSync = ovrHmdCap_NoVSync
 };
 
 /**
