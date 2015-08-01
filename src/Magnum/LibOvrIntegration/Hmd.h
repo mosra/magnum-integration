@@ -344,7 +344,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
          * the real-time operation of the VR application such as latency timing
          * and CPU & GPU performance metrics.
          */
-        void setPerformanceHudMode(const PerformanceHudMode mode) const;
+        void setPerformanceHudMode(PerformanceHudMode mode) const;
 
     private:
         explicit Hmd(::ovrHmd hmd, HmdStatusFlags flags);
