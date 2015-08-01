@@ -132,6 +132,17 @@ typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 
+/**
+@brief Performance HUD mode
+
+@see @ref Hmd::setPerformanceHudMode()
+*/
+enum class PerformanceHudMode: Int {
+    Off = ovrPerfHud_Off,                     /**< Turns off the performance HUD */
+    LatencyTiming = ovrPerfHud_LatencyTiming, /**< Shows latency related timing info */
+    RenderTiming = ovrPerfHud_RenderTiming    /**< Unknown type */
+};
+
 }}
 
 #endif

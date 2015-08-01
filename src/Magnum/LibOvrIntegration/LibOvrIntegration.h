@@ -51,6 +51,7 @@ enum class HmdType: Int;
 enum class HmdCapability: Int;
 enum class HmdTrackingCapability: Int;
 enum class HmdStatusFlag: UnsignedByte;
+enum class PerformanceHudMode: Int;
 enum class LayerType: Int;
 
 typedef Containers::EnumSet<HmdCapability> HmdCapabilities;

@@ -169,5 +169,8 @@ std::array<DualQuaternion, 2> Hmd::eyePoses() {
     return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
 }
 
+void Hmd::setPerformanceHudMode(const PerformanceHudMode mode) const {
+    ovrHmd_SetInt(_hmd, "PerfHudMode", Int(mode));
+}
 
 }}

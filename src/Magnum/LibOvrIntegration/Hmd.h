@@ -337,6 +337,15 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
             return ++_frameIndex;
         }
 
+        /**
+         * @brief Enable/Disable the performance HUD
+         *
+         * Performance HUD enables the HMD user to see information critical to
+         * the real-time operation of the VR application such as latency timing
+         * and CPU & GPU performance metrics.
+         */
+        void setPerformanceHudMode(const PerformanceHudMode mode) const;
+
     private:
         explicit Hmd(::ovrHmd hmd, HmdStatusFlags flags);
 
