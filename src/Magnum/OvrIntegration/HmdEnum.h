@@ -49,46 +49,13 @@ namespace Magnum { namespace OvrIntegration {
 enum class HmdType: Int {
     None = ovrHmd_None,             /**< Absence of an HMD type */
     DK1 = ovrHmd_DK1,               /**< Developer Kit 1 */
-    DKHD = ovrHmd_DKHD,             /**< HD prototype, aka Crystal Cove */
+    DKHD = ovrHmd_DKHD,             /**< HD prototype, aka Crystal Cove. Used by Oculus internally. */
     DK2 = ovrHmd_DK2,               /**< Developer Kit 2 */
-    CB = ovrHmd_CB,                 /**< Crescent Bay prototype */
-    Other = ovrHmd_Other            /**< Unknown type */
+    CB = ovrHmd_CB,                 /**< Crescent Bay prototype. Used by Oculus internally. */
+    Other = ovrHmd_Other,           /**< Unknown type */
+    E3_2015 = ovrHmd_E3_2015,       /**< Hmd demoed at E3 2015. Used by Oculus internally. */
+    ES06 = ovrHmd_ES06              /**< Used by Oculus internally. */
 };
-
-/**
-@brief HMD capability
-
-@see @ref HmdCapabilities, @ref Hmd::setEnabledCaps()
-*/
-enum class HmdCapability: Int {
-    /**
-     * Toggles low persistence mode on or off.
-     *
-     * This setting reduces eye-tracking based motion blur. Eye-tracking based
-     * motion blur is caused by the viewer's focal point moving more pixels
-     * than have refreshed in the same period of time.
-     *
-     * The disadvantage of this setting is that this reduces the average
-     * brightness of the display and causes some users to perceive flicker.
-     *
-     * @note There is no performance cost for this option. Oculus recommends
-     *      exposing it to the user as an optional setting.
-     */
-    LowPersistence = ovrHmdCap_LowPersistence,
-
-    /** Adjusts prediction dynamically based on internally measured latency */
-    DynamicPrediction = ovrHmdCap_DynamicPrediction
-
-};
-
-/**
-@brief HMD capabilities
-
-@see @ref Hmd::setEnabledCaps()
-*/
-typedef Containers::EnumSet<HmdCapability> HmdCapabilities;
-
-CORRADE_ENUMSET_OPERATORS(HmdCapabilities)
 
 /**
 @brief HMD tracking capability
@@ -115,6 +82,26 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
+/**
+@brief Ovr status flag
+
+Flags describing the current status of sensor tracking.
+The values must be the same as in enum StatusBits
+@see @ref OvrStatusFlags, @ref Hmd::configureTracking()
+*/
+enum class StatusFlag: Int {
+    OrientationTracked = ovrStatus_OrientationTracked, /**< Orientation is currently tracked (connected and in use) */
+    PositionTracked = ovrStatus_PositionTracked,       /**< Position is currently tracked (false if out of range) */
+    CameraPoseTracked = ovrStatus_CameraPoseTracked,   /**< Camera pose is currently tracked */
+    PositionConnected = ovrStatus_PositionConnected,   /**< Position tracking hardware is connected */
+    HmdConnected = ovrStatus_HmdConnected              /**< HMD Display is available and connected */
+};
+
+/** @brief HMD status flags */
+typedef Containers::EnumSet<StatusFlag> StatusFlags;
+
+CORRADE_ENUMSET_OPERATORS(StatusFlags)
+
 /** @brief HMD status flag */
 enum class HmdStatusFlag: UnsignedByte {
     /**
@@ -140,7 +127,33 @@ CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 enum class PerformanceHudMode: Int {
     Off = ovrPerfHud_Off,                     /**< Turns off the performance HUD */
     LatencyTiming = ovrPerfHud_LatencyTiming, /**< Shows latency related timing info */
-    RenderTiming = ovrPerfHud_RenderTiming    /**< Unknown type */
+    RenderTiming = ovrPerfHud_RenderTiming,   /**< Unknown type */
+    PerfHeadroom = ovrPerfHud_PerfHeadroom,   /**< Shows available performance headroom in a "consumer-friendly" way */
+    VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK Version Info */
+};
+
+/**
+@brief Debug HUD mode
+
+Debug HUD is provided to help developers gauge and debug the fidelity of their app's
+stereo rendering characteristics. Using the provided quad and crosshair guides,
+the developer can verify various aspects such as VR tracking units (e.g. meters),
+stereo camera-parallax properties (e.g. making sure objects at infinity are rendered
+with the proper separation), measuring VR geometry sizes and distances and more.
+@see @ref Hmd::setDebugHudMode()
+*/
+enum class DebugHudStereoMode: Int {
+    /** Turns off the Stereo Debug HUD */
+    Off = ovrDebugHudStereo_Off,
+
+    /** Renders Quad in world for Stereo Debugging */
+    Quad = ovrDebugHudStereo_Quad,
+
+    /** Renders Quad+crosshair in world for Stereo Debugging */
+    QuadWithCrosshair = ovrDebugHudStereo_QuadWithCrosshair,
+
+    /** Renders screen-space crosshair at infinity for Stereo Debugging */
+    CrosshairAtInfinity = ovrDebugHudStereo_CrosshairAtInfinity
 };
 
 }}
