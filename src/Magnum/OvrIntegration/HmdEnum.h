@@ -156,6 +156,68 @@ enum class DebugHudStereoMode: Int {
     CrosshairAtInfinity = ovrDebugHudStereo_CrosshairAtInfinity
 };
 
+/**
+@brief Error type
+
+@see @ref Error, @ref Context::error()
+*/
+enum class ErrorType: Int {
+    /* General errors */
+    MemoryAllocationFailure = ovrError_MemoryAllocationFailure, /**< Failure to allocate memory. */
+    SocketCreationFailure = ovrError_SocketCreationFailure,     /**< Failure to create a socket. */
+    InvalidHmd = ovrError_InvalidHmd,                   /**< Invalid HMD parameter provided. */
+    Timeout = ovrError_Timeout,                         /**< The operation timed out. */
+    NotInitialized = ovrError_NotInitialized,           /**< The system or component has not been initialized. */
+    InvalidParameter = ovrError_InvalidParameter,       /**< Invalid parameter provided. See error info or log for details. */
+    ServiceError = ovrError_ServiceError,               /**< Generic service error. See error info or log for details. */
+    NoHmd = ovrError_NoHmd,                             /**< The given HMD doesn't exist. */
+
+    /* Audio error range, reserved for Audio errors. */
+    AudioReservedBegin = ovrError_AudioReservedBegin,   /**< First Audio error. */
+    AudioReservedEnd = ovrError_AudioReservedEnd,       /**< Last Audio error. */
+
+    /* Initialization errors. */
+    Initialize = ovrError_Initialize,                   /**< Generic initialization error. */
+    LibLoad = ovrError_LibLoad,                         /**< Couldn't load LibOVRRT. */
+    LibVersion = ovrError_LibVersion,                   /**< LibOVRRT version incompatibility. */
+    ServiceConnection = ovrError_ServiceConnection,     /**< Couldn't connect to the OVR Service. */
+    ServiceVersion = ovrError_ServiceVersion,           /**< OVR Service version incompatibility. */
+    IncompatibleOS = ovrError_IncompatibleOS,           /**< The operating system version is incompatible. */
+    DisplayInit = ovrError_DisplayInit,                 /**< Unable to initialize the HMD display. */
+    ServerStart = ovrError_ServerStart,                 /**< Unable to start the server. Is it already running? */
+    Reinitialization = ovrError_Reinitialization,       /**< Attempting to re-initialize with a different version. */
+    MismatchedAdapters = ovrError_MismatchedAdapters,   /**< Chosen rendering adapters between client and service do not match */
+    LeakingResources = ovrError_LeakingResources,       /**< Calling application has leaked resources */
+    ClientVersion = ovrError_ClientVersion,             /**< Client version too old to connect to service */
+
+    /* Hardware Errors */
+    InvalidBundleAdjustment = ovrError_InvalidBundleAdjustment,     /**< Headset has no bundle adjustment data. */
+    USBBandwidth = ovrError_USBBandwidth,                           /**< The USB hub cannot handle the camera frame bandwidth. */
+    USBEnumeratedSpeed = ovrError_USBEnumeratedSpeed,               /**< The USB camera is not enumerating at the correct device speed. */
+    ImageSensorCommError = ovrError_ImageSensorCommError,           /**< Unable to communicate with the image sensor. */
+    GeneralTrackerFailure = ovrError_GeneralTrackerFailure,         /**< We use this to report various tracker issues that don't fit in an easily classifiable bucket. */
+    ExcessiveFrameTruncation = ovrError_ExcessiveFrameTruncation,   /**< A more than acceptable number of frames are coming back truncated. */
+    ExcessiveFrameSkipping = ovrError_ExcessiveFrameSkipping,       /**< A more than acceptable number of frames have been skipped. */
+    SyncDisconnected = ovrError_SyncDisconnected,                   /**< The tracker is not receiving the sync signal (cable disconnected?) */
+    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,   /**< Failed to read memory from the tracker */
+    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure, /**< Failed to write memory from the tracker */
+    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,             /**< Timed out waiting for a camera frame */
+    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,         /**< Truncated frame returned from tracker */
+
+    HMDFirmwareMismatch = ovrError_HMDFirmwareMismatch,             /**< The HMD Firmware is out of date and is unacceptable. */
+    TrackerFirmwareMismatch = ovrError_TrackerFirmwareMismatch,     /**< The Tracker Firmware is out of date and is unacceptable. */
+    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,   /**< A bootloader HMD is detected by the service */
+    TrackerCalibrationError = ovrError_TrackerCalibrationError,     /**< The tracker calibration is missing or incorrect */
+    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,/**< The controller firmware is out of date and is unacceptable */
+
+    /* Synchronization Errors */
+    Incomplete = ovrError_Incomplete,   /**< Requested async work not yet complete. */
+    Abandoned = ovrError_Abandoned,     /**< Requested async work was abandoned and result is incomplete. */
+
+    /* Rendering Errors */
+    DisplayLost = ovrError_DisplayLost, /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app */
+};
+
 }}
 
 #endif

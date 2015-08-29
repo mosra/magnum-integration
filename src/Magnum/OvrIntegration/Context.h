@@ -35,12 +35,22 @@
 #include <memory>
 #include <Magnum/Texture.h>
 
-#include "Magnum/OvrIntegration/visibility.h"
-#include "Magnum/OvrIntegration/OvrIntegration.h"
-#include "Magnum/OvrIntegration/Hmd.h" /* required for std::unique_ptr */
 #include "Magnum/OvrIntegration/Compositor.h"
+#include "Magnum/OvrIntegration/Hmd.h" /* required for std::unique_ptr */
+#include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/OvrIntegration.h"
+#include "Magnum/OvrIntegration/visibility.h"
 
 namespace Magnum { namespace OvrIntegration {
+
+/**
+ * @brief Error
+ * @see Context::error()
+ */
+struct Error {
+    ErrorType type;
+    std::string message;
+};
 
 /**
 @brief Context singleton
@@ -117,10 +127,22 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         /** @return Reference to the compositor */
         Compositor& compositor() { return _compositor; }
 
+        /**
+         * @brief Last error
+         */
+        Error error() const;
+
     private:
         static Context* _instance;
         Compositor _compositor;
 };
+
+inline Error Context::error() const {
+    ovrErrorInfo info;
+    ovr_GetLastErrorInfo(&info);
+
+    return Error{ErrorType(info.Result), info.ErrorString};
+}
 
 }}
 
