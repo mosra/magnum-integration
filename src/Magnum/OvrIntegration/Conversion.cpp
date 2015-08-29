@@ -24,11 +24,11 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/LibOVRIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Conversion.h"
 
 #include <OVR_CAPI_GL.h>
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 Texture2D wrap(const ovrTexture& texture) {
     CORRADE_ASSERT(texture.Header.API == ovrRenderAPI_OpenGL,

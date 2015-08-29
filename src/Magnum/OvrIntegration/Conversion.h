@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_Conversion_h
-#define Magnum_LibOvrIntegration_Conversion_h
+#ifndef Magnum_OvrIntegration_Conversion_h
+#define Magnum_OvrIntegration_Conversion_h
 /*
     This file is part of Magnum.
 
@@ -137,7 +137,7 @@ template<> struct RangeConverter<2, Int, ovrRecti> {
 
 }}
 
-namespace LibOvrIntegration {
+namespace OvrIntegration {
 
 /** @brief Wrap an `ovrTexture` as @ref Texture2D */
 Texture2D wrap(const ovrTexture& texture);

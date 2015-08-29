@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_visibility_h
-#define Magnum_LibOvrIntegration_visibility_h
+#ifndef Magnum_OvrIntegration_visibility_h
+#define Magnum_OvrIntegration_visibility_h
 /*
     This file is part of Magnum.
 
@@ -28,10 +28,10 @@
 
 #include <Corrade/Utility/VisibilityMacros.h>
 
-#ifdef MagnumLibOvrIntegration_EXPORTS
-    #define MAGNUM_LIBOVRINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
+#ifdef MagnumOvrIntegration_EXPORTS
+    #define MAGNUM_OVRINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
 #else
-    #define MAGNUM_LIBOVRINTEGRATION_EXPORT CORRADE_VISIBILITY_IMPORT
+    #define MAGNUM_OVRINTEGRATION_EXPORT CORRADE_VISIBILITY_IMPORT
 #endif
 
 #endif

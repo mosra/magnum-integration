@@ -28,5 +28,5 @@ if(WITH_BULLET)
 endif()
 
 if(WITH_OVR)
-    add_subdirectory(LibOvrIntegration)
+    add_subdirectory(OvrIntegration)
 endif()

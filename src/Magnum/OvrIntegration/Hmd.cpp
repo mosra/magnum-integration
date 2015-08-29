@@ -25,10 +25,10 @@
 */
 
 
-#include "Magnum/LibOVRIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Hmd.h"
 
-#include "Magnum/LibOVRIntegration/HmdEnum.h"
-#include "Magnum/LibOVRIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Conversion.h"
 
 #include <Magnum/TextureFormat.h>
 
@@ -37,7 +37,7 @@
 #undef near
 #undef far
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size) : _hmd(hmd), _format(format), _size(size) {
     ovrHmd_CreateSwapTextureSetGL(_hmd._hmd, GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);

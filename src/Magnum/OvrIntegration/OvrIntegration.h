@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_LibOvrIntegration_h
-#define Magnum_LibOvrIntegration_LibOvrIntegration_h
+#ifndef Magnum_OvrIntegration_OvrIntegration_h
+#define Magnum_OvrIntegration_OvrIntegration_h
 /*
     This file is part of Magnum.
 
@@ -27,14 +27,14 @@
 */
 
 /** @file
- * @brief Forward declarations for the @ref Magnum::LibOvrIntegration namespace.
+ * @brief Forward declarations for the @ref Magnum::OvrIntegration namespace.
  *
  * @author Jonathan Hale (Squareys)
  */
 
 #include <Magnum/Magnum.h>
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 class Hmd;
 class SwapTextureSet;

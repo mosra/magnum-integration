@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_Hmd_h
-#define Magnum_LibOvrIntegration_Hmd_h
+#ifndef Magnum_OvrIntegration_Hmd_h
+#define Magnum_OvrIntegration_Hmd_h
 /*
     This file is part of Magnum.
 
@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::LibOvrIntegration::Hmd, @ref Magnum::LibOvrIntegration::SwapTextureSet
+ * @brief Class @ref Magnum::OvrIntegration::Hmd, @ref Magnum::OvrIntegration::SwapTextureSet
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -38,11 +38,11 @@
 #include <Magnum/Texture.h>
 #include <Magnum/Magnum.h>
 
-#include "Magnum/LibOVRIntegration/visibility.h"
-#include "Magnum/LibOVRIntegration/Conversion.h"
-#include "Magnum/LibOVRIntegration/LibOvrIntegration.h"
+#include "Magnum/OvrIntegration/visibility.h"
+#include "Magnum/OvrIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/OvrIntegration.h"
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 /**
 @brief Swap texture set
@@ -51,7 +51,7 @@ Contains an array of textures which can be rendered to an HMD by the Oculus SDK
 @ref Compositor.
 @see @ref Hmd, @ref Layer
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT SwapTextureSet {
+class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
     public:
         /**
          * @brief Constructor
@@ -185,7 +185,7 @@ Framebuffer::blit(mirrorFramebuffer,
 
 @see @ref Context, @ref SwapTextureSet, @ref Compositor
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT Hmd {
+class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
     public:
         ~Hmd();
 

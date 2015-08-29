@@ -29,14 +29,14 @@ find_package(OVR REQUIRED)
 
 include_directories(${OVR_INCLUDE_DIR})
 
-set(MagnumLibOvrIntegration_SRCS
+set(MagnumOvrIntegration_SRCS
     Conversion.cpp
     Context.cpp
     Hmd.cpp
     Compositor.cpp)
 
-set(MagnumLibOvrIntegration_HEADERS
-    LibOvrIntegration.h
+set(MagnumOvrIntegration_HEADERS
+    OvrIntegration.h
     Conversion.h
     HmdEnum.h
     Context.h
@@ -45,22 +45,22 @@ set(MagnumLibOvrIntegration_HEADERS
 
     visibility.h)
 
-# LibOvrIntegration library
-add_library(MagnumLibOvrIntegration SHARED
-    ${MagnumLibOvrIntegration_SRCS}
-    ${MagnumLibOvrIntegration_HEADERS})
-set_target_properties(MagnumLibOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
+# OvrIntegration library
+add_library(MagnumOvrIntegration SHARED
+    ${MagnumOvrIntegration_SRCS}
+    ${MagnumOvrIntegration_HEADERS})
+set_target_properties(MagnumOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(BUILD_STATIC_PIC)
-    set_target_properties(MagnumLibOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set_target_properties(MagnumOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
-target_link_libraries(MagnumLibOvrIntegration
+target_link_libraries(MagnumOvrIntegration
     ${MAGNUM_LIBRARIES}
     ${OVR_LIBRARY})
 
-install(TARGETS MagnumLibOvrIntegration DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR}
+install(TARGETS MagnumOvrIntegration DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
-install(FILES ${MagnumLibOvrIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/LibOvrIntegration)
+install(FILES ${MagnumOvrIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/OvrIntegration)
 
 if(BUILD_TESTS)
     add_subdirectory(Test)

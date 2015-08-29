@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_Context_h
-#define Magnum_LibOvrIntegration_Context_h
+#ifndef Magnum_OvrIntegration_Context_h
+#define Magnum_OvrIntegration_Context_h
 /*
     This file is part of Magnum.
 
@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::LibOvrIntegration::Context
+ * @brief Class @ref Magnum::OvrIntegration::Context
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -35,12 +35,12 @@
 #include <memory>
 #include <Magnum/Texture.h>
 
-#include "Magnum/LibOVRIntegration/visibility.h"
-#include "Magnum/LibOVRIntegration/LibOvrIntegration.h"
-#include "Magnum/LibOVRIntegration/Hmd.h" /* required for std::unique_ptr */
-#include "Magnum/LibOVRIntegration/Compositor.h"
+#include "Magnum/OvrIntegration/visibility.h"
+#include "Magnum/OvrIntegration/OvrIntegration.h"
+#include "Magnum/OvrIntegration/Hmd.h" /* required for std::unique_ptr */
+#include "Magnum/OvrIntegration/Compositor.h"
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 /**
 @brief Context singleton
@@ -66,7 +66,7 @@ Context::get().detect();
 @see @ref Hmd, @ref Compositor
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT Context {
+class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
         /**
          * @brief Global context instance

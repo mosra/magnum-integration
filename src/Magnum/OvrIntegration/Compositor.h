@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_Compositor_h
-#define Magnum_LibOvrIntegration_Compositor_h
+#ifndef Magnum_OvrIntegration_Compositor_h
+#define Magnum_OvrIntegration_Compositor_h
 /*
     This file is part of Magnum.
 
@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::LibOvrIntegration::Compositor, @ref Magnum::LibOvrIntegration::Layer, @ref Magnum::LibOvrIntegration::LayerDirect, @ref Magnum::LibOvrIntegration::LayerEyeFov, @ref Magnum::LibOvrIntegration::LayerEyeFovDepth, @ref Magnum::LibOvrIntegration::LayerQuad, @ref Magnum::LibOvrIntegration::TimewarpProjectionDescription, enum @ref Magnum::LibOvrIntegration::LayerType
+ * @brief Class @ref Magnum::OvrIntegration::Compositor, @ref Magnum::OvrIntegration::Layer, @ref Magnum::OvrIntegration::LayerDirect, @ref Magnum::OvrIntegration::LayerEyeFov, @ref Magnum::OvrIntegration::LayerEyeFovDepth, @ref Magnum::OvrIntegration::LayerQuad, @ref Magnum::OvrIntegration::TimewarpProjectionDescription, enum @ref Magnum::OvrIntegration::LayerType
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -37,10 +37,10 @@
 #include <Magnum/Magnum.h>
 #include <OVR_CAPI.h>
 
-#include "Magnum/LibOvrIntegration/visibility.h"
-#include "Magnum/LibOvrIntegration/LibOvrIntegration.h"
+#include "Magnum/OvrIntegration/visibility.h"
+#include "Magnum/OvrIntegration/OvrIntegration.h"
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 /**
 @brief Layer type
@@ -91,7 +91,7 @@ classes instead: @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFov or
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT Layer {
     public:
         /**
          * @brief Contructor
@@ -154,7 +154,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT Layer {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerDirect: public Layer {
     public:
         /** @brief Constructor */
         explicit LayerDirect();
@@ -181,7 +181,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerDirect: public Layer {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
     public:
         /** @brief Constructor */
         explicit LayerEyeFov();
@@ -223,7 +223,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
 @see @ref LayerEyeFovDepth
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT TimewarpProjectionDescription {
+class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
     public:
         /** @brief Constructor */
         explicit TimewarpProjectionDescription(const Matrix4& projectionMatrix);
@@ -242,7 +242,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT TimewarpProjectionDescription {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
     public:
         explicit LayerEyeFovDepth();
 
@@ -296,7 +296,7 @@ class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT LayerQuad: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public Layer {
     public:
         /** @brief Constructor */
         explicit LayerQuad(bool headLocked = false);
@@ -378,7 +378,7 @@ Context::get().compositor().submitFrame(hmd);
 @see @ref Hmd, @ref SwapTextureSet, @ref Context::compositor()
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_LIBOVRINTEGRATION_EXPORT Compositor {
+class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
     public:
         /** @brief Copying is not allowed */
         Compositor(const Compositor&) = delete;

@@ -24,15 +24,15 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/LibOVRIntegration/Compositor.h"
+#include "Magnum/OvrIntegration/Compositor.h"
 
-#include "Magnum/LibOVRIntegration/Conversion.h"
-#include "Magnum/LibOVRIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Hmd.h"
 
 #include <OVR_CAPI_GL.h>
 #include <OVR_CAPI_Util.h>
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 Layer::Layer(const LayerType type): _layer(), _type(type) {
     _layer.Header.Type = ovrLayerType(Int(_type));

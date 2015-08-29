@@ -1,5 +1,5 @@
-#ifndef Magnum_LibOvrIntegration_HmdEnum_h
-#define Magnum_LibOvrIntegration_HmdEnum_h
+#ifndef Magnum_OvrIntegration_HmdEnum_h
+#define Magnum_OvrIntegration_HmdEnum_h
 /*
     This file is part of Magnum.
 
@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Enum @ref Magnum::LibOvrIntegration::HmdType, @ref Magnum::LibOvrIntegration::HmdCapability, @ref Magnum::LibOvrIntegration::HmdTrackingCapability, @ref Magnum::LibOvrIntegration::HmdStatusFlag, enum class @ref Magnum::LibOvrIntegration::HmdCapabilities, @ref Magnum::LibOvrIntegration::HmdTrackingCapabilities, @ref Magnum::LibOvrIntegration::HmdStatusFlags
+ * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::HmdCapability, @ref Magnum::OvrIntegration::HmdTrackingCapability, @ref Magnum::OvrIntegration::HmdStatusFlag, enum class @ref Magnum::OvrIntegration::HmdCapabilities, @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::HmdStatusFlags
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -37,9 +37,9 @@
 #include <Magnum/Magnum.h>
 #include <OVR_CAPI.h>
 
-#include "Magnum/LibOvrIntegration/visibility.h"
+#include "Magnum/OvrIntegration/visibility.h"
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 /**
 @brief HMD type

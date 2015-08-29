@@ -32,7 +32,7 @@ find_package(Magnum REQUIRED)
 
 # Parts of the library
 option(WITH_BULLET "Build BulletIntegration library" OFF)
-option(WITH_OVR "Build LibOvrIntegration library" OFF)
+option(WITH_OVR "Build OvrIntegration library" OFF)
 
 include(CMakeDependentOption)
 option(BUILD_STATIC "Build static libraries (default are shared)" OFF)

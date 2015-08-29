@@ -24,14 +24,14 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/LibOvrIntegration/Context.h"
+#include "Magnum/OvrIntegration/Context.h"
 
-#include "Magnum/LibOvrIntegration/Hmd.h"
-#include "Magnum/LibOvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/HmdEnum.h"
 
 #include <OVR_CAPI_GL.h>
 
-namespace Magnum { namespace LibOvrIntegration {
+namespace Magnum { namespace OvrIntegration {
 
 Context* Context::_instance = nullptr;
 
