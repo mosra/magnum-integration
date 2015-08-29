@@ -101,28 +101,16 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         /** @brief Moving is not allowed */
         Context& operator=(Context&&) = delete;
 
-        /** @brief Detect how many devices are currently connected */
-        Int detect() const;
+        /** @brief Detect if a device is currently connected */
+        bool detect() const;
 
         /**
          * @brief Create a handle to a connected HMD device
-         * @param index         Index of the device, must be greater than `0`
-         *      and smaller than @ref detect()
-         * @param debugType     If not @ref HmdType::None, this device type
-         *      will be used for a debug HMD in case a real connection cannot
-         *      be established.
          *
-         * Returns instance of the HMD at the given index (if exists), or a
-         * debug HMD, if @p debugType is not specified as @ref HmdType::None,
-         * in which case returns `nullptr`.
+         * Returns instance of the connected HMD, or `nullptr`,
+         * if there is none.
          */
-        std::unique_ptr<Hmd> createHmd(Int index, HmdType debugType);
-
-        /**
-         * @brief Create a HMD handle which is not connected to an actual device
-         * @param debugType     Type of device to create a debug handle to
-         */
-        std::unique_ptr<Hmd> createDebugHmd(HmdType debugType);
+        std::unique_ptr<Hmd> createHmd();
 
         /** @return Reference to the compositor */
         Compositor& compositor() { return _compositor; }

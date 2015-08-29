@@ -56,29 +56,20 @@ Context& Context::get() {
     return *Context::_instance;
 }
 
-Int Context::detect() const {
-    return ovrHmd_Detect();
+bool Context::detect() const {
+    return ovr_GetHmdDesc(nullptr).Type != ovrHmd_None;
 }
 
-std::unique_ptr<Hmd> Context::createHmd(Int index, HmdType debugType) {
+std::unique_ptr<Hmd> Context::createHmd() {
     /* check if index is valid */
-    if(index >= 0 && detect() > index) {
+    if(detect()) {
         ovrHmd hmd;
-        ovrHmd_Create(index, &hmd);
-        return std::unique_ptr<Hmd>(new Hmd(hmd, {}));
-    } else if(debugType != HmdType::None){
-        /* create a debug hmd instead of connecting to a device */
-        return createDebugHmd(debugType);
+        ovrGraphicsLuid luid;
+        ovr_Create(&hmd, &luid);
+        return std::unique_ptr<Hmd>(new Hmd(hmd));
     }
 
     return std::unique_ptr<Hmd>();
-}
-
-std::unique_ptr<Hmd> Context::createDebugHmd(HmdType debugType) {
-    ovrHmd hmd;
-    ovrHmd_CreateDebug(ovrHmdType(Int(debugType)), &hmd);
-
-    return std::unique_ptr<Hmd>(new Hmd(hmd, HmdStatusFlag::Debug));
 }
 
 }}

@@ -38,9 +38,10 @@
 #include <Magnum/Texture.h>
 #include <Magnum/Magnum.h>
 
-#include "Magnum/OvrIntegration/visibility.h"
 #include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
+#include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/visibility.h"
 
 namespace Magnum { namespace OvrIntegration {
 
@@ -190,12 +191,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         ~Hmd();
 
         /**
-         * @brief Enable or disable HMD capabilities
-         * @return Reference to self (for method chaining)
-         */
-        Hmd& setEnabledCaps(HmdCapabilities caps);
-
-        /**
          * @brief Enable or disable HMD tracking capabilities
          * @return Reference to self (for method chaining)
          */
@@ -263,7 +258,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         /** @brief Resolution of the HMD's display */
         Vector2i resolution() const {
-            return Vector2i(_hmd->Resolution);
+            return Vector2i(_hmdDesc.Resolution);
         }
 
         /**
@@ -273,7 +268,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * Returns vector of eye FoVs, x being horizontal and y vertical.
          */
         Vector2 defaultEyeFov(Int eye) const {
-            const ovrFovPort& fov = _hmd->DefaultEyeFov[eye];
+            const ovrFovPort& fov = _hmdDesc.DefaultEyeFov[eye];
             return {fov.RightTan + fov.LeftTan, fov.UpTan + fov.DownTan};
         }
 
@@ -309,6 +304,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         /** @brief Get the underlying `ovrHmd` */
         ::ovrHmd ovrHmd() const { return _hmd; }
 
+        /** @brief Get the underlying `ovrHmdDesc` */
+        ::ovrHmdDesc ovrHmdDesc() const { return _hmdDesc; }
+
         /** @brief Get the `ovrViewScale` */
         const ::ovrViewScaleDesc& ovrViewScaleDesc() const { return _viewScale; }
 
@@ -338,7 +336,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         }
 
         /**
-         * @brief Enable/Disable the performance HUD
+         * @brief Set performance HUD mode
          *
          * Performance HUD enables the HMD user to see information critical to
          * the real-time operation of the VR application such as latency timing
@@ -346,10 +344,27 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         void setPerformanceHudMode(PerformanceHudMode mode) const;
 
+        /**
+         * @brief Set debug HUD Setero Mode
+         *
+         * Debug HUD is provided to help developers gauge and debug the fidelity of their app's
+         * stereo rendering characteristics. Using the provided quad and crosshair guides,
+         * the developer can verify various aspects such as VR tracking units (e.g. meters),
+         * stereo camera-parallax properties (e.g. making sure objects at infinity are rendered
+         * with the proper separation), measuring VR geometry sizes and distances and more.
+         */
+        void setDebugHudStereoMode(DebugHudStereoMode mode) const;
+
+        /** @brief Tracking state */
+        StatusFlags trackingState() const {
+            return {StatusFlag(_trackingState.StatusFlags)};
+        }
+
     private:
-        explicit Hmd(::ovrHmd hmd, HmdStatusFlags flags);
+        explicit Hmd(::ovrHmd hmd);
 
         ::ovrHmd _hmd;
+        ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
         ovrVector3f _hmdToEyeViewOffset[2];
         ::ovrViewScaleDesc _viewScale;

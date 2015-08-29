@@ -30,7 +30,6 @@
 #include "Magnum/OvrIntegration/Hmd.h"
 
 #include <OVR_CAPI_GL.h>
-#include <OVR_CAPI_Util.h>
 
 namespace Magnum { namespace OvrIntegration {
 
@@ -90,7 +89,7 @@ LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
 }
 
 LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
-    const ovrFovPort* fov = hmd.ovrHmd()->DefaultEyeFov;
+    const ovrFovPort* fov = hmd.ovrHmdDesc().DefaultEyeFov;
     _layer.EyeFov.Fov[0] = fov[0];
     _layer.EyeFov.Fov[1] = fov[1];
 
@@ -129,7 +128,7 @@ LayerEyeFovDepth& LayerEyeFovDepth::setRenderPoses(const Hmd& hmd) {
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setFov(const Hmd& hmd) {
-    const ovrFovPort* fov = hmd.ovrHmd()->DefaultEyeFov;
+    const ovrFovPort* fov = hmd.ovrHmdDesc().DefaultEyeFov;
     _layer.EyeFov.Fov[0] = fov[0];
     _layer.EyeFov.Fov[1] = fov[1];
 
@@ -229,7 +228,7 @@ LayerQuad& Compositor::addLayerQuadInWorld() {
 }
 
 Compositor& Compositor::submitFrame(Hmd& hmd) {
-    ovrHmd_SubmitFrame(hmd.ovrHmd(), hmd.incFrameIndex(), &hmd.ovrViewScaleDesc(), _layers.data(), _layers.size());
+    ovr_SubmitFrame(hmd.ovrHmd(), hmd.incFrameIndex(), &hmd.ovrViewScaleDesc(), _layers.data(), _layers.size());
 
     return *this;
 }

@@ -83,7 +83,7 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 /**
-@brief Ovr status flag
+@brief Status flag
 
 Flags describing the current status of sensor tracking.
 The values must be the same as in enum StatusBits
@@ -97,7 +97,7 @@ enum class StatusFlag: Int {
     HmdConnected = ovrStatus_HmdConnected              /**< HMD Display is available and connected */
 };
 
-/** @brief HMD status flags */
+/** @brief Status flags */
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(StatusFlags)
@@ -135,11 +135,6 @@ enum class PerformanceHudMode: Int {
 /**
 @brief Debug HUD mode
 
-Debug HUD is provided to help developers gauge and debug the fidelity of their app's
-stereo rendering characteristics. Using the provided quad and crosshair guides,
-the developer can verify various aspects such as VR tracking units (e.g. meters),
-stereo camera-parallax properties (e.g. making sure objects at infinity are rendered
-with the proper separation), measuring VR geometry sizes and distances and more.
 @see @ref Hmd::setDebugHudMode()
 */
 enum class DebugHudStereoMode: Int {
