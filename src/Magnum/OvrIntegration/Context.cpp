@@ -61,7 +61,6 @@ bool Context::detect() const {
 }
 
 std::unique_ptr<Hmd> Context::createHmd() {
-    /* check if index is valid */
     if(detect()) {
         ovrHmd hmd;
         ovrGraphicsLuid luid;
