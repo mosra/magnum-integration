@@ -95,15 +95,15 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
 /**
 @brief Hmd
 
-Wraps `ovrHmd_*` methods.
+Wraps `ovrHmd` and methods from the Oculus SDK which directly affect the HMD
+and its properties.
 
 ## Usage
 
 Instances of @ref Hmd are created by @ref Context.
 
 @code
-std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd(0, HmdType::DK2);
-hmd->setEnabledCaps(HmdCapability::LowPersistence | HmdCapability::DynamicPrediction);
+std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd();
 hmd->configureTracking(HmdTrackingCapability::Orientation |
                        HmdTrackingCapability::MagYawCorrection |
                        HmdTrackingCapability::Position, {});
@@ -313,7 +313,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         /** @brief Get the `ovrViewScale` */
         const ::ovrViewScaleDesc& ovrViewScaleDesc() const { return _viewScale; }
 
-        /** @brief Whether this HMD is a debug or connection to a real device */
+        /** @brief Whether this HMD is a connection to a virtual or real device */
         bool isDebugHmd() const;
 
         /**
