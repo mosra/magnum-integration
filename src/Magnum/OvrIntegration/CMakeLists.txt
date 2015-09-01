@@ -30,10 +30,11 @@ find_package(OVR REQUIRED)
 include_directories(${OVR_INCLUDE_DIR})
 
 set(MagnumOvrIntegration_SRCS
+    Compositor.cpp
     Conversion.cpp
     Context.cpp
     Hmd.cpp
-    Compositor.cpp)
+    HmdEnum.cpp)
 
 set(MagnumOvrIntegration_HEADERS
     OvrIntegration.h

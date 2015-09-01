@@ -30,9 +30,9 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/DualQuaternion.h"
 
-#include "Magnum/LibOVRIntegration/Conversion.h"
+#include "Magnum/OVRIntegration/Conversion.h"
 
-namespace Magnum { namespace LibOvrIntegration { namespace Test {
+namespace Magnum { namespace OvrIntegration { namespace Test {
 
 struct ConversionTest: TestSuite::Tester {
     explicit ConversionTest();
@@ -169,4 +169,4 @@ void ConversionTest::posef() {
 
 }}}
 
-CORRADE_TEST_MAIN(Magnum::LibOvrIntegration::Test::ConversionTest)
+CORRADE_TEST_MAIN(Magnum::OvrIntegration::Test::ConversionTest)

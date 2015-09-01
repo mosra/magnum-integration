@@ -213,6 +213,16 @@ enum class ErrorType: Int {
     DisplayLost = ovrError_DisplayLost, /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app */
 };
 
+/** @debugoperatorclassenum{Magnum::OvrIntegration::HmdType,Magnum::OvrIntegration::ErrorType,
+ * Magnum::OvrIntegration::StatusFlag,Magnum::OvrIntegration::PerformanceHudMode,Magnum::OvrIntegration::DebugHudStereoMode,
+ * Magnum::OvrIntegration::ErrorType} */
+Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const HmdType value);
+Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const HmdTrackingCapability value);
+Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const StatusFlag value);
+Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const PerformanceHudMode value);
+Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const DebugHudStereoMode value);
+Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const ErrorType value);
+
 }}
 
 #endif
