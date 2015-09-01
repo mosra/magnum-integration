@@ -30,7 +30,7 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/DualQuaternion.h"
 
-#include "Magnum/OVRIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Conversion.h"
 
 namespace Magnum { namespace OvrIntegration { namespace Test {
 
