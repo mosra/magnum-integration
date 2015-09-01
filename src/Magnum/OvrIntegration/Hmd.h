@@ -35,6 +35,9 @@
 #include <array>
 #include <memory>
 #include <OVR_CAPI.h>
+
+#include <Corrade/Containers/Array.h>
+
 #include <Magnum/Texture.h>
 #include <Magnum/Magnum.h>
 
@@ -86,7 +89,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
         Vector2i _size;
 
         ::ovrSwapTextureSet* _swapTextureSet;
-        Texture2D** _textures;
+        Containers::Array<std::unique_ptr<Texture2D>> _textures;
 };
 
 /**

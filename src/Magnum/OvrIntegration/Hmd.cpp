@@ -24,7 +24,6 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-
 #include "Magnum/OvrIntegration/Hmd.h"
 
 #include "Magnum/OvrIntegration/HmdEnum.h"
@@ -40,14 +39,18 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size) : _hmd(hmd), _format(format), _size(size) {
-    ovr_CreateSwapTextureSetGL(_hmd._hmd, GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
+SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size):
+    _hmd(hmd),
+    _format(format),
+    _size(size)
+{
+    ovr_CreateSwapTextureSetGL(_hmd.ovrHmd(), GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
 
     /* wrap the texture set for magnum */
-    _textures = new Texture2D*[_swapTextureSet->TextureCount];
+    _textures = Containers::Array<std::unique_ptr<Texture2D>>(_swapTextureSet->TextureCount);
 
-    for(Int i = 0; i < _swapTextureSet->TextureCount; ++i) {
-        _textures[i] = new Texture2D(wrap(_swapTextureSet->Textures[i]));
+    for(UnsignedInt i = 0; i < _textures.size(); ++i) {
+        _textures[i].reset(new Texture2D(wrap(_swapTextureSet->Textures[i])));
         _textures[i]->setMinificationFilter(Sampler::Filter::Linear)
                     .setMagnificationFilter(Sampler::Filter::Linear)
                     .setWrapping(Sampler::Wrapping::ClampToEdge);
@@ -55,14 +58,7 @@ SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vecto
 }
 
 SwapTextureSet::~SwapTextureSet() {
-    Int numTextures = _swapTextureSet->TextureCount;
-
-    ovr_DestroySwapTextureSet(_hmd._hmd, _swapTextureSet);
-
-    for(Int i = 0; i < numTextures; ++i) {
-        delete _textures[i];
-    }
-    delete _textures;
+    ovr_DestroySwapTextureSet(_hmd.ovrHmd(), _swapTextureSet);
 }
 
 Texture2D& SwapTextureSet::activeTexture() const {
@@ -71,27 +67,25 @@ Texture2D& SwapTextureSet::activeTexture() const {
 
 //----------------------------------------------------------------
 
-Hmd::Hmd(::ovrHmd hmd) : _hmd(hmd), _flags() {
-    _hmdDesc = ovr_GetHmdDesc(_hmd);
-
-    if(_hmdDesc.AvailableHmdCaps & ovrHmdCap_DebugDevice) {
-        _flags |= HmdStatusFlag::Debug;
-    }
+Hmd::Hmd(::ovrHmd hmd):
+    _hmd(hmd),
+    _hmdDesc(ovr_GetHmdDesc(_hmd)),
+    _flags(HmdStatusFlag(_hmdDesc.AvailableHmdCaps))
+{
+    /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice,
+     * and therefore can be simply cast to HmdStatusFlag */
 }
 
 Hmd::~Hmd() {
     if(_flags & HmdStatusFlag::HasMirrorTexture) {
         ovr_DestroyMirrorTexture(_hmd, _ovrMirrorTexture);
-        _mirrorTexture.reset();
     }
 
     ovr_Destroy(_hmd);
 }
 
 Hmd& Hmd::configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required) {
-    ovr_ConfigureTracking(_hmd,
-           HmdTrackingCapabilities::UnderlyingType(caps),
-           HmdTrackingCapabilities::UnderlyingType(required));
+    ovr_ConfigureTracking(_hmd, Int(caps), Int(required));
     return *this;
 }
 
@@ -150,7 +144,7 @@ Matrix4 Hmd::projectionMatrix(const Int eye, Float near, Float far) const {
 
 Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
-                                                      _hmdToEyeViewOffset[eye].x);
+                                                     _hmdToEyeViewOffset[eye].x);
     return Matrix4(sub);
 }
 

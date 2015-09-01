@@ -111,7 +111,7 @@ enum class HmdStatusFlag: UnsignedByte {
     HasMirrorTexture = 1 << 0,
 
     /** The HMD was created as a debug HMD (without real hardware) */
-    Debug = 1 << 1
+    Debug = ovrHmdCap_DebugDevice /* 0x0010 */
 };
 
 /** @brief HMD status flags */
