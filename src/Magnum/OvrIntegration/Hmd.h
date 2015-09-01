@@ -67,7 +67,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
         ~SwapTextureSet();
 
         /** @brief Currently active texture in the set */
-        Texture2D& activeTexture() const;
+        Texture2D& activeTexture();
 
         /**
          * @brief Increment to use the next texture in the set
@@ -89,7 +89,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
         Vector2i _size;
 
         ::ovrSwapTextureSet* _swapTextureSet;
-        Containers::Array<std::unique_ptr<Texture2D>> _textures;
+        Containers::Array<Texture2D> _textures;
 };
 
 /**

@@ -47,11 +47,11 @@ SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vecto
     ovr_CreateSwapTextureSetGL(_hmd.ovrHmd(), GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
 
     /* wrap the texture set for magnum */
-    _textures = Containers::Array<std::unique_ptr<Texture2D>>(_swapTextureSet->TextureCount);
+    _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(_swapTextureSet->TextureCount)};
 
     for(UnsignedInt i = 0; i < _textures.size(); ++i) {
-        _textures[i].reset(new Texture2D(wrap(_swapTextureSet->Textures[i])));
-        _textures[i]->setMinificationFilter(Sampler::Filter::Linear)
+        new(&_textures[i]) Texture2D(wrap(_swapTextureSet->Textures[i]));
+        _textures[i].setMinificationFilter(Sampler::Filter::Linear)
                     .setMagnificationFilter(Sampler::Filter::Linear)
                     .setWrapping(Sampler::Wrapping::ClampToEdge);
     }
@@ -61,8 +61,8 @@ SwapTextureSet::~SwapTextureSet() {
     ovr_DestroySwapTextureSet(_hmd.ovrHmd(), _swapTextureSet);
 }
 
-Texture2D& SwapTextureSet::activeTexture() const {
-    return *_textures[_swapTextureSet->CurrentIndex];
+Texture2D& SwapTextureSet::activeTexture() {
+    return _textures[_swapTextureSet->CurrentIndex];
 }
 
 //----------------------------------------------------------------
