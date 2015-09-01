@@ -56,7 +56,7 @@ struct Error {
 @brief Context singleton
 
 Handles connection to devices, creation of debug HMDs and provides access to
-the Oculus SDK compositor.
+the Oculus SDK @ref Compositor.
 
 ## Usage
 
@@ -70,7 +70,9 @@ Context context;
 
 // ...
 
-Context::get().detect();
+if(Context::get().detect()) {
+    // ...
+}
 @endcode
 
 @see @ref Hmd, @ref Compositor
