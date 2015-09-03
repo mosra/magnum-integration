@@ -56,7 +56,6 @@ enum class PerformanceHudMode: Int;
 enum class LayerType: Int;
 
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
-typedef Containers::EnumSet<HmdCapability> HmdCapabilities;
 typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 
