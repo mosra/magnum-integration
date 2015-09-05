@@ -87,7 +87,7 @@ CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 Flags describing the current status of sensor tracking.
 The values must be the same as in enum StatusBits
-@see @ref OvrStatusFlags, @ref Hmd::configureTracking()
+@see @ref StatusFlags, @ref Hmd::configureTracking()
 */
 enum class StatusFlag: Int {
     OrientationTracked = ovrStatus_OrientationTracked, /**< Orientation is currently tracked (connected and in use) */
@@ -135,7 +135,7 @@ enum class PerformanceHudMode: Int {
 /**
 @brief Debug HUD mode
 
-@see @ref Hmd::setDebugHudMode()
+@see @ref Hmd::setDebugHudStereoMode()
 */
 enum class DebugHudStereoMode: Int {
     /** Turns off the Stereo Debug HUD */
