@@ -141,7 +141,7 @@ Framebuffer framebuffer{{}, textureSize};
 framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
 
 // setup depth attachment
-Image2D image(ColorFormat::DepthComponent, ColorType::UnsignedInt, textureSize, nullptr);
+Image2D image(PixelFormat::DepthComponent, PixelType::UnsignedInt, textureSize, nullptr);
 
 Texture2D* depth = new Texture2D();
 depth->setMinificationFilter(Sampler::Filter::Linear)
