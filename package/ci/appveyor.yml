@@ -13,6 +13,8 @@ install:
 - cinst ninja
 build_script:
 - set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
+# https://github.com/appveyor/ci/issues/414
+- ren "C:\Program Files (x86)\Windows Kits\10\include\wdf" 00wdf
 - call "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/vcvarsall.bat"
 - appveyor DownloadFile http://static.oculus.com/sdk-downloads/0.7.0.0/Public/1440610361/ovr_sdk_win_0.7.0.0.zip
 - 7z x ovr_sdk_win_0.7.0.0.zip
