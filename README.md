@@ -2,7 +2,7 @@ This is integration library for Magnum C++11/C++14 OpenGL graphics engine,
 providing integration of various math and physics libraries into the engine
 itself. If you don't know what Magnum is, see https://github.com/mosra/magnum.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
+[![Linux/OSX Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
 
 INSTALLATION
 ============
