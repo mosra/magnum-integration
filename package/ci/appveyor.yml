@@ -1,21 +1,32 @@
+# kate: indent-width 2;
+
 version: '{branch}-{build}'
+
 branches:
   only:
   - master
 skip_tags: true
-os: Visual Studio 2015
 shallow_clone: true
 clone_depth: 1
+
+os: Visual Studio 2015
+
 environment:
   matrix:
   - BUILD_STATIC: OFF
+
 install:
-- cinst ninja
-build_script:
-- set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
 - call "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/vcvarsall.bat"
+- set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
+
+# Ninja
+- cinst ninja
+
+# OVR SDK
 - appveyor DownloadFile http://static.oculus.com/sdk-downloads/0.7.0.0/Public/1440610361/ovr_sdk_win_0.7.0.0.zip
 - 7z x ovr_sdk_win_0.7.0.0.zip
+
+# Corrade
 - git clone --depth 1 git://github.com/mosra/corrade.git
 - cd corrade
 - mkdir build
@@ -25,6 +36,8 @@ build_script:
 - cmake --build . --target install
 - cd ..
 - cd ..
+
+# Magnum
 - git clone --depth 1 git://github.com/mosra/magnum.git
 - cd magnum
 - mkdir build
@@ -34,6 +47,8 @@ build_script:
 - cmake --build . --target install
 - cd ..
 - cd ..
+
+build_script:
 - mkdir build
 - cd build
 - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DOVR_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/OculusSDK/LibOVR/Include -DOVR_LIBRARY=%APPVEYOR_BUILD_FOLDER%/OculusSDK/LibOVR/Lib/Windows/Win32/Release/VS2013/LibOVR.lib -DWITH_OVR=OFF -DBUILD_TESTS=ON -DBUILD_STATIC=%BUILD_STATIC% -G Ninja
@@ -43,6 +58,7 @@ build_script:
 - cmake --build . --target install
 - cd ../Deploy
 - 7z a ../magnum-integration.zip *
+
 test_script:
 - cd %APPVEYOR_BUILD_FOLDER%/build
 - SET fail=0
