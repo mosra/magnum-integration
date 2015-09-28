@@ -214,22 +214,22 @@ enum class ErrorType: Int {
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
-Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const HmdType value);
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
-Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const HmdTrackingCapability value);
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
-Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const StatusFlag value);
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::PerformanceHudMode} */
-Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const PerformanceHudMode value);
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::DebugHudStereoMode} */
-Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const DebugHudStereoMode value);
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugHudStereoMode value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::ErrorType} */
-Debug MAGNUM_OVRINTEGRATION_EXPORT operator<<(Debug debug, const ErrorType value);
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ErrorType value);
 
 }}
 

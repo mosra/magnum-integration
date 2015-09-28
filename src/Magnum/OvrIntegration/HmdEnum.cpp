@@ -28,7 +28,7 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-Debug operator<<(Debug debug, const HmdType value) {
+Debug& operator<<(Debug& debug, const HmdType value) {
     switch(value) {
         #define _c(value) case HmdType::value: return debug << "OvrIntegration::HmdType::" #value;
         _c(None)
@@ -45,7 +45,7 @@ Debug operator<<(Debug debug, const HmdType value) {
     return debug << "OvrIntegration::HmdType::(invalid)";
 }
 
-Debug operator<<(Debug debug, const HmdTrackingCapability value) {
+Debug& operator<<(Debug& debug, const HmdTrackingCapability value) {
     switch(value) {
         #define _c(value) case HmdTrackingCapability::value: return debug << "OvrIntegration::HmdTrackingCapability::" #value;
         _c(Orientation)
@@ -57,7 +57,7 @@ Debug operator<<(Debug debug, const HmdTrackingCapability value) {
     return debug << "OvrIntegration::HmdTrackingCapability::(invalid)";
 }
 
-Debug operator<<(Debug debug, const StatusFlag value) {
+Debug& operator<<(Debug& debug, const StatusFlag value) {
     switch(value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;
         _c(OrientationTracked)
@@ -71,7 +71,7 @@ Debug operator<<(Debug debug, const StatusFlag value) {
     return debug << "OvrIntegration::StatusFlag::(invalid)";
 }
 
-Debug operator<<(Debug debug, const PerformanceHudMode value) {
+Debug& operator<<(Debug& debug, const PerformanceHudMode value) {
     switch(value) {
         #define _c(value) case PerformanceHudMode::value: return debug << "OvrIntegration::PerformanceHudMode::" #value;
         _c(Off)
@@ -85,8 +85,7 @@ Debug operator<<(Debug debug, const PerformanceHudMode value) {
     return debug << "OvrIntegration::PerformanceHudMode::(invalid)";
 }
 
-
-Debug operator<<(Debug debug, const DebugHudStereoMode value) {
+Debug& operator<<(Debug& debug, const DebugHudStereoMode value) {
     switch(value) {
         #define _c(value) case DebugHudStereoMode::value: return debug << "OvrIntegration::DebugHudStereoMode::" #value;
         _c(Off)
@@ -99,7 +98,7 @@ Debug operator<<(Debug debug, const DebugHudStereoMode value) {
     return debug << "OvrIntegration::DebugHudStereoMode::(invalid)";
 }
 
-Debug operator<<(Debug debug, const ErrorType value) {
+Debug& operator<<(Debug& debug, const ErrorType value) {
     switch(value) {
         #define _c(value) case ErrorType::value: return debug << "OvrIntegration::ErrorType::" #value;
         _c(MemoryAllocationFailure)
