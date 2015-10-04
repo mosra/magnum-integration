@@ -249,7 +249,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          *
          * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
          */
-        std::array<DualQuaternion, 2> eyePoses();
+        std::array<DualQuaternion, 2> eyePoses() const {
+            return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
+        }
 
         /**
          * @brief Refresh cached eye poses

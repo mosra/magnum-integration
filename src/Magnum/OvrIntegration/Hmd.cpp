@@ -160,10 +160,6 @@ bool Hmd::isDebugHmd() const {
     return (_flags & HmdStatusFlag::Debug) != HmdStatusFlags{};
 }
 
-std::array<DualQuaternion, 2> Hmd::eyePoses() {
-    return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
-}
-
 void Hmd::setPerformanceHudMode(const PerformanceHudMode mode) const {
     ovr_SetInt(_hmd, OVR_PERF_HUD_MODE, Int(mode));
 }
