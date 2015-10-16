@@ -13,6 +13,7 @@
 # For each component is then defined:
 #  MAGNUM_*INTEGRATION_FOUND    - Whether the component was found
 #  MAGNUM_*INTEGRATION_LIBRARIES - Component library and dependent libraries
+#  MAGNUM_*INTEGRATION_INCLUDE_DIRS - Include dirs of dependencies
 #
 # The package is found if either debug or release version of each requested
 # library is found. If both debug and release libraries are found, proper
