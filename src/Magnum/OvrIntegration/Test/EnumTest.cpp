@@ -33,6 +33,7 @@
 
 #include "Magnum/OvrIntegration/Hmd.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Context.h"
 
 namespace Magnum { namespace OvrIntegration { namespace Test {
 
@@ -45,6 +46,7 @@ struct EnumTest: TestSuite::Tester {
     void performanceHudMode();
     void debugHudStereoMode();
     void errorType();
+    void ovrDetectResult();
 };
 
 EnumTest::EnumTest() {
@@ -53,7 +55,8 @@ EnumTest::EnumTest() {
               &EnumTest::statusFlag,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
-              &EnumTest::errorType});
+              &EnumTest::errorType,
+              &EnumTest::ovrDetectResult});
 }
 
 void EnumTest::hmdType() {
@@ -114,6 +117,16 @@ void EnumTest::errorType() {
     out.str("");
     Debug(&out) << ErrorType(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::ErrorType::(invalid)\n");
+}
+
+void EnumTest::ovrDetectResult() {
+    std::ostringstream out;
+    Debug(&out) << OvrDetectResult::HmdConnected;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::HmdConnected\n");
+
+    out.str("");
+    Debug(&out) << OvrDetectResult(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::(invalid)\n");
 }
 
 }}}
