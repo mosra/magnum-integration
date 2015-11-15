@@ -42,7 +42,7 @@ SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vecto
     _format(format),
     _size(size)
 {
-    ovr_CreateSwapTextureSetGL(_hmd.ovrHmd(), GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
+    ovr_CreateSwapTextureSetGL(_hmd.ovrSession(), GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
 
     /* wrap the texture set for magnum */
     _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(_swapTextureSet->TextureCount)};
@@ -56,7 +56,7 @@ SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vecto
 }
 
 SwapTextureSet::~SwapTextureSet() {
-    ovr_DestroySwapTextureSet(_hmd.ovrHmd(), _swapTextureSet);
+    ovr_DestroySwapTextureSet(_hmd.ovrSession(), _swapTextureSet);
 }
 
 Texture2D& SwapTextureSet::activeTexture() {
@@ -65,9 +65,9 @@ Texture2D& SwapTextureSet::activeTexture() {
 
 //----------------------------------------------------------------
 
-Hmd::Hmd(::ovrHmd hmd):
-    _hmd(hmd),
-    _hmdDesc(ovr_GetHmdDesc(_hmd)),
+Hmd::Hmd(::ovrSession hmd):
+    _session(hmd),
+    _hmdDesc(ovr_GetHmdDesc(_session)),
     _flags(HmdStatusFlag(_hmdDesc.AvailableHmdCaps))
 {
     /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice,
@@ -76,21 +76,21 @@ Hmd::Hmd(::ovrHmd hmd):
 
 Hmd::~Hmd() {
     if(_flags & HmdStatusFlag::HasMirrorTexture) {
-        ovr_DestroyMirrorTexture(_hmd, _ovrMirrorTexture);
+        ovr_DestroyMirrorTexture(_session, _ovrMirrorTexture);
     }
 
-    ovr_Destroy(_hmd);
+    ovr_Destroy(_session);
 }
 
 Hmd& Hmd::configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required) {
-    ovr_ConfigureTracking(_hmd, Int(caps), Int(required));
+    ovr_ConfigureTracking(_session, Int(caps), Int(required));
     return *this;
 }
 
 Hmd& Hmd::configureRendering() {
     /* get offset from center to left/right eye. The offset lengths may differ. */
-    _hmdToEyeViewOffset[0] = ovr_GetRenderDesc(_hmd, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeViewOffset;
-    _hmdToEyeViewOffset[1] = ovr_GetRenderDesc(_hmd, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeViewOffset;
+    _hmdToEyeViewOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeViewOffset;
+    _hmdToEyeViewOffset[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeViewOffset;
 
     _viewScale.HmdSpaceToWorldScaleInMeters = 1.0f;
     _viewScale.HmdToEyeViewOffset[0] = _hmdToEyeViewOffset[0];
@@ -100,7 +100,7 @@ Hmd& Hmd::configureRendering() {
 }
 
 Vector2i Hmd::fovTextureSize(const Int eye) {
-    return Vector2i(ovr_GetFovTextureSize(_hmd, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
+    return Vector2i(ovr_GetFovTextureSize(_session, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
 }
 
 Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& size) {
@@ -109,7 +109,7 @@ Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& 
             *_mirrorTexture);
 
     ovrResult result = ovr_CreateMirrorTextureGL(
-                _hmd,
+                _session,
                 GLenum(format),
                 size.x(),
                 size.y(),
@@ -147,8 +147,8 @@ Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const 
 }
 
 Hmd& Hmd::pollEyePoses() {
-    _predictedDisplayTime = ovr_GetPredictedDisplayTime(_hmd, _frameIndex);
-    _trackingState = ovr_GetTrackingState(_hmd, _predictedDisplayTime, true);
+    _predictedDisplayTime = ovr_GetPredictedDisplayTime(_session, _frameIndex);
+    _trackingState = ovr_GetTrackingState(_session, _predictedDisplayTime, true);
     ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeViewOffset, _ovrPoses);
 
     return *this;
@@ -159,11 +159,11 @@ bool Hmd::isDebugHmd() const {
 }
 
 void Hmd::setPerformanceHudMode(const PerformanceHudMode mode) const {
-    ovr_SetInt(_hmd, OVR_PERF_HUD_MODE, Int(mode));
+    ovr_SetInt(_session, OVR_PERF_HUD_MODE, Int(mode));
 }
 
 void Hmd::setDebugHudStereoMode(const DebugHudStereoMode mode) const {
-    ovr_SetInt(_hmd, OVR_DEBUG_HUD_STEREO_MODE, Int(mode));
+    ovr_SetInt(_session, OVR_DEBUG_HUD_STEREO_MODE, Int(mode));
 }
 
 }}

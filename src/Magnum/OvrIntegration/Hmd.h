@@ -96,8 +96,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
 /**
 @brief Hmd
 
-Wraps `ovrHmd` and methods from the Oculus SDK which directly affect the HMD
-and its properties.
+Wraps `ovrSession`, `ovrHmdDesc` and methods from the Oculus SDK which directly
+affect an HMD and its properties.
 
 ## Usage
 
@@ -308,7 +308,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         Matrix4 orthoSubProjectionMatrix(Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
 
         /** @brief Get the underlying `ovrHmd` */
-        ::ovrHmd ovrHmd() const { return _hmd; }
+        ::ovrHmd ovrHmd() const { return _session; }
+
+        /** @brief Get the underlying `ovrSession` */
+        ::ovrSession ovrSession() const { return _session; }
 
         /** @brief Get the underlying `ovrHmdDesc` */
         ::ovrHmdDesc ovrHmdDesc() const { return _hmdDesc; }
@@ -368,57 +371,57 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         /** @brief Name of the active Oculus profile */
         std::string user() const {
-            return ovr_GetString(_hmd, OVR_KEY_USER, "");
+            return ovr_GetString(_session, OVR_KEY_USER, "");
         }
 
         /** @brief Name set in the active Oculus profile */
         std::string playerName() const {
-            return ovr_GetString(_hmd, OVR_KEY_NAME, "");
+            return ovr_GetString(_session, OVR_KEY_NAME, "");
         }
 
         /** @brief Gender set in the active Oculus profile */
         std::string playerGender() const {
-            return ovr_GetString(_hmd, OVR_KEY_GENDER, OVR_DEFAULT_GENDER);
+            return ovr_GetString(_session, OVR_KEY_GENDER, OVR_DEFAULT_GENDER);
         }
 
         /** @brief Player height set in the active Oculus profile */
         Float playerHeight() const {
-            return ovr_GetFloat(_hmd, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_PLAYER_HEIGHT);
+            return ovr_GetFloat(_session, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_PLAYER_HEIGHT);
         }
 
         /** @brief Eye height set in the active Oculus profile */
         Float eyeHeight() const {
-            return ovr_GetFloat(_hmd, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_EYE_HEIGHT);
+            return ovr_GetFloat(_session, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_EYE_HEIGHT);
         }
 
         /** @brief Interpupillar distance set in the active Oculus profile */
         Float ipd() const {
-            return ovr_GetFloat(_hmd, OVR_KEY_IPD, OVR_DEFAULT_IPD);
+            return ovr_GetFloat(_session, OVR_KEY_IPD, OVR_DEFAULT_IPD);
         }
 
         /** @brief Neck to eye distance set in the active Oculus profile */
         std::array<Float, 2> neckToEyeDistance() const {
             std::array<Float, 2> values{{OVR_DEFAULT_NECK_TO_EYE_HORIZONTAL, OVR_DEFAULT_NECK_TO_EYE_VERTICAL}};
-            ovr_GetFloatArray(_hmd, OVR_KEY_NECK_TO_EYE_DISTANCE, values.data(), 2);
+            ovr_GetFloatArray(_session, OVR_KEY_NECK_TO_EYE_DISTANCE, values.data(), 2);
             return values;
         }
 
         /** @brief State of the eye relief dial set in the active Oculus profile */
         Int eyeReliefDial() const {
-            return ovr_GetInt(_hmd, OVR_KEY_EYE_RELIEF_DIAL, OVR_DEFAULT_EYE_RELIEF_DIAL);
+            return ovr_GetInt(_session, OVR_KEY_EYE_RELIEF_DIAL, OVR_DEFAULT_EYE_RELIEF_DIAL);
         }
 
         /** @brief Eye to node distance set in the active Oculus profile */
         std::array<Float, 2> eyeToNoseDistance() const {
            std::array<Float, 2> values{{0.0f, 0.0f}};
-            ovr_GetFloatArray(_hmd, OVR_KEY_EYE_TO_NOSE_DISTANCE, values.data(), 2);
+            ovr_GetFloatArray(_session, OVR_KEY_EYE_TO_NOSE_DISTANCE, values.data(), 2);
             return values;
         }
 
         /** @brief Maximal eye to plate distance set in the active Oculus profile */
         std::array<Float, 2> maxEyeToPlateDistance() const {
             std::array<Float, 2> values{{0.0f, 0.0f}};
-            ovr_GetFloatArray(_hmd, OVR_KEY_MAX_EYE_TO_PLATE_DISTANCE, values.data(), 2);
+            ovr_GetFloatArray(_session, OVR_KEY_MAX_EYE_TO_PLATE_DISTANCE, values.data(), 2);
             return values;
         }
 
@@ -428,9 +431,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         }
 
     private:
-        explicit Hmd(::ovrHmd hmd);
+        explicit Hmd(::ovrSession hmd);
 
-        ::ovrHmd _hmd;
+        ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
         ovrVector3f _hmdToEyeViewOffset[2];

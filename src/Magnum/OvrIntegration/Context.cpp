@@ -62,10 +62,10 @@ bool Context::detect() const {
 
 std::unique_ptr<Hmd> Context::createHmd() {
     if(detect()) {
-        ovrHmd hmd;
+        ovrSession session;
         ovrGraphicsLuid luid;
-        ovr_Create(&hmd, &luid);
-        return std::unique_ptr<Hmd>(new Hmd(hmd));
+        ovr_Create(&session, &luid);
+        return std::unique_ptr<Hmd>(new Hmd(session));
     }
 
     return std::unique_ptr<Hmd>();
