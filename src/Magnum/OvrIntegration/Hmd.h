@@ -329,7 +329,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
 
         /** @brief Get the current frame index */
-        UnsignedInt currentFrameIndex() const { return _frameIndex; }
+        Long currentFrameIndex() const { return _frameIndex; }
 
         /**
          * @brief Increment the frame index
@@ -337,7 +337,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * Returns the new index value. This method is called by
          * @ref Compositor::submitFrame().
          */
-        UnsignedInt incFrameIndex() {
+        Long incFrameIndex() {
             return ++_frameIndex;
         }
 
@@ -436,10 +436,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         ovrVector3f _hmdToEyeViewOffset[2];
         ::ovrViewScaleDesc _viewScale;
 
-        ovrFrameTiming _frameTiming;
+        Double _predictedDisplayTime;
         ovrTrackingState _trackingState;
 
-        UnsignedInt _frameIndex;
+        Long _frameIndex;
 
         ovrTexture* _ovrMirrorTexture;
         std::unique_ptr<Texture2D> _mirrorTexture;
