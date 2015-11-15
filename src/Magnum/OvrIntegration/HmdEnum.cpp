@@ -103,7 +103,7 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
         #define _c(value) case ErrorType::value: return debug << "OvrIntegration::ErrorType::" #value;
         _c(MemoryAllocationFailure)
         _c(SocketCreationFailure)
-        _c(InvalidHmd)
+        _c(InvalidSession)
         _c(Timeout)
         _c(NotInitialized)
         _c(InvalidParameter)
