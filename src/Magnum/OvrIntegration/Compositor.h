@@ -121,6 +121,13 @@ class MAGNUM_OVRINTEGRATION_EXPORT Layer {
         }
 
         /**
+         * @brief Whether this layer is processed in high quality
+         */
+        bool isHighQuality() const {
+            return (_layer.Header.Flags & ovrLayerFlag_HighQuality);
+        }
+
+        /**
          * @brief Enable/disable the layer
          * @return Reference to self (for method chaining)
          */
