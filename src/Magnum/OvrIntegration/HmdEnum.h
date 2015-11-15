@@ -160,7 +160,7 @@ enum class ErrorType: Int {
     /* General errors */
     MemoryAllocationFailure = ovrError_MemoryAllocationFailure, /**< Failure to allocate memory. */
     SocketCreationFailure = ovrError_SocketCreationFailure,     /**< Failure to create a socket. */
-    InvalidHmd = ovrError_InvalidHmd,                   /**< Invalid HMD parameter provided. */
+    InvalidSession = ovrError_InvalidSession,           /**< Invalid ovrSession parameter provided. */
     Timeout = ovrError_Timeout,                         /**< The operation timed out. */
     NotInitialized = ovrError_NotInitialized,           /**< The system or component has not been initialized. */
     InvalidParameter = ovrError_InvalidParameter,       /**< Invalid parameter provided. See error info or log for details. */
