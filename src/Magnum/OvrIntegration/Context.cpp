@@ -33,6 +33,17 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+Debug& operator<<(Debug& debug, const OvrDetectResult value) {
+    switch(value) {
+        #define _c(value) case OvrDetectResult::value: return debug << "OvrIntegration::OvrDetectResult::" #value;
+        _c(ServiceRunning)
+        _c(HmdConnected)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::OvrDetectResult::(invalid)";
+}
+
 Context* Context::_instance = nullptr;
 
 Context::Context() : _compositor() {
