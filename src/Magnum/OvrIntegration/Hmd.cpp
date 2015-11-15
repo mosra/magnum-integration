@@ -147,8 +147,8 @@ Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const 
 }
 
 Hmd& Hmd::pollEyePoses() {
-    _frameTiming = ovr_GetFrameTiming(_hmd, _frameIndex);
-    _trackingState = ovr_GetTrackingState(_hmd, _frameTiming.DisplayMidpointSeconds);
+    _predictedDisplayTime = ovr_GetPredictedDisplayTime(_hmd, _frameIndex);
+    _trackingState = ovr_GetTrackingState(_hmd, _predictedDisplayTime, true);
     ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeViewOffset, _ovrPoses);
 
     return *this;
