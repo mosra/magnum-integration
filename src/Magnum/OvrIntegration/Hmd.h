@@ -331,6 +331,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
 
+        /**
+         * @brief Reset yaw and postion to current pose
+         *
+         * The roll and pitch orientation components are always determined by
+         * gravity and cannot be redefined. All future tracking will report
+         * values relative to this new reference position.
+         */
+        void recenterPose() const {
+            ovr_RecenterPose(_session);
+        }
+
         /** @brief Get the current frame index */
         Long currentFrameIndex() const { return _frameIndex; }
 
