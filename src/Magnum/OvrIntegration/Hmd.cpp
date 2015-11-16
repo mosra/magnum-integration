@@ -174,4 +174,8 @@ void Hmd::setDebugHudStereoMode(const DebugHudStereoMode mode) const {
     ovr_SetInt(_session, OVR_DEBUG_HUD_STEREO_MODE, Int(mode));
 }
 
+void Hmd::setLayerHudMode(const LayerHudMode mode) const {
+    ovr_SetInt(_session, OVR_LAYER_HUD_MODE, Int(mode));
+}
+
 }}

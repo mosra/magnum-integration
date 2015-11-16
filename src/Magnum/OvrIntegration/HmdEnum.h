@@ -168,6 +168,19 @@ enum class DebugHudStereoMode: Int {
 };
 
 /**
+@brief Layer HUD mode
+
+@see @ref Hmd::setLayerHudMode()
+*/
+enum class LayerHudMode: Int {
+    /** Turns off the layer HUD */
+    Off = ovrLayerHud_Off,
+
+    /** Shows info about a specific layer */
+    Info = ovrLayerHud_Info,
+};
+
+/**
 @brief Error type
 
 @see @ref Error, @ref Context::error()
@@ -246,6 +259,9 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode 
 
 /** @debugoperatorenum{Magnum::OvrIntegration::DebugHudStereoMode} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugHudStereoMode value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::LayerHudMode} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, LayerHudMode value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::ErrorType} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ErrorType value);

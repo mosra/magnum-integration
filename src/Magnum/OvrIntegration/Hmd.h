@@ -375,6 +375,13 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         void setDebugHudStereoMode(DebugHudStereoMode mode) const;
 
+        /**
+         * @brief Set layer HUD mode
+         *
+         * Layer HUD enables the HMD user to see information about a layer.
+         */
+        void setLayerHudMode(LayerHudMode mode) const;
+
         /** @brief Tracking state */
         StatusFlags trackingState() const {
             return {StatusFlag(_trackingState.StatusFlags)};
