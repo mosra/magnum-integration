@@ -109,6 +109,17 @@ Debug& operator<<(Debug& debug, const DebugHudStereoMode value) {
     return debug << "OvrIntegration::DebugHudStereoMode::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const LayerHudMode value) {
+    switch(value) {
+        #define _c(value) case LayerHudMode::value: return debug << "OvrIntegration::LayerHudMode::" #value;
+        _c(Off)
+        _c(Info)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::LayerHudMode::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const ErrorType value) {
     switch(value) {
         #define _c(value) case ErrorType::value: return debug << "OvrIntegration::ErrorType::" #value;

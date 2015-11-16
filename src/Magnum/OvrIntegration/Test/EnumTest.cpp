@@ -45,6 +45,7 @@ struct EnumTest: TestSuite::Tester {
     void statusFlag();
     void performanceHudMode();
     void debugHudStereoMode();
+    void layerHudMode();
     void errorType();
     void ovrDetectResult();
     void sessionStatusFlag();
@@ -56,6 +57,7 @@ EnumTest::EnumTest() {
               &EnumTest::statusFlag,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
+              &EnumTest::layerHudMode,
               &EnumTest::errorType,
               &EnumTest::ovrDetectResult,
               &EnumTest::sessionStatusFlag});
@@ -109,6 +111,16 @@ void EnumTest::debugHudStereoMode() {
     out.str("");
     Debug(&out) << DebugHudStereoMode(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::DebugHudStereoMode::(invalid)\n");
+}
+
+void EnumTest::layerHudMode() {
+    std::ostringstream out;
+    Debug(&out) << LayerHudMode::Off;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::LayerHudMode::Off\n");
+
+    out.str("");
+    Debug(&out) << LayerHudMode(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::LayerHudMode::(invalid)\n");
 }
 
 void EnumTest::errorType() {
