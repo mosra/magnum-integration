@@ -104,9 +104,6 @@ Instances of @ref Hmd are created by @ref Context.
 
 @code
 std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd();
-hmd->configureTracking(HmdTrackingCapability::Orientation |
-                       HmdTrackingCapability::MagYawCorrection |
-                       HmdTrackingCapability::Position, {});
 hmd->configureRendering();
 
 // ...
@@ -141,14 +138,11 @@ Framebuffer framebuffer{{}, textureSize};
 framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
 
 // setup depth attachment
-Image2D image(PixelFormat::DepthComponent, PixelType::UnsignedInt, textureSize, nullptr);
-
 Texture2D* depth = new Texture2D();
 depth->setMinificationFilter(Sampler::Filter::Linear)
       .setMagnificationFilter(Sampler::Filter::Linear)
       .setWrapping(Sampler::Wrapping::ClampToEdge)
-      .setStorage(1, TextureFormat::DepthComponent24, textureSize)
-      .subImage(0, {{}, textureSize}, image);
+      .setStorage(1, TextureFormat::DepthComponent24, textureSize);
 
 // ...
 
@@ -196,6 +190,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         /**
          * @brief Enable or disable HMD tracking capabilities
          * @return Reference to self (for method chaining)
+         *
+         * By default full tracking capabilies of a device are enabled.
          */
         Hmd& configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required);
 
