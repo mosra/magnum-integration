@@ -47,6 +47,7 @@ struct EnumTest: TestSuite::Tester {
     void debugHudStereoMode();
     void errorType();
     void ovrDetectResult();
+    void sessionStatusFlag();
 };
 
 EnumTest::EnumTest() {
@@ -56,7 +57,8 @@ EnumTest::EnumTest() {
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
               &EnumTest::errorType,
-              &EnumTest::ovrDetectResult});
+              &EnumTest::ovrDetectResult,
+              &EnumTest::sessionStatusFlag});
 }
 
 void EnumTest::hmdType() {
@@ -127,6 +129,16 @@ void EnumTest::ovrDetectResult() {
     out.str("");
     Debug(&out) << OvrDetectResult(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::(invalid)\n");
+}
+
+void EnumTest::sessionStatusFlag() {
+    std::ostringstream out;
+    Debug(&out) << SessionStatusFlag::HasVrFocus;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HasVrFocus\n");
+
+    out.str("");
+    Debug(&out) << SessionStatusFlag(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::(invalid)\n");
 }
 
 }}}

@@ -119,6 +119,22 @@ typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 
+/** @brief Session status flag */
+enum class SessionStatusFlag: Byte {
+    /** Set when the process has VR focus and thus is visible in the HMD */
+    HasVrFocus = 1,
+
+    /** Set when an HMD is present */
+    HmdPresent = 2
+};
+
+/** @brief Session status flags */
+typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
+
+CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
+
+
+
 /**
 @brief Performance HUD mode
 
@@ -221,6 +237,9 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapabili
 
 /** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::SessionStatusFlag} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::PerformanceHudMode} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode value);
