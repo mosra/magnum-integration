@@ -44,7 +44,6 @@
 
 #include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
-#include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/visibility.h"
 
 namespace Magnum { namespace OvrIntegration {
