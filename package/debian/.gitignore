@@ -1,0 +1,10 @@
+magnum-integration-dev.debhelper.log
+magnum-integration-dev.substvars
+magnum-integration-dev/
+magnum-integration.debhelper.log
+magnum-integration.postinst.debhelper
+magnum-integration.postrm.debhelper
+magnum-integration.substvars
+magnum-integration/
+files
+tmp/
