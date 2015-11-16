@@ -343,11 +343,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         /**
          * @brief Increment the frame index
          *
-         * Returns the new index value. This method is called by
+         * Returns the previous index value. This method is called by
          * @ref Compositor::submitFrame().
          */
         Long incFrameIndex() {
-            return ++_frameIndex;
+            return _frameIndex++;
         }
 
         /**
