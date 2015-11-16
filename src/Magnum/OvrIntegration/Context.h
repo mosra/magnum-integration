@@ -28,8 +28,6 @@
 
 /** @file
  * @brief Class @ref Magnum::OvrIntegration::Context
- *
- * @author Jonathan Hale (Squareys)
  */
 
 #include <memory>
@@ -86,8 +84,16 @@ if(Context::get().detect()) {
 }
 @endcode
 
+Or without initializing the service you can do:
+
+@code
+const OvrDetectResults result = Context::detect();
+if(result & OvrDetectResult::HmdConnected) {
+    // ...
+}
+@endcode
+
 @see @ref Hmd, @ref Compositor
-@author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
