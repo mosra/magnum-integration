@@ -120,7 +120,7 @@ typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 
 /** @brief Session status flag */
-enum class SessionStatusFlag: Byte {
+enum class SessionStatusFlag: UnsignedByte {
     /** Set when the process has VR focus and thus is visible in the HMD */
     HasVrFocus = 1,
 
@@ -132,8 +132,6 @@ enum class SessionStatusFlag: Byte {
 typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
-
-
 
 /**
 @brief Performance HUD mode
