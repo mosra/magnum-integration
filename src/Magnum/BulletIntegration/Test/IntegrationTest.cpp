@@ -64,8 +64,14 @@ void IntegrationTest::matrix() {
                   7.9f, -1.0f, 8.0f};
 
     CORRADE_COMPARE(Matrix3{b}, a);
-    /* Clang can't handle {} (huh?) */
-    CORRADE_VERIFY(btMatrix3x3(a) == b);
+
+    /* Comparing directly fails on floating-point inaccuracies, need to use
+       fuzzy compare */
+    const btMatrix3x3 btA = btMatrix3x3(a);
+    const btScalar* pa = &btA[0][0];
+    const btScalar* pb = &b[0][0];
+    for(std::size_t i = 0; i < 9; ++i, ++pb, ++pa)
+        CORRADE_COMPARE(*pa, *pb);
 }
 
 }}}
