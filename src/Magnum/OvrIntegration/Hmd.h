@@ -430,6 +430,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
             return ovr_GetString(_session, OVR_KEY_EYE_CUP, "");
         }
 
+        /** @brief Status of the OVR session */
+        SessionStatusFlags sessionStatus() const;
+
     private:
         explicit Hmd(::ovrSession hmd);
 

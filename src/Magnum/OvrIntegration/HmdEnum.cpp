@@ -71,6 +71,17 @@ Debug& operator<<(Debug& debug, const StatusFlag value) {
     return debug << "OvrIntegration::StatusFlag::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const SessionStatusFlag value) {
+    switch(value) {
+        #define _c(value) case SessionStatusFlag::value: return debug << "OvrIntegration::SessionStatusFlag::" #value;
+        _c(HasVrFocus)
+        _c(HmdPresent)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::SessionStatusFlag::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const PerformanceHudMode value) {
     switch(value) {
         #define _c(value) case PerformanceHudMode::value: return debug << "OvrIntegration::PerformanceHudMode::" #value;
