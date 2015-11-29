@@ -430,8 +430,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
          * @brief Add a layer of specific type
          *
          * @see @ref addLayerDirect(), @ref addLayerEyeFov(),
-         *      @ref addLayerEyeFovDepth(), @ref addLayerQuadHeadLocked(),
-         *      @ref addLayerQuadInWorld()
+         *      @ref addLayerEyeFovDepth(), @ref addLayerQuad()
          */
         Layer& addLayer(LayerType type);
 

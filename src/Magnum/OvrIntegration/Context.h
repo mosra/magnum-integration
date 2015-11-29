@@ -119,6 +119,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
          */
         static Context& get();
 
+        /** @brief Constructor */
         explicit Context();
 
         /** @brief Copying is not allowed */
@@ -138,7 +139,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         /**
          * @brief Detect if a device is currently connected
          *
-         * @see @ref detect(int) to detect runtime and HMD before initializing Context.
+         * See @ref detect(Int) to detect runtime and HMD before initializing
+         * context.
          */
         bool detect() const;
 
