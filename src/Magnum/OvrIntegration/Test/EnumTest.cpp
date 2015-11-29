@@ -31,6 +31,7 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/DualQuaternion.h"
 
+#include "Magnum/OvrIntegration/Hmd.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
 
 namespace Magnum { namespace OvrIntegration { namespace Test {
