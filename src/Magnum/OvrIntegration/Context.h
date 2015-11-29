@@ -51,15 +51,23 @@ struct Error {
 };
 
 /**
- * @brief Result of @ref Context::detect(int).
- */
-enum class OvrDetectResult: Byte {
-    ServiceRunning = 1,
-    HmdConnected = 2
+@brief Detection result
+
+@see @ref DetectResults, @ref Context::detect(Int)
+*/
+enum class DetectResult: UnsignedByte {
+    ServiceRunning = 1,     /**< Service is running */
+    HmdConnected = 2        /**< HMD is connected */
 };
 
-typedef Corrade::Containers::EnumSet<OvrDetectResult> OvrDetectResults;
-CORRADE_ENUMSET_OPERATORS(OvrDetectResults)
+/**
+@brief Detection results
+
+@see @ref Context::detect(Int)
+*/
+typedef Containers::EnumSet<DetectResult> DetectResults;
+
+CORRADE_ENUMSET_OPERATORS(DetectResults)
 
 /**
 @brief Context singleton
@@ -97,7 +105,6 @@ if(result & OvrDetectResult::HmdConnected) {
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
-
         /**
          * @brief Detect if a device is currently connected
          * @param timeout Timeout (in milliseconds) or 0 to poll
@@ -106,10 +113,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
          * loading the LibOVRRT shared library.  This may be called before
          * @ref Context() to help decide whether or not to initialize LibOVR.
          */
-        static OvrDetectResults detect(Int timeout) {
+        static DetectResults detect(Int timeout) {
             const ovrDetectResult result = ovr_Detect(timeout);
-            return ((result.IsOculusHMDConnected) ? OvrDetectResult::ServiceRunning : OvrDetectResults{})
-                 | ((result.IsOculusServiceRunning) ? OvrDetectResult::HmdConnected : OvrDetectResults{});
+            return ((result.IsOculusHMDConnected) ? DetectResult::ServiceRunning : DetectResults{})
+                 | ((result.IsOculusServiceRunning) ? DetectResult::HmdConnected : DetectResults{});
         }
 
         /**
@@ -165,8 +172,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         Compositor _compositor;
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::OvrDetectResult} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, OvrDetectResult value);
+/** @debugoperatorenum{Magnum::OvrIntegration::DetectResult} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DetectResult value);
 
 inline Error Context::error() const {
     ovrErrorInfo info;

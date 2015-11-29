@@ -47,7 +47,7 @@ struct EnumTest: TestSuite::Tester {
     void debugHudStereoMode();
     void layerHudMode();
     void errorType();
-    void ovrDetectResult();
+    void detectResult();
     void sessionStatusFlag();
 };
 
@@ -59,7 +59,7 @@ EnumTest::EnumTest() {
               &EnumTest::debugHudStereoMode,
               &EnumTest::layerHudMode,
               &EnumTest::errorType,
-              &EnumTest::ovrDetectResult,
+              &EnumTest::detectResult,
               &EnumTest::sessionStatusFlag});
 }
 
@@ -133,14 +133,14 @@ void EnumTest::errorType() {
     CORRADE_COMPARE(out.str(), "OvrIntegration::ErrorType::(invalid)\n");
 }
 
-void EnumTest::ovrDetectResult() {
+void EnumTest::detectResult() {
     std::ostringstream out;
-    Debug(&out) << OvrDetectResult::HmdConnected;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::HmdConnected\n");
+    Debug(&out) << DetectResult::HmdConnected;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::DetectResult::HmdConnected\n");
 
     out.str("");
-    Debug(&out) << OvrDetectResult(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::(invalid)\n");
+    Debug(&out) << DetectResult(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::DetectResult::(invalid)\n");
 }
 
 void EnumTest::sessionStatusFlag() {
