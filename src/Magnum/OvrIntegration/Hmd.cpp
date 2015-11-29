@@ -35,8 +35,6 @@
 #undef near
 #undef far
 
-#include <OVR_CAPI_Keys.h>
-
 namespace Magnum { namespace OvrIntegration {
 
 SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size):
