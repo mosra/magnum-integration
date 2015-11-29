@@ -62,16 +62,9 @@ enum class LayerType: Int {
 
     /**
      * Described by `ovrLayerQuad`.
-     * @see @ref LayerQuad, @ref Compositor::addLayerQuadInWorld()
+     * @see @ref LayerQuad, @ref Compositor::addLayerQuad()
      */
-    QuadInWorld = ovrLayerType_QuadInWorld,
-
-    /**
-     * Described by `ovrLayerQuad`. Displayed in front of your face, moving
-     * with the head.
-     * @see @ref LayerQuad, @ref Compositor::addLayerQuadHeadLocked()
-     */
-    QuadHeadLocked = ovrLayerType_QuadHeadLocked,
+    Quad = ovrLayerType_Quad,
 
     /**
      * Described by `ovrLayerDirect`. Passthrough for debugging and custom
@@ -157,6 +150,40 @@ class MAGNUM_OVRINTEGRATION_EXPORT Layer {
 };
 
 /**
+@brief Superclass for layers which can be locked relative to the HMD
+
+@author Jonathan Hale (Squareys)
+*/
+class MAGNUM_OVRINTEGRATION_EXPORT HeadLockableLayer: public Layer {
+    public:
+        /** @brief Constructor */
+        explicit HeadLockableLayer(LayerType type): Layer(type) {}
+
+        /**
+         * @brief Set whether to lock this layer to the players head
+         * @return Reference to self (for method chaining)
+         *
+         * The surface will move relative to the HMD rather than to the
+         * sensor/torso, remaining still while the head moves.
+         */
+        HeadLockableLayer& setHeadLocked(bool headLocked) {
+            if(headLocked) {
+                _layer.Header.Flags |= ovrLayerFlag_HeadLocked;
+            } else {
+                _layer.Header.Flags &= ~ovrLayerFlag_HeadLocked;
+            }
+            return *this;
+        }
+
+        /**
+         * @brief Whether this layer is locked to the players head
+         */
+        bool isHeadLocked() const {
+            return (_layer.Header.Flags & ovrLayerFlag_HeadLocked);
+        }
+};
+
+/**
 @brief Wrapper around `ovrLayerDirect`
 
 @author Jonathan Hale (Squareys)
@@ -188,7 +215,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerDirect: public Layer {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
     public:
         /** @brief Constructor */
         explicit LayerEyeFov();
@@ -249,7 +276,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFovDepth: public HeadLockableLayer {
     public:
         explicit LayerEyeFovDepth();
 
@@ -303,10 +330,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFovDepth: public Layer {
 
 @author Jonathan Hale (Squareys)
 */
-class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public Layer {
+class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
     public:
         /** @brief Constructor */
-        explicit LayerQuad(bool headLocked = false);
+        explicit LayerQuad();
 
         /**
          * @brief Set color texture
@@ -430,22 +457,15 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
         LayerEyeFovDepth& addLayerEyeFovDepth();
 
         /**
-         * @brief Create a @ref LayerQuad with @ref LayerType::QuadHeadLocked
+         * @brief Create a @ref LayerQuad
          *
          * @see @ref addLayer()
          */
-        LayerQuad& addLayerQuadHeadLocked();
-
-        /**
-         * @brief Create a @ref LayerQuad with @ref LayerType::QuadInWorld
-         *
-         * @see @ref addLayer()
-         */
-        LayerQuad& addLayerQuadInWorld();
+        LayerQuad& addLayerQuad();
 
         /**
          * @brief Submit the frame to the compositor
-         * @param hmd       HMD to render to.
+         * @param hmd       HMD to render to
          * @return Reference to self (for method chaining)
          */
         Compositor& submitFrame(Hmd& hmd);

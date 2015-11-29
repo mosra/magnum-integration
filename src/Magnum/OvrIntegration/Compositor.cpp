@@ -65,7 +65,7 @@ LayerDirect& LayerDirect::setViewport(const Int eye, const Range2Di& viewport) {
 
 //----------------------------------------------------------------
 
-LayerEyeFov::LayerEyeFov(): Layer(LayerType::EyeFov) {
+LayerEyeFov::LayerEyeFov(): HeadLockableLayer(LayerType::EyeFov) {
 }
 
 LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
@@ -104,7 +104,7 @@ TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& proj
                 ovrProjection_RightHanded | ovrProjection_ClipRangeOpenGL);
 }
 
-LayerEyeFovDepth::LayerEyeFovDepth(): Layer(LayerType::EyeFovDepth) {
+LayerEyeFovDepth::LayerEyeFovDepth(): HeadLockableLayer(LayerType::EyeFovDepth) {
 }
 
 LayerEyeFovDepth& LayerEyeFovDepth::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
@@ -149,9 +149,7 @@ LayerEyeFovDepth& LayerEyeFovDepth::setTimewarpProjDesc(const TimewarpProjection
 
 //----------------------------------------------------------------
 
-LayerQuad::LayerQuad(bool headLocked):
-    Layer((headLocked) ? LayerType::QuadHeadLocked : LayerType::QuadInWorld)
-{
+LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {
 }
 
 LayerQuad& LayerQuad::setColorTexture(const SwapTextureSet& textureSet) {
@@ -192,10 +190,8 @@ Layer& Compositor::addLayer(const LayerType type) {
             return addLayerEyeFov();
         case LayerType::EyeFovDepth:
             return addLayerEyeFovDepth();
-        case LayerType::QuadHeadLocked:
-            return addLayerQuadHeadLocked();
-        case LayerType::QuadInWorld:
-            return addLayerQuadInWorld();
+        case LayerType::Quad:
+            return addLayerQuad();
     }
     CORRADE_ASSERT_UNREACHABLE();
 }
@@ -216,15 +212,11 @@ LayerEyeFov& Compositor::addLayerEyeFov() {
 }
 
 LayerEyeFovDepth& Compositor::addLayerEyeFovDepth() {
-    return static_cast<LayerEyeFovDepth&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
+    return static_cast<LayerEyeFovDepth&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFovDepth()))));
 }
 
-LayerQuad& Compositor::addLayerQuadHeadLocked() {
-    return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerQuad(true)))));
-}
-
-LayerQuad& Compositor::addLayerQuadInWorld() {
-    return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
+LayerQuad& Compositor::addLayerQuad() {
+    return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerQuad()))));
 }
 
 Compositor& Compositor::submitFrame(Hmd& hmd) {
