@@ -33,6 +33,17 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+Debug& operator<<(Debug& debug, const OvrDetectResult value) {
+    switch(value) {
+        #define _c(value) case OvrDetectResult::value: return debug << "OvrIntegration::OvrDetectResult::" #value;
+        _c(ServiceRunning)
+        _c(HmdConnected)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::OvrDetectResult::(invalid)";
+}
+
 Context* Context::_instance = nullptr;
 
 Context::Context() : _compositor() {
@@ -62,10 +73,10 @@ bool Context::detect() const {
 
 std::unique_ptr<Hmd> Context::createHmd() {
     if(detect()) {
-        ovrHmd hmd;
+        ovrSession session;
         ovrGraphicsLuid luid;
-        ovr_Create(&hmd, &luid);
-        return std::unique_ptr<Hmd>(new Hmd(hmd));
+        ovr_Create(&session, &luid);
+        return std::unique_ptr<Hmd>(new Hmd(session));
     }
 
     return std::unique_ptr<Hmd>();

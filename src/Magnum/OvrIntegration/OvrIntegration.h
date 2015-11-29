@@ -52,12 +52,16 @@ enum class HmdType: Int;
 enum class HmdCapability: Int;
 enum class HmdTrackingCapability: Int;
 enum class HmdStatusFlag: UnsignedByte;
+enum class SessionStatusFlag: UnsignedByte;
 enum class PerformanceHudMode: Int;
+enum class DebugHudStereoMode: Int;
+enum class LayerHudMode: Int;
 enum class LayerType: Int;
 
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
+typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
 }}
 

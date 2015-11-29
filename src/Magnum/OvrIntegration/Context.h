@@ -28,8 +28,6 @@
 
 /** @file
  * @brief Class @ref Magnum::OvrIntegration::Context
- *
- * @author Jonathan Hale (Squareys)
  */
 
 #include <memory>
@@ -51,6 +49,17 @@ struct Error {
     ErrorType type;         /**< @brief Error type */
     std::string message;    /**< @brief Error message */
 };
+
+/**
+ * @brief Result of @ref Context::detect(int).
+ */
+enum class OvrDetectResult: Byte {
+    ServiceRunning = 1,
+    HmdConnected = 2
+};
+
+typedef Corrade::Containers::EnumSet<OvrDetectResult> OvrDetectResults;
+CORRADE_ENUMSET_OPERATORS(OvrDetectResults)
 
 /**
 @brief Context singleton
@@ -75,11 +84,34 @@ if(Context::get().detect()) {
 }
 @endcode
 
+Or without initializing the service you can do:
+
+@code
+const OvrDetectResults result = Context::detect();
+if(result & OvrDetectResult::HmdConnected) {
+    // ...
+}
+@endcode
+
 @see @ref Hmd, @ref Compositor
-@author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
+
+        /**
+         * @brief Detect if a device is currently connected
+         * @param timeout Timeout (in milliseconds) or 0 to poll
+         *
+         * Checks for Oculus Runtime and Oculus HMD device status without
+         * loading the LibOVRRT shared library.  This may be called before
+         * @ref Context() to help decide whether or not to initialize LibOVR.
+         */
+        static OvrDetectResults detect(Int timeout) {
+            const ovrDetectResult result = ovr_Detect(timeout);
+            return ((result.IsOculusHMDConnected) ? OvrDetectResult::ServiceRunning : OvrDetectResults{})
+                 | ((result.IsOculusServiceRunning) ? OvrDetectResult::HmdConnected : OvrDetectResults{});
+        }
+
         /**
          * @brief Global context instance
          *
@@ -103,7 +135,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         /** @brief Moving is not allowed */
         Context& operator=(Context&&) = delete;
 
-        /** @brief Detect if a device is currently connected */
+        /**
+         * @brief Detect if a device is currently connected
+         *
+         * @see @ref detect(int) to detect runtime and HMD before initializing Context.
+         */
         bool detect() const;
 
         /**
@@ -126,6 +162,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         static Context* _instance;
         Compositor _compositor;
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::OvrDetectResult} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, OvrDetectResult value);
 
 inline Error Context::error() const {
     ovrErrorInfo info;

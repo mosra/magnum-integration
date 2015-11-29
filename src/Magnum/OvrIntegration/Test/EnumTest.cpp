@@ -31,7 +31,9 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/DualQuaternion.h"
 
+#include "Magnum/OvrIntegration/Hmd.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Context.h"
 
 namespace Magnum { namespace OvrIntegration { namespace Test {
 
@@ -43,7 +45,10 @@ struct EnumTest: TestSuite::Tester {
     void statusFlag();
     void performanceHudMode();
     void debugHudStereoMode();
+    void layerHudMode();
     void errorType();
+    void ovrDetectResult();
+    void sessionStatusFlag();
 };
 
 EnumTest::EnumTest() {
@@ -52,7 +57,10 @@ EnumTest::EnumTest() {
               &EnumTest::statusFlag,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
-              &EnumTest::errorType});
+              &EnumTest::layerHudMode,
+              &EnumTest::errorType,
+              &EnumTest::ovrDetectResult,
+              &EnumTest::sessionStatusFlag});
 }
 
 void EnumTest::hmdType() {
@@ -105,6 +113,16 @@ void EnumTest::debugHudStereoMode() {
     CORRADE_COMPARE(out.str(), "OvrIntegration::DebugHudStereoMode::(invalid)\n");
 }
 
+void EnumTest::layerHudMode() {
+    std::ostringstream out;
+    Debug(&out) << LayerHudMode::Off;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::LayerHudMode::Off\n");
+
+    out.str("");
+    Debug(&out) << LayerHudMode(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::LayerHudMode::(invalid)\n");
+}
+
 void EnumTest::errorType() {
     std::ostringstream out;
     Debug(&out) << ErrorType::LeakingResources;
@@ -113,6 +131,26 @@ void EnumTest::errorType() {
     out.str("");
     Debug(&out) << ErrorType(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::ErrorType::(invalid)\n");
+}
+
+void EnumTest::ovrDetectResult() {
+    std::ostringstream out;
+    Debug(&out) << OvrDetectResult::HmdConnected;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::HmdConnected\n");
+
+    out.str("");
+    Debug(&out) << OvrDetectResult(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::OvrDetectResult::(invalid)\n");
+}
+
+void EnumTest::sessionStatusFlag() {
+    std::ostringstream out;
+    Debug(&out) << SessionStatusFlag::HasVrFocus;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HasVrFocus\n");
+
+    out.str("");
+    Debug(&out) << SessionStatusFlag(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::(invalid)\n");
 }
 
 }}}

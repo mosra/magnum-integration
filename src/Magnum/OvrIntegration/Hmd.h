@@ -35,6 +35,7 @@
 #include <array>
 #include <memory>
 #include <OVR_CAPI.h>
+#include <OVR_CAPI_Keys.h>
 
 #include <Corrade/Containers/Array.h>
 
@@ -43,7 +44,6 @@
 
 #include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
-#include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/visibility.h"
 
 namespace Magnum { namespace OvrIntegration {
@@ -95,8 +95,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
 /**
 @brief Hmd
 
-Wraps `ovrHmd` and methods from the Oculus SDK which directly affect the HMD
-and its properties.
+Wraps `ovrSession`, `ovrHmdDesc` and methods from the Oculus SDK which directly
+affect an HMD and its properties.
 
 ## Usage
 
@@ -104,9 +104,6 @@ Instances of @ref Hmd are created by @ref Context.
 
 @code
 std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd();
-hmd->configureTracking(HmdTrackingCapability::Orientation |
-                       HmdTrackingCapability::MagYawCorrection |
-                       HmdTrackingCapability::Position, {});
 hmd->configureRendering();
 
 // ...
@@ -141,14 +138,11 @@ Framebuffer framebuffer{{}, textureSize};
 framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
 
 // setup depth attachment
-Image2D image(PixelFormat::DepthComponent, PixelType::UnsignedInt, textureSize, nullptr);
-
 Texture2D* depth = new Texture2D();
 depth->setMinificationFilter(Sampler::Filter::Linear)
       .setMagnificationFilter(Sampler::Filter::Linear)
       .setWrapping(Sampler::Wrapping::ClampToEdge)
-      .setStorage(1, TextureFormat::DepthComponent24, textureSize)
-      .subImage(0, {{}, textureSize}, image);
+      .setStorage(1, TextureFormat::DepthComponent24, textureSize);
 
 // ...
 
@@ -196,6 +190,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         /**
          * @brief Enable or disable HMD tracking capabilities
          * @return Reference to self (for method chaining)
+         *
+         * By default full tracking capabilies of a device are enabled.
          */
         Hmd& configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required);
 
@@ -249,7 +245,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          *
          * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
          */
-        std::array<DualQuaternion, 2> eyePoses();
+        std::array<DualQuaternion, 2> eyePoses() const {
+            return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
+        }
 
         /**
          * @brief Refresh cached eye poses
@@ -305,7 +303,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         Matrix4 orthoSubProjectionMatrix(Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
 
         /** @brief Get the underlying `ovrHmd` */
-        ::ovrHmd ovrHmd() const { return _hmd; }
+        ::ovrHmd ovrHmd() const { return _session; }
+
+        /** @brief Get the underlying `ovrSession` */
+        ::ovrSession ovrSession() const { return _session; }
 
         /** @brief Get the underlying `ovrHmdDesc` */
         ::ovrHmdDesc ovrHmdDesc() const { return _hmdDesc; }
@@ -325,17 +326,28 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
 
+        /**
+         * @brief Reset yaw and postion to current pose
+         *
+         * The roll and pitch orientation components are always determined by
+         * gravity and cannot be redefined. All future tracking will report
+         * values relative to this new reference position.
+         */
+        void recenterPose() const {
+            ovr_RecenterPose(_session);
+        }
+
         /** @brief Get the current frame index */
-        UnsignedInt currentFrameIndex() const { return _frameIndex; }
+        Long currentFrameIndex() const { return _frameIndex; }
 
         /**
          * @brief Increment the frame index
          *
-         * Returns the new index value. This method is called by
+         * Returns the previous index value. This method is called by
          * @ref Compositor::submitFrame().
          */
-        UnsignedInt incFrameIndex() {
-            return ++_frameIndex;
+        Long incFrameIndex() {
+            return _frameIndex++;
         }
 
         /**
@@ -358,24 +370,95 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         void setDebugHudStereoMode(DebugHudStereoMode mode) const;
 
+        /**
+         * @brief Set layer HUD mode
+         *
+         * Layer HUD enables the HMD user to see information about a layer.
+         */
+        void setLayerHudMode(LayerHudMode mode) const;
+
         /** @brief Tracking state */
         StatusFlags trackingState() const {
             return {StatusFlag(_trackingState.StatusFlags)};
         }
 
-    private:
-        explicit Hmd(::ovrHmd hmd);
+        /** @brief Name of the active Oculus profile */
+        std::string user() const {
+            return ovr_GetString(_session, OVR_KEY_USER, "");
+        }
 
-        ::ovrHmd _hmd;
+        /** @brief Name set in the active Oculus profile */
+        std::string playerName() const {
+            return ovr_GetString(_session, OVR_KEY_NAME, "");
+        }
+
+        /** @brief Gender set in the active Oculus profile */
+        std::string playerGender() const {
+            return ovr_GetString(_session, OVR_KEY_GENDER, OVR_DEFAULT_GENDER);
+        }
+
+        /** @brief Player height set in the active Oculus profile */
+        Float playerHeight() const {
+            return ovr_GetFloat(_session, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_PLAYER_HEIGHT);
+        }
+
+        /** @brief Eye height set in the active Oculus profile */
+        Float eyeHeight() const {
+            return ovr_GetFloat(_session, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_EYE_HEIGHT);
+        }
+
+        /** @brief Interpupillar distance set in the active Oculus profile */
+        Float ipd() const {
+            return ovr_GetFloat(_session, OVR_KEY_IPD, OVR_DEFAULT_IPD);
+        }
+
+        /** @brief Neck to eye distance set in the active Oculus profile */
+        std::array<Float, 2> neckToEyeDistance() const {
+            std::array<Float, 2> values{{OVR_DEFAULT_NECK_TO_EYE_HORIZONTAL, OVR_DEFAULT_NECK_TO_EYE_VERTICAL}};
+            ovr_GetFloatArray(_session, OVR_KEY_NECK_TO_EYE_DISTANCE, values.data(), 2);
+            return values;
+        }
+
+        /** @brief State of the eye relief dial set in the active Oculus profile */
+        Int eyeReliefDial() const {
+            return ovr_GetInt(_session, OVR_KEY_EYE_RELIEF_DIAL, OVR_DEFAULT_EYE_RELIEF_DIAL);
+        }
+
+        /** @brief Eye to node distance set in the active Oculus profile */
+        std::array<Float, 2> eyeToNoseDistance() const {
+           std::array<Float, 2> values{{0.0f, 0.0f}};
+            ovr_GetFloatArray(_session, OVR_KEY_EYE_TO_NOSE_DISTANCE, values.data(), 2);
+            return values;
+        }
+
+        /** @brief Maximal eye to plate distance set in the active Oculus profile */
+        std::array<Float, 2> maxEyeToPlateDistance() const {
+            std::array<Float, 2> values{{0.0f, 0.0f}};
+            ovr_GetFloatArray(_session, OVR_KEY_MAX_EYE_TO_PLATE_DISTANCE, values.data(), 2);
+            return values;
+        }
+
+        /** @brief Eye cup set in the active Oculus profile */
+        std::string eyeCup() const {
+            return ovr_GetString(_session, OVR_KEY_EYE_CUP, "");
+        }
+
+        /** @brief Status of the OVR session */
+        SessionStatusFlags sessionStatus() const;
+
+    private:
+        explicit Hmd(::ovrSession hmd);
+
+        ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
         ovrVector3f _hmdToEyeViewOffset[2];
         ::ovrViewScaleDesc _viewScale;
 
-        ovrFrameTiming _frameTiming;
+        Double _predictedDisplayTime;
         ovrTrackingState _trackingState;
 
-        UnsignedInt _frameIndex;
+        Long _frameIndex;
 
         ovrTexture* _ovrMirrorTexture;
         std::unique_ptr<Texture2D> _mirrorTexture;

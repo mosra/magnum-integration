@@ -71,6 +71,17 @@ Debug& operator<<(Debug& debug, const StatusFlag value) {
     return debug << "OvrIntegration::StatusFlag::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const SessionStatusFlag value) {
+    switch(value) {
+        #define _c(value) case SessionStatusFlag::value: return debug << "OvrIntegration::SessionStatusFlag::" #value;
+        _c(HasVrFocus)
+        _c(HmdPresent)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::SessionStatusFlag::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const PerformanceHudMode value) {
     switch(value) {
         #define _c(value) case PerformanceHudMode::value: return debug << "OvrIntegration::PerformanceHudMode::" #value;
@@ -98,34 +109,49 @@ Debug& operator<<(Debug& debug, const DebugHudStereoMode value) {
     return debug << "OvrIntegration::DebugHudStereoMode::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const LayerHudMode value) {
+    switch(value) {
+        #define _c(value) case LayerHudMode::value: return debug << "OvrIntegration::LayerHudMode::" #value;
+        _c(Off)
+        _c(Info)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::LayerHudMode::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const ErrorType value) {
     switch(value) {
         #define _c(value) case ErrorType::value: return debug << "OvrIntegration::ErrorType::" #value;
         _c(MemoryAllocationFailure)
         _c(SocketCreationFailure)
-        _c(InvalidHmd)
+        _c(InvalidSession)
         _c(Timeout)
         _c(NotInitialized)
         _c(InvalidParameter)
         _c(ServiceError)
         _c(NoHmd)
-        _c(AudioReservedBegin)
-        _c(AudioReservedEnd)
+        _c(AudioDeviceNotFound)
+        _c(AudioComError)
         _c(Initialize)
         _c(LibLoad)
         _c(LibVersion)
         _c(ServiceConnection)
         _c(ServiceVersion)
-        _c(IncompatibleOS)
+        _c(IncompatibleOs)
         _c(DisplayInit)
         _c(ServerStart)
         _c(Reinitialization)
         _c(MismatchedAdapters)
         _c(LeakingResources)
         _c(ClientVersion)
+        _c(OutOfDateOs)
+        _c(OutOfDateGfxDriver)
+        _c(IncompatibleGpu)
+        _c(NoValidVrDisplaySystem)
         _c(InvalidBundleAdjustment)
-        _c(USBBandwidth)
-        _c(USBEnumeratedSpeed)
+        _c(UsbBandwidth)
+        _c(UsbEnumeratedSpeed)
         _c(ImageSensorCommError)
         _c(GeneralTrackerFailure)
         _c(ExcessiveFrameTruncation)
@@ -135,7 +161,7 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
         _c(TrackerMemoryWriteFailure)
         _c(TrackerFrameTimeout)
         _c(TrackerTruncatedFrame)
-        _c(HMDFirmwareMismatch)
+        _c(HmdFirmwareMismatch)
         _c(TrackerFirmwareMismatch)
         _c(BootloaderDeviceDetected)
         _c(TrackerCalibrationError)
@@ -143,6 +169,7 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
         _c(Incomplete)
         _c(Abandoned)
         _c(DisplayLost)
+        _c(RuntimeException)
         #undef _c
     }
 
