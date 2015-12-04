@@ -61,3 +61,6 @@ install(FILES ${MagnumBulletIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_IN
 if(BUILD_TESTS)
     add_subdirectory(Test)
 endif()
+
+# Magnum BulletIntegration library for superprojects
+set(MAGNUM_BULLETINTEGRATION_LIBRARY MagnumBulletIntegration CACHE INTERNAL "")

@@ -66,3 +66,6 @@ install(FILES ${MagnumOvrIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTA
 if(BUILD_TESTS)
     add_subdirectory(Test)
 endif()
+
+# Magnum OvrIntegration library for superprojects
+set(MAGNUM_OVRINTEGRATION_LIBRARY MagnumOvrIntegration CACHE INTERNAL "")
