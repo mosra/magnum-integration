@@ -48,6 +48,8 @@ Basic usage is:
 This command tries to find Magnum integration library and then defines:
 
 -   `MAGNUMINTEGRATION_FOUND` -- Whether the library was found
+-   `MAGNUMINTEGRATION_INCLUDE_DIRS` -- Magnum integration include dir and
+    include dirs of global dependencies
 
 This command alone is useless without specifying the components:
 
