@@ -88,6 +88,13 @@ This will compile binary and development packages, which will then appear in
 parent directory. If you need to modify CMake flags (enabling/disabling some
 libraries, for example), modify the last entry in `debian/rules`.
 
+@subsection building-integration-brew Homebrew formulas
+
+OS X Homebrew formulas are in `package/homebrew` directory. Download the `*.rb`
+file and install it using the following command:
+
+    brew install --HEAD magnum-integration.rb
+
 @section building-integration-ci Continuous Integration
 
 @subsection building-integration-ci-travis Travis
