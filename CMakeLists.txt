@@ -53,6 +53,7 @@ elseif(MSVC)
 endif()
 
 if(BUILD_TESTS)
+    find_package(Corrade REQUIRED TestSuite)
     enable_testing()
 endif()
 

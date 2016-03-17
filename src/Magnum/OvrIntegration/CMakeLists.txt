@@ -27,8 +27,6 @@
 
 find_package(OVR REQUIRED)
 
-include_directories(${OVR_INCLUDE_DIR})
-
 set(MagnumOvrIntegration_SRCS
     Compositor.cpp
     Conversion.cpp
@@ -50,13 +48,14 @@ set(MagnumOvrIntegration_HEADERS
 add_library(MagnumOvrIntegration SHARED
     ${MagnumOvrIntegration_SRCS}
     ${MagnumOvrIntegration_HEADERS})
+target_include_directories(MagnumOvrIntegration PUBLIC ${PROJECT_SOURCE_DIR}/src)
 set_target_properties(MagnumOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(BUILD_STATIC_PIC)
     set_target_properties(MagnumOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumOvrIntegration
-    ${MAGNUM_LIBRARIES}
-    ${OVR_LIBRARY})
+    Magnum::Magnum
+    OVR::OVR)
 
 install(TARGETS MagnumOvrIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}
@@ -68,5 +67,5 @@ if(BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 
-# Magnum OvrIntegration library for superprojects
-set(MAGNUM_OVRINTEGRATION_LIBRARY MagnumOvrIntegration CACHE INTERNAL "")
+# Magnum Bullet integration target alias for superprojects
+add_library(MagnumIntegration::Ovr ALIAS MagnumOvrIntegration)

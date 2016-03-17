@@ -25,5 +25,5 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-corrade_add_test(OvrConversionTest ConversionTest.cpp LIBRARIES ${MAGNUM_LIBRARY})
-corrade_add_test(OvrEnumTest EnumTest.cpp LIBRARIES MagnumOvrIntegration ${MAGNUM_LIBRARY})
+corrade_add_test(OvrConversionTest ConversionTest.cpp LIBRARIES MagnumOvrIntegration)
+corrade_add_test(OvrEnumTest EnumTest.cpp LIBRARIES MagnumOvrIntegration)

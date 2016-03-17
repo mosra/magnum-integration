@@ -43,13 +43,11 @@ separate them with semicolons.
 
 Basic usage is:
 
-    find_package(MagnumIntegration [REQUIRED])
+    find_package(MagnumIntegration REQUIRED)
 
 This command tries to find Magnum integration library and then defines:
 
--   `MAGNUMINTEGRATION_FOUND` -- Whether the library was found
--   `MAGNUMINTEGRATION_INCLUDE_DIRS` -- Magnum integration include dir and
-    include dirs of global dependencies
+-   `MagnumIntegration_FOUND` -- Whether the library was found
 
 This command alone is useless without specifying the components:
 
@@ -66,15 +64,20 @@ Example usage with specifying additional components is:
 
 For each component is then defined:
 
--   `MAGNUM_*INTEGRATION_FOUND` -- Whether the component was found
--   `MAGNUM_*INTEGRATION_LIBRARIES` -- Component library and dependent
-    libraries
--   `MAGNUM_*INTEGRATION_INCLUDE_DIRS` -- Include dirs of dependencies
+-   `MagnumIntegration_*_FOUND` -- Whether the component was found
+-   `MagnumIntegration::*` -- Component imported target
 
 The package is found if either debug or release version of each requested
 library is found. If both debug and release libraries are found, proper version
 is chosen based on actual build configuration of the project (i.e. `Debug`
 build is linked to debug libraries, `Release` build to release libraries).
+
+Workflows without imported targets are deprecated and the following variables
+are included just for backwards compatibility and only if
+@ref MAGNUM_BUILD_DEPRECATED is enabled:
+
+-   `MAGNUM_*INTEGRATION_LIBRARIES` -- Expands to `MagnumIntegration::*`
+    target. Use `MagnumIntegration::*` target directly instead.
 
 See also @ref cmake "Magnum usage with CMake" for more information.
 

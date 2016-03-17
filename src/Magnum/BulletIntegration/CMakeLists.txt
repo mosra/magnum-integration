@@ -27,9 +27,6 @@
 find_package(Magnum REQUIRED SceneGraph Shapes)
 find_package(Bullet REQUIRED)
 
-# Silence pedantic warnings in Bullet headers
-include_directories(SYSTEM ${BULLET_INCLUDE_DIRS})
-
 set(MagnumBulletIntegration_SRCS
     ConvertShape.cpp
     MotionState.cpp)
@@ -45,14 +42,17 @@ set(MagnumBulletIntegration_HEADERS
 add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
     ${MagnumBulletIntegration_SRCS}
     ${MagnumBulletIntegration_HEADERS})
+target_include_directories(MagnumBulletIntegration PUBLIC ${PROJECT_SOURCE_DIR}/src)
+# Silence pedantic warnings in Bullet headers
+target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
 set_target_properties(MagnumBulletIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(BUILD_STATIC_PIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumBulletIntegration
-    ${MAGNUM_LIBRARIES}
-    ${MAGNUM_SCENEGRAPH_LIBRARIES}
-    ${MAGNUM_SHAPES_LIBRARIES}
+    Magnum::Magnum
+    Magnum::SceneGraph
+    Magnum::Shapes
     ${BULLET_LIBRARIES})
 
 install(TARGETS MagnumBulletIntegration
@@ -65,5 +65,5 @@ if(BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 
-# Magnum BulletIntegration library for superprojects
-set(MAGNUM_BULLETINTEGRATION_LIBRARY MagnumBulletIntegration CACHE INTERNAL "")
+# Magnum Bullet integration target alias for superprojects
+add_library(MagnumIntegration::Bullet ALIAS MagnumBulletIntegration)

@@ -24,5 +24,5 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES ${MAGNUM_LIBRARY})
+corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
