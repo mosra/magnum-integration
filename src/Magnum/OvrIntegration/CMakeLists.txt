@@ -29,7 +29,6 @@ find_package(OVR REQUIRED)
 
 set(MagnumOvrIntegration_SRCS
     Compositor.cpp
-    Conversion.cpp
     Context.cpp
     Hmd.cpp
     HmdEnum.cpp)

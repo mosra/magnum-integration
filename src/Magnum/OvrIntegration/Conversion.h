@@ -135,13 +135,6 @@ template<> struct RangeConverter<2, Int, ovrRecti> {
     }
 };
 
-}}
-
-namespace OvrIntegration {
-
-/** @brief Wrap an `ovrTexture` as @ref Texture2D */
-Texture2D wrap(const ovrTexture& texture);
-
-}}
+}}}
 
 #endif
