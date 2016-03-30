@@ -58,7 +58,7 @@ if(WIN32)
         # link against a specific version. This will cause problems with newer oculus runtimes,
         # though. (FIXME!)
         # The clean way to link against libOVR, which seems to require the Windows DDK
-        find_library(OVR_LIBRARY NAMES LibOVRRT32_0_8.dll HINTS "C:/Windows/SysWOW64")
+        find_library(OVR_LIBRARY NAMES LibOVRRT32_1.dll HINTS "C:/Program Files (x86)/Oculus/Support/oculus-runtime")
         #find_library(OVR_LIBRARY NAMES LibOVR HINTS ${LIBOVR_ROOT}/Lib/Windows/Win32/Release/VS2012)
     endif()
 endif()
