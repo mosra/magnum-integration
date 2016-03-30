@@ -140,9 +140,7 @@ Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& 
                 &_ovrMirrorTexture);
 
     if(result != ovrSuccess) {
-        ovrErrorInfo info;
-        ovr_GetLastErrorInfo(&info);
-        Error() << info.ErrorString;
+        Error() << "Could not create mirror texture:" << Context::get().error().message;
     }
 
     _mirrorTexture.reset(new Texture2D(wrap(*_ovrMirrorTexture)));
