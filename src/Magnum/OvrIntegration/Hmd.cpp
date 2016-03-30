@@ -28,6 +28,7 @@
 
 #include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Context.h"
 
 #include <Magnum/TextureFormat.h>
 
@@ -37,30 +38,58 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-SwapTextureSet::SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size):
+TextureSwapChain::TextureSwapChain(const Hmd& hmd, const Vector2i& size):
     _hmd(hmd),
-    _format(format),
-    _size(size)
+    _size(size),
+    _curIndex(0)
 {
-    ovr_CreateSwapTextureSetGL(_hmd.ovrSession(), GLenum(_format), _size.x(), _size.y(), &_swapTextureSet);
+    ovrTextureSwapChainDesc desc;
+    desc.Type = ovrTexture_2D;
+    desc.Width = size.x();
+    desc.Height = size.y();
+    desc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
+    desc.ArraySize = 1;
+    desc.MipLevels = 1;
+    desc.SampleCount = 1;
+    desc.StaticImage = ovrFalse;
+    desc.MiscFlags = ovrTextureMisc_None;
+
+    ovrResult result = ovr_CreateTextureSwapChainGL(_hmd.ovrSession(), &desc, &_textureSwapChain);
+
+    if(result != ovrSuccess) {
+        Corrade::Utility::Error() << "Could not create texture swap chain:" << Context::get().error().message;
+        return;
+    }
+
+    Int length = 0;
+    ovr_GetTextureSwapChainLength(_hmd.ovrSession(), _textureSwapChain, &length);
 
     /* wrap the texture set for magnum */
-    _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(_swapTextureSet->TextureCount)};
+    _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(length)};
 
     for(UnsignedInt i = 0; i < _textures.size(); ++i) {
-        new(&_textures[i]) Texture2D(wrap(_swapTextureSet->Textures[i]));
+        UnsignedInt textureId;
+        ovr_GetTextureSwapChainBufferGL(_hmd.ovrSession(), _textureSwapChain, i, &textureId);
+        new(&_textures[i]) Texture2D(Texture2D::wrap(textureId));
         _textures[i].setMinificationFilter(Sampler::Filter::Linear)
                     .setMagnificationFilter(Sampler::Filter::Linear)
                     .setWrapping(Sampler::Wrapping::ClampToEdge);
     }
 }
 
-SwapTextureSet::~SwapTextureSet() {
-    ovr_DestroySwapTextureSet(_hmd.ovrSession(), _swapTextureSet);
+TextureSwapChain::~TextureSwapChain() {
+    ovr_DestroyTextureSwapChain(_hmd.ovrSession(), _textureSwapChain);
 }
 
-Texture2D& SwapTextureSet::activeTexture() {
-    return _textures[_swapTextureSet->CurrentIndex];
+TextureSwapChain& TextureSwapChain::commit() {
+    ovr_CommitTextureSwapChain(_hmd.ovrSession(), _textureSwapChain);
+    ovr_GetTextureSwapChainCurrentIndex(_hmd.ovrSession(), _textureSwapChain, &_curIndex);
+
+    return *this;
+}
+
+Texture2D& TextureSwapChain::activeTexture() {
+    return _textures[_curIndex];
 }
 
 //----------------------------------------------------------------
@@ -121,12 +150,12 @@ Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& 
     return *_mirrorTexture;
 }
 
-std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Int eye) {
-    return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, fovTextureSize(eye)));
+std::unique_ptr<TextureSwapChain> Hmd::createTextureSwapChain(const Int eye) {
+    return std::unique_ptr<TextureSwapChain>(new TextureSwapChain(*this, fovTextureSize(eye)));
 }
 
-std::unique_ptr<SwapTextureSet> Hmd::createSwapTextureSet(TextureFormat format, const Vector2i& size) {
-    return std::unique_ptr<SwapTextureSet>(new SwapTextureSet(*this, format, size));
+std::unique_ptr<TextureSwapChain> Hmd::createTextureSwapChain(const Vector2i& size) {
+    return std::unique_ptr<TextureSwapChain>(new TextureSwapChain(*this, size));
 }
 
 Matrix4 Hmd::projectionMatrix(const Int eye, Float near, Float far) const {
