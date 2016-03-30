@@ -85,8 +85,8 @@ void EnumTest::hmdTrackingCapability() {
 
 void EnumTest::statusFlag() {
     std::ostringstream out;
-    Debug(&out) << StatusFlag::HmdConnected;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::HmdConnected\n");
+    Debug(&out) << StatusFlag::OrientationTracked;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::OrientationTracked\n");
 
     out.str("");
     Debug(&out) << StatusFlag(-1);
@@ -95,8 +95,8 @@ void EnumTest::statusFlag() {
 
 void EnumTest::performanceHudMode() {
     std::ostringstream out;
-    Debug(&out) << PerformanceHudMode::PerfHeadroom;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::PerformanceHudMode::PerfHeadroom\n");
+    Debug(&out) << PerformanceHudMode::AppRenderTiming;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::PerformanceHudMode::AppRenderTiming\n");
 
     out.str("");
     Debug(&out) << PerformanceHudMode(-1);
@@ -145,8 +145,8 @@ void EnumTest::detectResult() {
 
 void EnumTest::sessionStatusFlag() {
     std::ostringstream out;
-    Debug(&out) << SessionStatusFlag::HasVrFocus;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HasVrFocus\n");
+    Debug(&out) << SessionStatusFlag::HmdPresent;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HmdPresent\n");
 
     out.str("");
     Debug(&out) << SessionStatusFlag(-1);
