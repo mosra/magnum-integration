@@ -41,9 +41,7 @@ class TextureSwapChain;
 class Context;
 class Compositor;
 class Layer;
-class LayerDirect;
 class LayerEyeFov;
-class LayerEyeFovDepth;
 class LayerQuad;
 class TimewarpProjectionDescription;
 
