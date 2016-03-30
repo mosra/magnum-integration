@@ -199,7 +199,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         /**
          * @brief Create a mirror texture
-         * @param format    Texture format
          * @param size      Size for the mirror texture
          * @return Reference to the created mirror texture. Its destruction is
          *      handled by the @ref Hmd.
@@ -207,7 +206,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
          */
-        Texture2D& createMirrorTexture(TextureFormat format, const Vector2i& size);
+        Texture2D& createMirrorTexture(const Vector2i& size);
 
         /**
          * @brief Convenience method to create a @ref TextureSwapChain for this HMD
@@ -430,7 +429,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         Long _frameIndex;
 
-        ovrTexture* _ovrMirrorTexture;
+        ovrMirrorTexture _ovrMirrorTexture;
         std::unique_ptr<Texture2D> _mirrorTexture;
 
         HmdStatusFlags _flags;
