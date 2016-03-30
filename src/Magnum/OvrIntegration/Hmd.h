@@ -302,9 +302,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         Matrix4 orthoSubProjectionMatrix(Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
 
-        /** @brief Get the underlying `ovrHmd` */
-        ::ovrHmd ovrHmd() const { return _session; }
-
         /** @brief Get the underlying `ovrSession` */
         ::ovrSession ovrSession() const { return _session; }
 
