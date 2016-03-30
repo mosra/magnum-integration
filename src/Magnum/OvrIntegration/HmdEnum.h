@@ -5,7 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -54,7 +54,10 @@ enum class HmdType: Int {
     CB = ovrHmd_CB,                 /**< Crescent Bay prototype. Used by Oculus internally. */
     Other = ovrHmd_Other,           /**< Unknown type */
     E3_2015 = ovrHmd_E3_2015,       /**< Hmd demoed at E3 2015. Used by Oculus internally. */
-    ES06 = ovrHmd_ES06              /**< Used by Oculus internally. */
+    ES06 = ovrHmd_ES06,             /**< Used by Oculus internally. */
+    ES09 = ovrHmd_ES09,             /**< Used by Oculus internally. */
+    ES11 = ovrHmd_ES11,             /**< Used by Oculus internally. */
+    CV1 = ovrHmd_CV1,               /**< Consumer Version 1 */
 };
 
 /**
@@ -92,9 +95,6 @@ The values must be the same as in enum StatusBits
 enum class StatusFlag: Int {
     OrientationTracked = ovrStatus_OrientationTracked, /**< Orientation is currently tracked (connected and in use) */
     PositionTracked = ovrStatus_PositionTracked,       /**< Position is currently tracked (false if out of range) */
-    CameraPoseTracked = ovrStatus_CameraPoseTracked,   /**< Camera pose is currently tracked */
-    PositionConnected = ovrStatus_PositionConnected,   /**< Position tracking hardware is connected */
-    HmdConnected = ovrStatus_HmdConnected              /**< HMD Display is available and connected */
 };
 
 /** @brief Status flags */
@@ -122,10 +122,22 @@ CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 /** @brief Session status flag */
 enum class SessionStatusFlag: UnsignedByte {
     /** Set when the process has VR focus and thus is visible in the HMD */
-    HasVrFocus = 1,
+    IsVisible = 0,
 
     /** Set when an HMD is present */
-    HmdPresent = 2
+    HmdPresent = 1,
+
+    /** Set when the HMD is on the user's head */
+    HmdMounted = 2,
+
+    /** Set when the session is in a display-lost state. See ovr_SubmitFrame. */
+    DisplayLost = 3,
+
+    /** Set when the application should initiate shutdown. */
+    ShouldQuit = 4,
+
+    /** Set when UX has requested re-centering. Must call ovr_ClearShouldRecenterFlag or ovr_RecenterTrackingOrigin. */
+    ShouldRecenter = 5,
 };
 
 /** @brief Session status flags */
@@ -140,10 +152,11 @@ CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
 */
 enum class PerformanceHudMode: Int {
     Off = ovrPerfHud_Off,                     /**< Turns off the performance HUD */
+    PerfSummary = ovrPerfHud_PerfSummary,     /**< Shows performance summary and headroom */
     LatencyTiming = ovrPerfHud_LatencyTiming, /**< Shows latency related timing info */
-    RenderTiming = ovrPerfHud_RenderTiming,   /**< Unknown type */
-    PerfHeadroom = ovrPerfHud_PerfHeadroom,   /**< Shows available performance headroom in a "consumer-friendly" way */
-    VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK Version Info */
+    AppRenderTiming = ovrPerfHud_AppRenderTiming,  /**< Shows render timing info for application */
+    CompRenderTiming = ovrPerfHud_CompRenderTiming,/**< Shows render timing info for OVR compositor */
+    VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK & HMD version Info */
 };
 
 /**

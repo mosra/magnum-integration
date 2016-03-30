@@ -3,7 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -39,6 +39,9 @@ Debug& operator<<(Debug& debug, const HmdType value) {
         _c(Other)
         _c(E3_2015)
         _c(ES06)
+        _c(ES09)
+        _c(ES11)
+        _c(CV1)
         #undef _c
     }
 
@@ -62,9 +65,6 @@ Debug& operator<<(Debug& debug, const StatusFlag value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;
         _c(OrientationTracked)
         _c(PositionTracked)
-        _c(CameraPoseTracked)
-        _c(PositionConnected)
-        _c(HmdConnected)
         #undef _c
     }
 
@@ -74,8 +74,12 @@ Debug& operator<<(Debug& debug, const StatusFlag value) {
 Debug& operator<<(Debug& debug, const SessionStatusFlag value) {
     switch(value) {
         #define _c(value) case SessionStatusFlag::value: return debug << "OvrIntegration::SessionStatusFlag::" #value;
-        _c(HasVrFocus)
+        _c(IsVisible)
         _c(HmdPresent)
+        _c(HmdMounted)
+        _c(DisplayLost)
+        _c(ShouldQuit)
+        _c(ShouldRecenter)
         #undef _c
     }
 
@@ -86,9 +90,10 @@ Debug& operator<<(Debug& debug, const PerformanceHudMode value) {
     switch(value) {
         #define _c(value) case PerformanceHudMode::value: return debug << "OvrIntegration::PerformanceHudMode::" #value;
         _c(Off)
+        _c(PerfSummary)
         _c(LatencyTiming)
-        _c(RenderTiming)
-        _c(PerfHeadroom)
+        _c(AppRenderTiming)
+        _c(CompRenderTiming)
         _c(VersionInfo)
         #undef _c
     }
