@@ -55,24 +55,16 @@ enum class LayerType: Int {
     EyeFov = ovrLayerType_EyeFov,
 
     /**
-     * Described by `ovrLayerEyeFovDepth`.
-     * @see @ref LayerEyeFovDepth, @ref Compositor::addLayerEyeFovDepth()
-     */
-    EyeFovDepth = ovrLayerType_EyeFovDepth,
-
-    /**
      * Described by `ovrLayerQuad`.
      * @see @ref LayerQuad, @ref Compositor::addLayerQuad()
      */
     Quad = ovrLayerType_Quad,
 
     /**
-     * Described by `ovrLayerDirect`. Passthrough for debugging and custom
-     * rendering.
-     * @see @ref LayerDirect, @ref Compositor::addLayerDirect()
+     * Described by `ovrLayerEyeMatrix`.
+     * @see @ref LayerEyeMatrix, @ref Compositor::addLayerEyeMatrix()
      */
-    Direct = ovrLayerType_Direct
-
+    EyeMatrix = ovrLayerType_EyeMatrix,
 };
 
 /**
