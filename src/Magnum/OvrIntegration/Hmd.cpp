@@ -187,9 +187,14 @@ Hmd& Hmd::pollEyePoses() {
 SessionStatusFlags Hmd::sessionStatus() const {
     ovrSessionStatus status;
     ovr_GetSessionStatus(_session, &status);
+    const SessionStatusFlags none = SessionStatusFlags{};
 
-    return ((status.HasVrFocus) ? SessionStatusFlag::HasVrFocus : SessionStatusFlags{})
-         | ((status.HmdPresent) ? SessionStatusFlag::HmdPresent : SessionStatusFlags{});
+    return ((status.IsVisible) ? SessionStatusFlag::IsVisible : none)
+         | ((status.HmdPresent) ? SessionStatusFlag::HmdPresent : none)
+         | ((status.HmdMounted) ? SessionStatusFlag::HmdMounted : none)
+         | ((status.DisplayLost) ? SessionStatusFlag::DisplayLost : none)
+         | ((status.ShouldQuit) ? SessionStatusFlag::ShouldQuit : none)
+         | ((status.ShouldRecenter) ? SessionStatusFlag::ShouldRecenter : none);
 }
 
 bool Hmd::isDebugHmd() const {
