@@ -327,6 +327,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
             ovr_RecenterTrackingOrigin(_session);
         }
 
+        /**
+         * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
+         *
+         * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing further recenter
+         * requests to be detected. Since this is automatically done by @ref Hmd::recenterTrackingOrigin(),
+         * this is only needs to be called when application is doing its own re-centering.
+         */
+        void clearShouldRecenterFlag() const {
+            ovr_ClearShouldRecenterFlag(_session);
+        }
+
         /** @brief Get the current frame index */
         Long currentFrameIndex() const { return _frameIndex; }
 
