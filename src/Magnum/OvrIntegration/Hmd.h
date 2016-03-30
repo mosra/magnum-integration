@@ -324,14 +324,22 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
 
         /**
-         * @brief Reset yaw and postion to current pose
+         * @brief Re-centers the sensor position and orientation.
          *
-         * The roll and pitch orientation components are always determined by
-         * gravity and cannot be redefined. All future tracking will report
-         * values relative to this new reference position.
+         * This resets the (x,y,z) positional components and the yaw orientation component.
+         * The Roll and pitch orientation components are always determined by gravity and cannot
+         * be redefined. All future tracking will report values relative to this new reference position.
+         * If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose after
+         * this, because the sensor position(s) will change as a result of this.
+         *
+         * The headset cannot be facing vertically upward or downward but rather must be roughly
+         * level otherwise this function will fail with ovrError_InvalidHeadsetOrientation.
+         *
+         * For more info, see the notes on each ovrTrackingOrigin enumeration to understand how
+         * recenter will vary slightly in its behavior based on the current ovrTrackingOrigin setting.
          */
-        void recenterPose() const {
-            ovr_RecenterPose(_session);
+        void recenterTrackingOrigin() const {
+            ovr_RecenterTrackingOrigin(_session);
         }
 
         /** @brief Get the current frame index */
