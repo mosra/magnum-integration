@@ -68,8 +68,8 @@ LayerDirect& LayerDirect::setViewport(const Int eye, const Range2Di& viewport) {
 LayerEyeFov::LayerEyeFov(): HeadLockableLayer(LayerType::EyeFov) {
 }
 
-LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFov.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
+LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const TextureSwapChain& textureSet) {
+    _layer.EyeFov.ColorTexture[eye] = textureSet.ovrTextureSwapChain();
 
     return *this;
 }
@@ -152,8 +152,8 @@ LayerEyeFovDepth& LayerEyeFovDepth::setTimewarpProjDesc(const TimewarpProjection
 LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {
 }
 
-LayerQuad& LayerQuad::setColorTexture(const SwapTextureSet& textureSet) {
-    _layer.Quad.ColorTexture = &textureSet.ovrSwapTextureSet();
+LayerQuad& LayerQuad::setColorTexture(const TextureSwapChain& textureSet) {
+    _layer.Quad.ColorTexture = textureSet.ovrTextureSwapChain();
 
     return *this;
 }

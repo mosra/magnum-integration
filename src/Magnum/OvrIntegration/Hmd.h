@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Hmd, @ref Magnum::OvrIntegration::SwapTextureSet
+ * @brief Class @ref Magnum::OvrIntegration::Hmd, @ref Magnum::OvrIntegration::TextureSwapChain
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -49,22 +49,21 @@
 namespace Magnum { namespace OvrIntegration {
 
 /**
-@brief Swap texture set
+@brief Texture swap chain
 
 Contains an array of textures which can be rendered to an HMD by the Oculus SDK
 @ref Compositor.
 @see @ref Hmd, @ref Layer
 */
-class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
+class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
     public:
         /**
          * @brief Constructor
          * @param hmd       HMD for which this swap texture set is created
-         * @param format    Texture format
          * @param size      Size for the textures
          */
-        explicit SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size);
-        ~SwapTextureSet();
+        explicit TextureSwapChain(const Hmd& hmd,  const Vector2i& size);
+        ~TextureSwapChain();
 
         /** @brief Currently active texture in the set */
         Texture2D& activeTexture();
@@ -73,22 +72,19 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
          * @brief Increment to use the next texture in the set
          * @return Reference to self (for method chaining)
          */
-        SwapTextureSet& increment() {
-            _swapTextureSet->CurrentIndex = (_swapTextureSet->CurrentIndex + 1) % _swapTextureSet->TextureCount;
-            return *this;
-        }
+        TextureSwapChain& commit();
 
-        /** @brief The underlying `ovrSwapTextureSet` */
-        ::ovrSwapTextureSet& ovrSwapTextureSet() const {
-            return *_swapTextureSet;
+        /** @brief The underlying `ovrTextureSwapChain` */
+        ::ovrTextureSwapChain ovrTextureSwapChain() const {
+            return _textureSwapChain;
         }
 
     private:
         const Hmd& _hmd;
-        TextureFormat _format;
         Vector2i _size;
+        Int _curIndex;
 
-        ::ovrSwapTextureSet* _swapTextureSet;
+        ::ovrTextureSwapChain _textureSwapChain;
         Containers::Array<Texture2D> _textures;
 };
 
@@ -125,12 +121,12 @@ rendered directly to the Rift. The compositor layers usually require you to
 render to a set of textures which are then rendered to the rift with
 distortion, chromatic abberation and possibly timewarp.
 
-A setup for such a @ref SwapTextureSet for an eye could look like this:
+A setup for such a @ref TextureSwapChain for an eye could look like this:
 
 @code
 const Int eye = 0; // left eye
 Vector2i textureSize = hmd.fovTextureSize(eye);
-std::unique_ptr<SwapTextureSet> textureSet = hmd.createSwapTextureSet(TextureFormat::RGBA, textureSize);
+std::unique_ptr<TextureSwapChain> textureSet = hmd.createTextureSwapChain(textureSize);
 
 // create the framebuffer which will be used to render to the current texture
 // of the texture set later.
@@ -146,7 +142,7 @@ depth->setMinificationFilter(Sampler::Filter::Linear)
 
 // ...
 
-// render to the SwapTextureSet
+// render to the TextureSwapChain
 textureSet->increment();
 
 // switch to framebuffer and attach textures
@@ -181,7 +177,7 @@ Framebuffer::blit(mirrorFramebuffer,
                   FramebufferBlit::Color, FramebufferBlitFilter::Nearest);
 @endcode
 
-@see @ref Context, @ref SwapTextureSet, @ref Compositor
+@see @ref Context, @ref TextureSwapChain, @ref Compositor
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
     public:
@@ -214,23 +210,21 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         Texture2D& createMirrorTexture(TextureFormat format, const Vector2i& size);
 
         /**
-         * @brief Convenience method to create a @ref SwapTextureSet for this HMD
-         * @param format    Texture format
+         * @brief Convenience method to create a @ref TextureSwapChain for this HMD
          * @param eye       Eye index which will be used to get the preferred
          *      size for the texture.
          *
-         * @see @ref createSwapTextureSet(TextureFormat, const Vector2i&)
+         * @see @ref createTextureSwapChain(const Vector2i&)
          */
-        std::unique_ptr<SwapTextureSet> createSwapTextureSet(TextureFormat format, Int eye);
+        std::unique_ptr<TextureSwapChain> createTextureSwapChain(Int eye);
 
         /**
-         * @brief Create a @ref SwapTextureSet for this HMD
-         * @param format    Texture format
+         * @brief Create a @ref TextureSwapChain for this HMD
          * @param size      Size for the textures in the created set
          *
-         * @see @ref createSwapTextureSet(TextureFormat, Int)
+         * @see @ref createTextureSwapChain(TextureFormat, Int)
          */
-        std::unique_ptr<SwapTextureSet> createSwapTextureSet(TextureFormat format, const Vector2i& size);
+        std::unique_ptr<TextureSwapChain> createTextureSwapChain(const Vector2i& size);
 
         /**
          * @brief Get the current translation for the eyes from the head pose tracked by the HMD
@@ -441,7 +435,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         HmdStatusFlags _flags;
 
-        friend class SwapTextureSet;
+        friend class TextureSwapChain;
         friend class Context;
 };
 

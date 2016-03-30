@@ -199,7 +199,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerDirect: public Layer {
          * @param textureSet    Swap texture set to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerDirect& setColorTexture(Int eye, const SwapTextureSet& textureSet);
+        LayerDirect& setColorTexture(Int eye, const TextureSwapChain& textureSet);
 
         /**
          * @brief Set the viewport
@@ -226,7 +226,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
          * @param textureSet    Swap texture set to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setColorTexture(Int eye, const SwapTextureSet& textureSet);
+        LayerEyeFov& setColorTexture(Int eye, const TextureSwapChain& textureSet);
 
         /**
          * @brief Set the viewport
@@ -340,7 +340,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
          * @param textureSet    Swap texture set to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerQuad& setColorTexture(const SwapTextureSet& textureSet);
+        LayerQuad& setColorTexture(const TextureSwapChain& textureSet);
 
         /**
          * @brief Set the viewport
@@ -383,10 +383,10 @@ properties. See @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFovDepth and
 Setup of a distortion layer may look as follows:
 
 @code
-// setup SwapTextureSets etc
+// setup TextureSwapChains etc
 Context context;
 Hmd& hmd = // ...
-std::unique_ptr<SwapTextureSet> textureSet[2] = // ...
+std::unique_ptr<TextureSwapChain> textureSet[2] = // ...
 Vector2i textureSize[2] = // ...
 
 // setup compositor layers
@@ -409,7 +409,7 @@ layer.setRenderPoses(hmd);
 Context::get().compositor().submitFrame(hmd);
 @endcode
 
-@see @ref Hmd, @ref SwapTextureSet, @ref Context::compositor()
+@see @ref Hmd, @ref TextureSwapChain, @ref Context::compositor()
 @author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
