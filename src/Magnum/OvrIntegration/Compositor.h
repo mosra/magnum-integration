@@ -61,8 +61,7 @@ enum class LayerType: Int {
     Quad = ovrLayerType_Quad,
 
     /**
-     * Described by `ovrLayerEyeMatrix`.
-     * @see @ref LayerEyeMatrix, @ref Compositor::addLayerEyeMatrix()
+     * Described by `ovrLayerEyeMatrix`. Currently not supported.
      */
     EyeMatrix = ovrLayerType_EyeMatrix,
 };
@@ -176,33 +175,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT HeadLockableLayer: public Layer {
 };
 
 /**
-@brief Wrapper around `ovrLayerDirect`
-
-@author Jonathan Hale (Squareys)
-*/
-class MAGNUM_OVRINTEGRATION_EXPORT LayerDirect: public Layer {
-    public:
-        /** @brief Constructor */
-        explicit LayerDirect();
-
-        /**
-         * @brief Set color texture
-         * @param eye           Index of the eye the color texture is set for
-         * @param textureSet    Swap texture set to set as color texture
-         * @return Reference to self (for method chaining)
-         */
-        LayerDirect& setColorTexture(Int eye, const TextureSwapChain& textureSet);
-
-        /**
-         * @brief Set the viewport
-         * @param eye           Eye index to set the viewport for
-         * @param viewport      Viewport to set to
-         * @return Reference to self (for method chaining)
-         */
-        LayerDirect& setViewport(Int eye, const Range2Di& viewport);
-};
-
-/**
 @brief Wrapper around `ovrLayerEveFov`
 
 @author Jonathan Hale (Squareys)
@@ -261,60 +233,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
 
     private:
         ::ovrTimewarpProjectionDesc _projectionDesc;
-};
-
-/**
-@brief Wrapper around `ovrLayerEveFovDepth`
-
-@author Jonathan Hale (Squareys)
-*/
-class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFovDepth: public HeadLockableLayer {
-    public:
-        explicit LayerEyeFovDepth();
-
-        /**
-         * @brief Set color texture
-         * @param eye           Index of the eye the color texture is set for
-         * @param textureSet    Swap texture set to set as color texture
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setColorTexture(Int eye, const SwapTextureSet& textureSet);
-
-        /**
-         * @brief Set the viewport
-         * @param eye           Eye index to set the viewport for
-         * @param viewport      Viewport to set to
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setViewport(Int eye, const Range2Di& viewport);
-
-        /**
-         * @brief Set the render pose
-         * @param hmd           HMD to get the render pose from
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setRenderPoses(const Hmd& hmd);
-
-        /**
-         * @brief Set FoV for this layer
-         * @param hmd           HMD to get the default eye fov to set to
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setFov(const Hmd& hmd);
-
-        /**
-         * @brief Set depth texture
-         * @param eye           Index of the eye the depth texture is set for
-         * @param textureSet    Swap texture set to set as depth texture
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setDepthTexture(Int eye, const SwapTextureSet& textureSet);
-
-        /**
-         * @brief Set timewarp projection description
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setTimewarpProjDesc(const TimewarpProjectionDescription& desc);
 };
 
 /**
@@ -427,25 +345,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
         Layer& addLayer(LayerType type);
 
         /**
-         * @brief Create a @ref LayerDirect
-         *
-         * @see @ref addLayer()
-         */
-        LayerDirect& addLayerDirect();
-
-        /**
          * @brief Create a @ref LayerEyeFov
          *
          * @see @ref addLayer()
          */
         LayerEyeFov& addLayerEyeFov();
-
-        /**
-         * @brief Create a @ref LayerEyeFovDepth
-         *
-         * @see @ref addLayer()
-         */
-        LayerEyeFovDepth& addLayerEyeFovDepth();
 
         /**
          * @brief Create a @ref LayerQuad
