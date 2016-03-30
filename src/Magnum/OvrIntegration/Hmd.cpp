@@ -114,12 +114,12 @@ Hmd::~Hmd() {
 
 Hmd& Hmd::configureRendering() {
     /* get offset from center to left/right eye. The offset lengths may differ. */
-    _hmdToEyeViewOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeViewOffset;
-    _hmdToEyeViewOffset[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeViewOffset;
+    _hmdToEyeOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeOffset;
+    _hmdToEyeOffset[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeOffset;
 
     _viewScale.HmdSpaceToWorldScaleInMeters = 1.0f;
-    _viewScale.HmdToEyeViewOffset[0] = _hmdToEyeViewOffset[0];
-    _viewScale.HmdToEyeViewOffset[1] = _hmdToEyeViewOffset[1];
+    _viewScale.HmdToEyeOffset[0] = _hmdToEyeOffset[0];
+    _viewScale.HmdToEyeOffset[1] = _hmdToEyeOffset[1];
 
     return *this;
 }
@@ -172,14 +172,14 @@ Matrix4 Hmd::projectionMatrix(const Int eye, Float near, Float far) const {
 
 Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
-                                                     _hmdToEyeViewOffset[eye].x);
+                                                     _hmdToEyeOffset[eye].x);
     return Matrix4(sub);
 }
 
 Hmd& Hmd::pollEyePoses() {
     _predictedDisplayTime = ovr_GetPredictedDisplayTime(_session, _frameIndex);
     _trackingState = ovr_GetTrackingState(_session, _predictedDisplayTime, true);
-    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeViewOffset, _ovrPoses);
+    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeOffset, _ovrPoses);
 
     return *this;
 }
