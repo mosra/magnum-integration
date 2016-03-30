@@ -100,8 +100,7 @@ LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
 
 TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& projectionMatrix) {
     _projectionDesc = ovrTimewarpProjectionDesc_FromProjection(
-                ovrMatrix4f(projectionMatrix),
-                ovrProjection_RightHanded | ovrProjection_ClipRangeOpenGL);
+                ovrMatrix4f(projectionMatrix), ovrProjection_ClipRangeOpenGL);
 }
 
 LayerEyeFovDepth::LayerEyeFovDepth(): HeadLockableLayer(LayerType::EyeFovDepth) {
