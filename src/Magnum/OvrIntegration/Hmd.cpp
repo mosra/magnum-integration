@@ -97,6 +97,7 @@ Texture2D& TextureSwapChain::activeTexture() {
 Hmd::Hmd(::ovrSession hmd):
     _session(hmd),
     _hmdDesc(ovr_GetHmdDesc(_session)),
+    _ovrMirrorTexture(nullptr),
     _flags(HmdStatusFlag(_hmdDesc.AvailableHmdCaps))
 {
     /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice,
@@ -127,23 +128,30 @@ Vector2i Hmd::fovTextureSize(const Int eye) {
     return Vector2i(ovr_GetFovTextureSize(_session, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
 }
 
-Texture2D& Hmd::createMirrorTexture(const TextureFormat format, const Vector2i& size) {
+Texture2D& Hmd::createMirrorTexture(const Vector2i& size) {
     CORRADE_ASSERT(!(_flags & HmdStatusFlag::HasMirrorTexture),
            "Hmd::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
 
+    ovrMirrorTextureDesc desc;
+    desc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
+    desc.Width = size.x();
+    desc.Height = size.y();
+    desc.MiscFlags = ovrTextureMisc_None;
+
     ovrResult result = ovr_CreateMirrorTextureGL(
                 _session,
-                GLenum(format),
-                size.x(),
-                size.y(),
+                &desc,
                 &_ovrMirrorTexture);
 
     if(result != ovrSuccess) {
-        Error() << "Could not create mirror texture:" << Context::get().error().message;
+        Corrade::Utility::Error() << "Could not create mirror texture:" << Context::get().error().message;
     }
 
-    _mirrorTexture.reset(new Texture2D(wrap(*_ovrMirrorTexture)));
+    /* wrap the opengl texture id as magnum texture */
+    UnsignedInt id;
+    ovr_GetMirrorTextureBufferGL(_session, _ovrMirrorTexture, &id);
+    _mirrorTexture.reset(new Texture2D(std::move(Texture2D::wrap(id))));
 
     return *_mirrorTexture;
 }
