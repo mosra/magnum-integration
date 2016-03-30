@@ -30,8 +30,8 @@ install:
 - cinst ninja
 
 # OVR SDK
-- appveyor DownloadFile http://static.oculus.com/sdk-downloads/0.7.0.0/Public/1440610361/ovr_sdk_win_0.7.0.0.zip
-- 7z x ovr_sdk_win_0.7.0.0.zip
+- appveyor DownloadFile http://static.oculus.com/sdk-downloads/1.3.0/Public/1459135039/ovr_sdk_win_1.3.0_public.zip
+- 7z x ovr_sdk_win_1.3.0_public.zip
 
 # Corrade
 - git clone --depth 1 git://github.com/mosra/corrade.git
