@@ -421,7 +421,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
-        ovrVector3f _hmdToEyeViewOffset[2];
+        ovrVector3f _hmdToEyeOffset[2];
         ::ovrViewScaleDesc _viewScale;
 
         Double _predictedDisplayTime;
