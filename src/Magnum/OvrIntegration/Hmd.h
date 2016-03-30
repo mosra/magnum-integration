@@ -188,14 +188,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         ~Hmd();
 
         /**
-         * @brief Enable or disable HMD tracking capabilities
-         * @return Reference to self (for method chaining)
-         *
-         * By default full tracking capabilies of a device are enabled.
-         */
-        Hmd& configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required);
-
-        /**
          * @brief Configure rendering to the Rift
          * @return Reference to self (for method chaining)
          *

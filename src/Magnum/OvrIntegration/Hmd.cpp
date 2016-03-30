@@ -82,11 +82,6 @@ Hmd::~Hmd() {
     ovr_Destroy(_session);
 }
 
-Hmd& Hmd::configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required) {
-    ovr_ConfigureTracking(_session, Int(caps), Int(required));
-    return *this;
-}
-
 Hmd& Hmd::configureRendering() {
     /* get offset from center to left/right eye. The offset lengths may differ. */
     _hmdToEyeViewOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeViewOffset;
