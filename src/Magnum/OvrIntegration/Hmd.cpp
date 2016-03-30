@@ -160,7 +160,7 @@ std::unique_ptr<TextureSwapChain> Hmd::createTextureSwapChain(const Vector2i& si
 
 Matrix4 Hmd::projectionMatrix(const Int eye, Float near, Float far) const {
     ovrMatrix4f proj = ovrMatrix4f_Projection(_hmdDesc.DefaultEyeFov[eye], near, far,
-                                              ovrProjection_RightHanded | ovrProjection_ClipRangeOpenGL);
+                                              ovrProjection_ClipRangeOpenGL);
     return Matrix4(proj);
 }
 
