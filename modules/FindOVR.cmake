@@ -18,7 +18,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
 #             Vladimír Vondruš <mosra@centrum.cz>
-#   Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+#   Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -54,13 +54,18 @@ if(WIN32)
     if(MSVC)
         find_library(OVR_LIBRARY NAMES LibOVR HINTS ${LIBOVR_ROOT}/Lib/Windows)
     elseif(MINGW)
-        # linking against the MSVC dll with MinGW does not work directly. Instead, you need to
-        # link against a specific version. This will cause problems with newer oculus runtimes,
-        # though. (FIXME!)
-        # The clean way to link against libOVR, which seems to require the Windows DDK
-        find_library(OVR_LIBRARY NAMES LibOVRRT32_1.dll HINTS "C:/Program Files (x86)/Oculus/Support/oculus-runtime")
-        #find_library(OVR_LIBRARY NAMES LibOVR HINTS ${LIBOVR_ROOT}/Lib/Windows/Win32/Release/VS2012)
+        # we cannot link against the MSVC lib with MinGW. Instead, we link directly to the runtime DLL,
+        # which requires the Oculus runtime to be installed.
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            # compiling for 64 bit
+            find_library(OVR_LIBRARY NAMES LibOVRRT64_1.dll HINTS "C:/Program Files (x86)/Oculus/Support/oculus-runtime")
+        else()
+            # compiling for 32 bit
+            find_library(OVR_LIBRARY NAMES LibOVRRT32_1.dll HINTS "C:/Program Files (x86)/Oculus/Support/oculus-runtime")
+        endif()
     endif()
+else()
+    error("The Oculus SDK does not support ${CMAKE_SYSTEM_NAME}.")
 endif()
 
 include(FindPackageHandleStandardArgs)
