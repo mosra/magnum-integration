@@ -86,6 +86,41 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 /**
+ * @brief Tracking origin
+ */
+enum class TrackingOrigin: Int {
+    /**
+     * @brief Tracking system origin reported at eye (HMD) height
+     *
+     * Prefer using this origin when your application requires matching user's
+     * current physical head pose to a virtual head pose without any regards to
+     * the height of the floor. Cockpit-based, or 3rd-person experiences are
+     * ideal candidates.
+     * When used, all poses in ovrTrackingState are reported as an offset
+     * transform from the profile calibrated or recentered HMD pose.
+     * It is recommended that apps using this origin type call @ref Hmd::recenterTrackingOrigin()
+     * prior to starting the VR experience, but notify the user before doing so
+     * to make sure the user is in a comfortable pose, facing a comfortable
+     * direction.
+     */
+    EyeLevel = ovrTrackingOrigin_EyeLevel,
+
+    /**
+     * @brief Tracking system origin reported at floor height
+     *
+     * Prefer using this origin when your application requires the physical
+     * floor height to match the virtual floor height, such as standing
+     * experiences.
+     * When used, all poses in ovrTrackingState are reported as an offset
+     * transform from the profile calibrated floor pose. Calling @ref Hmd::recenterTrackingOrigin()
+     * will recenter the X & Z axes as well as yaw, but the Y-axis (i.e. height)
+     * will continue to be reported using the floor height as the origin for
+     * all poses.
+     */
+    FloorLevel = ovrTrackingOrigin_FloorLevel,
+};
+
+/**
 @brief Tracker flag
 
 @see @ref TrackerFlags
@@ -397,6 +432,9 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::TrackingOrigin} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackingOrigin value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::TrackerFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackerFlag value);
