@@ -39,13 +39,19 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-set(LIBOVR_ROOT ${CMAKE_INSTALL_PREFIX})
-
 if(NOT OVR_SDK_ROOT)
-    message(WARNING "OVR_SDK_ROOT is not set. Will try to find headers and library in ${CMAKE_INSTALL_PREFIX}." )
-else()
-    set(LIBOVR_ROOT ${OVR_SDK_ROOT}/LibOVR)
+   find_path(OVR_SDK_ROOT OculusSDK)
 endif()
+
+if(OVR_SDK_ROOT)
+    set(OVR_SDK_ROOT "${OVR_SDK_ROOT}/OculusSDK")
+
+    mark_as_advanced(OVR_SDK_ROOT)
+    message(STATUS "Found OculusSDK: ${OVR_SDK_ROOT}")
+endif()
+
+set(LIBOVR_ROOT ${OVR_SDK_ROOT}/LibOVR)
+mark_as_advanced(LIBOVR_ROOT)
 
 # find include directory
 find_path(OVR_INCLUDE_DIR NAMES OVR_CAPI.h HINTS ${LIBOVR_ROOT}/Include)
