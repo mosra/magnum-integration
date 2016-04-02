@@ -108,6 +108,57 @@ typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
 
 CORRADE_ENUMSET_OPERATORS(TrackerFlags)
 
+/**
+@brief Button
+
+The Oculus SDK provides an abstraction of input for the XBox controller,
+the Oculus Remote and Oculus Touch. This enum describes all possible buttons
+pressable on one of these controllers.
+
+@see @ref Buttons
+*/
+enum class Button: UnsignedInt {
+    A = ovrButton_A,
+    B = ovrButton_B,
+
+    X = ovrButton_X,
+    Y = ovrButton_Y,
+
+    RThumb = ovrButton_RThumb,
+    RShoulder = ovrButton_RShoulder,
+    LThumb = ovrButton_LThumb,
+    LShoulder = ovrButton_LShoulder,
+
+    Up = ovrButton_Up,          /**< D pad up */
+    Down = ovrButton_Down,      /**< D pad down */
+    Left = ovrButton_Left,      /**< D pad left */
+    Right = ovrButton_Right,    /**< D pad right */
+
+    Enter = ovrButton_Enter,    /**< Start on XBox controller */
+    Back = ovrButton_Back,      /**< Back on Xbox controller */
+
+    VolUp = ovrButton_VolUp,    /**< Only supported by Remote */
+    VolDown = ovrButton_VolDown,/**< Only supported by Remote */
+
+    Home = ovrButton_Home,
+};
+
+/**
+@brief Buttons
+*/
+typedef Containers::EnumSet<Button> Buttons;
+
+CORRADE_ENUMSET_OPERATORS(Buttons)
+
+/** @brief Bit mask of all buttons on the right Touch controller */
+constexpr Buttons R_BUTTON_MASK = Button::A | Button::B | Button::RThumb | Button::RShoulder;
+
+/** @brief Bit mask of all buttons on the left Touch controller */
+constexpr Buttons L_BUTTON_MASK = Button::X | Button::Y | Button::LThumb | Button::LShoulder;
+
+/** @brief Bit mask of buttons used by Oculus Home */
+constexpr Buttons PRIVATE_MASK = Button::VolUp | Button::VolDown | Button::Home;
+
 @brief Status flag
 
 Flags describing the current status of sensor tracking.
