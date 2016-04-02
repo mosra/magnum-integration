@@ -58,7 +58,29 @@ find_path(OVR_INCLUDE_DIR NAMES OVR_CAPI.h HINTS ${LIBOVR_ROOT}/Include)
 
 if(WIN32)
     if(MSVC)
-        find_library(OVR_LIBRARY NAMES LibOVR HINTS ${LIBOVR_ROOT}/Lib/Windows)
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            # compiling for 64 bit
+            set(MSVC_ARCH "x64")
+        else()
+            # compiling for 32 bit
+            set(MSVC_ARCH "Win32")
+        endif()
+
+        # select the correct library folder matching MSVC version
+        if (MSVC_VERSION GREATER 1800)
+            set(MSVC_NAME "VS2015")
+        elseif (MSVC_VERSION GREATER 1700)
+            set(MSVC_NAME "VS2013")
+        elseif (MSVC_VERSION GREATER 1600)
+            set(MSVC_NAME "VS2012")
+        else()
+            set(MSVC_NAME "VS2010")
+        endif()
+
+        find_library(OVR_LIBRARY NAMES LibOVR HINTS "${LIBOVR_ROOT}/Lib/Windows/${MSVC_ARCH}/Release/${MSVC_NAME}")
+
+        unset(MSVC_ARCH)
+        unset(MSVC_NAME)
     elseif(MINGW)
         # we cannot link against the MSVC lib with MinGW. Instead, we link directly to the runtime DLL,
         # which requires the Oculus runtime to be installed.
