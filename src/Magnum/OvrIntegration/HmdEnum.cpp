@@ -97,6 +97,27 @@ Debug& operator<<(Debug& debug, const Button value) {
     return debug << "OvrIntegration::Button::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const Touch value) {
+    switch(value) {
+        #define _c(value) case Touch::value: return debug << "OvrIntegration::Touch::" #value;
+        _c(A)
+        _c(B)
+        _c(X)
+        _c(Y)
+        _c(RThumb)
+        _c(LThumb)
+        _c(RIndexTrigger)
+        _c(LIndexTrigger)
+        _c(RIndexPointing)
+        _c(RThumbUp)
+        _c(LIndexPointing)
+        _c(LThumbUp)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::Touch::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const StatusFlag value) {
     switch(value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;

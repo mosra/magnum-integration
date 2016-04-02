@@ -44,6 +44,7 @@ struct EnumTest: TestSuite::Tester {
     void hmdTrackingCapability();
     void trackerFlag();
     void button();
+    void touch();
     void statusFlag();
     void performanceHudMode();
     void debugHudStereoMode();
@@ -58,6 +59,7 @@ EnumTest::EnumTest() {
               &EnumTest::hmdTrackingCapability,
               &EnumTest::trackerFlag,
               &EnumTest::button,
+              &EnumTest::touch,
               &EnumTest::statusFlag,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
@@ -105,6 +107,16 @@ void EnumTest::button() {
     out.str("");
     Debug(&out) << Button(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::Button::(invalid)\n");
+}
+
+void EnumTest::touch() {
+    std::ostringstream out;
+    Debug(&out) << Touch::RIndexPointing;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::RIndexPointing\n");
+
+    out.str("");
+    Debug(&out) << Touch(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::(invalid)\n");
 }
 
 void EnumTest::statusFlag() {
