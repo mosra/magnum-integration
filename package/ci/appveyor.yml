@@ -58,7 +58,7 @@ install:
 build_script:
 - mkdir build
 - cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DOVR_SDK_ROOT=%APPVEYOR_BUILD_FOLDER%/OculusSDK/ -DWITH_OVR=ON -DBUILD_TESTS=ON -DBUILD_STATIC=%BUILD_STATIC% -G Ninja
+- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_OVR=ON -DBUILD_TESTS=ON -DBUILD_STATIC=%BUILD_STATIC% -G Ninja
 - cmake --build .
 - cmake --build . --target install
 - cmake . -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/Deploy -DBUILD_TESTS=OFF
