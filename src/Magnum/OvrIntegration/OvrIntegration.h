@@ -49,6 +49,7 @@ enum class StatusFlag: Int;
 enum class HmdType: Int;
 enum class HmdCapability: Int;
 enum class HmdTrackingCapability: Int;
+enum class Button: UnsignedInt;
 enum class HmdStatusFlag: UnsignedByte;
 enum class SessionStatusFlag: UnsignedByte;
 enum class PerformanceHudMode: Int;

@@ -71,6 +71,32 @@ Debug& operator<<(Debug& debug, const TrackerFlag value) {
     return debug << "OvrIntegration::TrackerFlag::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const Button value) {
+    switch(value) {
+        #define _c(value) case Button::value: return debug << "OvrIntegration::Button::" #value;
+        _c(A)
+        _c(B)
+        _c(X)
+        _c(Y)
+        _c(RThumb)
+        _c(RShoulder)
+        _c(LThumb)
+        _c(LShoulder)
+        _c(Up)
+        _c(Down)
+        _c(Left)
+        _c(Right)
+        _c(Enter)
+        _c(Back)
+        _c(VolUp)
+        _c(VolDown)
+        _c(Home)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::Button::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const StatusFlag value) {
     switch(value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;
