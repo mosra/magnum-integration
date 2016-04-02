@@ -42,6 +42,7 @@ struct EnumTest: TestSuite::Tester {
 
     void hmdType();
     void hmdTrackingCapability();
+    void trackerFlag();
     void statusFlag();
     void performanceHudMode();
     void debugHudStereoMode();
@@ -54,6 +55,7 @@ struct EnumTest: TestSuite::Tester {
 EnumTest::EnumTest() {
     addTests({&EnumTest::hmdType,
               &EnumTest::hmdTrackingCapability,
+              &EnumTest::trackerFlag,
               &EnumTest::statusFlag,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
@@ -81,6 +83,16 @@ void EnumTest::hmdTrackingCapability() {
     out.str("");
     Debug(&out) << HmdTrackingCapability(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::HmdTrackingCapability::(invalid)\n");
+}
+
+void EnumTest::trackerFlag() {
+    std::ostringstream out;
+    Debug(&out) << TrackerFlag::Connected;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackerFlag::Connected\n");
+
+    out.str("");
+    Debug(&out) << TrackerFlag(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackerFlag::(invalid)\n");
 }
 
 void EnumTest::statusFlag() {

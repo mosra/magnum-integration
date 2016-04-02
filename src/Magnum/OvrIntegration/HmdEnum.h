@@ -86,6 +86,28 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 /**
+@brief Tracker flag
+
+@see @ref TrackerFlags
+*/
+enum class TrackerFlag: Int {
+    /**< The sensor is present, else the sensor is absent or offline */
+    Connected = ovrTracker_Connected,
+
+    /**
+     * The sensor has a valid pose, else the pose is unavailable.
+     * This will only be set if ovrTracker_Connected is set.
+     */
+    PoseTracked = ovrTracker_PoseTracked
+};
+
+/**
+@brief Tracker flags
+*/
+typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
+
+CORRADE_ENUMSET_OPERATORS(TrackerFlags)
+
 @brief Status flag
 
 Flags describing the current status of sensor tracking.

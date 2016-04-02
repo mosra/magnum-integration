@@ -60,6 +60,17 @@ Debug& operator<<(Debug& debug, const HmdTrackingCapability value) {
     return debug << "OvrIntegration::HmdTrackingCapability::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const TrackerFlag value) {
+    switch(value) {
+        #define _c(value) case TrackerFlag::value: return debug << "OvrIntegration::TrackerFlag::" #value;
+        _c(Connected)
+        _c(PoseTracked)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::TrackerFlag::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const StatusFlag value) {
     switch(value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;
