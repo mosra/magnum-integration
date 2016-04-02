@@ -159,6 +159,62 @@ constexpr Buttons L_BUTTON_MASK = Button::X | Button::Y | Button::LThumb | Butto
 /** @brief Bit mask of buttons used by Oculus Home */
 constexpr Buttons PRIVATE_MASK = Button::VolUp | Button::VolDown | Button::Home;
 
+/**
+@brief Touch
+
+The Oculus SDK provides an abstraction of input for the XBox controller,
+the Oculus Remote and Oculus Touch. This enum describes all possible buttons
+or poses which can be "touched", therefore, the player is touching the button,
+but not pressing it.
+
+@see @ref Touches
+*/
+enum class Touch: UnsignedInt {
+    A = ovrTouch_A,
+    B = ovrTouch_B,
+
+    X = ovrTouch_X,
+    Y = ovrTouch_Y,
+
+    RThumb = ovrTouch_RThumb,
+    LThumb = ovrTouch_LThumb,
+
+    RIndexTrigger = ovrTouch_RIndexTrigger,
+    LIndexTrigger = ovrTouch_LIndexTrigger,
+
+    /**
+     * Right index finger pose state, derived internally based on distance,
+     * proximity to sensors and filtering.
+     */
+    RIndexPointing = ovrTouch_RIndexPointing,
+
+    /**
+     * Right thumb pose state, derived internally based on distance,
+     * proximity to sensors and filtering.
+     */
+    RThumbUp = ovrTouch_RThumbUp,
+
+    LIndexPointing = ovrTouch_LIndexPointing, /**< Left index finger pose state */
+    LThumbUp = ovrTouch_LThumbUp, /**< Left thumb pose state */
+};
+
+typedef Containers::EnumSet<Touch> Touches;
+
+CORRADE_ENUMSET_OPERATORS(Touches)
+
+/** @brief Bit mask of all the button touches on the right controller */
+constexpr Touches R_TOUCH_MASK = Touch::A | Touch::B | Touch::RThumb | Touch::RIndexTrigger;
+
+/** @brief Bit mask of all the button touches on the left controller */
+constexpr Touches L_TOUCH_MASK = Touch::X | Touch::Y | Touch::LThumb | Touch::LIndexTrigger;
+
+/** @brief Bit mask of all right controller poses */
+constexpr Touches R_POSE_MASK = Touch::RIndexPointing | Touch::RThumbUp;
+
+/** @brief Bit mask of all left controller poses */
+constexpr Touches L_POSE_MASK = Touch::LIndexPointing | Touch::LThumbUp;
+
+/**
 @brief Status flag
 
 Flags describing the current status of sensor tracking.
@@ -341,6 +397,15 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::TrackerFlag} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackerFlag value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::Button} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::Touch} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
