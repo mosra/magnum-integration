@@ -370,6 +370,11 @@ enum class ErrorType: Int {
     InvalidParameter = ovrError_InvalidParameter,       /**< Invalid parameter provided. See error info or log for details. */
     ServiceError = ovrError_ServiceError,               /**< Generic service error. See error info or log for details. */
     NoHmd = ovrError_NoHmd,                             /**< The given HMD doesn't exist. */
+    Unsupported = ovrError_Unsupported,                 /**< Function call is not supported on this hardware/software. */
+    DeviceUnavailable = ovrError_DeviceUnavailable,     /**< Specified device type isn't available. */
+    InvalidHeadsetOrientation = ovrError_InvalidHeadsetOrientation, /**< The headset was in an invalid orientation for the requested operation (e.g. vertically oriented during ovr_RecenterPose). */
+    ClientSkippedDestroy = ovrError_ClientSkippedDestroy,           /**< The client failed to call ovr_Destroy on an active session before calling ovr_Shutdown. Or the client crashed. */
+    ClientSkippedShutdown = ovrError_ClientSkippedShutdown,         /**< The client failed to call ovr_Shutdown or the client crashed. */
 
     /* Audio errors. */
     AudioDeviceNotFound =  ovrError_AudioDeviceNotFound,/**< Failure to find the specified audio device. */
@@ -385,13 +390,18 @@ enum class ErrorType: Int {
     DisplayInit = ovrError_DisplayInit,                 /**< Unable to initialize the HMD display. */
     ServerStart = ovrError_ServerStart,                 /**< Unable to start the server. Is it already running? */
     Reinitialization = ovrError_Reinitialization,       /**< Attempting to re-initialize with a different version. */
-    MismatchedAdapters = ovrError_MismatchedAdapters,   /**< Chosen rendering adapters between client and service do not match */
-    LeakingResources = ovrError_LeakingResources,       /**< Calling application has leaked resources */
-    ClientVersion = ovrError_ClientVersion,             /**< Client version too old to connect to service */
+    MismatchedAdapters = ovrError_MismatchedAdapters,   /**< Chosen rendering adapters between client and service do not match. */
+    LeakingResources = ovrError_LeakingResources,       /**< Calling application has leaked resources. */
+    ClientVersion = ovrError_ClientVersion,             /**< Client version too old to connect to service. */
     OutOfDateOs = ovrError_OutOfDateOS,                 /**< The operating system is out of date. */
     OutOfDateGfxDriver = ovrError_OutOfDateGfxDriver,   /**< The graphics driver is out of date. */
-    IncompatibleGpu = ovrError_IncompatibleGPU,         /**< The graphics hardware is not supported */
-    NoValidVrDisplaySystem = ovrError_NoValidVRDisplaySystem,   /**< No valid VR display system found. */
+    IncompatibleGpu = ovrError_IncompatibleGPU,         /**< The graphics hardware is not supported. */
+    NoValidVrDisplaySystem = ovrError_NoValidVRDisplaySystem,       /**< No valid VR display system found. */
+    Obsolete = ovrError_Obsolete,                                   /**< Feature or API is obsolete and no longer supported. */
+    DisabledOrDefaultAdapter = ovrError_DisabledOrDefaultAdapter,   /**< No supported VR display system found, but disabled or driverless adapter found. */
+    HybridGraphicsNotSupported = ovrError_HybridGraphicsNotSupported,/**< The system is using hybrid graphics (Optimus, etc...), which is not support. */
+    DisplayManagerInit = ovrError_DisplayManagerInit,               /**< Initialization of the DisplayManager failed. */
+    TrackerDriverInit = ovrError_TrackerDriverInit,                 /**< Failed to get the interface for an attached tracker. */
 
     /* Hardware Errors */
     InvalidBundleAdjustment = ovrError_InvalidBundleAdjustment,     /**< Headset has no bundle adjustment data. */
@@ -401,23 +411,36 @@ enum class ErrorType: Int {
     GeneralTrackerFailure = ovrError_GeneralTrackerFailure,         /**< We use this to report various tracker issues that don't fit in an easily classifiable bucket. */
     ExcessiveFrameTruncation = ovrError_ExcessiveFrameTruncation,   /**< A more than acceptable number of frames are coming back truncated. */
     ExcessiveFrameSkipping = ovrError_ExcessiveFrameSkipping,       /**< A more than acceptable number of frames have been skipped. */
-    SyncDisconnected = ovrError_SyncDisconnected,                   /**< The tracker is not receiving the sync signal (cable disconnected?) */
-    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,   /**< Failed to read memory from the tracker */
-    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure, /**< Failed to write memory from the tracker */
-    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,             /**< Timed out waiting for a camera frame */
-    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,         /**< Truncated frame returned from tracker */
+    SyncDisconnected = ovrError_SyncDisconnected,                   /**< The tracker is not receiving the sync signal (cable disconnected?). */
+    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,   /**< Failed to read memory from the tracker. */
+    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure, /**< Failed to write memory from the tracker. */
+    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,             /**< Timed out waiting for a camera frame. */
+    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,         /**< Truncated frame returned from tracker. */
+    TrackerDriverFailure = ovrError_TrackerDriverFailure,           /**< The sensor driver has encountered a problem. */
+    TrackerNRFFailure = ovrError_TrackerNRFFailure,                 /**< The sensor wireless subsystem has encountered a problem. */
+    HardwareGone = ovrError_HardwareGone,                           /**< The hardware has been unplugged. */
+    NordicEnabledNoSync = ovrError_NordicEnabledNoSync,             /**< The nordic indicates that sync is enabled but it is not sending sync pulses. */
+    NordicSyncNoFrames = ovrError_NordicSyncNoFrames,               /**< It looks like we're getting a sync signal, but no camera frames have been received. */
+    CatastrophicFailure = ovrError_CatastrophicFailure,             /**< A catastrophic failure has occurred.  We will attempt to recover by resetting the device. */
+
     HmdFirmwareMismatch = ovrError_HMDFirmwareMismatch,             /**< The HMD Firmware is out of date and is unacceptable. */
     TrackerFirmwareMismatch = ovrError_TrackerFirmwareMismatch,     /**< The Tracker Firmware is out of date and is unacceptable. */
-    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,   /**< A bootloader HMD is detected by the service */
-    TrackerCalibrationError = ovrError_TrackerCalibrationError,     /**< The tracker calibration is missing or incorrect */
-    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,/**< The controller firmware is out of date and is unacceptable */
+    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,   /**< A bootloader HMD is detected by the service. */
+    TrackerCalibrationError = ovrError_TrackerCalibrationError,     /**< The tracker calibration is missing or incorrect. */
+    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,/**< The controller firmware is out of date and is unacceptable. */
+
+    IMUTooManyLostSamples = ovrError_IMUTooManyLostSamples,         /**< Too many lost IMU samples. */
+    IMURateError = ovrError_IMURateError,                           /**< IMU rate is outside of the expected range. */
+    FeatureReportFailure = ovrError_FeatureReportFailure,           /**< A feature report has failed. */
 
     /* Synchronization Errors */
     Incomplete = ovrError_Incomplete,   /**< Requested async work not yet complete. */
     Abandoned = ovrError_Abandoned,     /**< Requested async work was abandoned and result is incomplete. */
 
     /* Rendering Errors */
-    DisplayLost = ovrError_DisplayLost, /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app */
+    DisplayLost = ovrError_DisplayLost,                             /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app. */
+    TextureSwapChainFull = ovrError_TextureSwapChainFull,           /**< ovr_CommitTextureSwapChain was called too many times on a texture swapchain without calling submit to use the chain. */
+    TextureSwapChainInvalid = ovrError_TextureSwapChainInvalid,     /**< The ovrTextureSwapChain is in an incomplete or inconsistent state. Ensure @ref TextureSwapChain::commit() was called at least once first. */
 
     /* Fatal errors */
     /**
@@ -425,6 +448,18 @@ enum class ErrorType: Int {
      * LibOVR and re-initialize it before this error state will be cleared.
      */
     RuntimeException = ovrError_RuntimeException,
+
+    MetricsUnknownApp = ovrError_MetricsUnknownApp,
+    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,
+    MetricsNoEvents = ovrError_MetricsNoEvents,
+    MetricsRuntime = ovrError_MetricsRuntime,
+    MetricsFile  = ovrError_MetricsFile,
+    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,
+    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,
+    MetricsNoApp = ovrError_MetricsNoApp,
+    MetricsOafFailure = ovrError_MetricsOafFailure,
+    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive,
+    MetricsSessionNotActive = ovrError_MetricsSessionNotActive,
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
