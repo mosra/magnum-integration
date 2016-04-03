@@ -311,14 +311,16 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         /**
          * @brief Re-centers the sensor position and orientation.
          *
-         * This resets the (x,y,z) positional components and the yaw orientation component.
-         * The Roll and pitch orientation components are always determined by gravity and cannot
-         * be redefined. All future tracking will report values relative to this new reference position.
-         * If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose after
-         * this, because the sensor position(s) will change as a result of this.
+         * This resets the (x,y,z) positional components and the yaw orientation
+         * component. The Roll and pitch orientation components are always determined by
+         * gravity and cannot be redefined. All future tracking will report values
+         * relative to this new reference position.
+         * If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose
+         * after this, because the sensor position(s) will change as a result of this.
          *
-         * The headset cannot be facing vertically upward or downward but rather must be roughly
-         * level otherwise this function will fail with ovrError_InvalidHeadsetOrientation.
+         * The headset cannot be facing vertically upward or downward but rather must be
+         * roughly level otherwise this function will fail with
+         * @ref OvrIntegration::Error::InvalidHeadsetOrientation.
          *
          * For more info, see the notes on each ovrTrackingOrigin enumeration to understand how
          * recenter will vary slightly in its behavior based on the current ovrTrackingOrigin setting.
