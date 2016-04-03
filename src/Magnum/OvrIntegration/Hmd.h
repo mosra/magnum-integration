@@ -328,6 +328,16 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         }
 
         /**
+         * @brief Sets the tracking origin type
+         *
+         * When the tracking origin is changed, all of the calls that either provide
+         * or accept ovrPosef will use the new tracking origin provided.
+         */
+        void setTrackingOrigin(TrackingOrigin origin) const {
+            ovr_SetTrackingOriginType(_session, ovrTrackingOrigin(origin));
+        }
+
+        /**
          * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
          *
          * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing further recenter
