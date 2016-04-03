@@ -69,9 +69,8 @@ enum class LayerType: Int {
 /**
 @brief Wrapper around `ovrLayerHeader`
 
-If you need to be able to change layer specific data, use one of the layer
-classes instead: @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFov or
-@ref LayerQuad.
+If you need to be able to change layer specific data, use @ref LayerEyeFov or
+@ref LayerQuad instead.
 
 @author Jonathan Hale (Squareys)
 */
@@ -296,7 +295,7 @@ Setup of a distortion layer may look as follows:
 // setup TextureSwapChains etc
 Context context;
 Hmd& hmd = // ...
-std::unique_ptr<TextureSwapChain> textureSet[2] = // ...
+std::unique_ptr<TextureSwapChain> textureChain[2] = // ...
 Vector2i textureSize[2] = // ...
 
 // setup compositor layers
@@ -305,13 +304,13 @@ layer.setFov(hmd.get());
 layer.setHighQuality(true);
 
 for(Int eye = 0; eye < 2; ++eye) {
-    layer.setColorTexture(eye, *textureSet[eye]);
+    layer.setColorTexture(eye, *textureChain[eye]);
     layer.setViewport(eye, {{}, textureSize[eye]});
 }
 @endcode
 
 After that you need to render every frame by first rendering to the texture
-sets and then submitting the compositor frame via @ref Compositor::submitFrame().
+swap chains and then submitting the compositor frame via @ref Compositor::submitFrame().
 
 @code
 layer.setRenderPoses(hmd);

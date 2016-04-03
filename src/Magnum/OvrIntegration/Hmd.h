@@ -59,7 +59,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
     public:
         /**
          * @brief Constructor
-         * @param hmd       HMD for which this swap texture set is created
+         * @param hmd       HMD for which this texture swap chain is created
          * @param size      Size for the textures
          */
         explicit TextureSwapChain(const Hmd& hmd,  const Vector2i& size);
@@ -129,7 +129,7 @@ Vector2i textureSize = hmd.fovTextureSize(eye);
 std::unique_ptr<TextureSwapChain> textureSet = hmd.createTextureSwapChain(textureSize);
 
 // create the framebuffer which will be used to render to the current texture
-// of the texture set later.
+// of the texture chain later.
 Framebuffer framebuffer{{}, textureSize};
 framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
 
@@ -142,16 +142,16 @@ depth->setMinificationFilter(Sampler::Filter::Linear)
 
 // ...
 
-// render to the TextureSwapChain
-textureSet->increment();
-
 // switch to framebuffer and attach textures
 framebuffer.bind();
-framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureSet->activeTexture(), 0)
+framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureChain->activeTexture(), 0)
            .attachTexture(Framebuffer::BufferAttachment::Depth, *depth, 0)
            .clear(FramebufferClear::Color | FramebufferClear::Depth);
 
 // ... render scene
+
+// commit changes to the TextureSwapChain
+textureSet->commit();
 
 framebuffer.detach(Framebuffer::ColorAttachment(0))
            .detach(Framebuffer::BufferAttachment::Depth);
@@ -161,7 +161,7 @@ Usually, especially for debugging, you will want to have a *mirror* of the
 @ref Compositor result displayed to a window.
 
 @code
-Texture2D& mirrorTexture = hmd->createMirrorTexture(TextureFormat::RGBA, resolution);
+Texture2D& mirrorTexture = hmd->createMirrorTexture(resolution);
 Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
 mirrorFramebuffer.attachTexture(Framebuffer::ColorAttachment(0), mirrorTexture, 0)
                  .mapForRead(Framebuffer::ColorAttachment(0));
