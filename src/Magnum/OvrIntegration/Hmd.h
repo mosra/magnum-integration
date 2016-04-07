@@ -667,7 +667,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         HmdStatusFlags _flags;
 
-        friend class TextureSwapChain;
         friend class Context;
 };
 
