@@ -129,6 +129,22 @@ Debug& operator<<(Debug& debug, const Touch value) {
     return debug << "OvrIntegration::Touch::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const ControllerType value) {
+    switch(value) {
+        #define _c(value) case ControllerType::value: return debug << "OvrIntegration::ControllerType::" #value;
+        _c(None)
+        _c(LTouch)
+        _c(RTouch)
+        _c(Touch)
+        _c(Remote)
+        _c(XBox)
+        _c(Active)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::ControllerType::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const StatusFlag value) {
     switch(value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;

@@ -53,6 +53,7 @@ enum class Button: UnsignedInt;
 enum class Touch: UnsignedInt;
 enum class TrackingOrigin: Int;
 enum class TrackerFlag: Int;
+enum class ControllerType: Int;
 enum class HmdStatusFlag: UnsignedByte;
 enum class SessionStatusFlag: UnsignedByte;
 enum class PerformanceHudMode: Int;
