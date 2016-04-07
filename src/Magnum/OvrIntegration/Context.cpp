@@ -71,15 +71,15 @@ bool Context::detect() const {
     return ovr_GetHmdDesc(nullptr).Type != ovrHmd_None;
 }
 
-std::unique_ptr<Hmd> Context::createHmd() {
+std::unique_ptr<Session> Context::createSession() {
     if(detect()) {
         ovrSession session;
         ovrGraphicsLuid luid;
         ovr_Create(&session, &luid);
-        return std::unique_ptr<Hmd>(new Hmd(session));
+        return std::unique_ptr<Session>(new Session(session));
     }
 
-    return std::unique_ptr<Hmd>();
+    return std::unique_ptr<Session>();
 }
 
 }}

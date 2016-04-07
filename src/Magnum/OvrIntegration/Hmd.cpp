@@ -38,8 +38,8 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-TextureSwapChain::TextureSwapChain(const Hmd& hmd, const Vector2i& size):
-    _hmd(hmd),
+TextureSwapChain::TextureSwapChain(const Session& session, const Vector2i& size):
+    _session(session),
     _size(size),
     _curIndex(0)
 {
@@ -54,7 +54,7 @@ TextureSwapChain::TextureSwapChain(const Hmd& hmd, const Vector2i& size):
     desc.StaticImage = ovrFalse;
     desc.MiscFlags = ovrTextureMisc_None;
 
-    ovrResult result = ovr_CreateTextureSwapChainGL(_hmd.ovrSession(), &desc, &_textureSwapChain);
+    ovrResult result = ovr_CreateTextureSwapChainGL(_session.ovrSession(), &desc, &_textureSwapChain);
 
     if(result != ovrSuccess) {
         Corrade::Utility::Error() << "Could not create texture swap chain:" << Context::get().error().message;
@@ -62,14 +62,14 @@ TextureSwapChain::TextureSwapChain(const Hmd& hmd, const Vector2i& size):
     }
 
     Int length = 0;
-    ovr_GetTextureSwapChainLength(_hmd.ovrSession(), _textureSwapChain, &length);
+    ovr_GetTextureSwapChainLength(_session.ovrSession(), _textureSwapChain, &length);
 
     /* wrap the texture set for magnum */
     _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(length)};
 
     for(UnsignedInt i = 0; i < _textures.size(); ++i) {
         UnsignedInt textureId;
-        ovr_GetTextureSwapChainBufferGL(_hmd.ovrSession(), _textureSwapChain, i, &textureId);
+        ovr_GetTextureSwapChainBufferGL(_session.ovrSession(), _textureSwapChain, i, &textureId);
         new(&_textures[i]) Texture2D(Texture2D::wrap(textureId));
         _textures[i].setMinificationFilter(Sampler::Filter::Linear)
                     .setMagnificationFilter(Sampler::Filter::Linear)
@@ -78,12 +78,12 @@ TextureSwapChain::TextureSwapChain(const Hmd& hmd, const Vector2i& size):
 }
 
 TextureSwapChain::~TextureSwapChain() {
-    ovr_DestroyTextureSwapChain(_hmd.ovrSession(), _textureSwapChain);
+    ovr_DestroyTextureSwapChain(_session.ovrSession(), _textureSwapChain);
 }
 
 TextureSwapChain& TextureSwapChain::commit() {
-    ovr_CommitTextureSwapChain(_hmd.ovrSession(), _textureSwapChain);
-    ovr_GetTextureSwapChainCurrentIndex(_hmd.ovrSession(), _textureSwapChain, &_curIndex);
+    ovr_CommitTextureSwapChain(_session.ovrSession(), _textureSwapChain);
+    ovr_GetTextureSwapChainCurrentIndex(_session.ovrSession(), _textureSwapChain, &_curIndex);
 
     return *this;
 }
@@ -94,7 +94,7 @@ Texture2D& TextureSwapChain::activeTexture() {
 
 //----------------------------------------------------------------
 
-Hmd::Hmd(::ovrSession hmd):
+Session::Session(::ovrSession hmd):
     _session(hmd),
     _hmdDesc(ovr_GetHmdDesc(_session)),
     _ovrMirrorTexture(nullptr),
@@ -104,7 +104,7 @@ Hmd::Hmd(::ovrSession hmd):
      * and therefore can be simply cast to HmdStatusFlag */
 }
 
-Hmd::~Hmd() {
+Session::~Session() {
     if(_flags & HmdStatusFlag::HasMirrorTexture) {
         ovr_DestroyMirrorTexture(_session, _ovrMirrorTexture);
     }
@@ -112,7 +112,7 @@ Hmd::~Hmd() {
     ovr_Destroy(_session);
 }
 
-Hmd& Hmd::configureRendering() {
+Session& Session::configureRendering() {
     /* get offset from center to left/right eye. The offset lengths may differ. */
     _hmdToEyeOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeOffset;
     _hmdToEyeOffset[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeOffset;
@@ -124,11 +124,11 @@ Hmd& Hmd::configureRendering() {
     return *this;
 }
 
-Vector2i Hmd::fovTextureSize(const Int eye) {
+Vector2i Session::fovTextureSize(const Int eye) {
     return Vector2i(ovr_GetFovTextureSize(_session, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
 }
 
-Texture2D& Hmd::createMirrorTexture(const Vector2i& size) {
+Texture2D& Session::createMirrorTexture(const Vector2i& size) {
     CORRADE_ASSERT(!(_flags & HmdStatusFlag::HasMirrorTexture),
            "Hmd::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
@@ -156,44 +156,44 @@ Texture2D& Hmd::createMirrorTexture(const Vector2i& size) {
     return *_mirrorTexture;
 }
 
-std::unique_ptr<TextureSwapChain> Hmd::createTextureSwapChain(const Int eye) {
+std::unique_ptr<TextureSwapChain> Session::createTextureSwapChain(const Int eye) {
     return std::unique_ptr<TextureSwapChain>(new TextureSwapChain(*this, fovTextureSize(eye)));
 }
 
-std::unique_ptr<TextureSwapChain> Hmd::createTextureSwapChain(const Vector2i& size) {
+std::unique_ptr<TextureSwapChain> Session::createTextureSwapChain(const Vector2i& size) {
     return std::unique_ptr<TextureSwapChain>(new TextureSwapChain(*this, size));
 }
 
-Matrix4 Hmd::projectionMatrix(const Int eye, Float near, Float far) const {
+Matrix4 Session::projectionMatrix(const Int eye, Float near, Float far) const {
     ovrMatrix4f proj = ovrMatrix4f_Projection(_hmdDesc.DefaultEyeFov[eye], near, far,
                                               ovrProjection_ClipRangeOpenGL);
     return Matrix4(proj);
 }
 
-Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
+Matrix4 Session::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
                                                      _hmdToEyeOffset[eye].x);
     return Matrix4(sub);
 }
 
-Hmd& Hmd::pollTrackers() {
+Session& Session::pollTrackers() {
     _predictedDisplayTime = ovr_GetPredictedDisplayTime(_session, _frameIndex);
     _trackingState = ovr_GetTrackingState(_session, _predictedDisplayTime, true);
     return *this;
 }
 
-Hmd& Hmd::pollEyePoses() {
+Session& Session::pollEyePoses() {
     pollTrackers();
     ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeOffset, _ovrPoses);
     return *this;
 }
 
-Hmd& Hmd::pollController(const ControllerType types, InputState& state) {
+Session& Session::pollController(const ControllerType types, InputState& state) {
     ovr_GetInputState(_session, ovrControllerType(types), &state.ovrInputState());
     return *this;
 }
 
-SessionStatusFlags Hmd::sessionStatus() const {
+SessionStatusFlags Session::sessionStatus() const {
     ovrSessionStatus status;
     ovr_GetSessionStatus(_session, &status);
     const SessionStatusFlags none = SessionStatusFlags{};
@@ -206,19 +206,19 @@ SessionStatusFlags Hmd::sessionStatus() const {
          | ((status.ShouldRecenter) ? SessionStatusFlag::ShouldRecenter : none);
 }
 
-bool Hmd::isDebugHmd() const {
+bool Session::isDebugHmd() const {
     return (_flags & HmdStatusFlag::Debug) != HmdStatusFlags{};
 }
 
-void Hmd::setPerformanceHudMode(const PerformanceHudMode mode) const {
+void Session::setPerformanceHudMode(const PerformanceHudMode mode) const {
     ovr_SetInt(_session, OVR_PERF_HUD_MODE, Int(mode));
 }
 
-void Hmd::setDebugHudStereoMode(const DebugHudStereoMode mode) const {
+void Session::setDebugHudStereoMode(const DebugHudStereoMode mode) const {
     ovr_SetInt(_session, OVR_DEBUG_HUD_STEREO_MODE, Int(mode));
 }
 
-void Hmd::setLayerHudMode(const LayerHudMode mode) const {
+void Session::setLayerHudMode(const LayerHudMode mode) const {
     ovr_SetInt(_session, OVR_LAYER_HUD_MODE, Int(mode));
 }
 

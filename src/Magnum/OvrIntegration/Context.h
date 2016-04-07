@@ -101,7 +101,7 @@ if(result & OvrDetectResult::HmdConnected) {
 }
 @endcode
 
-@see @ref Hmd, @ref Compositor
+@see @ref Session, @ref Compositor
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
@@ -152,12 +152,12 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         bool detect() const;
 
         /**
-         * @brief Create a handle to a connected HMD device
+         * @brief Create a handle to a Oculus Session
          *
-         * Returns instance of the connected HMD, or `nullptr`,
+         * Returns instance of @ref Session, or `nullptr`,
          * if there is none.
          */
-        std::unique_ptr<Hmd> createHmd();
+        std::unique_ptr<Session> createSession();
 
         /** @return Reference to the compositor */
         Compositor& compositor() { return _compositor; }

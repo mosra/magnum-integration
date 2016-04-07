@@ -204,14 +204,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
          * @param hmd           HMD to get the render pose from
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setRenderPoses(const Hmd& hmd);
+        LayerEyeFov& setRenderPoses(const Session& hmd);
 
         /**
          * @brief Set fov for this layer
          * @param hmd           HMD to get the default eye fov to set to
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setFov(const Hmd& hmd);
+        LayerEyeFov& setFov(const Session& hmd);
 };
 
 /**
@@ -294,7 +294,7 @@ Setup of a distortion layer may look as follows:
 @code
 // setup TextureSwapChains etc
 Context context;
-Hmd& hmd = // ...
+Session& session = // ...
 std::unique_ptr<TextureSwapChain> textureChain[2] = // ...
 Vector2i textureSize[2] = // ...
 
@@ -318,7 +318,7 @@ layer.setRenderPoses(hmd);
 Context::get().compositor().submitFrame(hmd);
 @endcode
 
-@see @ref Hmd, @ref TextureSwapChain, @ref Context::compositor()
+@see @ref Session, @ref TextureSwapChain, @ref Context::compositor()
 @author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
@@ -362,7 +362,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
          * @param hmd       HMD to render to
          * @return Reference to self (for method chaining)
          */
-        Compositor& submitFrame(Hmd& hmd);
+        Compositor& submitFrame(Session& hmd);
 
     private:
         explicit Compositor();
