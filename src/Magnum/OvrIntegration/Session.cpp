@@ -24,7 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/OvrIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Session.h"
 
 #include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/Conversion.h"

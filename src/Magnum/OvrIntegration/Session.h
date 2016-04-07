@@ -1,5 +1,5 @@
-#ifndef Magnum_OvrIntegration_Hmd_h
-#define Magnum_OvrIntegration_Hmd_h
+#ifndef Magnum_OvrIntegration_Session_h
+#define Magnum_OvrIntegration_Session_h
 /*
     This file is part of Magnum.
 

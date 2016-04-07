@@ -30,7 +30,7 @@ find_package(OVR REQUIRED)
 set(MagnumOvrIntegration_SRCS
     Compositor.cpp
     Context.cpp
-    Hmd.cpp
+    Session.cpp
     HmdEnum.cpp)
 
 set(MagnumOvrIntegration_HEADERS
@@ -38,7 +38,7 @@ set(MagnumOvrIntegration_HEADERS
     Conversion.h
     HmdEnum.h
     Context.h
-    Hmd.h
+    Session.h
     Compositor.h
 
     visibility.h)
