@@ -34,7 +34,7 @@
 #include <Magnum/Texture.h>
 
 #include "Magnum/OvrIntegration/Compositor.h"
-#include "Magnum/OvrIntegration/Hmd.h" /* required for std::unique_ptr */
+#include "Magnum/OvrIntegration/Session.h" /* required for std::unique_ptr */
 #include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
 #include "Magnum/OvrIntegration/visibility.h"

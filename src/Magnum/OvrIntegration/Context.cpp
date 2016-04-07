@@ -26,7 +26,7 @@
 
 #include "Magnum/OvrIntegration/Context.h"
 
-#include "Magnum/OvrIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Session.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
 
 #include <OVR_CAPI_GL.h>
