@@ -433,6 +433,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          */
         Hmd& pollEyePoses();
 
+        /**
+         * @brief Get input state of given controller type
+         * @param types Controller type to get the input state of
+         * @param state Receives the resulting input state
+         * @return Reference to self (for method chaining)
+         */
+        Hmd& pollController(ControllerType types, InputState& state);
+
         /** @brief Resolution of the HMD's display */
         Vector2i resolution() const {
             return Vector2i(_hmdDesc.Resolution);
