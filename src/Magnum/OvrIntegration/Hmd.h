@@ -49,6 +49,79 @@
 namespace Magnum { namespace OvrIntegration {
 
 /**
+ * @brief A full pose (rigid body) configuration with first and second derivatives.
+ *
+ * Body refers to any object for which ovrPoseStatef is providing data.
+ * It can be the HMD, Touch controller, sensor or something else. The context
+ * depends on the usage of the struct.
+ */
+class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
+public:
+
+    static PoseState& wrap(::ovrPoseStatef& state) {
+        return reinterpret_cast<PoseState&>(state);
+    }
+    static const PoseState& wrap(const ::ovrPoseStatef& state) {
+        return reinterpret_cast<const PoseState&>(state);
+    }
+
+    PoseState(): _state() {}
+    PoseState(const ovrPoseStatef& state): _state(state) {}
+
+    /**
+     * @brief Position and orientation
+     */
+    DualQuaternion pose() const {
+        return DualQuaternion{_state.ThePose};
+    }
+
+    /**
+     * @brief Angular velocity in radians per second
+     */
+    Vector3 angularVelocity() const {
+        return Vector3{_state.AngularVelocity};
+    }
+
+    /**
+     * @brief Velocity in meters per second
+     */
+    Vector3 LinearVelocity() const {
+        return Vector3{_state.LinearVelocity};
+    }
+
+    /**
+     * @brief Angular acceleration in radians per second per second
+     */
+    Vector3 angularAcceleration() const {
+        return Vector3{_state.AngularAcceleration};
+    }
+
+    /**
+     * @brief Acceleration in meters per second per second
+     */
+    Vector3 linearAcceleration() const {
+        return Vector3{_state.LinearAcceleration};
+    }
+
+    /**
+     * @brief Absolute time that this pose refers to (in seconds)
+     */
+    Double time() const {
+        return _state.TimeInSeconds;
+    }
+
+    /**
+     * @brief The underlying `ovrPoseStatef`
+     */
+    ::ovrPoseStatef& ovrPoseStatef() {
+        return _state;
+    }
+
+private:
+    ::ovrPoseStatef _state;
+};
+
+/**
 @brief Texture swap chain
 
 Contains an array of textures which can be rendered to an HMD by the Oculus SDK
