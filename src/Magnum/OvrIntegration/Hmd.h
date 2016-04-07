@@ -382,15 +382,54 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          *
          * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
          */
+        const PoseState& headPoseState() const {
+            return PoseState::wrap(_trackingState.HeadPose);
+        }
+
+        /**
+         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         *
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         */
+        DualQuaternion calibratedOrigin() const {
+            return DualQuaternion(_trackingState.CalibratedOrigin);
+        }
+
+        /**
+         * @brief Get translation for the eyes from the head pose of last @ref pollEyePoses()
+         *
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         */
         std::array<DualQuaternion, 2> eyePoses() const {
             return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
         }
 
         /**
-         * @brief Refresh cached eye poses
+         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         *
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         */
+        std::array<std::reference_wrapper<const PoseState>, 2> handPoseStates() const {
+            return std::array<std::reference_wrapper<const PoseState>, 2>{{
+                    PoseState::wrap(_trackingState.HandPoses[0]),
+                    PoseState::wrap(_trackingState.HandPoses[1])}};
+        }
+
+        /**
+         * @brief Refresh cached tracking state
          * @return Reference to self (for method chaining)
          *
          * Use @ref eyePoses() to access the result.
+         */
+        Hmd& pollTrackers();
+
+        /**
+         * @brief Refresh cached eye poses
+         * @return Reference to self (for method chaining)
+         *
+         * Use @ref eyePoses() to access the result. Calls @ref pollTrackers().
+         * Call @ref pollTrackers() directly, if you do not need to calculate
+         * the eye poses.
          */
         Hmd& pollEyePoses();
 
@@ -459,6 +498,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * @see @ref pollEyePoses()
          */
         const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
+
+        /**
+         * @brief ovrHandPoseStates
+         *
+         * The most recent calculated pose for each hand when hand controller
+         * tracking is present. HandPoses[ovrHand_Left] refers to the left hand
+         * and HandPoses[ovrHand_Right] to the right hand.
+         * These values can be combined with the result of @ref pollController()
+         * with @ref ControllerType::Touch for complete hand controller information.
+         */
+        const ovrPoseStatef* ovrHandPoseStates() const { return _trackingState.HandPoses; }
 
         /**
          * @brief Re-centers the sensor position and orientation.
