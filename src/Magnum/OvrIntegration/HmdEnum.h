@@ -250,6 +250,19 @@ constexpr Touches R_POSE_MASK = Touch::RIndexPointing | Touch::RThumbUp;
 constexpr Touches L_POSE_MASK = Touch::LIndexPointing | Touch::LThumbUp;
 
 /**
+ * @brief Controller type
+ */
+enum class ControllerType: Int {
+    None = ovrControllerType_None,      /**< No controllers */
+    LTouch = ovrControllerType_LTouch,  /**< Left Touch controller */
+    RTouch = ovrControllerType_RTouch,  /**< Right Touch controller */
+    Touch = ovrControllerType_Touch,    /**< Left and right Touch controllers */
+    Remote = ovrControllerType_Remote,  /**< Oculus Remote */
+    XBox   = ovrControllerType_XBox,    /**< XBox controller */
+    Active   = ovrControllerType_Active,/**< Operate on or query whichever controller is active */
+};
+
+/**
 @brief Status flag
 
 Flags describing the current status of sensor tracking.
@@ -479,6 +492,9 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::Touch} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::ControllerType} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
