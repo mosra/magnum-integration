@@ -176,10 +176,17 @@ Matrix4 Hmd::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const 
     return Matrix4(sub);
 }
 
-Hmd& Hmd::pollEyePoses() {
+Hmd& Hmd::pollTrackers() {
     _predictedDisplayTime = ovr_GetPredictedDisplayTime(_session, _frameIndex);
     _trackingState = ovr_GetTrackingState(_session, _predictedDisplayTime, true);
+    return *this;
+}
+
+Hmd& Hmd::pollEyePoses() {
+    pollTrackers();
     ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeOffset, _ovrPoses);
+    return *this;
+}
 
     return *this;
 }
