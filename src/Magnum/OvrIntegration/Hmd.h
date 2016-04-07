@@ -122,6 +122,85 @@ private:
 };
 
 /**
+ * @brief Input state
+ *
+ * ovrInputState describes the complete controller input state, including
+ * Oculus Touch, and XBox gamepad. If multiple inputs are connected and used at
+ * the same time, their inputs are combined.
+ */
+class MAGNUM_OVRINTEGRATION_EXPORT InputState {
+public:
+
+    InputState(): _state() {}
+    InputState(const ovrInputState& state): _state(state) {}
+
+    /**
+     * @brief Values for buttons described by ovrButton
+     */
+    Buttons buttons() const {
+        return Buttons{static_cast<Button>(_state.Buttons)};
+    }
+
+    /**
+     * @brief Touch values for buttons and sensors as described by ovrTouch
+     */
+    Touches touches() const {
+        return Touches{static_cast<Touch>(_state.Touches)};
+    }
+
+    /**
+     * @brief Left and right finger trigger values
+     *
+     * In the range `[0.0f;1.0f]`
+     */
+    Float indexTrigger(UnsignedInt hand) const {
+        return _state.IndexTrigger[hand];
+    }
+
+    /**
+     * @brief Left and right hand trigger values
+     *
+     * In the range `[0.0f;1.0f]`
+     */
+    Float handTrigger(UnsignedInt hand) const {
+        return _state.HandTrigger[hand];
+    }
+
+    /**
+     * @brief Horizontal and vertical thumbstick axis values
+     *
+     * In the range `[-1.0f;1.0f]`
+     */
+    Vector2 thumbstick(UnsignedInt hand) const {
+        return Vector2{_state.Thumbstick[hand]};
+    }
+
+    /**
+     * @brief System time when the controller state was last updated (in seconds)
+     */
+    Double time() const {
+        return _state.TimeInSeconds;
+    }
+
+    /**
+     * @brief The type of the controller this state is for
+     */
+    ControllerType controllerType() const {
+        return static_cast<ControllerType>(_state.ControllerType);
+    }
+
+    /**
+     * @brief The underlying `ovrInputState`
+     */
+    ::ovrInputState& ovrInputState() {
+        return _state;
+    }
+
+private:
+    ::ovrInputState _state;
+};
+
+/**
 @brief Texture swap chain
 
 Contains an array of textures which can be rendered to an HMD by the Oculus SDK
