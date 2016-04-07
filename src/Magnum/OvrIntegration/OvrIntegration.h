@@ -36,7 +36,7 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-class Hmd;
+class Session;
 class TextureSwapChain;
 class Context;
 class Compositor;

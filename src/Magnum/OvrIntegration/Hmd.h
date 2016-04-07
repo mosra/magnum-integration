@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Hmd, @ref Magnum::OvrIntegration::TextureSwapChain
+ * @brief Class @ref Magnum::OvrIntegration::Session, @ref Magnum::OvrIntegration::TextureSwapChain
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -205,16 +205,16 @@ private:
 
 Contains an array of textures which can be rendered to an HMD by the Oculus SDK
 @ref Compositor.
-@see @ref Hmd, @ref Layer
+@see @ref Session, @ref Layer
 */
 class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
     public:
         /**
          * @brief Constructor
-         * @param hmd       HMD for which this texture swap chain is created
+         * @param session   HMD for which this texture swap chain is created
          * @param size      Size for the textures
          */
-        explicit TextureSwapChain(const Hmd& hmd,  const Vector2i& size);
+        explicit TextureSwapChain(const Session& session,  const Vector2i& size);
         ~TextureSwapChain();
 
         /** @brief Currently active texture in the set */
@@ -232,7 +232,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
         }
 
     private:
-        const Hmd& _hmd;
+        const Session& _session;
         Vector2i _size;
         Int _curIndex;
 
@@ -241,18 +241,18 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
 };
 
 /**
-@brief Hmd
+@brief Session
 
 Wraps `ovrSession`, `ovrHmdDesc` and methods from the Oculus SDK which directly
 affect an HMD and its properties.
 
 ## Usage
 
-Instances of @ref Hmd are created by @ref Context.
+Instances of @ref Session are created by @ref Context.
 
 @code
-std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd();
-hmd->configureRendering();
+std::unique_ptr<Session> session = Context::get().initialize().createSession();
+session->configureRendering();
 
 // ...
 @endcode
@@ -260,15 +260,15 @@ hmd->configureRendering();
 Once the HMD is configured, you can poll and get the head pose.
 
 @code
-std::unique_ptr<DualQuaternion> poses = hmd->pollEyePoses().eyePoses();
+std::unique_ptr<DualQuaternion> poses = session->pollEyePoses().eyePoses();
 
 DualQuaternion leftPose = poses.get()[0];
 DualQuaternion rightPose = poses.get()[1];
 @endcode
 
-### Rendering to HMD
+### Rendering to the HMD
 
-Rendering to an @ref Hmd is done via the @ref Compositor. It's results are
+Rendering to an HMD is done via the @ref Compositor. It's results are
 rendered directly to the Rift. The compositor layers usually require you to
 render to a set of textures which are then rendered to the rift with
 distortion, chromatic abberation and possibly timewarp.
@@ -277,8 +277,8 @@ A setup for such a @ref TextureSwapChain for an eye could look like this:
 
 @code
 const Int eye = 0; // left eye
-Vector2i textureSize = hmd.fovTextureSize(eye);
-std::unique_ptr<TextureSwapChain> textureSet = hmd.createTextureSwapChain(textureSize);
+Vector2i textureSize = session.fovTextureSize(eye);
+std::unique_ptr<TextureSwapChain> textureSet = session.createTextureSwapChain(textureSize);
 
 // create the framebuffer which will be used to render to the current texture
 // of the texture chain later.
@@ -313,7 +313,7 @@ Usually, especially for debugging, you will want to have a *mirror* of the
 @ref Compositor result displayed to a window.
 
 @code
-Texture2D& mirrorTexture = hmd->createMirrorTexture(resolution);
+Texture2D& mirrorTexture = session->createMirrorTexture(resolution);
 Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
 mirrorFramebuffer.attachTexture(Framebuffer::ColorAttachment(0), mirrorTexture, 0)
                  .mapForRead(Framebuffer::ColorAttachment(0));
@@ -331,9 +331,9 @@ Framebuffer::blit(mirrorFramebuffer,
 
 @see @ref Context, @ref TextureSwapChain, @ref Compositor
 */
-class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
+class MAGNUM_OVRINTEGRATION_EXPORT Session {
     public:
-        ~Hmd();
+        ~Session();
 
         /**
          * @brief Configure rendering to the Rift
@@ -341,7 +341,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          *
          * Includes setting up HMD to eye offsets internally.
          */
-        Hmd& configureRendering();
+        Session& configureRendering();
 
         /**
          * @brief Get preferred size for textures used for rendering to this HMD
@@ -353,7 +353,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * @brief Create a mirror texture
          * @param size      Size for the mirror texture
          * @return Reference to the created mirror texture. Its destruction is
-         *      handled by the @ref Hmd.
+         *      handled by the @ref Session.
          *
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
@@ -421,7 +421,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          *
          * Use @ref eyePoses() to access the result.
          */
-        Hmd& pollTrackers();
+        Session& pollTrackers();
 
         /**
          * @brief Refresh cached eye poses
@@ -431,7 +431,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * Call @ref pollTrackers() directly, if you do not need to calculate
          * the eye poses.
          */
-        Hmd& pollEyePoses();
+        Session& pollEyePoses();
 
         /**
          * @brief Get input state of given controller type
@@ -439,7 +439,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * @param state Receives the resulting input state
          * @return Reference to self (for method chaining)
          */
-        Hmd& pollController(ControllerType types, InputState& state);
+        Session& pollController(ControllerType types, InputState& state);
 
         /** @brief Resolution of the HMD's display */
         Vector2i resolution() const {
@@ -474,7 +474,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * @brief Get a projection matrix for projection to an orthogonal plane.
          * @param eye       The eye index
          * @param proj      Projection matrix, usually created by
-         *      @ref Hmd::projectionMatrix()
+         *      @ref Session::projectionMatrix()
          * @param scale     Scale for the 2D plane
          * @param distance  Distance of the plane from hmd position
          * @return The projection matrix for eye
@@ -482,7 +482,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * Get a projection matrix which can be used for projection onto a 2D
          * plane orthogonal to the hmds view/screen with distance from hmds
          * position.
-         * @see @ref Hmd::projectionMatrix()
+         * @see @ref Session::projectionMatrix()
          */
         Matrix4 orthoSubProjectionMatrix(Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
 
@@ -553,7 +553,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
          *
          * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing further recenter
-         * requests to be detected. Since this is automatically done by @ref Hmd::recenterTrackingOrigin(),
+         * requests to be detected. Since this is automatically done by @ref Session::recenterTrackingOrigin(),
          * this is only needs to be called when application is doing its own re-centering.
          */
         void clearShouldRecenterFlag() const {
@@ -649,7 +649,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         SessionStatusFlags sessionStatus() const;
 
     private:
-        explicit Hmd(::ovrSession hmd);
+        explicit Session(::ovrSession session);
 
         ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;

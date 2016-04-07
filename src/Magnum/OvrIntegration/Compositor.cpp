@@ -64,7 +64,7 @@ LayerEyeFov& LayerEyeFov::setViewport(const Int eye, const Range2Di& viewport) {
     return *this;
 }
 
-LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
+LayerEyeFov& LayerEyeFov::setRenderPoses(const Session& hmd) {
     const ovrPosef* poses = hmd.ovrEyePoses();
     _layer.EyeFov.RenderPose[0] = poses[0];
     _layer.EyeFov.RenderPose[1] = poses[1];
@@ -72,7 +72,7 @@ LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
     return *this;
 }
 
-LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
+LayerEyeFov& LayerEyeFov::setFov(const Session& hmd) {
     const ovrFovPort* fov = hmd.ovrHmdDesc().DefaultEyeFov;
     _layer.EyeFov.Fov[0] = fov[0];
     _layer.EyeFov.Fov[1] = fov[1];
@@ -151,7 +151,7 @@ LayerQuad& Compositor::addLayerQuad() {
     return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerQuad()))));
 }
 
-Compositor& Compositor::submitFrame(Hmd& hmd) {
+Compositor& Compositor::submitFrame(Session& hmd) {
     ovr_SubmitFrame(hmd.ovrSession(), hmd.incFrameIndex(), &hmd.ovrViewScaleDesc(), _layers.data(), _layers.size());
 
     return *this;
