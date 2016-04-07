@@ -188,6 +188,8 @@ Hmd& Hmd::pollEyePoses() {
     return *this;
 }
 
+Hmd& Hmd::pollController(const ControllerType types, InputState& state) {
+    ovr_GetInputState(_session, ovrControllerType(types), &state.ovrInputState());
     return *this;
 }
 
