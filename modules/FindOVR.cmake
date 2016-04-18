@@ -40,7 +40,7 @@
 #
 
 if(NOT OVR_SDK_ROOT)
-   find_path(OVR_SDK_ROOT OculusSDK)
+    find_path(OVR_SDK_ROOT OculusSDK)
 endif()
 
 if(OVR_SDK_ROOT)
