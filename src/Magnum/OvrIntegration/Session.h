@@ -56,69 +56,69 @@ namespace Magnum { namespace OvrIntegration {
  * depends on the usage of the struct.
  */
 class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
-public:
+    public:
 
-    static PoseState& wrap(::ovrPoseStatef& state) {
-        return reinterpret_cast<PoseState&>(state);
-    }
-    static const PoseState& wrap(const ::ovrPoseStatef& state) {
-        return reinterpret_cast<const PoseState&>(state);
-    }
+        static PoseState& wrap(::ovrPoseStatef& state) {
+            return reinterpret_cast<PoseState&>(state);
+        }
+        static const PoseState& wrap(const ::ovrPoseStatef& state) {
+            return reinterpret_cast<const PoseState&>(state);
+        }
 
-    PoseState(): _state() {}
-    PoseState(const ovrPoseStatef& state): _state(state) {}
+        PoseState(): _state() {}
+        PoseState(const ovrPoseStatef& state): _state(state) {}
 
-    /**
-     * @brief Position and orientation
-     */
-    DualQuaternion pose() const {
-        return DualQuaternion{_state.ThePose};
-    }
+        /**
+         * @brief Position and orientation
+         */
+        DualQuaternion pose() const {
+            return DualQuaternion{_state.ThePose};
+        }
 
-    /**
-     * @brief Angular velocity in radians per second
-     */
-    Vector3 angularVelocity() const {
-        return Vector3{_state.AngularVelocity};
-    }
+        /**
+         * @brief Angular velocity in radians per second
+         */
+        Vector3 angularVelocity() const {
+            return Vector3{_state.AngularVelocity};
+        }
 
-    /**
-     * @brief Velocity in meters per second
-     */
-    Vector3 LinearVelocity() const {
-        return Vector3{_state.LinearVelocity};
-    }
+        /**
+         * @brief Velocity in meters per second
+         */
+        Vector3 LinearVelocity() const {
+            return Vector3{_state.LinearVelocity};
+        }
 
-    /**
-     * @brief Angular acceleration in radians per second per second
-     */
-    Vector3 angularAcceleration() const {
-        return Vector3{_state.AngularAcceleration};
-    }
+        /**
+         * @brief Angular acceleration in radians per second per second
+         */
+        Vector3 angularAcceleration() const {
+            return Vector3{_state.AngularAcceleration};
+        }
 
-    /**
-     * @brief Acceleration in meters per second per second
-     */
-    Vector3 linearAcceleration() const {
-        return Vector3{_state.LinearAcceleration};
-    }
+        /**
+         * @brief Acceleration in meters per second per second
+         */
+        Vector3 linearAcceleration() const {
+            return Vector3{_state.LinearAcceleration};
+        }
 
-    /**
-     * @brief Absolute time that this pose refers to (in seconds)
-     */
-    Double time() const {
-        return _state.TimeInSeconds;
-    }
+        /**
+         * @brief Absolute time that this pose refers to (in seconds)
+         */
+        Double time() const {
+            return _state.TimeInSeconds;
+        }
 
-    /**
-     * @brief The underlying `ovrPoseStatef`
-     */
-    ::ovrPoseStatef& ovrPoseStatef() {
-        return _state;
-    }
+        /**
+         * @brief The underlying `ovrPoseStatef`
+         */
+        ::ovrPoseStatef& ovrPoseStatef() {
+            return _state;
+        }
 
-private:
-    ::ovrPoseStatef _state;
+    private:
+        ::ovrPoseStatef _state;
 };
 
 /**
@@ -129,75 +129,75 @@ private:
  * the same time, their inputs are combined.
  */
 class MAGNUM_OVRINTEGRATION_EXPORT InputState {
-public:
+    public:
 
-    InputState(): _state() {}
-    InputState(const ovrInputState& state): _state(state) {}
+        InputState(): _state() {}
+        InputState(const ovrInputState& state): _state(state) {}
 
-    /**
-     * @brief Values for buttons described by ovrButton
-     */
-    Buttons buttons() const {
-        return Buttons{static_cast<Button>(_state.Buttons)};
-    }
+        /**
+         * @brief Values for buttons described by ovrButton
+         */
+        Buttons buttons() const {
+            return Buttons{static_cast<Button>(_state.Buttons)};
+        }
 
-    /**
-     * @brief Touch values for buttons and sensors as described by ovrTouch
-     */
-    Touches touches() const {
-        return Touches{static_cast<Touch>(_state.Touches)};
-    }
+        /**
+         * @brief Touch values for buttons and sensors as described by ovrTouch
+         */
+        Touches touches() const {
+            return Touches{static_cast<Touch>(_state.Touches)};
+        }
 
-    /**
-     * @brief Left and right finger trigger values
-     *
-     * In the range `[0.0f;1.0f]`
-     */
-    Float indexTrigger(UnsignedInt hand) const {
-        return _state.IndexTrigger[hand];
-    }
+        /**
+         * @brief Left and right finger trigger values
+         *
+         * In the range `[0.0f;1.0f]`
+         */
+        Float indexTrigger(UnsignedInt hand) const {
+            return _state.IndexTrigger[hand];
+        }
 
-    /**
-     * @brief Left and right hand trigger values
-     *
-     * In the range `[0.0f;1.0f]`
-     */
-    Float handTrigger(UnsignedInt hand) const {
-        return _state.HandTrigger[hand];
-    }
+        /**
+         * @brief Left and right hand trigger values
+         *
+         * In the range `[0.0f;1.0f]`
+         */
+        Float handTrigger(UnsignedInt hand) const {
+            return _state.HandTrigger[hand];
+        }
 
-    /**
-     * @brief Horizontal and vertical thumbstick axis values
-     *
-     * In the range `[-1.0f;1.0f]`
-     */
-    Vector2 thumbstick(UnsignedInt hand) const {
-        return Vector2{_state.Thumbstick[hand]};
-    }
+        /**
+         * @brief Horizontal and vertical thumbstick axis values
+         *
+         * In the range `[-1.0f;1.0f]`
+         */
+        Vector2 thumbstick(UnsignedInt hand) const {
+            return Vector2{_state.Thumbstick[hand]};
+        }
 
-    /**
-     * @brief System time when the controller state was last updated (in seconds)
-     */
-    Double time() const {
-        return _state.TimeInSeconds;
-    }
+        /**
+         * @brief System time when the controller state was last updated (in seconds)
+         */
+        Double time() const {
+            return _state.TimeInSeconds;
+        }
 
-    /**
-     * @brief The type of the controller this state is for
-     */
-    ControllerType controllerType() const {
-        return static_cast<ControllerType>(_state.ControllerType);
-    }
+        /**
+         * @brief The type of the controller this state is for
+         */
+        ControllerType controllerType() const {
+            return static_cast<ControllerType>(_state.ControllerType);
+        }
 
-    /**
-     * @brief The underlying `ovrInputState`
-     */
-    ::ovrInputState& ovrInputState() {
-        return _state;
-    }
+        /**
+         * @brief The underlying `ovrInputState`
+         */
+        ::ovrInputState& ovrInputState() {
+            return _state;
+        }
 
-private:
-    ::ovrInputState _state;
+    private:
+        ::ovrInputState _state;
 };
 
 /**
