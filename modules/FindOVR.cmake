@@ -41,17 +41,15 @@
 
 if(NOT OVR_SDK_ROOT)
     find_path(OVR_SDK_ROOT OculusSDK)
-endif()
 
-if(OVR_SDK_ROOT)
-    set(OVR_SDK_ROOT "${OVR_SDK_ROOT}/OculusSDK")
+    if(OVR_SDK_ROOT)
+        set(OVR_SDK_ROOT "${OVR_SDK_ROOT}/OculusSDK")
+        message(STATUS "Found OculusSDK: ${OVR_SDK_ROOT}")
+    endif()
 
-    mark_as_advanced(OVR_SDK_ROOT)
-    message(STATUS "Found OculusSDK: ${OVR_SDK_ROOT}")
 endif()
 
 set(LIBOVR_ROOT ${OVR_SDK_ROOT}/LibOVR)
-mark_as_advanced(LIBOVR_ROOT)
 
 # find include directory
 find_path(OVR_INCLUDE_DIR NAMES OVR_CAPI.h HINTS ${LIBOVR_ROOT}/Include)
