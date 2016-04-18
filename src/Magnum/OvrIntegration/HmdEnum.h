@@ -126,7 +126,7 @@ enum class TrackingOrigin: Int {
 @see @ref TrackerFlags
 */
 enum class TrackerFlag: Int {
-    /**< The sensor is present, else the sensor is absent or offline */
+    /** The sensor is present, else the sensor is absent or offline */
     Connected = ovrTracker_Connected,
 
     /**

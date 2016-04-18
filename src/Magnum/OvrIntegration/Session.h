@@ -58,14 +58,30 @@ namespace Magnum { namespace OvrIntegration {
 class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
     public:
 
+        /**
+         * @brief Wrap a `ovrPoseStatef` as @ref PoseState
+         * @return `state` as @ref PoseState reference
+         */
         static PoseState& wrap(::ovrPoseStatef& state) {
             return reinterpret_cast<PoseState&>(state);
         }
+        /** @overload */
         static const PoseState& wrap(const ::ovrPoseStatef& state) {
             return reinterpret_cast<const PoseState&>(state);
         }
 
+        /**
+         * @brief Constructor
+         *
+         * Default initializes underlying `ovrPoseStatef`.
+         */
         PoseState(): _state() {}
+
+        /**
+         * @brief Constructor with initial `ovrPoseStatef`
+         *
+         * Initializes underlying `ovrPoseStatef` with given `state`.
+         */
         PoseState(const ovrPoseStatef& state): _state(state) {}
 
         /**
