@@ -121,6 +121,10 @@ void EnumTest::button() {
     out.str("");
     Debug(&out) << Button(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::Button::(invalid)\n");
+
+    CORRADE_VERIFY((Buttons{Button::RShoulder} & Buttons::RMask) != Buttons{});
+    CORRADE_VERIFY((Buttons{Button::LShoulder} & Buttons::LMask) != Buttons{});
+    CORRADE_VERIFY((Buttons{Button::Home} & Buttons::PrivateMask) != Buttons{});
 }
 
 void EnumTest::touch() {
@@ -131,6 +135,11 @@ void EnumTest::touch() {
     out.str("");
     Debug(&out) << Touch(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::(invalid)\n");
+
+    CORRADE_VERIFY((Touches{Touch::RThumb} & Touches::RMask) != Touches{});
+    CORRADE_VERIFY((Touches{Touch::LThumb} & Touches::LMask) != Touches{});
+    CORRADE_VERIFY((Touches{Touch::RThumbUp} & Touches::RPoseMask) != Touches{});
+    CORRADE_VERIFY((Touches{Touch::LThumbUp} & Touches::LPoseMask) != Touches{});
 }
 
 void EnumTest::controllerType() {

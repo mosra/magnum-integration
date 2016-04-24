@@ -38,6 +38,16 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+Buttons InputState::buttons() const {
+    return Buttons{static_cast<Button>(_state.Buttons)};
+}
+
+Touches InputState::touches() const {
+     return Touches{static_cast<Touch>(_state.Touches)};
+}
+
+//----------------------------------------------------------------
+
 TextureSwapChain::TextureSwapChain(const Session& session, const Vector2i& size):
     _session(session),
     _size(size),

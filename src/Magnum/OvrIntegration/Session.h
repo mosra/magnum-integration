@@ -153,16 +153,12 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
         /**
          * @brief Values for buttons described by ovrButton
          */
-        Buttons buttons() const {
-            return Buttons{static_cast<Button>(_state.Buttons)};
-        }
+        Buttons buttons() const;
 
         /**
          * @brief Touch values for buttons and sensors as described by ovrTouch
          */
-        Touches touches() const {
-            return Touches{static_cast<Touch>(_state.Touches)};
-        }
+        Touches touches() const;
 
         /**
          * @brief Left and right finger trigger values

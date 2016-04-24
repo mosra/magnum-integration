@@ -153,16 +153,16 @@ pressable on one of these controllers.
 @see @ref Buttons
 */
 enum class Button: UnsignedInt {
-    A = ovrButton_A,
-    B = ovrButton_B,
+    A = ovrButton_A, /**< A button */
+    B = ovrButton_B, /**< B button */
 
-    X = ovrButton_X,
-    Y = ovrButton_Y,
+    X = ovrButton_X, /**< Y button */
+    Y = ovrButton_Y, /**< X button */
 
-    RThumb = ovrButton_RThumb,
-    RShoulder = ovrButton_RShoulder,
-    LThumb = ovrButton_LThumb,
-    LShoulder = ovrButton_LShoulder,
+    RThumb = ovrButton_RThumb,       /**< Right thumbstick button */
+    RShoulder = ovrButton_RShoulder, /**< Right shoulder button */
+    LThumb = ovrButton_LThumb,       /**< Left thumbstick button */
+    LShoulder = ovrButton_LShoulder, /**< Left shoulder button */
 
     Up = ovrButton_Up,          /**< D pad up */
     Down = ovrButton_Down,      /**< D pad down */
@@ -178,21 +178,42 @@ enum class Button: UnsignedInt {
     Home = ovrButton_Home,
 };
 
+CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Button>)
+
 /**
 @brief Buttons
 */
-typedef Containers::EnumSet<Button> Buttons;
+struct MAGNUM_OVRINTEGRATION_EXPORT Buttons: Containers::EnumSet<Button> {
+    /** @brief Bit mask of all buttons on the right Touch controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Buttons
+        #else
+        Containers::EnumSet<Button>
+        #endif
+        RMask = Button::A | Button::B | Button::RThumb | Button::RShoulder;
 
-CORRADE_ENUMSET_OPERATORS(Buttons)
+    /** @brief Bit mask of all buttons on the left Touch controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Buttons
+        #else
+        Containers::EnumSet<Button>
+        #endif
+        LMask = Button::X | Button::Y | Button::LThumb | Button::LShoulder;
 
-/** @brief Bit mask of all buttons on the right Touch controller */
-constexpr Buttons R_BUTTON_MASK = Button::A | Button::B | Button::RThumb | Button::RShoulder;
 
-/** @brief Bit mask of all buttons on the left Touch controller */
-constexpr Buttons L_BUTTON_MASK = Button::X | Button::Y | Button::LThumb | Button::LShoulder;
+    /** @brief Bit mask of buttons used by Oculus Home */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Buttons
+        #else
+        Containers::EnumSet<Button>
+        #endif
+        PrivateMask = Button::VolUp | Button::VolDown | Button::Home;
 
-/** @brief Bit mask of buttons used by Oculus Home */
-constexpr Buttons PRIVATE_MASK = Button::VolUp | Button::VolDown | Button::Home;
+    using EnumSet::EnumSet;
+};
 
 /**
 @brief Touch
@@ -205,17 +226,17 @@ but not pressing it.
 @see @ref Touches
 */
 enum class Touch: UnsignedInt {
-    A = ovrTouch_A,
-    B = ovrTouch_B,
+    A = ovrTouch_A, /**< A button touch */
+    B = ovrTouch_B, /**< B button touch */
 
-    X = ovrTouch_X,
-    Y = ovrTouch_Y,
+    X = ovrTouch_X, /**< X button touch */
+    Y = ovrTouch_Y, /**< Y button touch */
 
-    RThumb = ovrTouch_RThumb,
-    LThumb = ovrTouch_LThumb,
+    RThumb = ovrTouch_RThumb, /**< Right thumbstick touch */
+    LThumb = ovrTouch_LThumb, /**< Left thumbstick touch */
 
-    RIndexTrigger = ovrTouch_RIndexTrigger,
-    LIndexTrigger = ovrTouch_LIndexTrigger,
+    RIndexTrigger = ovrTouch_RIndexTrigger, /**< Right index finger touch */
+    LIndexTrigger = ovrTouch_LIndexTrigger, /**< Left index finger touch */
 
     /**
      * Right index finger pose state, derived internally based on distance,
@@ -233,21 +254,47 @@ enum class Touch: UnsignedInt {
     LThumbUp = ovrTouch_LThumbUp, /**< Left thumb pose state */
 };
 
-typedef Containers::EnumSet<Touch> Touches;
+CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Touch>)
 
-CORRADE_ENUMSET_OPERATORS(Touches)
+struct MAGNUM_OVRINTEGRATION_EXPORT Touches: Containers::EnumSet<Touch> {
+    /** @brief Bit mask of all the button touches on the right controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Touches
+        #else
+        Containers::EnumSet<Touch>
+        #endif
+        RMask = Touch::A | Touch::B | Touch::RThumb | Touch::RIndexTrigger;
 
-/** @brief Bit mask of all the button touches on the right controller */
-constexpr Touches R_TOUCH_MASK = Touch::A | Touch::B | Touch::RThumb | Touch::RIndexTrigger;
+    /** @brief Bit mask of all the button touches on the left controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Touches
+        #else
+        Containers::EnumSet<Touch>
+        #endif
+        LMask = Touch::X | Touch::Y | Touch::LThumb | Touch::LIndexTrigger;
 
-/** @brief Bit mask of all the button touches on the left controller */
-constexpr Touches L_TOUCH_MASK = Touch::X | Touch::Y | Touch::LThumb | Touch::LIndexTrigger;
+    /** @brief Bit mask of all right controller poses */
+    static constexpr
+       #ifdef DOXYGEN_GENERATING_OUTPUT
+       Touches
+       #else
+       Containers::EnumSet<Touch>
+       #endif
+       RPoseMask = Touch::RIndexPointing | Touch::RThumbUp;
 
-/** @brief Bit mask of all right controller poses */
-constexpr Touches R_POSE_MASK = Touch::RIndexPointing | Touch::RThumbUp;
+    /** @brief Bit mask of all left controller poses */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Touches
+        #else
+        Containers::EnumSet<Touch>
+        #endif
+        LPoseMask = Touch::LIndexPointing | Touch::LThumbUp;
 
-/** @brief Bit mask of all left controller poses */
-constexpr Touches L_POSE_MASK = Touch::LIndexPointing | Touch::LThumbUp;
+    using EnumSet::EnumSet;
+};
 
 /**
  * @brief Controller type
