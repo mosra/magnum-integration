@@ -28,6 +28,15 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+constexpr Containers::EnumSet<Button> Buttons::RMask;
+constexpr Containers::EnumSet<Button> Buttons::LMask;
+constexpr Containers::EnumSet<Button> Buttons::PrivateMask;
+
+constexpr Containers::EnumSet<Touch> Touches::RMask;
+constexpr Containers::EnumSet<Touch> Touches::LMask;
+constexpr Containers::EnumSet<Touch> Touches::RPoseMask;
+constexpr Containers::EnumSet<Touch> Touches::LPoseMask;
+
 Debug& operator<<(Debug& debug, const HmdType value) {
     switch(value) {
         #define _c(value) case HmdType::value: return debug << "OvrIntegration::HmdType::" #value;
