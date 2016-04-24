@@ -509,17 +509,17 @@ enum class ErrorType: Int {
      */
     RuntimeException = ovrError_RuntimeException,
 
-    MetricsUnknownApp = ovrError_MetricsUnknownApp,
-    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,
-    MetricsNoEvents = ovrError_MetricsNoEvents,
-    MetricsRuntime = ovrError_MetricsRuntime,
-    MetricsFile  = ovrError_MetricsFile,
-    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,
-    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,
-    MetricsNoApp = ovrError_MetricsNoApp,
-    MetricsOafFailure = ovrError_MetricsOafFailure,
-    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive,
-    MetricsSessionNotActive = ovrError_MetricsSessionNotActive,
+    MetricsUnknownApp = ovrError_MetricsUnknownApp,             /**< Metrics unknown app */
+    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,         /**< Metrics duplicate app */
+    MetricsNoEvents = ovrError_MetricsNoEvents,                 /**< Metrics no events */
+    MetricsRuntime = ovrError_MetricsRuntime,                   /**< Metrics runtime */
+    MetricsFile  = ovrError_MetricsFile,                        /**< Metrics file */
+    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,         /**< Metrics no client info */
+    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,       /**< Metrics no app meta data */
+    MetricsNoApp = ovrError_MetricsNoApp,                       /**< Metrics no app */
+    MetricsOafFailure = ovrError_MetricsOafFailure,             /**< Metrics oaf failure */
+    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive, /**< Metrics session already active */
+    MetricsSessionNotActive = ovrError_MetricsSessionNotActive, /**< Metrics session not active */
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
