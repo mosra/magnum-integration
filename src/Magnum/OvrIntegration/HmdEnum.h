@@ -5,7 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -54,7 +54,10 @@ enum class HmdType: Int {
     CB = ovrHmd_CB,                 /**< Crescent Bay prototype. Used by Oculus internally. */
     Other = ovrHmd_Other,           /**< Unknown type */
     E3_2015 = ovrHmd_E3_2015,       /**< Hmd demoed at E3 2015. Used by Oculus internally. */
-    ES06 = ovrHmd_ES06              /**< Used by Oculus internally. */
+    ES06 = ovrHmd_ES06,             /**< Used by Oculus internally. */
+    ES09 = ovrHmd_ES09,             /**< Used by Oculus internally. */
+    ES11 = ovrHmd_ES11,             /**< Used by Oculus internally. */
+    CV1 = ovrHmd_CV1,               /**< Consumer Version 1 */
 };
 
 /**
@@ -83,6 +86,230 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 /**
+ * @brief Tracking origin
+ */
+enum class TrackingOrigin: Int {
+    /**
+     * @brief Tracking system origin reported at eye (HMD) height
+     *
+     * Prefer using this origin when your application requires matching user's
+     * current physical head pose to a virtual head pose without any regards to
+     * the height of the floor. Cockpit-based, or 3rd-person experiences are
+     * ideal candidates.
+     * When used, all poses in ovrTrackingState are reported as an offset
+     * transform from the profile calibrated or recentered HMD pose.
+     * It is recommended that apps using this origin type call @ref Hmd::recenterTrackingOrigin()
+     * prior to starting the VR experience, but notify the user before doing so
+     * to make sure the user is in a comfortable pose, facing a comfortable
+     * direction.
+     */
+    EyeLevel = ovrTrackingOrigin_EyeLevel,
+
+    /**
+     * @brief Tracking system origin reported at floor height
+     *
+     * Prefer using this origin when your application requires the physical
+     * floor height to match the virtual floor height, such as standing
+     * experiences.
+     * When used, all poses in ovrTrackingState are reported as an offset
+     * transform from the profile calibrated floor pose. Calling @ref Hmd::recenterTrackingOrigin()
+     * will recenter the X & Z axes as well as yaw, but the Y-axis (i.e. height)
+     * will continue to be reported using the floor height as the origin for
+     * all poses.
+     */
+    FloorLevel = ovrTrackingOrigin_FloorLevel,
+};
+
+/**
+@brief Tracker flag
+
+@see @ref TrackerFlags
+*/
+enum class TrackerFlag: Int {
+    /** The sensor is present, else the sensor is absent or offline */
+    Connected = ovrTracker_Connected,
+
+    /**
+     * The sensor has a valid pose, else the pose is unavailable.
+     * This will only be set if ovrTracker_Connected is set.
+     */
+    PoseTracked = ovrTracker_PoseTracked
+};
+
+/**
+@brief Tracker flags
+*/
+typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
+
+CORRADE_ENUMSET_OPERATORS(TrackerFlags)
+
+/**
+@brief Button
+
+The Oculus SDK provides an abstraction of input for the XBox controller,
+the Oculus Remote and Oculus Touch. This enum describes all possible buttons
+pressable on one of these controllers.
+
+@see @ref Buttons
+*/
+enum class Button: UnsignedInt {
+    A = ovrButton_A, /**< A button */
+    B = ovrButton_B, /**< B button */
+
+    X = ovrButton_X, /**< Y button */
+    Y = ovrButton_Y, /**< X button */
+
+    RThumb = ovrButton_RThumb,       /**< Right thumbstick button */
+    RShoulder = ovrButton_RShoulder, /**< Right shoulder button */
+    LThumb = ovrButton_LThumb,       /**< Left thumbstick button */
+    LShoulder = ovrButton_LShoulder, /**< Left shoulder button */
+
+    Up = ovrButton_Up,          /**< D pad up */
+    Down = ovrButton_Down,      /**< D pad down */
+    Left = ovrButton_Left,      /**< D pad left */
+    Right = ovrButton_Right,    /**< D pad right */
+
+    Enter = ovrButton_Enter,    /**< Start on XBox controller */
+    Back = ovrButton_Back,      /**< Back on Xbox controller */
+
+    VolUp = ovrButton_VolUp,    /**< Only supported by Remote */
+    VolDown = ovrButton_VolDown,/**< Only supported by Remote */
+
+    Home = ovrButton_Home,
+};
+
+CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Button>)
+
+/**
+@brief Buttons
+*/
+struct MAGNUM_OVRINTEGRATION_EXPORT Buttons: Containers::EnumSet<Button> {
+    /** @brief Bit mask of all buttons on the right Touch controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Buttons
+        #else
+        Containers::EnumSet<Button>
+        #endif
+        RMask = Button::A | Button::B | Button::RThumb | Button::RShoulder;
+
+    /** @brief Bit mask of all buttons on the left Touch controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Buttons
+        #else
+        Containers::EnumSet<Button>
+        #endif
+        LMask = Button::X | Button::Y | Button::LThumb | Button::LShoulder;
+
+
+    /** @brief Bit mask of buttons used by Oculus Home */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Buttons
+        #else
+        Containers::EnumSet<Button>
+        #endif
+        PrivateMask = Button::VolUp | Button::VolDown | Button::Home;
+
+    using EnumSet::EnumSet;
+};
+
+/**
+@brief Touch
+
+The Oculus SDK provides an abstraction of input for the XBox controller,
+the Oculus Remote and Oculus Touch. This enum describes all possible buttons
+or poses which can be "touched", therefore, the player is touching the button,
+but not pressing it.
+
+@see @ref Touches
+*/
+enum class Touch: UnsignedInt {
+    A = ovrTouch_A, /**< A button touch */
+    B = ovrTouch_B, /**< B button touch */
+
+    X = ovrTouch_X, /**< X button touch */
+    Y = ovrTouch_Y, /**< Y button touch */
+
+    RThumb = ovrTouch_RThumb, /**< Right thumbstick touch */
+    LThumb = ovrTouch_LThumb, /**< Left thumbstick touch */
+
+    RIndexTrigger = ovrTouch_RIndexTrigger, /**< Right index finger touch */
+    LIndexTrigger = ovrTouch_LIndexTrigger, /**< Left index finger touch */
+
+    /**
+     * Right index finger pose state, derived internally based on distance,
+     * proximity to sensors and filtering.
+     */
+    RIndexPointing = ovrTouch_RIndexPointing,
+
+    /**
+     * Right thumb pose state, derived internally based on distance,
+     * proximity to sensors and filtering.
+     */
+    RThumbUp = ovrTouch_RThumbUp,
+
+    LIndexPointing = ovrTouch_LIndexPointing, /**< Left index finger pose state */
+    LThumbUp = ovrTouch_LThumbUp, /**< Left thumb pose state */
+};
+
+CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Touch>)
+
+struct MAGNUM_OVRINTEGRATION_EXPORT Touches: Containers::EnumSet<Touch> {
+    /** @brief Bit mask of all the button touches on the right controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Touches
+        #else
+        Containers::EnumSet<Touch>
+        #endif
+        RMask = Touch::A | Touch::B | Touch::RThumb | Touch::RIndexTrigger;
+
+    /** @brief Bit mask of all the button touches on the left controller */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Touches
+        #else
+        Containers::EnumSet<Touch>
+        #endif
+        LMask = Touch::X | Touch::Y | Touch::LThumb | Touch::LIndexTrigger;
+
+    /** @brief Bit mask of all right controller poses */
+    static constexpr
+       #ifdef DOXYGEN_GENERATING_OUTPUT
+       Touches
+       #else
+       Containers::EnumSet<Touch>
+       #endif
+       RPoseMask = Touch::RIndexPointing | Touch::RThumbUp;
+
+    /** @brief Bit mask of all left controller poses */
+    static constexpr
+        #ifdef DOXYGEN_GENERATING_OUTPUT
+        Touches
+        #else
+        Containers::EnumSet<Touch>
+        #endif
+        LPoseMask = Touch::LIndexPointing | Touch::LThumbUp;
+
+    using EnumSet::EnumSet;
+};
+
+/**
+ * @brief Controller type
+ */
+enum class ControllerType: Int {
+    None = ovrControllerType_None,      /**< No controllers */
+    LTouch = ovrControllerType_LTouch,  /**< Left Touch controller */
+    RTouch = ovrControllerType_RTouch,  /**< Right Touch controller */
+    Touch = ovrControllerType_Touch,    /**< Left and right Touch controllers */
+    Remote = ovrControllerType_Remote,  /**< Oculus Remote */
+    XBox   = ovrControllerType_XBox,    /**< XBox controller */
+    Active   = ovrControllerType_Active,/**< Operate on or query whichever controller is active */
+};
+
+/**
 @brief Status flag
 
 Flags describing the current status of sensor tracking.
@@ -92,9 +319,6 @@ The values must be the same as in enum StatusBits
 enum class StatusFlag: Int {
     OrientationTracked = ovrStatus_OrientationTracked, /**< Orientation is currently tracked (connected and in use) */
     PositionTracked = ovrStatus_PositionTracked,       /**< Position is currently tracked (false if out of range) */
-    CameraPoseTracked = ovrStatus_CameraPoseTracked,   /**< Camera pose is currently tracked */
-    PositionConnected = ovrStatus_PositionConnected,   /**< Position tracking hardware is connected */
-    HmdConnected = ovrStatus_HmdConnected              /**< HMD Display is available and connected */
 };
 
 /** @brief Status flags */
@@ -122,10 +346,22 @@ CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 /** @brief Session status flag */
 enum class SessionStatusFlag: UnsignedByte {
     /** Set when the process has VR focus and thus is visible in the HMD */
-    HasVrFocus = 1,
+    IsVisible = 0,
 
     /** Set when an HMD is present */
-    HmdPresent = 2
+    HmdPresent = 1,
+
+    /** Set when the HMD is on the user's head */
+    HmdMounted = 2,
+
+    /** Set when the session is in a display-lost state. See ovr_SubmitFrame. */
+    DisplayLost = 3,
+
+    /** Set when the application should initiate shutdown. */
+    ShouldQuit = 4,
+
+    /** Set when UX has requested re-centering. Must call ovr_ClearShouldRecenterFlag or ovr_RecenterTrackingOrigin. */
+    ShouldRecenter = 5,
 };
 
 /** @brief Session status flags */
@@ -140,10 +376,11 @@ CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
 */
 enum class PerformanceHudMode: Int {
     Off = ovrPerfHud_Off,                     /**< Turns off the performance HUD */
+    PerfSummary = ovrPerfHud_PerfSummary,     /**< Shows performance summary and headroom */
     LatencyTiming = ovrPerfHud_LatencyTiming, /**< Shows latency related timing info */
-    RenderTiming = ovrPerfHud_RenderTiming,   /**< Unknown type */
-    PerfHeadroom = ovrPerfHud_PerfHeadroom,   /**< Shows available performance headroom in a "consumer-friendly" way */
-    VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK Version Info */
+    AppRenderTiming = ovrPerfHud_AppRenderTiming,  /**< Shows render timing info for application */
+    CompRenderTiming = ovrPerfHud_CompRenderTiming,/**< Shows render timing info for OVR compositor */
+    VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK & HMD version Info */
 };
 
 /**
@@ -193,6 +430,11 @@ enum class ErrorType: Int {
     InvalidParameter = ovrError_InvalidParameter,       /**< Invalid parameter provided. See error info or log for details. */
     ServiceError = ovrError_ServiceError,               /**< Generic service error. See error info or log for details. */
     NoHmd = ovrError_NoHmd,                             /**< The given HMD doesn't exist. */
+    Unsupported = ovrError_Unsupported,                 /**< Function call is not supported on this hardware/software. */
+    DeviceUnavailable = ovrError_DeviceUnavailable,     /**< Specified device type isn't available. */
+    InvalidHeadsetOrientation = ovrError_InvalidHeadsetOrientation, /**< The headset was in an invalid orientation for the requested operation (e.g. vertically oriented during ovr_RecenterPose). */
+    ClientSkippedDestroy = ovrError_ClientSkippedDestroy,           /**< The client failed to call ovr_Destroy on an active session before calling ovr_Shutdown. Or the client crashed. */
+    ClientSkippedShutdown = ovrError_ClientSkippedShutdown,         /**< The client failed to call ovr_Shutdown or the client crashed. */
 
     /* Audio errors. */
     AudioDeviceNotFound =  ovrError_AudioDeviceNotFound,/**< Failure to find the specified audio device. */
@@ -208,13 +450,18 @@ enum class ErrorType: Int {
     DisplayInit = ovrError_DisplayInit,                 /**< Unable to initialize the HMD display. */
     ServerStart = ovrError_ServerStart,                 /**< Unable to start the server. Is it already running? */
     Reinitialization = ovrError_Reinitialization,       /**< Attempting to re-initialize with a different version. */
-    MismatchedAdapters = ovrError_MismatchedAdapters,   /**< Chosen rendering adapters between client and service do not match */
-    LeakingResources = ovrError_LeakingResources,       /**< Calling application has leaked resources */
-    ClientVersion = ovrError_ClientVersion,             /**< Client version too old to connect to service */
+    MismatchedAdapters = ovrError_MismatchedAdapters,   /**< Chosen rendering adapters between client and service do not match. */
+    LeakingResources = ovrError_LeakingResources,       /**< Calling application has leaked resources. */
+    ClientVersion = ovrError_ClientVersion,             /**< Client version too old to connect to service. */
     OutOfDateOs = ovrError_OutOfDateOS,                 /**< The operating system is out of date. */
     OutOfDateGfxDriver = ovrError_OutOfDateGfxDriver,   /**< The graphics driver is out of date. */
-    IncompatibleGpu = ovrError_IncompatibleGPU,         /**< The graphics hardware is not supported */
-    NoValidVrDisplaySystem = ovrError_NoValidVRDisplaySystem,   /**< No valid VR display system found. */
+    IncompatibleGpu = ovrError_IncompatibleGPU,         /**< The graphics hardware is not supported. */
+    NoValidVrDisplaySystem = ovrError_NoValidVRDisplaySystem,       /**< No valid VR display system found. */
+    Obsolete = ovrError_Obsolete,                                   /**< Feature or API is obsolete and no longer supported. */
+    DisabledOrDefaultAdapter = ovrError_DisabledOrDefaultAdapter,   /**< No supported VR display system found, but disabled or driverless adapter found. */
+    HybridGraphicsNotSupported = ovrError_HybridGraphicsNotSupported,/**< The system is using hybrid graphics (Optimus, etc...), which is not support. */
+    DisplayManagerInit = ovrError_DisplayManagerInit,               /**< Initialization of the DisplayManager failed. */
+    TrackerDriverInit = ovrError_TrackerDriverInit,                 /**< Failed to get the interface for an attached tracker. */
 
     /* Hardware Errors */
     InvalidBundleAdjustment = ovrError_InvalidBundleAdjustment,     /**< Headset has no bundle adjustment data. */
@@ -224,23 +471,36 @@ enum class ErrorType: Int {
     GeneralTrackerFailure = ovrError_GeneralTrackerFailure,         /**< We use this to report various tracker issues that don't fit in an easily classifiable bucket. */
     ExcessiveFrameTruncation = ovrError_ExcessiveFrameTruncation,   /**< A more than acceptable number of frames are coming back truncated. */
     ExcessiveFrameSkipping = ovrError_ExcessiveFrameSkipping,       /**< A more than acceptable number of frames have been skipped. */
-    SyncDisconnected = ovrError_SyncDisconnected,                   /**< The tracker is not receiving the sync signal (cable disconnected?) */
-    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,   /**< Failed to read memory from the tracker */
-    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure, /**< Failed to write memory from the tracker */
-    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,             /**< Timed out waiting for a camera frame */
-    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,         /**< Truncated frame returned from tracker */
+    SyncDisconnected = ovrError_SyncDisconnected,                   /**< The tracker is not receiving the sync signal (cable disconnected?). */
+    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,   /**< Failed to read memory from the tracker. */
+    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure, /**< Failed to write memory from the tracker. */
+    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,             /**< Timed out waiting for a camera frame. */
+    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,         /**< Truncated frame returned from tracker. */
+    TrackerDriverFailure = ovrError_TrackerDriverFailure,           /**< The sensor driver has encountered a problem. */
+    TrackerNRFFailure = ovrError_TrackerNRFFailure,                 /**< The sensor wireless subsystem has encountered a problem. */
+    HardwareGone = ovrError_HardwareGone,                           /**< The hardware has been unplugged. */
+    NordicEnabledNoSync = ovrError_NordicEnabledNoSync,             /**< The nordic indicates that sync is enabled but it is not sending sync pulses. */
+    NordicSyncNoFrames = ovrError_NordicSyncNoFrames,               /**< It looks like we're getting a sync signal, but no camera frames have been received. */
+    CatastrophicFailure = ovrError_CatastrophicFailure,             /**< A catastrophic failure has occurred.  We will attempt to recover by resetting the device. */
+
     HmdFirmwareMismatch = ovrError_HMDFirmwareMismatch,             /**< The HMD Firmware is out of date and is unacceptable. */
     TrackerFirmwareMismatch = ovrError_TrackerFirmwareMismatch,     /**< The Tracker Firmware is out of date and is unacceptable. */
-    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,   /**< A bootloader HMD is detected by the service */
-    TrackerCalibrationError = ovrError_TrackerCalibrationError,     /**< The tracker calibration is missing or incorrect */
-    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,/**< The controller firmware is out of date and is unacceptable */
+    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,   /**< A bootloader HMD is detected by the service. */
+    TrackerCalibrationError = ovrError_TrackerCalibrationError,     /**< The tracker calibration is missing or incorrect. */
+    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,/**< The controller firmware is out of date and is unacceptable. */
+
+    IMUTooManyLostSamples = ovrError_IMUTooManyLostSamples,         /**< Too many lost IMU samples. */
+    IMURateError = ovrError_IMURateError,                           /**< IMU rate is outside of the expected range. */
+    FeatureReportFailure = ovrError_FeatureReportFailure,           /**< A feature report has failed. */
 
     /* Synchronization Errors */
     Incomplete = ovrError_Incomplete,   /**< Requested async work not yet complete. */
     Abandoned = ovrError_Abandoned,     /**< Requested async work was abandoned and result is incomplete. */
 
     /* Rendering Errors */
-    DisplayLost = ovrError_DisplayLost, /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app */
+    DisplayLost = ovrError_DisplayLost,                             /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app. */
+    TextureSwapChainFull = ovrError_TextureSwapChainFull,           /**< ovr_CommitTextureSwapChain was called too many times on a texture swapchain without calling submit to use the chain. */
+    TextureSwapChainInvalid = ovrError_TextureSwapChainInvalid,     /**< The ovrTextureSwapChain is in an incomplete or inconsistent state. Ensure @ref TextureSwapChain::commit() was called at least once first. */
 
     /* Fatal errors */
     /**
@@ -248,6 +508,18 @@ enum class ErrorType: Int {
      * LibOVR and re-initialize it before this error state will be cleared.
      */
     RuntimeException = ovrError_RuntimeException,
+
+    MetricsUnknownApp = ovrError_MetricsUnknownApp,             /**< Metrics unknown app */
+    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,         /**< Metrics duplicate app */
+    MetricsNoEvents = ovrError_MetricsNoEvents,                 /**< Metrics no events */
+    MetricsRuntime = ovrError_MetricsRuntime,                   /**< Metrics runtime */
+    MetricsFile  = ovrError_MetricsFile,                        /**< Metrics file */
+    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,         /**< Metrics no client info */
+    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,       /**< Metrics no app meta data */
+    MetricsNoApp = ovrError_MetricsNoApp,                       /**< Metrics no app */
+    MetricsOafFailure = ovrError_MetricsOafFailure,             /**< Metrics oaf failure */
+    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive, /**< Metrics session already active */
+    MetricsSessionNotActive = ovrError_MetricsSessionNotActive, /**< Metrics session not active */
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
@@ -255,6 +527,21 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::TrackingOrigin} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackingOrigin value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::TrackerFlag} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackerFlag value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::Button} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::Touch} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
+
+/** @debugoperatorenum{Magnum::OvrIntegration::ControllerType} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);

@@ -5,7 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -34,7 +34,7 @@
 #include <Magnum/Texture.h>
 
 #include "Magnum/OvrIntegration/Compositor.h"
-#include "Magnum/OvrIntegration/Hmd.h" /* required for std::unique_ptr */
+#include "Magnum/OvrIntegration/Session.h" /* required for std::unique_ptr */
 #include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
 #include "Magnum/OvrIntegration/visibility.h"
@@ -101,7 +101,7 @@ if(result & OvrDetectResult::HmdConnected) {
 }
 @endcode
 
-@see @ref Hmd, @ref Compositor
+@see @ref Session, @ref Compositor
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
@@ -152,12 +152,12 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         bool detect() const;
 
         /**
-         * @brief Create a handle to a connected HMD device
+         * @brief Create a handle to a Oculus Session
          *
-         * Returns instance of the connected HMD, or `nullptr`,
+         * Returns instance of @ref Session, or `nullptr`,
          * if there is none.
          */
-        std::unique_ptr<Hmd> createHmd();
+        std::unique_ptr<Session> createSession();
 
         /** @return Reference to the compositor */
         Compositor& compositor() { return _compositor; }

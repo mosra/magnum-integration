@@ -3,7 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 
 #include "Magnum/OvrIntegration/Context.h"
 
-#include "Magnum/OvrIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Session.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
 
 #include <OVR_CAPI_GL.h>
@@ -71,15 +71,15 @@ bool Context::detect() const {
     return ovr_GetHmdDesc(nullptr).Type != ovrHmd_None;
 }
 
-std::unique_ptr<Hmd> Context::createHmd() {
+std::unique_ptr<Session> Context::createSession() {
     if(detect()) {
         ovrSession session;
         ovrGraphicsLuid luid;
         ovr_Create(&session, &luid);
-        return std::unique_ptr<Hmd>(new Hmd(session));
+        return std::unique_ptr<Session>(new Session(session));
     }
 
-    return std::unique_ptr<Hmd>();
+    return std::unique_ptr<Session>();
 }
 
 }}

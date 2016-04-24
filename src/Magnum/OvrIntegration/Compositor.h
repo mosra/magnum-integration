@@ -5,7 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -55,32 +55,22 @@ enum class LayerType: Int {
     EyeFov = ovrLayerType_EyeFov,
 
     /**
-     * Described by `ovrLayerEyeFovDepth`.
-     * @see @ref LayerEyeFovDepth, @ref Compositor::addLayerEyeFovDepth()
-     */
-    EyeFovDepth = ovrLayerType_EyeFovDepth,
-
-    /**
      * Described by `ovrLayerQuad`.
      * @see @ref LayerQuad, @ref Compositor::addLayerQuad()
      */
     Quad = ovrLayerType_Quad,
 
     /**
-     * Described by `ovrLayerDirect`. Passthrough for debugging and custom
-     * rendering.
-     * @see @ref LayerDirect, @ref Compositor::addLayerDirect()
+     * Described by `ovrLayerEyeMatrix`. Currently not supported.
      */
-    Direct = ovrLayerType_Direct
-
+    EyeMatrix = ovrLayerType_EyeMatrix,
 };
 
 /**
 @brief Wrapper around `ovrLayerHeader`
 
-If you need to be able to change layer specific data, use one of the layer
-classes instead: @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFov or
-@ref LayerQuad.
+If you need to be able to change layer specific data, use @ref LayerEyeFov or
+@ref LayerQuad instead.
 
 @author Jonathan Hale (Squareys)
 */
@@ -184,33 +174,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT HeadLockableLayer: public Layer {
 };
 
 /**
-@brief Wrapper around `ovrLayerDirect`
-
-@author Jonathan Hale (Squareys)
-*/
-class MAGNUM_OVRINTEGRATION_EXPORT LayerDirect: public Layer {
-    public:
-        /** @brief Constructor */
-        explicit LayerDirect();
-
-        /**
-         * @brief Set color texture
-         * @param eye           Index of the eye the color texture is set for
-         * @param textureSet    Swap texture set to set as color texture
-         * @return Reference to self (for method chaining)
-         */
-        LayerDirect& setColorTexture(Int eye, const SwapTextureSet& textureSet);
-
-        /**
-         * @brief Set the viewport
-         * @param eye           Eye index to set the viewport for
-         * @param viewport      Viewport to set to
-         * @return Reference to self (for method chaining)
-         */
-        LayerDirect& setViewport(Int eye, const Range2Di& viewport);
-};
-
-/**
 @brief Wrapper around `ovrLayerEveFov`
 
 @author Jonathan Hale (Squareys)
@@ -226,7 +189,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
          * @param textureSet    Swap texture set to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setColorTexture(Int eye, const SwapTextureSet& textureSet);
+        LayerEyeFov& setColorTexture(Int eye, const TextureSwapChain& textureSet);
 
         /**
          * @brief Set the viewport
@@ -241,14 +204,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
          * @param hmd           HMD to get the render pose from
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setRenderPoses(const Hmd& hmd);
+        LayerEyeFov& setRenderPoses(const Session& hmd);
 
         /**
          * @brief Set fov for this layer
          * @param hmd           HMD to get the default eye fov to set to
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setFov(const Hmd& hmd);
+        LayerEyeFov& setFov(const Session& hmd);
 };
 
 /**
@@ -272,60 +235,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
 };
 
 /**
-@brief Wrapper around `ovrLayerEveFovDepth`
-
-@author Jonathan Hale (Squareys)
-*/
-class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFovDepth: public HeadLockableLayer {
-    public:
-        explicit LayerEyeFovDepth();
-
-        /**
-         * @brief Set color texture
-         * @param eye           Index of the eye the color texture is set for
-         * @param textureSet    Swap texture set to set as color texture
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setColorTexture(Int eye, const SwapTextureSet& textureSet);
-
-        /**
-         * @brief Set the viewport
-         * @param eye           Eye index to set the viewport for
-         * @param viewport      Viewport to set to
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setViewport(Int eye, const Range2Di& viewport);
-
-        /**
-         * @brief Set the render pose
-         * @param hmd           HMD to get the render pose from
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setRenderPoses(const Hmd& hmd);
-
-        /**
-         * @brief Set FoV for this layer
-         * @param hmd           HMD to get the default eye fov to set to
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setFov(const Hmd& hmd);
-
-        /**
-         * @brief Set depth texture
-         * @param eye           Index of the eye the depth texture is set for
-         * @param textureSet    Swap texture set to set as depth texture
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setDepthTexture(Int eye, const SwapTextureSet& textureSet);
-
-        /**
-         * @brief Set timewarp projection description
-         * @return Reference to self (for method chaining)
-         */
-        LayerEyeFovDepth& setTimewarpProjDesc(const TimewarpProjectionDescription& desc);
-};
-
-/**
 @brief Wrapper around `ovrLayerQuad`
 
 @author Jonathan Hale (Squareys)
@@ -340,7 +249,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
          * @param textureSet    Swap texture set to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerQuad& setColorTexture(const SwapTextureSet& textureSet);
+        LayerQuad& setColorTexture(const TextureSwapChain& textureSet);
 
         /**
          * @brief Set the viewport
@@ -383,10 +292,10 @@ properties. See @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFovDepth and
 Setup of a distortion layer may look as follows:
 
 @code
-// setup SwapTextureSets etc
+// setup TextureSwapChains etc
 Context context;
-Hmd& hmd = // ...
-std::unique_ptr<SwapTextureSet> textureSet[2] = // ...
+Session& session = // ...
+std::unique_ptr<TextureSwapChain> textureChain[2] = // ...
 Vector2i textureSize[2] = // ...
 
 // setup compositor layers
@@ -395,13 +304,13 @@ layer.setFov(hmd.get());
 layer.setHighQuality(true);
 
 for(Int eye = 0; eye < 2; ++eye) {
-    layer.setColorTexture(eye, *textureSet[eye]);
+    layer.setColorTexture(eye, *textureChain[eye]);
     layer.setViewport(eye, {{}, textureSize[eye]});
 }
 @endcode
 
 After that you need to render every frame by first rendering to the texture
-sets and then submitting the compositor frame via @ref Compositor::submitFrame().
+swap chains and then submitting the compositor frame via @ref Compositor::submitFrame().
 
 @code
 layer.setRenderPoses(hmd);
@@ -409,7 +318,7 @@ layer.setRenderPoses(hmd);
 Context::get().compositor().submitFrame(hmd);
 @endcode
 
-@see @ref Hmd, @ref SwapTextureSet, @ref Context::compositor()
+@see @ref Session, @ref TextureSwapChain, @ref Context::compositor()
 @author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
@@ -435,25 +344,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
         Layer& addLayer(LayerType type);
 
         /**
-         * @brief Create a @ref LayerDirect
-         *
-         * @see @ref addLayer()
-         */
-        LayerDirect& addLayerDirect();
-
-        /**
          * @brief Create a @ref LayerEyeFov
          *
          * @see @ref addLayer()
          */
         LayerEyeFov& addLayerEyeFov();
-
-        /**
-         * @brief Create a @ref LayerEyeFovDepth
-         *
-         * @see @ref addLayer()
-         */
-        LayerEyeFovDepth& addLayerEyeFovDepth();
 
         /**
          * @brief Create a @ref LayerQuad
@@ -467,7 +362,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
          * @param hmd       HMD to render to
          * @return Reference to self (for method chaining)
          */
-        Compositor& submitFrame(Hmd& hmd);
+        Compositor& submitFrame(Session& hmd);
 
     private:
         explicit Compositor();

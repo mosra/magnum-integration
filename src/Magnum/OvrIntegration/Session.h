@@ -1,11 +1,11 @@
-#ifndef Magnum_OvrIntegration_Hmd_h
-#define Magnum_OvrIntegration_Hmd_h
+#ifndef Magnum_OvrIntegration_Session_h
+#define Magnum_OvrIntegration_Session_h
 /*
     This file is part of Magnum.
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Hmd, @ref Magnum::OvrIntegration::SwapTextureSet
+ * @brief Class @ref Magnum::OvrIntegration::Session, @ref Magnum::OvrIntegration::TextureSwapChain
  *
  * @author Jonathan Hale (Squareys)
  */
@@ -49,22 +49,185 @@
 namespace Magnum { namespace OvrIntegration {
 
 /**
-@brief Swap texture set
+ * @brief A full pose (rigid body) configuration with first and second derivatives.
+ *
+ * Body refers to any object for which ovrPoseStatef is providing data.
+ * It can be the HMD, Touch controller, sensor or something else. The context
+ * depends on the usage of the struct.
+ */
+class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
+    public:
+
+        /**
+         * @brief Wrap a `ovrPoseStatef` as @ref PoseState
+         * @return `state` as @ref PoseState reference
+         */
+        static PoseState& wrap(::ovrPoseStatef& state) {
+            return reinterpret_cast<PoseState&>(state);
+        }
+        /** @overload */
+        static const PoseState& wrap(const ::ovrPoseStatef& state) {
+            return reinterpret_cast<const PoseState&>(state);
+        }
+
+        /**
+         * @brief Constructor
+         *
+         * Default initializes underlying `ovrPoseStatef`.
+         */
+        PoseState(): _state() {}
+
+        /**
+         * @brief Constructor with initial `ovrPoseStatef`
+         *
+         * Initializes underlying `ovrPoseStatef` with given `state`.
+         */
+        PoseState(const ovrPoseStatef& state): _state(state) {}
+
+        /**
+         * @brief Position and orientation
+         */
+        DualQuaternion pose() const {
+            return DualQuaternion{_state.ThePose};
+        }
+
+        /**
+         * @brief Angular velocity in radians per second
+         */
+        Vector3 angularVelocity() const {
+            return Vector3{_state.AngularVelocity};
+        }
+
+        /**
+         * @brief Velocity in meters per second
+         */
+        Vector3 LinearVelocity() const {
+            return Vector3{_state.LinearVelocity};
+        }
+
+        /**
+         * @brief Angular acceleration in radians per second per second
+         */
+        Vector3 angularAcceleration() const {
+            return Vector3{_state.AngularAcceleration};
+        }
+
+        /**
+         * @brief Acceleration in meters per second per second
+         */
+        Vector3 linearAcceleration() const {
+            return Vector3{_state.LinearAcceleration};
+        }
+
+        /**
+         * @brief Absolute time that this pose refers to (in seconds)
+         */
+        Double time() const {
+            return _state.TimeInSeconds;
+        }
+
+        /**
+         * @brief The underlying `ovrPoseStatef`
+         */
+        ::ovrPoseStatef& ovrPoseStatef() {
+            return _state;
+        }
+
+    private:
+        ::ovrPoseStatef _state;
+};
+
+/**
+ * @brief Input state
+ *
+ * ovrInputState describes the complete controller input state, including
+ * Oculus Touch, and XBox gamepad. If multiple inputs are connected and used at
+ * the same time, their inputs are combined.
+ */
+class MAGNUM_OVRINTEGRATION_EXPORT InputState {
+    public:
+
+        InputState(): _state() {}
+        InputState(const ovrInputState& state): _state(state) {}
+
+        /**
+         * @brief Values for buttons described by ovrButton
+         */
+        Buttons buttons() const;
+
+        /**
+         * @brief Touch values for buttons and sensors as described by ovrTouch
+         */
+        Touches touches() const;
+
+        /**
+         * @brief Left and right finger trigger values
+         *
+         * In the range `[0.0f;1.0f]`
+         */
+        Float indexTrigger(UnsignedInt hand) const {
+            return _state.IndexTrigger[hand];
+        }
+
+        /**
+         * @brief Left and right hand trigger values
+         *
+         * In the range `[0.0f;1.0f]`
+         */
+        Float handTrigger(UnsignedInt hand) const {
+            return _state.HandTrigger[hand];
+        }
+
+        /**
+         * @brief Horizontal and vertical thumbstick axis values
+         *
+         * In the range `[-1.0f;1.0f]`
+         */
+        Vector2 thumbstick(UnsignedInt hand) const {
+            return Vector2{_state.Thumbstick[hand]};
+        }
+
+        /**
+         * @brief System time when the controller state was last updated (in seconds)
+         */
+        Double time() const {
+            return _state.TimeInSeconds;
+        }
+
+        /**
+         * @brief The type of the controller this state is for
+         */
+        ControllerType controllerType() const {
+            return static_cast<ControllerType>(_state.ControllerType);
+        }
+
+        /**
+         * @brief The underlying `ovrInputState`
+         */
+        ::ovrInputState& ovrInputState() {
+            return _state;
+        }
+
+    private:
+        ::ovrInputState _state;
+};
+
+/**
+@brief Texture swap chain
 
 Contains an array of textures which can be rendered to an HMD by the Oculus SDK
 @ref Compositor.
-@see @ref Hmd, @ref Layer
+@see @ref Session, @ref Layer
 */
-class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
+class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
     public:
         /**
          * @brief Constructor
-         * @param hmd       HMD for which this swap texture set is created
-         * @param format    Texture format
+         * @param session   HMD for which this texture swap chain is created
          * @param size      Size for the textures
          */
-        explicit SwapTextureSet(const Hmd& hmd, TextureFormat format, const Vector2i& size);
-        ~SwapTextureSet();
+        explicit TextureSwapChain(const Session& session,  const Vector2i& size);
+        ~TextureSwapChain();
 
         /** @brief Currently active texture in the set */
         Texture2D& activeTexture();
@@ -73,38 +236,35 @@ class MAGNUM_OVRINTEGRATION_EXPORT SwapTextureSet {
          * @brief Increment to use the next texture in the set
          * @return Reference to self (for method chaining)
          */
-        SwapTextureSet& increment() {
-            _swapTextureSet->CurrentIndex = (_swapTextureSet->CurrentIndex + 1) % _swapTextureSet->TextureCount;
-            return *this;
-        }
+        TextureSwapChain& commit();
 
-        /** @brief The underlying `ovrSwapTextureSet` */
-        ::ovrSwapTextureSet& ovrSwapTextureSet() const {
-            return *_swapTextureSet;
+        /** @brief The underlying `ovrTextureSwapChain` */
+        ::ovrTextureSwapChain ovrTextureSwapChain() const {
+            return _textureSwapChain;
         }
 
     private:
-        const Hmd& _hmd;
-        TextureFormat _format;
+        const Session& _session;
         Vector2i _size;
+        Int _curIndex;
 
-        ::ovrSwapTextureSet* _swapTextureSet;
+        ::ovrTextureSwapChain _textureSwapChain;
         Containers::Array<Texture2D> _textures;
 };
 
 /**
-@brief Hmd
+@brief Session
 
 Wraps `ovrSession`, `ovrHmdDesc` and methods from the Oculus SDK which directly
 affect an HMD and its properties.
 
 ## Usage
 
-Instances of @ref Hmd are created by @ref Context.
+Instances of @ref Session are created by @ref Context.
 
 @code
-std::unique_ptr<Hmd> hmd = Context::get().initialize().createHmd();
-hmd->configureRendering();
+std::unique_ptr<Session> session = Context::get().initialize().createSession();
+session->configureRendering();
 
 // ...
 @endcode
@@ -112,28 +272,28 @@ hmd->configureRendering();
 Once the HMD is configured, you can poll and get the head pose.
 
 @code
-std::unique_ptr<DualQuaternion> poses = hmd->pollEyePoses().eyePoses();
+std::unique_ptr<DualQuaternion> poses = session->pollEyePoses().eyePoses();
 
 DualQuaternion leftPose = poses.get()[0];
 DualQuaternion rightPose = poses.get()[1];
 @endcode
 
-### Rendering to HMD
+### Rendering to the HMD
 
-Rendering to an @ref Hmd is done via the @ref Compositor. It's results are
+Rendering to an HMD is done via the @ref Compositor. It's results are
 rendered directly to the Rift. The compositor layers usually require you to
 render to a set of textures which are then rendered to the rift with
 distortion, chromatic abberation and possibly timewarp.
 
-A setup for such a @ref SwapTextureSet for an eye could look like this:
+A setup for such a @ref TextureSwapChain for an eye could look like this:
 
 @code
 const Int eye = 0; // left eye
-Vector2i textureSize = hmd.fovTextureSize(eye);
-std::unique_ptr<SwapTextureSet> textureSet = hmd.createSwapTextureSet(TextureFormat::RGBA, textureSize);
+Vector2i textureSize = session.fovTextureSize(eye);
+std::unique_ptr<TextureSwapChain> textureSet = session.createTextureSwapChain(textureSize);
 
 // create the framebuffer which will be used to render to the current texture
-// of the texture set later.
+// of the texture chain later.
 Framebuffer framebuffer{{}, textureSize};
 framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
 
@@ -146,16 +306,16 @@ depth->setMinificationFilter(Sampler::Filter::Linear)
 
 // ...
 
-// render to the SwapTextureSet
-textureSet->increment();
-
 // switch to framebuffer and attach textures
 framebuffer.bind();
-framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureSet->activeTexture(), 0)
+framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureChain->activeTexture(), 0)
            .attachTexture(Framebuffer::BufferAttachment::Depth, *depth, 0)
            .clear(FramebufferClear::Color | FramebufferClear::Depth);
 
 // ... render scene
+
+// commit changes to the TextureSwapChain
+textureSet->commit();
 
 framebuffer.detach(Framebuffer::ColorAttachment(0))
            .detach(Framebuffer::BufferAttachment::Depth);
@@ -165,7 +325,7 @@ Usually, especially for debugging, you will want to have a *mirror* of the
 @ref Compositor result displayed to a window.
 
 @code
-Texture2D& mirrorTexture = hmd->createMirrorTexture(TextureFormat::RGBA, resolution);
+Texture2D& mirrorTexture = session->createMirrorTexture(resolution);
 Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
 mirrorFramebuffer.attachTexture(Framebuffer::ColorAttachment(0), mirrorTexture, 0)
                  .mapForRead(Framebuffer::ColorAttachment(0));
@@ -181,19 +341,11 @@ Framebuffer::blit(mirrorFramebuffer,
                   FramebufferBlit::Color, FramebufferBlitFilter::Nearest);
 @endcode
 
-@see @ref Context, @ref SwapTextureSet, @ref Compositor
+@see @ref Context, @ref TextureSwapChain, @ref Compositor
 */
-class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
+class MAGNUM_OVRINTEGRATION_EXPORT Session {
     public:
-        ~Hmd();
-
-        /**
-         * @brief Enable or disable HMD tracking capabilities
-         * @return Reference to self (for method chaining)
-         *
-         * By default full tracking capabilies of a device are enabled.
-         */
-        Hmd& configureTracking(HmdTrackingCapabilities caps, HmdTrackingCapabilities required);
+        ~Session();
 
         /**
          * @brief Configure rendering to the Rift
@@ -201,7 +353,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          *
          * Includes setting up HMD to eye offsets internally.
          */
-        Hmd& configureRendering();
+        Session& configureRendering();
 
         /**
          * @brief Get preferred size for textures used for rendering to this HMD
@@ -211,37 +363,52 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         /**
          * @brief Create a mirror texture
-         * @param format    Texture format
          * @param size      Size for the mirror texture
          * @return Reference to the created mirror texture. Its destruction is
-         *      handled by the @ref Hmd.
+         *      handled by the @ref Session.
          *
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
          */
-        Texture2D& createMirrorTexture(TextureFormat format, const Vector2i& size);
+        Texture2D& createMirrorTexture(const Vector2i& size);
 
         /**
-         * @brief Convenience method to create a @ref SwapTextureSet for this HMD
-         * @param format    Texture format
+         * @brief Convenience method to create a @ref TextureSwapChain for this HMD
          * @param eye       Eye index which will be used to get the preferred
          *      size for the texture.
          *
-         * @see @ref createSwapTextureSet(TextureFormat, const Vector2i&)
+         * @see @ref createTextureSwapChain(const Vector2i&)
          */
-        std::unique_ptr<SwapTextureSet> createSwapTextureSet(TextureFormat format, Int eye);
+        std::unique_ptr<TextureSwapChain> createTextureSwapChain(Int eye);
 
         /**
-         * @brief Create a @ref SwapTextureSet for this HMD
-         * @param format    Texture format
+         * @brief Create a @ref TextureSwapChain for this HMD
          * @param size      Size for the textures in the created set
          *
-         * @see @ref createSwapTextureSet(TextureFormat, Int)
+         * @see @ref createTextureSwapChain(TextureFormat, Int)
          */
-        std::unique_ptr<SwapTextureSet> createSwapTextureSet(TextureFormat format, const Vector2i& size);
+        std::unique_ptr<TextureSwapChain> createTextureSwapChain(const Vector2i& size);
 
         /**
          * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         *
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         */
+        const PoseState& headPoseState() const {
+            return PoseState::wrap(_trackingState.HeadPose);
+        }
+
+        /**
+         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         *
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         */
+        DualQuaternion calibratedOrigin() const {
+            return DualQuaternion(_trackingState.CalibratedOrigin);
+        }
+
+        /**
+         * @brief Get translation for the eyes from the head pose of last @ref pollEyePoses()
          *
          * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
          */
@@ -250,12 +417,41 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         }
 
         /**
-         * @brief Refresh cached eye poses
+         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         *
+         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         */
+        std::array<std::reference_wrapper<const PoseState>, 2> handPoseStates() const {
+            return std::array<std::reference_wrapper<const PoseState>, 2>{{
+                    PoseState::wrap(_trackingState.HandPoses[0]),
+                    PoseState::wrap(_trackingState.HandPoses[1])}};
+        }
+
+        /**
+         * @brief Refresh cached tracking state
          * @return Reference to self (for method chaining)
          *
          * Use @ref eyePoses() to access the result.
          */
-        Hmd& pollEyePoses();
+        Session& pollTrackers();
+
+        /**
+         * @brief Refresh cached eye poses
+         * @return Reference to self (for method chaining)
+         *
+         * Use @ref eyePoses() to access the result. Calls @ref pollTrackers().
+         * Call @ref pollTrackers() directly, if you do not need to calculate
+         * the eye poses.
+         */
+        Session& pollEyePoses();
+
+        /**
+         * @brief Get input state of given controller type
+         * @param types Controller type to get the input state of
+         * @param state Receives the resulting input state
+         * @return Reference to self (for method chaining)
+         */
+        Session& pollController(ControllerType types, InputState& state);
 
         /** @brief Resolution of the HMD's display */
         Vector2i resolution() const {
@@ -290,7 +486,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * @brief Get a projection matrix for projection to an orthogonal plane.
          * @param eye       The eye index
          * @param proj      Projection matrix, usually created by
-         *      @ref Hmd::projectionMatrix()
+         *      @ref Session::projectionMatrix()
          * @param scale     Scale for the 2D plane
          * @param distance  Distance of the plane from hmd position
          * @return The projection matrix for eye
@@ -298,12 +494,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
          * Get a projection matrix which can be used for projection onto a 2D
          * plane orthogonal to the hmds view/screen with distance from hmds
          * position.
-         * @see @ref Hmd::projectionMatrix()
+         * @see @ref Session::projectionMatrix()
          */
         Matrix4 orthoSubProjectionMatrix(Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const;
-
-        /** @brief Get the underlying `ovrHmd` */
-        ::ovrHmd ovrHmd() const { return _session; }
 
         /** @brief Get the underlying `ovrSession` */
         ::ovrSession ovrSession() const { return _session; }
@@ -327,14 +520,56 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
         const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
 
         /**
-         * @brief Reset yaw and postion to current pose
+         * @brief ovrHandPoseStates
          *
-         * The roll and pitch orientation components are always determined by
-         * gravity and cannot be redefined. All future tracking will report
-         * values relative to this new reference position.
+         * The most recent calculated pose for each hand when hand controller
+         * tracking is present. HandPoses[ovrHand_Left] refers to the left hand
+         * and HandPoses[ovrHand_Right] to the right hand.
+         * These values can be combined with the result of @ref pollController()
+         * with @ref ControllerType::Touch for complete hand controller information.
          */
-        void recenterPose() const {
-            ovr_RecenterPose(_session);
+        const ovrPoseStatef* ovrHandPoseStates() const { return _trackingState.HandPoses; }
+
+        /**
+         * @brief Re-centers the sensor position and orientation.
+         *
+         * This resets the (x,y,z) positional components and the yaw orientation
+         * component. The Roll and pitch orientation components are always determined by
+         * gravity and cannot be redefined. All future tracking will report values
+         * relative to this new reference position.
+         * If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose
+         * after this, because the sensor position(s) will change as a result of this.
+         *
+         * The headset cannot be facing vertically upward or downward but rather must be
+         * roughly level otherwise this function will fail with
+         * @ref OvrIntegration::Error::InvalidHeadsetOrientation.
+         *
+         * For more info, see the notes on each ovrTrackingOrigin enumeration to understand how
+         * recenter will vary slightly in its behavior based on the current ovrTrackingOrigin setting.
+         */
+        void recenterTrackingOrigin() const {
+            ovr_RecenterTrackingOrigin(_session);
+        }
+
+        /**
+         * @brief Sets the tracking origin type
+         *
+         * When the tracking origin is changed, all of the calls that either provide
+         * or accept ovrPosef will use the new tracking origin provided.
+         */
+        void setTrackingOrigin(TrackingOrigin origin) const {
+            ovr_SetTrackingOriginType(_session, ovrTrackingOrigin(origin));
+        }
+
+        /**
+         * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
+         *
+         * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing further recenter
+         * requests to be detected. Since this is automatically done by @ref Session::recenterTrackingOrigin(),
+         * this is only needs to be called when application is doing its own re-centering.
+         */
+        void clearShouldRecenterFlag() const {
+            ovr_ClearShouldRecenterFlag(_session);
         }
 
         /** @brief Get the current frame index */
@@ -407,21 +642,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
             return ovr_GetFloat(_session, OVR_KEY_EYE_HEIGHT, OVR_DEFAULT_EYE_HEIGHT);
         }
 
-        /** @brief Interpupillar distance set in the active Oculus profile */
-        Float ipd() const {
-            return ovr_GetFloat(_session, OVR_KEY_IPD, OVR_DEFAULT_IPD);
-        }
-
         /** @brief Neck to eye distance set in the active Oculus profile */
         std::array<Float, 2> neckToEyeDistance() const {
             std::array<Float, 2> values{{OVR_DEFAULT_NECK_TO_EYE_HORIZONTAL, OVR_DEFAULT_NECK_TO_EYE_VERTICAL}};
             ovr_GetFloatArray(_session, OVR_KEY_NECK_TO_EYE_DISTANCE, values.data(), 2);
             return values;
-        }
-
-        /** @brief State of the eye relief dial set in the active Oculus profile */
-        Int eyeReliefDial() const {
-            return ovr_GetInt(_session, OVR_KEY_EYE_RELIEF_DIAL, OVR_DEFAULT_EYE_RELIEF_DIAL);
         }
 
         /** @brief Eye to node distance set in the active Oculus profile */
@@ -431,28 +656,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
             return values;
         }
 
-        /** @brief Maximal eye to plate distance set in the active Oculus profile */
-        std::array<Float, 2> maxEyeToPlateDistance() const {
-            std::array<Float, 2> values{{0.0f, 0.0f}};
-            ovr_GetFloatArray(_session, OVR_KEY_MAX_EYE_TO_PLATE_DISTANCE, values.data(), 2);
-            return values;
-        }
-
-        /** @brief Eye cup set in the active Oculus profile */
-        std::string eyeCup() const {
-            return ovr_GetString(_session, OVR_KEY_EYE_CUP, "");
-        }
 
         /** @brief Status of the OVR session */
         SessionStatusFlags sessionStatus() const;
 
     private:
-        explicit Hmd(::ovrSession hmd);
+        explicit Session(::ovrSession session);
 
         ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
-        ovrVector3f _hmdToEyeViewOffset[2];
+        ovrVector3f _hmdToEyeOffset[2];
         ::ovrViewScaleDesc _viewScale;
 
         Double _predictedDisplayTime;
@@ -460,12 +674,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Hmd {
 
         Long _frameIndex;
 
-        ovrTexture* _ovrMirrorTexture;
+        ovrMirrorTexture _ovrMirrorTexture;
         std::unique_ptr<Texture2D> _mirrorTexture;
 
         HmdStatusFlags _flags;
 
-        friend class SwapTextureSet;
         friend class Context;
 };
 

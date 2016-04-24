@@ -31,7 +31,7 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/DualQuaternion.h"
 
-#include "Magnum/OvrIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Session.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/Context.h"
 
@@ -42,6 +42,11 @@ struct EnumTest: TestSuite::Tester {
 
     void hmdType();
     void hmdTrackingCapability();
+    void trackingOrigin();
+    void trackerFlag();
+    void button();
+    void touch();
+    void controllerType();
     void statusFlag();
     void performanceHudMode();
     void debugHudStereoMode();
@@ -54,6 +59,11 @@ struct EnumTest: TestSuite::Tester {
 EnumTest::EnumTest() {
     addTests({&EnumTest::hmdType,
               &EnumTest::hmdTrackingCapability,
+              &EnumTest::trackingOrigin,
+              &EnumTest::trackerFlag,
+              &EnumTest::button,
+              &EnumTest::touch,
+              &EnumTest::controllerType,
               &EnumTest::statusFlag,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
@@ -83,10 +93,69 @@ void EnumTest::hmdTrackingCapability() {
     CORRADE_COMPARE(out.str(), "OvrIntegration::HmdTrackingCapability::(invalid)\n");
 }
 
+void EnumTest::trackingOrigin() {
+    std::ostringstream out;
+    Debug(&out) << TrackingOrigin::EyeLevel;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackingOrigin::EyeLevel\n");
+
+    out.str("");
+    Debug(&out) << TrackingOrigin(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackingOrigin::(invalid)\n");
+}
+
+void EnumTest::trackerFlag() {
+    std::ostringstream out;
+    Debug(&out) << TrackerFlag::Connected;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackerFlag::Connected\n");
+
+    out.str("");
+    Debug(&out) << TrackerFlag(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackerFlag::(invalid)\n");
+}
+
+void EnumTest::button() {
+    std::ostringstream out;
+    Debug(&out) << Button::A;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::Button::A\n");
+
+    out.str("");
+    Debug(&out) << Button(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::Button::(invalid)\n");
+
+    CORRADE_VERIFY((Buttons{Button::RShoulder} & Buttons::RMask) != Buttons{});
+    CORRADE_VERIFY((Buttons{Button::LShoulder} & Buttons::LMask) != Buttons{});
+    CORRADE_VERIFY((Buttons{Button::Home} & Buttons::PrivateMask) != Buttons{});
+}
+
+void EnumTest::touch() {
+    std::ostringstream out;
+    Debug(&out) << Touch::RIndexPointing;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::RIndexPointing\n");
+
+    out.str("");
+    Debug(&out) << Touch(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::(invalid)\n");
+
+    CORRADE_VERIFY((Touches{Touch::RThumb} & Touches::RMask) != Touches{});
+    CORRADE_VERIFY((Touches{Touch::LThumb} & Touches::LMask) != Touches{});
+    CORRADE_VERIFY((Touches{Touch::RThumbUp} & Touches::RPoseMask) != Touches{});
+    CORRADE_VERIFY((Touches{Touch::LThumbUp} & Touches::LPoseMask) != Touches{});
+}
+
+void EnumTest::controllerType() {
+    std::ostringstream out;
+    Debug(&out) << ControllerType::Remote;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::Remote\n");
+
+    out.str("");
+    Debug(&out) << ControllerType(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::(invalid)\n");
+}
+
 void EnumTest::statusFlag() {
     std::ostringstream out;
-    Debug(&out) << StatusFlag::HmdConnected;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::HmdConnected\n");
+    Debug(&out) << StatusFlag::OrientationTracked;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::OrientationTracked\n");
 
     out.str("");
     Debug(&out) << StatusFlag(-1);
@@ -95,8 +164,8 @@ void EnumTest::statusFlag() {
 
 void EnumTest::performanceHudMode() {
     std::ostringstream out;
-    Debug(&out) << PerformanceHudMode::PerfHeadroom;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::PerformanceHudMode::PerfHeadroom\n");
+    Debug(&out) << PerformanceHudMode::AppRenderTiming;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::PerformanceHudMode::AppRenderTiming\n");
 
     out.str("");
     Debug(&out) << PerformanceHudMode(-1);
@@ -145,8 +214,8 @@ void EnumTest::detectResult() {
 
 void EnumTest::sessionStatusFlag() {
     std::ostringstream out;
-    Debug(&out) << SessionStatusFlag::HasVrFocus;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HasVrFocus\n");
+    Debug(&out) << SessionStatusFlag::HmdPresent;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HmdPresent\n");
 
     out.str("");
     Debug(&out) << SessionStatusFlag(-1);

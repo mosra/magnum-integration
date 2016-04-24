@@ -3,7 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -28,6 +28,15 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+constexpr Containers::EnumSet<Button> Buttons::RMask;
+constexpr Containers::EnumSet<Button> Buttons::LMask;
+constexpr Containers::EnumSet<Button> Buttons::PrivateMask;
+
+constexpr Containers::EnumSet<Touch> Touches::RMask;
+constexpr Containers::EnumSet<Touch> Touches::LMask;
+constexpr Containers::EnumSet<Touch> Touches::RPoseMask;
+constexpr Containers::EnumSet<Touch> Touches::LPoseMask;
+
 Debug& operator<<(Debug& debug, const HmdType value) {
     switch(value) {
         #define _c(value) case HmdType::value: return debug << "OvrIntegration::HmdType::" #value;
@@ -39,6 +48,9 @@ Debug& operator<<(Debug& debug, const HmdType value) {
         _c(Other)
         _c(E3_2015)
         _c(ES06)
+        _c(ES09)
+        _c(ES11)
+        _c(CV1)
         #undef _c
     }
 
@@ -57,14 +69,96 @@ Debug& operator<<(Debug& debug, const HmdTrackingCapability value) {
     return debug << "OvrIntegration::HmdTrackingCapability::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const TrackingOrigin value) {
+    switch(value) {
+        #define _c(value) case TrackingOrigin::value: return debug << "OvrIntegration::TrackingOrigin::" #value;
+        _c(EyeLevel)
+        _c(FloorLevel)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::TrackingOrigin::(invalid)";
+}
+
+Debug& operator<<(Debug& debug, const TrackerFlag value) {
+    switch(value) {
+        #define _c(value) case TrackerFlag::value: return debug << "OvrIntegration::TrackerFlag::" #value;
+        _c(Connected)
+        _c(PoseTracked)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::TrackerFlag::(invalid)";
+}
+
+Debug& operator<<(Debug& debug, const Button value) {
+    switch(value) {
+        #define _c(value) case Button::value: return debug << "OvrIntegration::Button::" #value;
+        _c(A)
+        _c(B)
+        _c(X)
+        _c(Y)
+        _c(RThumb)
+        _c(RShoulder)
+        _c(LThumb)
+        _c(LShoulder)
+        _c(Up)
+        _c(Down)
+        _c(Left)
+        _c(Right)
+        _c(Enter)
+        _c(Back)
+        _c(VolUp)
+        _c(VolDown)
+        _c(Home)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::Button::(invalid)";
+}
+
+Debug& operator<<(Debug& debug, const Touch value) {
+    switch(value) {
+        #define _c(value) case Touch::value: return debug << "OvrIntegration::Touch::" #value;
+        _c(A)
+        _c(B)
+        _c(X)
+        _c(Y)
+        _c(RThumb)
+        _c(LThumb)
+        _c(RIndexTrigger)
+        _c(LIndexTrigger)
+        _c(RIndexPointing)
+        _c(RThumbUp)
+        _c(LIndexPointing)
+        _c(LThumbUp)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::Touch::(invalid)";
+}
+
+Debug& operator<<(Debug& debug, const ControllerType value) {
+    switch(value) {
+        #define _c(value) case ControllerType::value: return debug << "OvrIntegration::ControllerType::" #value;
+        _c(None)
+        _c(LTouch)
+        _c(RTouch)
+        _c(Touch)
+        _c(Remote)
+        _c(XBox)
+        _c(Active)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::ControllerType::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const StatusFlag value) {
     switch(value) {
         #define _c(value) case StatusFlag::value: return debug << "OvrIntegration::StatusFlag::" #value;
         _c(OrientationTracked)
         _c(PositionTracked)
-        _c(CameraPoseTracked)
-        _c(PositionConnected)
-        _c(HmdConnected)
         #undef _c
     }
 
@@ -74,8 +168,12 @@ Debug& operator<<(Debug& debug, const StatusFlag value) {
 Debug& operator<<(Debug& debug, const SessionStatusFlag value) {
     switch(value) {
         #define _c(value) case SessionStatusFlag::value: return debug << "OvrIntegration::SessionStatusFlag::" #value;
-        _c(HasVrFocus)
+        _c(IsVisible)
         _c(HmdPresent)
+        _c(HmdMounted)
+        _c(DisplayLost)
+        _c(ShouldQuit)
+        _c(ShouldRecenter)
         #undef _c
     }
 
@@ -86,9 +184,10 @@ Debug& operator<<(Debug& debug, const PerformanceHudMode value) {
     switch(value) {
         #define _c(value) case PerformanceHudMode::value: return debug << "OvrIntegration::PerformanceHudMode::" #value;
         _c(Off)
+        _c(PerfSummary)
         _c(LatencyTiming)
-        _c(RenderTiming)
-        _c(PerfHeadroom)
+        _c(AppRenderTiming)
+        _c(CompRenderTiming)
         _c(VersionInfo)
         #undef _c
     }
@@ -131,6 +230,11 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
         _c(InvalidParameter)
         _c(ServiceError)
         _c(NoHmd)
+        _c(Unsupported)
+        _c(DeviceUnavailable)
+        _c(InvalidHeadsetOrientation)
+        _c(ClientSkippedDestroy)
+        _c(ClientSkippedShutdown)
         _c(AudioDeviceNotFound)
         _c(AudioComError)
         _c(Initialize)
@@ -149,6 +253,11 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
         _c(OutOfDateGfxDriver)
         _c(IncompatibleGpu)
         _c(NoValidVrDisplaySystem)
+        _c(Obsolete)
+        _c(DisabledOrDefaultAdapter)
+        _c(HybridGraphicsNotSupported)
+        _c(DisplayManagerInit)
+        _c(TrackerDriverInit)
         _c(InvalidBundleAdjustment)
         _c(UsbBandwidth)
         _c(UsbEnumeratedSpeed)
@@ -161,15 +270,37 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
         _c(TrackerMemoryWriteFailure)
         _c(TrackerFrameTimeout)
         _c(TrackerTruncatedFrame)
+        _c(TrackerDriverFailure)
+        _c(TrackerNRFFailure)
+        _c(HardwareGone)
+        _c(NordicEnabledNoSync)
+        _c(NordicSyncNoFrames)
+        _c(CatastrophicFailure)
         _c(HmdFirmwareMismatch)
         _c(TrackerFirmwareMismatch)
         _c(BootloaderDeviceDetected)
         _c(TrackerCalibrationError)
         _c(ControllerFirmwareMismatch)
+        _c(IMUTooManyLostSamples)
+        _c(IMURateError)
+        _c(FeatureReportFailure)
         _c(Incomplete)
         _c(Abandoned)
         _c(DisplayLost)
+        _c(TextureSwapChainFull)
+        _c(TextureSwapChainInvalid)
         _c(RuntimeException)
+        _c(MetricsUnknownApp)
+        _c(MetricsDuplicateApp)
+        _c(MetricsNoEvents)
+        _c(MetricsRuntime)
+        _c(MetricsFile)
+        _c(MetricsNoClientInfo)
+        _c(MetricsNoAppMetaData)
+        _c(MetricsNoApp)
+        _c(MetricsOafFailure)
+        _c(MetricsSessionAlreadyActive)
+        _c(MetricsSessionNotActive)
         #undef _c
     }
 

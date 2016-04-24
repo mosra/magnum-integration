@@ -3,7 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
 #             Vladimír Vondruš <mosra@centrum.cz>
-#   Copyright © 2015
+#   Copyright © 2015, 2016
 #             Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
@@ -29,9 +29,8 @@ find_package(OVR REQUIRED)
 
 set(MagnumOvrIntegration_SRCS
     Compositor.cpp
-    Conversion.cpp
     Context.cpp
-    Hmd.cpp
+    Session.cpp
     HmdEnum.cpp)
 
 set(MagnumOvrIntegration_HEADERS
@@ -39,7 +38,7 @@ set(MagnumOvrIntegration_HEADERS
     Conversion.h
     HmdEnum.h
     Context.h
-    Hmd.h
+    Session.h
     Compositor.h
 
     visibility.h)

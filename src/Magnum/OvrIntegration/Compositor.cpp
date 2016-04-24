@@ -3,7 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
 #include "Magnum/OvrIntegration/Compositor.h"
 
 #include "Magnum/OvrIntegration/Conversion.h"
-#include "Magnum/OvrIntegration/Hmd.h"
+#include "Magnum/OvrIntegration/Session.h"
 
 #include <OVR_CAPI_GL.h>
 
@@ -48,28 +48,12 @@ Layer& Layer::setEnabled(bool enabled) {
 }
 
 //----------------------------------------------------------------
-LayerDirect::LayerDirect(): Layer(LayerType::Direct) {
-}
-
-LayerDirect& LayerDirect::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.Direct.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
-
-    return *this;
-}
-
-LayerDirect& LayerDirect::setViewport(const Int eye, const Range2Di& viewport) {
-    _layer.Direct.Viewport[eye] = ovrRecti(viewport);
-
-    return *this;
-}
-
-//----------------------------------------------------------------
 
 LayerEyeFov::LayerEyeFov(): HeadLockableLayer(LayerType::EyeFov) {
 }
 
-LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFov.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
+LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const TextureSwapChain& textureSet) {
+    _layer.EyeFov.ColorTexture[eye] = textureSet.ovrTextureSwapChain();
 
     return *this;
 }
@@ -80,7 +64,7 @@ LayerEyeFov& LayerEyeFov::setViewport(const Int eye, const Range2Di& viewport) {
     return *this;
 }
 
-LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
+LayerEyeFov& LayerEyeFov::setRenderPoses(const Session& hmd) {
     const ovrPosef* poses = hmd.ovrEyePoses();
     _layer.EyeFov.RenderPose[0] = poses[0];
     _layer.EyeFov.RenderPose[1] = poses[1];
@@ -88,7 +72,7 @@ LayerEyeFov& LayerEyeFov::setRenderPoses(const Hmd& hmd) {
     return *this;
 }
 
-LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
+LayerEyeFov& LayerEyeFov::setFov(const Session& hmd) {
     const ovrFovPort* fov = hmd.ovrHmdDesc().DefaultEyeFov;
     _layer.EyeFov.Fov[0] = fov[0];
     _layer.EyeFov.Fov[1] = fov[1];
@@ -100,51 +84,7 @@ LayerEyeFov& LayerEyeFov::setFov(const Hmd& hmd) {
 
 TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& projectionMatrix) {
     _projectionDesc = ovrTimewarpProjectionDesc_FromProjection(
-                ovrMatrix4f(projectionMatrix),
-                ovrProjection_RightHanded | ovrProjection_ClipRangeOpenGL);
-}
-
-LayerEyeFovDepth::LayerEyeFovDepth(): HeadLockableLayer(LayerType::EyeFovDepth) {
-}
-
-LayerEyeFovDepth& LayerEyeFovDepth::setColorTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFovDepth.ColorTexture[eye] = &textureSet.ovrSwapTextureSet();
-
-    return *this;
-}
-
-LayerEyeFovDepth& LayerEyeFovDepth::setViewport(const Int eye, const Range2Di& viewport) {
-    _layer.EyeFovDepth.Viewport[eye] = ovrRecti(viewport);
-
-    return *this;
-}
-
-LayerEyeFovDepth& LayerEyeFovDepth::setRenderPoses(const Hmd& hmd) {
-    const ovrPosef* poses = hmd.ovrEyePoses();
-    _layer.EyeFov.RenderPose[0] = poses[0];
-    _layer.EyeFov.RenderPose[1] = poses[1];
-
-    return *this;
-}
-
-LayerEyeFovDepth& LayerEyeFovDepth::setFov(const Hmd& hmd) {
-    const ovrFovPort* fov = hmd.ovrHmdDesc().DefaultEyeFov;
-    _layer.EyeFov.Fov[0] = fov[0];
-    _layer.EyeFov.Fov[1] = fov[1];
-
-    return *this;
-}
-
-LayerEyeFovDepth& LayerEyeFovDepth::setDepthTexture(const Int eye, const SwapTextureSet& textureSet) {
-    _layer.EyeFovDepth.DepthTexture[eye] = &textureSet.ovrSwapTextureSet();
-
-    return *this;
-}
-
-LayerEyeFovDepth& LayerEyeFovDepth::setTimewarpProjDesc(const TimewarpProjectionDescription& desc) {
-    _layer.EyeFovDepth.ProjectionDesc = desc.ovrTimewarpProjectionDesc();
-
-    return *this;
+                ovrMatrix4f(projectionMatrix), ovrProjection_ClipRangeOpenGL);
 }
 
 //----------------------------------------------------------------
@@ -152,8 +92,8 @@ LayerEyeFovDepth& LayerEyeFovDepth::setTimewarpProjDesc(const TimewarpProjection
 LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {
 }
 
-LayerQuad& LayerQuad::setColorTexture(const SwapTextureSet& textureSet) {
-    _layer.Quad.ColorTexture = &textureSet.ovrSwapTextureSet();
+LayerQuad& LayerQuad::setColorTexture(const TextureSwapChain& textureSet) {
+    _layer.Quad.ColorTexture = textureSet.ovrTextureSwapChain();
 
     return *this;
 }
@@ -184,12 +124,12 @@ Compositor::Compositor(): _layers(), _wrappedLayers() {
 
 Layer& Compositor::addLayer(const LayerType type) {
     switch (type) {
-        case LayerType::Direct:
-            return addLayerDirect();
         case LayerType::EyeFov:
             return addLayerEyeFov();
-        case LayerType::EyeFovDepth:
-            return addLayerEyeFovDepth();
+        case LayerType::EyeMatrix:
+            CORRADE_ASSERT(false,
+                           "Layer type EyeMatrix is currently not supported.",
+                           addLayerEyeFov());
         case LayerType::Quad:
             return addLayerQuad();
     }
@@ -203,24 +143,16 @@ Layer& Compositor::addLayer(std::unique_ptr<Layer> layer) {
     return *_wrappedLayers.back().get();
 }
 
-LayerDirect& Compositor::addLayerDirect() {
-    return static_cast<LayerDirect&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerDirect()))));
-}
-
 LayerEyeFov& Compositor::addLayerEyeFov() {
     return static_cast<LayerEyeFov&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFov()))));
-}
-
-LayerEyeFovDepth& Compositor::addLayerEyeFovDepth() {
-    return static_cast<LayerEyeFovDepth&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerEyeFovDepth()))));
 }
 
 LayerQuad& Compositor::addLayerQuad() {
     return static_cast<LayerQuad&>(addLayer(std::move(std::unique_ptr<Layer>(new LayerQuad()))));
 }
 
-Compositor& Compositor::submitFrame(Hmd& hmd) {
-    ovr_SubmitFrame(hmd.ovrHmd(), hmd.incFrameIndex(), &hmd.ovrViewScaleDesc(), _layers.data(), _layers.size());
+Compositor& Compositor::submitFrame(Session& hmd) {
+    ovr_SubmitFrame(hmd.ovrSession(), hmd.incFrameIndex(), &hmd.ovrViewScaleDesc(), _layers.data(), _layers.size());
 
     return *this;
 }

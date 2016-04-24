@@ -5,7 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -36,14 +36,12 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-class Hmd;
-class SwapTextureSet;
+class Session;
+class TextureSwapChain;
 class Context;
 class Compositor;
 class Layer;
-class LayerDirect;
 class LayerEyeFov;
-class LayerEyeFovDepth;
 class LayerQuad;
 class TimewarpProjectionDescription;
 
@@ -51,6 +49,11 @@ enum class StatusFlag: Int;
 enum class HmdType: Int;
 enum class HmdCapability: Int;
 enum class HmdTrackingCapability: Int;
+enum class Button: UnsignedInt;
+enum class Touch: UnsignedInt;
+enum class TrackingOrigin: Int;
+enum class TrackerFlag: Int;
+enum class ControllerType: Int;
 enum class HmdStatusFlag: UnsignedByte;
 enum class SessionStatusFlag: UnsignedByte;
 enum class PerformanceHudMode: Int;
@@ -61,6 +64,10 @@ enum class LayerType: Int;
 
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
+typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
+struct Buttons;
+struct Touches;
+typedef Containers::EnumSet<ControllerType> ControllerTypes;
 typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 typedef Containers::EnumSet<DetectResult> DetectResults;
