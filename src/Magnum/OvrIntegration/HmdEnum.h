@@ -60,6 +60,9 @@ enum class HmdType: Int {
     CV1 = ovrHmd_CV1,               /**< Consumer Version 1 */
 };
 
+/** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
+
 /**
 @brief HMD tracking capability
 
@@ -75,6 +78,9 @@ enum class HmdTrackingCapability: Int {
     /** Supports positional tracking */
     Position = ovrTrackingCap_Position,
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
 
 /**
 @brief HMD tracking capabilities
@@ -120,6 +126,9 @@ enum class TrackingOrigin: Int {
     FloorLevel = ovrTrackingOrigin_FloorLevel,
 };
 
+/** @debugoperatorenum{Magnum::OvrIntegration::TrackingOrigin} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackingOrigin value);
+
 /**
 @brief Tracker flag
 
@@ -135,6 +144,9 @@ enum class TrackerFlag: Int {
      */
     PoseTracked = ovrTracker_PoseTracked
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::TrackerFlag} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackerFlag value);
 
 /**
 @brief Tracker flags
@@ -178,6 +190,9 @@ enum class Button: UnsignedInt {
     Home = ovrButton_Home,
 };
 
+/** @debugoperatorenum{Magnum::OvrIntegration::Button} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
+
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Button>)
 
 /**
@@ -201,7 +216,6 @@ struct MAGNUM_OVRINTEGRATION_EXPORT Buttons: Containers::EnumSet<Button> {
         Containers::EnumSet<Button>
         #endif
         LMask = Button::X | Button::Y | Button::LThumb | Button::LShoulder;
-
 
     /** @brief Bit mask of buttons used by Oculus Home */
     static constexpr
@@ -260,6 +274,9 @@ enum class Touch: UnsignedInt {
     LIndexPointing = ovrTouch_LIndexPointing, /**< Left index finger pose state */
     LThumbUp = ovrTouch_LThumbUp, /**< Left thumb pose state */
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::Touch} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
 
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Touch>)
 
@@ -323,6 +340,9 @@ enum class ControllerType: Int {
     Active   = ovrControllerType_Active,/**< Operate on or query whichever controller is active */
 };
 
+/** @debugoperatorenum{Magnum::OvrIntegration::ControllerType} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType value);
+
 /**
 @brief Status flag
 
@@ -334,6 +354,9 @@ enum class StatusFlag: Int {
     OrientationTracked = ovrStatus_OrientationTracked, /**< Orientation is currently tracked (connected and in use) */
     PositionTracked = ovrStatus_PositionTracked,       /**< Position is currently tracked (false if out of range) */
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
 
 /** @brief Status flags */
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
@@ -378,6 +401,9 @@ enum class SessionStatusFlag: UnsignedByte {
     ShouldRecenter = 5,
 };
 
+/** @debugoperatorenum{Magnum::OvrIntegration::SessionStatusFlag} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag value);
+
 /** @brief Session status flags */
 typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
@@ -396,6 +422,9 @@ enum class PerformanceHudMode: Int {
     CompRenderTiming = ovrPerfHud_CompRenderTiming,/**< Shows render timing info for OVR compositor */
     VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK & HMD version Info */
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::PerformanceHudMode} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode value);
 
 /**
 @brief Debug HUD mode
@@ -416,6 +445,9 @@ enum class DebugHudStereoMode: Int {
     CrosshairAtInfinity = ovrDebugHudStereo_CrosshairAtInfinity
 };
 
+/** @debugoperatorenum{Magnum::OvrIntegration::DebugHudStereoMode} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugHudStereoMode value);
+
 /**
 @brief Layer HUD mode
 
@@ -428,6 +460,9 @@ enum class LayerHudMode: Int {
     /** Shows info about a specific layer */
     Info = ovrLayerHud_Info,
 };
+
+/** @debugoperatorenum{Magnum::OvrIntegration::LayerHudMode} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, LayerHudMode value);
 
 /**
 @brief Error type

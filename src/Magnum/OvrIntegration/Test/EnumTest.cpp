@@ -23,13 +23,12 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     DEALINGS IN THE SOFTWARE.
 */
+
 #include <sstream>
-
 #include <Corrade/TestSuite/Tester.h>
-
-#include "Magnum/Magnum.h"
-#include "Magnum/Math/Matrix3.h"
-#include "Magnum/Math/DualQuaternion.h"
+#include <Magnum/Magnum.h>
+#include <Magnum/Math/Matrix3.h>
+#include <Magnum/Math/DualQuaternion.h>
 
 #include "Magnum/OvrIntegration/Session.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"

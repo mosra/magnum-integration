@@ -24,7 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/OvrIntegration/Compositor.h"
+#include "Compositor.h"
 
 #include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/Session.h"
@@ -47,10 +47,7 @@ Layer& Layer::setEnabled(bool enabled) {
     return *this;
 }
 
-//----------------------------------------------------------------
-
-LayerEyeFov::LayerEyeFov(): HeadLockableLayer(LayerType::EyeFov) {
-}
+LayerEyeFov::LayerEyeFov(): HeadLockableLayer(LayerType::EyeFov) {}
 
 LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const TextureSwapChain& textureSet) {
     _layer.EyeFov.ColorTexture[eye] = textureSet.ovrTextureSwapChain();
@@ -80,17 +77,12 @@ LayerEyeFov& LayerEyeFov::setFov(const Session& hmd) {
     return *this;
 }
 
-//----------------------------------------------------------------
-
 TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& projectionMatrix) {
     _projectionDesc = ovrTimewarpProjectionDesc_FromProjection(
                 ovrMatrix4f(projectionMatrix), ovrProjection_ClipRangeOpenGL);
 }
 
-//----------------------------------------------------------------
-
-LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {
-}
+LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {}
 
 LayerQuad& LayerQuad::setColorTexture(const TextureSwapChain& textureSet) {
     _layer.Quad.ColorTexture = textureSet.ovrTextureSwapChain();
@@ -116,11 +108,7 @@ LayerQuad& LayerQuad::setQuadSize(const Vector2& size) {
     return *this;
 }
 
-
-//----------------------------------------------------------------
-
-Compositor::Compositor(): _layers(), _wrappedLayers() {
-}
+Compositor::Compositor() = default;
 
 Layer& Compositor::addLayer(const LayerType type) {
     switch (type) {

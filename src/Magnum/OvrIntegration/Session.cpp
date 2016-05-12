@@ -24,17 +24,16 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/OvrIntegration/Session.h"
+#include "Session.h"
+
+#include <Magnum/TextureFormat.h>
+#include <OVR_CAPI_GL.h>
+#undef near
+#undef far
 
 #include "Magnum/OvrIntegration/HmdEnum.h"
 #include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/Context.h"
-
-#include <Magnum/TextureFormat.h>
-
-#include <OVR_CAPI_GL.h>
-#undef near
-#undef far
 
 namespace Magnum { namespace OvrIntegration {
 
@@ -45,8 +44,6 @@ Buttons InputState::buttons() const {
 Touches InputState::touches() const {
      return Touches{static_cast<Touch>(_state.Touches)};
 }
-
-//----------------------------------------------------------------
 
 TextureSwapChain::TextureSwapChain(const Session& session, const Vector2i& size):
     _session(session),
@@ -102,22 +99,17 @@ Texture2D& TextureSwapChain::activeTexture() {
     return _textures[_curIndex];
 }
 
-//----------------------------------------------------------------
-
 Session::Session(::ovrSession hmd):
     _session(hmd),
     _hmdDesc(ovr_GetHmdDesc(_session)),
     _ovrMirrorTexture(nullptr),
-    _flags(HmdStatusFlag(_hmdDesc.AvailableHmdCaps))
-{
-    /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice,
-     * and therefore can be simply cast to HmdStatusFlag */
-}
+    /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice
+       and therefore can be simply cast to HmdStatusFlag */
+    _flags(HmdStatusFlag(_hmdDesc.AvailableHmdCaps)) {}
 
 Session::~Session() {
-    if(_flags & HmdStatusFlag::HasMirrorTexture) {
+    if(_flags & HmdStatusFlag::HasMirrorTexture)
         ovr_DestroyMirrorTexture(_session, _ovrMirrorTexture);
-    }
 
     ovr_Destroy(_session);
 }
@@ -175,14 +167,14 @@ std::unique_ptr<TextureSwapChain> Session::createTextureSwapChain(const Vector2i
 }
 
 Matrix4 Session::projectionMatrix(const Int eye, Float near, Float far) const {
-    ovrMatrix4f proj = ovrMatrix4f_Projection(_hmdDesc.DefaultEyeFov[eye], near, far,
-                                              ovrProjection_ClipRangeOpenGL);
+    const ovrMatrix4f proj = ovrMatrix4f_Projection(_hmdDesc.DefaultEyeFov[eye],
+        near, far, ovrProjection_ClipRangeOpenGL);
     return Matrix4(proj);
 }
 
 Matrix4 Session::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
-    ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj), ovrVector2f(scale), distance,
-                                                     _hmdToEyeOffset[eye].x);
+    const ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj),
+        ovrVector2f(scale), distance, _hmdToEyeOffset[eye].x);
     return Matrix4(sub);
 }
 
@@ -208,12 +200,12 @@ SessionStatusFlags Session::sessionStatus() const {
     ovr_GetSessionStatus(_session, &status);
     const SessionStatusFlags none = SessionStatusFlags{};
 
-    return ((status.IsVisible) ? SessionStatusFlag::IsVisible : none)
-         | ((status.HmdPresent) ? SessionStatusFlag::HmdPresent : none)
-         | ((status.HmdMounted) ? SessionStatusFlag::HmdMounted : none)
-         | ((status.DisplayLost) ? SessionStatusFlag::DisplayLost : none)
-         | ((status.ShouldQuit) ? SessionStatusFlag::ShouldQuit : none)
-         | ((status.ShouldRecenter) ? SessionStatusFlag::ShouldRecenter : none);
+    return ((status.IsVisible) ? SessionStatusFlag::IsVisible : none) |
+           ((status.HmdPresent) ? SessionStatusFlag::HmdPresent : none) |
+           ((status.HmdMounted) ? SessionStatusFlag::HmdMounted : none) |
+           ((status.DisplayLost) ? SessionStatusFlag::DisplayLost : none) |
+           ((status.ShouldQuit) ? SessionStatusFlag::ShouldQuit : none) |
+           ((status.ShouldRecenter) ? SessionStatusFlag::ShouldRecenter : none);
 }
 
 bool Session::isDebugHmd() const {

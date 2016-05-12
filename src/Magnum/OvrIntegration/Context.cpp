@@ -24,7 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/OvrIntegration/Context.h"
+#include "Context.h"
 
 #include "Magnum/OvrIntegration/Session.h"
 #include "Magnum/OvrIntegration/HmdEnum.h"
@@ -72,14 +72,12 @@ bool Context::detect() const {
 }
 
 std::unique_ptr<Session> Context::createSession() {
-    if(detect()) {
-        ovrSession session;
-        ovrGraphicsLuid luid;
-        ovr_Create(&session, &luid);
-        return std::unique_ptr<Session>(new Session(session));
-    }
+    if(!detect()) return {};
 
-    return std::unique_ptr<Session>();
+    ovrSession session;
+    ovrGraphicsLuid luid;
+    ovr_Create(&session, &luid);
+    return std::unique_ptr<Session>(new Session(session));
 }
 
 }}

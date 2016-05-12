@@ -34,13 +34,10 @@
 
 #include <array>
 #include <memory>
+#include <Corrade/Containers/Array.h>
+#include <Magnum/Texture.h>
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_Keys.h>
-
-#include <Corrade/Containers/Array.h>
-
-#include <Magnum/Texture.h>
-#include <Magnum/Magnum.h>
 
 #include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
@@ -344,6 +341,8 @@ Framebuffer::blit(mirrorFramebuffer,
 @see @ref Context, @ref TextureSwapChain, @ref Compositor
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Session {
+    friend class Context;
+
     public:
         ~Session();
 
@@ -656,7 +655,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
             return values;
         }
 
-
         /** @brief Status of the OVR session */
         SessionStatusFlags sessionStatus() const;
 
@@ -678,8 +676,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         std::unique_ptr<Texture2D> _mirrorTexture;
 
         HmdStatusFlags _flags;
-
-        friend class Context;
 };
 
 }}

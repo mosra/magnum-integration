@@ -115,8 +115,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
          */
         static DetectResults detect(Int timeout) {
             const ovrDetectResult result = ovr_Detect(timeout);
-            return ((result.IsOculusHMDConnected) ? DetectResult::ServiceRunning : DetectResults{})
-                 | ((result.IsOculusServiceRunning) ? DetectResult::HmdConnected : DetectResults{});
+            return ((result.IsOculusHMDConnected) ? DetectResult::ServiceRunning : DetectResults{}) |
+                   ((result.IsOculusServiceRunning) ? DetectResult::HmdConnected : DetectResults{});
         }
 
         /**
