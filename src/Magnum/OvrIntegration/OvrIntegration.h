@@ -65,7 +65,6 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
 struct Buttons;
 struct Touches;
-typedef Containers::EnumSet<ControllerType> ControllerTypes;
 typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 typedef Containers::EnumSet<DetectResult> DetectResults;
