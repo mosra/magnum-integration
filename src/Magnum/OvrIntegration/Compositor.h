@@ -27,9 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Compositor, @ref Magnum::OvrIntegration::Layer, @ref Magnum::OvrIntegration::LayerDirect, @ref Magnum::OvrIntegration::LayerEyeFov, @ref Magnum::OvrIntegration::LayerEyeFovDepth, @ref Magnum::OvrIntegration::LayerQuad, @ref Magnum::OvrIntegration::TimewarpProjectionDescription, enum @ref Magnum::OvrIntegration::LayerType
- *
- * @author Jonathan Hale (Squareys)
+ * @brief Class @ref Magnum::OvrIntegration::Layer, @ref Magnum::OvrIntegration::HeadLockableLayer, @ref Magnum::OvrIntegration::LayerEyeFov, @ref Magnum::OvrIntegration::TimewarpProjectionDescription, @ref Magnum::OvrIntegration::LayerQuad, @ref Magnum::OvrIntegration::Compositor, enum @ref Magnum::OvrIntegration::LayerType
  */
 
 #include <memory>
@@ -71,8 +69,6 @@ enum class LayerType: Int {
 
 If you need to be able to change layer specific data, use @ref LayerEyeFov or
 @ref LayerQuad instead.
-
-@author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Layer {
     public:
@@ -139,11 +135,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Layer {
         friend class Compositor;
 };
 
-/**
-@brief Superclass for layers which can be locked relative to the HMD
-
-@author Jonathan Hale (Squareys)
-*/
+/** @brief Superclass for layers which can be locked relative to the HMD */
 class MAGNUM_OVRINTEGRATION_EXPORT HeadLockableLayer: public Layer {
     public:
         /** @brief Constructor */
@@ -173,11 +165,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT HeadLockableLayer: public Layer {
         }
 };
 
-/**
-@brief Wrapper around `ovrLayerEveFov`
-
-@author Jonathan Hale (Squareys)
-*/
+/** @brief Wrapper around `ovrLayerEveFov` */
 class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
     public:
         /** @brief Constructor */
@@ -214,12 +202,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
         LayerEyeFov& setFov(const Session& hmd);
 };
 
-/**
-@brief Timewarp projection description
-
-@see @ref LayerEyeFovDepth
-@author Jonathan Hale (Squareys)
-*/
+/** @brief Timewarp projection description */
 class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
     public:
         /** @brief Constructor */
@@ -234,11 +217,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
         ::ovrTimewarpProjectionDesc _projectionDesc;
 };
 
-/**
-@brief Wrapper around `ovrLayerQuad`
-
-@author Jonathan Hale (Squareys)
-*/
+/** @brief Wrapper around `ovrLayerQuad` */
 class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
     public:
         /** @brief Constructor */
@@ -286,8 +265,7 @@ The compositor handles distortion, chromatic abberation, timewarp and sending
 images to a HMD's display.
 
 The compositor may contain a set of layers with different sizes and different
-properties. See @ref LayerDirect, @ref LayerEyeFov, @ref LayerEyeFovDepth and
-@ref LayerQuad.
+properties. See @ref LayerEyeFov and @ref LayerQuad.
 
 Setup of a distortion layer may look as follows:
 
@@ -319,7 +297,6 @@ Context::get().compositor().submitFrame(hmd);
 @endcode
 
 @see @ref Session, @ref TextureSwapChain, @ref Context::compositor()
-@author Jonathan Hale (Squareys)
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
     public:
@@ -338,8 +315,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
         /**
          * @brief Add a layer of specific type
          *
-         * @see @ref addLayerDirect(), @ref addLayerEyeFov(),
-         *      @ref addLayerEyeFovDepth(), @ref addLayerQuad()
+         * @see @ref addLayerEyeFov(), @ref addLayerQuad()
          */
         Layer& addLayer(LayerType type);
 

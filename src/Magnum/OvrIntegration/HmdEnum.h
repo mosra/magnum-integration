@@ -27,9 +27,7 @@
 */
 
 /** @file
- * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::HmdTrackingCapability, @ref Magnum::OvrIntegration::HmdStatusFlag, enum class @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::HmdStatusFlags
- *
- * @author Jonathan Hale (Squareys)
+ * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::HmdTrackingCapability, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::HmdStatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::HmdStatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
  */
 
 #include <memory>
@@ -44,20 +42,41 @@ namespace Magnum { namespace OvrIntegration {
 /**
 @brief HMD type
 
-@see @ref Context::createHmd()
+@see @ref Context::createSession()
 */
 enum class HmdType: Int {
-    None = ovrHmd_None,             /**< Absence of an HMD type */
-    DK1 = ovrHmd_DK1,               /**< Developer Kit 1 */
-    DKHD = ovrHmd_DKHD,             /**< HD prototype, aka Crystal Cove. Used by Oculus internally. */
-    DK2 = ovrHmd_DK2,               /**< Developer Kit 2 */
-    CB = ovrHmd_CB,                 /**< Crescent Bay prototype. Used by Oculus internally. */
-    Other = ovrHmd_Other,           /**< Unknown type */
-    E3_2015 = ovrHmd_E3_2015,       /**< Hmd demoed at E3 2015. Used by Oculus internally. */
-    ES06 = ovrHmd_ES06,             /**< Used by Oculus internally. */
-    ES09 = ovrHmd_ES09,             /**< Used by Oculus internally. */
-    ES11 = ovrHmd_ES11,             /**< Used by Oculus internally. */
-    CV1 = ovrHmd_CV1,               /**< Consumer Version 1 */
+    /** Absence of a HMD type */
+    None = ovrHmd_None,
+
+    /** Developer Kit 1 */
+    DK1 = ovrHmd_DK1,
+
+    /** HD prototype, aka Crystal Cove. Used by Oculus internally. */
+    DKHD = ovrHmd_DKHD,
+
+    /** Developer Kit 2 */
+    DK2 = ovrHmd_DK2,
+
+    /** Crescent Bay prototype. Used by Oculus internally. */
+    CB = ovrHmd_CB,
+
+    /** Unknown type */
+    Other = ovrHmd_Other,
+
+    /** HMD demoed at E3 2015. Used by Oculus internally. */
+    E3_2015 = ovrHmd_E3_2015,
+
+    /** Used by Oculus internally */
+    ES06 = ovrHmd_ES06,
+
+    /** Used by Oculus internally */
+    ES09 = ovrHmd_ES09,
+
+    /** Used by Oculus internally */
+    ES11 = ovrHmd_ES11,
+
+    /** Consumer Version 1 */
+    CV1 = ovrHmd_CV1,
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
@@ -92,36 +111,40 @@ typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 /**
- * @brief Tracking origin
- */
+@brief Tracking origin
+
+@see @ref Session::setTrackingOrigin()
+*/
 enum class TrackingOrigin: Int {
     /**
-     * @brief Tracking system origin reported at eye (HMD) height
+     * Tracking system origin reported at eye (HMD) height.
      *
      * Prefer using this origin when your application requires matching user's
      * current physical head pose to a virtual head pose without any regards to
      * the height of the floor. Cockpit-based, or 3rd-person experiences are
      * ideal candidates.
+     *
      * When used, all poses in ovrTrackingState are reported as an offset
-     * transform from the profile calibrated or recentered HMD pose.
-     * It is recommended that apps using this origin type call @ref Hmd::recenterTrackingOrigin()
-     * prior to starting the VR experience, but notify the user before doing so
-     * to make sure the user is in a comfortable pose, facing a comfortable
-     * direction.
+     * transform from the profile calibrated or recentered HMD pose. It is
+     * recommended that apps using this origin type call
+     * @ref Session::recenterTrackingOrigin() prior to starting the VR
+     * experience, but notify the user before doing so to make sure the user is
+     * in a comfortable pose, facing a comfortable direction.
      */
     EyeLevel = ovrTrackingOrigin_EyeLevel,
 
     /**
-     * @brief Tracking system origin reported at floor height
+     * Tracking system origin reported at floor height.
      *
      * Prefer using this origin when your application requires the physical
      * floor height to match the virtual floor height, such as standing
      * experiences.
+     *
      * When used, all poses in ovrTrackingState are reported as an offset
-     * transform from the profile calibrated floor pose. Calling @ref Hmd::recenterTrackingOrigin()
-     * will recenter the X & Z axes as well as yaw, but the Y-axis (i.e. height)
-     * will continue to be reported using the floor height as the origin for
-     * all poses.
+     * transform from the profile calibrated floor pose. Calling
+     * @ref Session::recenterTrackingOrigin() will recenter the X & Z axes as
+     * well as yaw, but the Y-axis (i.e. height) will continue to be reported
+     * using the floor height as the origin for all poses.
      */
     FloorLevel = ovrTrackingOrigin_FloorLevel,
 };
@@ -139,8 +162,8 @@ enum class TrackerFlag: Int {
     Connected = ovrTracker_Connected,
 
     /**
-     * The sensor has a valid pose, else the pose is unavailable.
-     * This will only be set if ovrTracker_Connected is set.
+     * The sensor has a valid pose, else the pose is unavailable. This will
+     * only be set if `ovrTracker_Connected` is set.
      */
     PoseTracked = ovrTracker_PoseTracked
 };
@@ -165,29 +188,31 @@ pressable on one of these controllers.
 @see @ref Buttons
 */
 enum class Button: UnsignedInt {
-    A = ovrButton_A, /**< A button */
-    B = ovrButton_B, /**< B button */
+    A = ovrButton_A,                    /**< A */
+    B = ovrButton_B,                    /**< B */
+    X = ovrButton_X,                    /**< X */
+    Y = ovrButton_Y,                    /**< Y */
 
-    X = ovrButton_X, /**< Y button */
-    Y = ovrButton_Y, /**< X button */
+    RThumb = ovrButton_RThumb,          /**< Right thumbstick */
+    RShoulder = ovrButton_RShoulder,    /**< Right shoulder */
+    LThumb = ovrButton_LThumb,          /**< Left thumbstick */
+    LShoulder = ovrButton_LShoulder,    /**< Left shoulder */
 
-    RThumb = ovrButton_RThumb,       /**< Right thumbstick button */
-    RShoulder = ovrButton_RShoulder, /**< Right shoulder button */
-    LThumb = ovrButton_LThumb,       /**< Left thumbstick button */
-    LShoulder = ovrButton_LShoulder, /**< Left shoulder button */
+    Up = ovrButton_Up,                  /**< D pad up */
+    Down = ovrButton_Down,              /**< D pad down */
+    Left = ovrButton_Left,              /**< D pad left */
+    Right = ovrButton_Right,            /**< D pad right */
 
-    Up = ovrButton_Up,          /**< D pad up */
-    Down = ovrButton_Down,      /**< D pad down */
-    Left = ovrButton_Left,      /**< D pad left */
-    Right = ovrButton_Right,    /**< D pad right */
+    Enter = ovrButton_Enter,            /**< Start on XBox controller */
+    Back = ovrButton_Back,              /**< Back on Xbox controller */
 
-    Enter = ovrButton_Enter,    /**< Start on XBox controller */
-    Back = ovrButton_Back,      /**< Back on Xbox controller */
+    /** Volume up. Only supported by Remote. */
+    VolUp = ovrButton_VolUp,
 
-    VolUp = ovrButton_VolUp,    /**< Only supported by Remote */
-    VolDown = ovrButton_VolDown,/**< Only supported by Remote */
+    /** Volume down. Only supported by Remote */
+    VolDown = ovrButton_VolDown,
 
-    Home = ovrButton_Home,
+    Home = ovrButton_Home,              /**< Home */
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::Button} */
@@ -195,9 +220,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
 
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Button>)
 
-/**
-@brief Buttons
-*/
+/** @brief Buttons */
 struct MAGNUM_OVRINTEGRATION_EXPORT Buttons: Containers::EnumSet<Button> {
     /** @brief Bit mask of all buttons on the right Touch controller */
     static constexpr
@@ -280,6 +303,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
 
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Touch>)
 
+/** @brief Touches */
 struct MAGNUM_OVRINTEGRATION_EXPORT Touches: Containers::EnumSet<Touch> {
     /** @brief Bit mask of all the button touches on the right controller */
     static constexpr
@@ -328,8 +352,10 @@ struct MAGNUM_OVRINTEGRATION_EXPORT Touches: Containers::EnumSet<Touch> {
 };
 
 /**
- * @brief Controller type
- */
+@brief Controller type
+
+@see @ref InputState::controllerType(), @ref Session::pollController()
+*/
 enum class ControllerType: Int {
     None = ovrControllerType_None,      /**< No controllers */
     LTouch = ovrControllerType_LTouch,  /**< Left Touch controller */
@@ -337,7 +363,9 @@ enum class ControllerType: Int {
     Touch = ovrControllerType_Touch,    /**< Left and right Touch controllers */
     Remote = ovrControllerType_Remote,  /**< Oculus Remote */
     XBox   = ovrControllerType_XBox,    /**< XBox controller */
-    Active   = ovrControllerType_Active,/**< Operate on or query whichever controller is active */
+
+    /** Operate on or query whichever controller is active */
+    Active   = ovrControllerType_Active,
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::ControllerType} */
@@ -346,24 +374,35 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType valu
 /**
 @brief Status flag
 
-Flags describing the current status of sensor tracking.
-The values must be the same as in enum StatusBits
+Flags describing the current status of sensor tracking. The values must be the
+same as in enum `StatusBits`.
 @see @ref StatusFlags, @ref Hmd::configureTracking()
 */
 enum class StatusFlag: Int {
-    OrientationTracked = ovrStatus_OrientationTracked, /**< Orientation is currently tracked (connected and in use) */
-    PositionTracked = ovrStatus_PositionTracked,       /**< Position is currently tracked (false if out of range) */
+    /** Orientation is currently tracked (connected and in use) */
+    OrientationTracked = ovrStatus_OrientationTracked,
+
+    /** Position is currently tracked (false if out of range) */
+    PositionTracked = ovrStatus_PositionTracked,
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
 
-/** @brief Status flags */
+/**
+@brief Status flags
+
+@see @ref Hmd::configureTracking()
+*/
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(StatusFlags)
 
-/** @brief HMD status flag */
+/**
+@brief HMD status flag
+
+@see @ref HmdStatusFlags
+*/
 enum class HmdStatusFlag: UnsignedByte {
     /**
      * A mirror texture was created for the hmd and needs to be destroyed on
@@ -380,7 +419,11 @@ typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 
-/** @brief Session status flag */
+/**
+@brief Session status flag
+
+@see @ref SessionStatusFlags, @ref Session::sessionStatus()
+*/
 enum class SessionStatusFlag: UnsignedByte {
     /** Set when the process has VR focus and thus is visible in the HMD */
     IsVisible = 0,
@@ -404,7 +447,11 @@ enum class SessionStatusFlag: UnsignedByte {
 /** @debugoperatorenum{Magnum::OvrIntegration::SessionStatusFlag} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag value);
 
-/** @brief Session status flags */
+/**
+@brief Session status flags
+
+@see @ref Session::sessionStatus()
+*/
 typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
@@ -412,7 +459,7 @@ CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
 /**
 @brief Performance HUD mode
 
-@see @ref Hmd::setPerformanceHudMode()
+@see @ref Session::setPerformanceHudMode()
 */
 enum class PerformanceHudMode: Int {
     Off = ovrPerfHud_Off,                     /**< Turns off the performance HUD */
@@ -429,7 +476,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode 
 /**
 @brief Debug HUD mode
 
-@see @ref Hmd::setDebugHudStereoMode()
+@see @ref Session::setDebugHudStereoMode()
 */
 enum class DebugHudStereoMode: Int {
     /** Turns off the Stereo Debug HUD */
@@ -451,7 +498,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugHudStereoMode 
 /**
 @brief Layer HUD mode
 
-@see @ref Hmd::setLayerHudMode()
+@see @ref Session::setLayerHudMode()
 */
 enum class LayerHudMode: Int {
     /** Turns off the layer HUD */
@@ -471,141 +518,294 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, LayerHudMode value)
 */
 enum class ErrorType: Int {
     /* General errors */
-    MemoryAllocationFailure = ovrError_MemoryAllocationFailure, /**< Failure to allocate memory. */
-    SocketCreationFailure = ovrError_SocketCreationFailure,     /**< Failure to create a socket. */
-    InvalidSession = ovrError_InvalidSession,           /**< Invalid ovrSession parameter provided. */
-    Timeout = ovrError_Timeout,                         /**< The operation timed out. */
-    NotInitialized = ovrError_NotInitialized,           /**< The system or component has not been initialized. */
-    InvalidParameter = ovrError_InvalidParameter,       /**< Invalid parameter provided. See error info or log for details. */
-    ServiceError = ovrError_ServiceError,               /**< Generic service error. See error info or log for details. */
-    NoHmd = ovrError_NoHmd,                             /**< The given HMD doesn't exist. */
-    Unsupported = ovrError_Unsupported,                 /**< Function call is not supported on this hardware/software. */
-    DeviceUnavailable = ovrError_DeviceUnavailable,     /**< Specified device type isn't available. */
-    InvalidHeadsetOrientation = ovrError_InvalidHeadsetOrientation, /**< The headset was in an invalid orientation for the requested operation (e.g. vertically oriented during ovr_RecenterPose). */
-    ClientSkippedDestroy = ovrError_ClientSkippedDestroy,           /**< The client failed to call ovr_Destroy on an active session before calling ovr_Shutdown. Or the client crashed. */
-    ClientSkippedShutdown = ovrError_ClientSkippedShutdown,         /**< The client failed to call ovr_Shutdown or the client crashed. */
 
-    /* Audio errors. */
-    AudioDeviceNotFound =  ovrError_AudioDeviceNotFound,/**< Failure to find the specified audio device. */
-    AudioComError = ovrError_AudioComError,             /**< Generic COM error. */
+    /** Failure to allocate memory */
+    MemoryAllocationFailure = ovrError_MemoryAllocationFailure,
 
-    /* Initialization errors. */
-    Initialize = ovrError_Initialize,                   /**< Generic initialization error. */
-    LibLoad = ovrError_LibLoad,                         /**< Couldn't load LibOVRRT. */
-    LibVersion = ovrError_LibVersion,                   /**< LibOVRRT version incompatibility. */
-    ServiceConnection = ovrError_ServiceConnection,     /**< Couldn't connect to the OVR Service. */
-    ServiceVersion = ovrError_ServiceVersion,           /**< OVR Service version incompatibility. */
-    IncompatibleOs = ovrError_IncompatibleOS,           /**< The operating system version is incompatible. */
-    DisplayInit = ovrError_DisplayInit,                 /**< Unable to initialize the HMD display. */
-    ServerStart = ovrError_ServerStart,                 /**< Unable to start the server. Is it already running? */
-    Reinitialization = ovrError_Reinitialization,       /**< Attempting to re-initialize with a different version. */
-    MismatchedAdapters = ovrError_MismatchedAdapters,   /**< Chosen rendering adapters between client and service do not match. */
-    LeakingResources = ovrError_LeakingResources,       /**< Calling application has leaked resources. */
-    ClientVersion = ovrError_ClientVersion,             /**< Client version too old to connect to service. */
-    OutOfDateOs = ovrError_OutOfDateOS,                 /**< The operating system is out of date. */
-    OutOfDateGfxDriver = ovrError_OutOfDateGfxDriver,   /**< The graphics driver is out of date. */
-    IncompatibleGpu = ovrError_IncompatibleGPU,         /**< The graphics hardware is not supported. */
-    NoValidVrDisplaySystem = ovrError_NoValidVRDisplaySystem,       /**< No valid VR display system found. */
-    Obsolete = ovrError_Obsolete,                                   /**< Feature or API is obsolete and no longer supported. */
-    DisabledOrDefaultAdapter = ovrError_DisabledOrDefaultAdapter,   /**< No supported VR display system found, but disabled or driverless adapter found. */
-    HybridGraphicsNotSupported = ovrError_HybridGraphicsNotSupported,/**< The system is using hybrid graphics (Optimus, etc...), which is not support. */
-    DisplayManagerInit = ovrError_DisplayManagerInit,               /**< Initialization of the DisplayManager failed. */
-    TrackerDriverInit = ovrError_TrackerDriverInit,                 /**< Failed to get the interface for an attached tracker. */
+    /** Failure to create a socket */
+    SocketCreationFailure = ovrError_SocketCreationFailure,
 
-    /* Hardware Errors */
-    InvalidBundleAdjustment = ovrError_InvalidBundleAdjustment,     /**< Headset has no bundle adjustment data. */
-    UsbBandwidth = ovrError_USBBandwidth,                           /**< The USB hub cannot handle the camera frame bandwidth. */
-    UsbEnumeratedSpeed = ovrError_USBEnumeratedSpeed,               /**< The USB camera is not enumerating at the correct device speed. */
-    ImageSensorCommError = ovrError_ImageSensorCommError,           /**< Unable to communicate with the image sensor. */
-    GeneralTrackerFailure = ovrError_GeneralTrackerFailure,         /**< We use this to report various tracker issues that don't fit in an easily classifiable bucket. */
-    ExcessiveFrameTruncation = ovrError_ExcessiveFrameTruncation,   /**< A more than acceptable number of frames are coming back truncated. */
-    ExcessiveFrameSkipping = ovrError_ExcessiveFrameSkipping,       /**< A more than acceptable number of frames have been skipped. */
-    SyncDisconnected = ovrError_SyncDisconnected,                   /**< The tracker is not receiving the sync signal (cable disconnected?). */
-    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,   /**< Failed to read memory from the tracker. */
-    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure, /**< Failed to write memory from the tracker. */
-    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,             /**< Timed out waiting for a camera frame. */
-    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,         /**< Truncated frame returned from tracker. */
-    TrackerDriverFailure = ovrError_TrackerDriverFailure,           /**< The sensor driver has encountered a problem. */
-    TrackerNRFFailure = ovrError_TrackerNRFFailure,                 /**< The sensor wireless subsystem has encountered a problem. */
-    HardwareGone = ovrError_HardwareGone,                           /**< The hardware has been unplugged. */
-    NordicEnabledNoSync = ovrError_NordicEnabledNoSync,             /**< The nordic indicates that sync is enabled but it is not sending sync pulses. */
-    NordicSyncNoFrames = ovrError_NordicSyncNoFrames,               /**< It looks like we're getting a sync signal, but no camera frames have been received. */
-    CatastrophicFailure = ovrError_CatastrophicFailure,             /**< A catastrophic failure has occurred.  We will attempt to recover by resetting the device. */
+    /** Invalid ovrSession parameter provided */
+    InvalidSession = ovrError_InvalidSession,
 
-    HmdFirmwareMismatch = ovrError_HMDFirmwareMismatch,             /**< The HMD Firmware is out of date and is unacceptable. */
-    TrackerFirmwareMismatch = ovrError_TrackerFirmwareMismatch,     /**< The Tracker Firmware is out of date and is unacceptable. */
-    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,   /**< A bootloader HMD is detected by the service. */
-    TrackerCalibrationError = ovrError_TrackerCalibrationError,     /**< The tracker calibration is missing or incorrect. */
-    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,/**< The controller firmware is out of date and is unacceptable. */
+    /** The operation timed out */
+    Timeout = ovrError_Timeout,
 
-    IMUTooManyLostSamples = ovrError_IMUTooManyLostSamples,         /**< Too many lost IMU samples. */
-    IMURateError = ovrError_IMURateError,                           /**< IMU rate is outside of the expected range. */
-    FeatureReportFailure = ovrError_FeatureReportFailure,           /**< A feature report has failed. */
+    /** The system or component has not been initialized */
+    NotInitialized = ovrError_NotInitialized,
 
-    /* Synchronization Errors */
-    Incomplete = ovrError_Incomplete,   /**< Requested async work not yet complete. */
-    Abandoned = ovrError_Abandoned,     /**< Requested async work was abandoned and result is incomplete. */
+    /** Invalid parameter provided. See error info or log for details */
+    InvalidParameter = ovrError_InvalidParameter,
 
-    /* Rendering Errors */
-    DisplayLost = ovrError_DisplayLost,                             /**< In the event of a system-wide graphics reset or cable unplug this is returned to the app. */
-    TextureSwapChainFull = ovrError_TextureSwapChainFull,           /**< ovr_CommitTextureSwapChain was called too many times on a texture swapchain without calling submit to use the chain. */
-    TextureSwapChainInvalid = ovrError_TextureSwapChainInvalid,     /**< The ovrTextureSwapChain is in an incomplete or inconsistent state. Ensure @ref TextureSwapChain::commit() was called at least once first. */
+    /** Generic service error. See error info or log for details */
+    ServiceError = ovrError_ServiceError,
+
+    /** The given HMD doesn't exist */
+    NoHmd = ovrError_NoHmd,
+
+    /** Function call is not supported on this hardware/software */
+    Unsupported = ovrError_Unsupported,
+
+    /** Specified device type isn't available */
+    DeviceUnavailable = ovrError_DeviceUnavailable,
+
+    /**
+     * The headset was in an invalid orientation for the requested operation
+     * (e.g. vertically oriented during `ovr_RecenterPose`)
+     */
+    InvalidHeadsetOrientation = ovrError_InvalidHeadsetOrientation,
+
+    /**
+     * The client failed to call `ovr_Destroy` on an active session before
+     * calling `ovr_Shutdown`. Or the client crashed.
+     */
+    ClientSkippedDestroy = ovrError_ClientSkippedDestroy,
+
+    /** The client failed to call ovr_Shutdown or the client crashed */
+    ClientSkippedShutdown = ovrError_ClientSkippedShutdown,
+
+    /* Audio errors */
+
+    /** Failure to find the specified audio device */
+    AudioDeviceNotFound =  ovrError_AudioDeviceNotFound,
+
+    /** Generic COM error */
+    AudioComError = ovrError_AudioComError,
+
+    /* Initialization errors */
+
+    /** Generic initialization error */
+    Initialize = ovrError_Initialize,
+
+    /** Couldn't load LibOVRRT */
+    LibLoad = ovrError_LibLoad,
+
+    /** LibOVRRT version incompatibility */
+    LibVersion = ovrError_LibVersion,
+
+    /** Couldn't connect to the OVR Service */
+    ServiceConnection = ovrError_ServiceConnection,
+
+    /** OVR Service version incompatibility */
+    ServiceVersion = ovrError_ServiceVersion,
+
+    /** The operating system version is incompatible */
+    IncompatibleOs = ovrError_IncompatibleOS,
+
+    /** Unable to initialize the HMD display */
+    DisplayInit = ovrError_DisplayInit,
+
+    /** Unable to start the server. Is it already running? */
+    ServerStart = ovrError_ServerStart,
+
+    /** Attempting to re-initialize with a different version */
+    Reinitialization = ovrError_Reinitialization,
+
+    /** Chosen rendering adapters between client and service do not match */
+    MismatchedAdapters = ovrError_MismatchedAdapters,
+
+    /** Calling application has leaked resources */
+    LeakingResources = ovrError_LeakingResources,
+
+    /** Client version too old to connect to service */
+    ClientVersion = ovrError_ClientVersion,
+
+    /** The operating system is out of date */
+    OutOfDateOs = ovrError_OutOfDateOS,
+
+    /** The graphics driver is out of date */
+    OutOfDateGfxDriver = ovrError_OutOfDateGfxDriver,
+
+    /** The graphics hardware is not supported */
+    IncompatibleGpu = ovrError_IncompatibleGPU,
+
+    /** No valid VR display system found */
+    NoValidVrDisplaySystem = ovrError_NoValidVRDisplaySystem,
+
+    /** Feature or API is obsolete and no longer supported */
+    Obsolete = ovrError_Obsolete,
+
+    /**
+     * No supported VR display system found, but disabled or driverless adapter
+     * found
+     */
+    DisabledOrDefaultAdapter = ovrError_DisabledOrDefaultAdapter,
+
+    /**
+     * The system is using hybrid graphics (Optimus, etc...), which is not
+     * supported
+     */
+    HybridGraphicsNotSupported = ovrError_HybridGraphicsNotSupported,
+
+    /** Initialization of the display manager failed. */
+    DisplayManagerInit = ovrError_DisplayManagerInit,
+
+    /** Failed to get the interface for an attached tracker */
+    TrackerDriverInit = ovrError_TrackerDriverInit,
+
+    /* Hardware errors */
+
+    /** Headset has no bundle adjustment data */
+    InvalidBundleAdjustment = ovrError_InvalidBundleAdjustment,
+
+    /** The USB hub cannot handle the camera frame bandwidth */
+    UsbBandwidth = ovrError_USBBandwidth,
+
+    /** The USB camera is not enumerating at the correct device speed */
+    UsbEnumeratedSpeed = ovrError_USBEnumeratedSpeed,
+
+    /** Unable to communicate with the image sensor */
+    ImageSensorCommError = ovrError_ImageSensorCommError,
+
+    /**
+     * We use this to report various tracker issues that don't fit in an easily
+     * classifiable bucket.
+     */
+    GeneralTrackerFailure = ovrError_GeneralTrackerFailure,
+
+    /** A more than acceptable number of frames are coming back truncated */
+    ExcessiveFrameTruncation = ovrError_ExcessiveFrameTruncation,
+
+    /** A more than acceptable number of frames have been skipped */
+    ExcessiveFrameSkipping = ovrError_ExcessiveFrameSkipping,
+
+    /** The tracker is not receiving the sync signal (cable disconnected?) */
+    SyncDisconnected = ovrError_SyncDisconnected,
+
+    /** Failed to read memory from the tracker */
+    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,
+
+    /** Failed to write memory from the tracker */
+    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure,
+
+    /** Timed out waiting for a camera frame */
+    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,
+
+    /** Truncated frame returned from tracker */
+    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,
+
+    /** The sensor driver has encountered a problem */
+    TrackerDriverFailure = ovrError_TrackerDriverFailure,
+
+    /** The sensor wireless subsystem has encountered a problem */
+    TrackerNRFFailure = ovrError_TrackerNRFFailure,
+
+    /** The hardware has been unplugged */
+    HardwareGone = ovrError_HardwareGone,
+
+    /**
+     * The nordic indicates that sync is enabled but it is not sending sync
+     * pulses.
+     */
+    NordicEnabledNoSync = ovrError_NordicEnabledNoSync,
+
+    /**
+     * It looks like we're getting a sync signal, but no camera frames have
+     * been received.
+     */
+    NordicSyncNoFrames = ovrError_NordicSyncNoFrames,
+
+    /**
+     * A catastrophic failure has occurred.  We will attempt to recover by
+     * resetting the device.
+     */
+    CatastrophicFailure = ovrError_CatastrophicFailure,
+
+    /** The HMD firmware is out of date and is unacceptable */
+    HmdFirmwareMismatch = ovrError_HMDFirmwareMismatch,
+
+    /** The tracker firmware is out of date and is unacceptable */
+    TrackerFirmwareMismatch = ovrError_TrackerFirmwareMismatch,
+
+    /** A bootloader HMD is detected by the service */
+    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,
+
+    /** The tracker calibration is missing or incorrect */
+    TrackerCalibrationError = ovrError_TrackerCalibrationError,
+
+    /** The controller firmware is out of date and is unacceptable */
+    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,
+
+    /** Too many lost IMU samples */
+    IMUTooManyLostSamples = ovrError_IMUTooManyLostSamples,
+
+    /** IMU rate is outside of the expected range */
+    IMURateError = ovrError_IMURateError,
+
+    /** A feature report has failed */
+    FeatureReportFailure = ovrError_FeatureReportFailure,
+
+    /* Synchronization errors */
+
+    /** Requested async work not yet complete. */
+    Incomplete = ovrError_Incomplete,
+
+    /** Requested async work was abandoned and result is incomplete */
+    Abandoned = ovrError_Abandoned,
+
+    /* Rendering errors */
+
+    /**
+     * In the event of a system-wide graphics reset or cable unplug this is
+     * returned to the app.
+     */
+    DisplayLost = ovrError_DisplayLost,
+
+    /**
+     * `ovr_CommitTextureSwapChain` was called too many times on a texture
+     * swapchain without calling submit to use the chain
+     */
+    TextureSwapChainFull = ovrError_TextureSwapChainFull,
+
+    /**
+     * The `ovrTextureSwapChain` is in an incomplete or inconsistent state.
+     * Ensure @ref TextureSwapChain::commit() was called at least once first.
+     */
+    TextureSwapChainInvalid = ovrError_TextureSwapChainInvalid,
 
     /* Fatal errors */
+
     /**
      * A runtime exception occurred. The application is required to shutdown
      * LibOVR and re-initialize it before this error state will be cleared.
      */
     RuntimeException = ovrError_RuntimeException,
 
-    MetricsUnknownApp = ovrError_MetricsUnknownApp,             /**< Metrics unknown app */
-    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,         /**< Metrics duplicate app */
-    MetricsNoEvents = ovrError_MetricsNoEvents,                 /**< Metrics no events */
-    MetricsRuntime = ovrError_MetricsRuntime,                   /**< Metrics runtime */
-    MetricsFile  = ovrError_MetricsFile,                        /**< Metrics file */
-    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,         /**< Metrics no client info */
-    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,       /**< Metrics no app meta data */
-    MetricsNoApp = ovrError_MetricsNoApp,                       /**< Metrics no app */
-    MetricsOafFailure = ovrError_MetricsOafFailure,             /**< Metrics oaf failure */
-    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive, /**< Metrics session already active */
-    MetricsSessionNotActive = ovrError_MetricsSessionNotActive, /**< Metrics session not active */
+    /* Metrics */
+
+    /** Metrics unknown app */
+    MetricsUnknownApp = ovrError_MetricsUnknownApp,
+
+    /** Metrics duplicate app */
+    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,
+
+    /** Metrics no events */
+    MetricsNoEvents = ovrError_MetricsNoEvents,
+
+    /** Metrics runtime */
+    MetricsRuntime = ovrError_MetricsRuntime,
+
+    /** Metrics file */
+    MetricsFile  = ovrError_MetricsFile,
+
+    /** Metrics no client info */
+    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,
+
+    /** Metrics no app meta data */
+    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,
+
+    /** Metrics no app */
+    MetricsNoApp = ovrError_MetricsNoApp,
+
+    /** Metrics oaf failure */
+    MetricsOafFailure = ovrError_MetricsOafFailure,
+
+    /** Metrics session already active */
+    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive,
+
+    /** Metrics session not active */
+    MetricsSessionNotActive = ovrError_MetricsSessionNotActive,
 };
-
-/** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::TrackingOrigin} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackingOrigin value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::TrackerFlag} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackerFlag value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::Button} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::Touch} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::ControllerType} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::SessionStatusFlag} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::PerformanceHudMode} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::DebugHudStereoMode} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugHudStereoMode value);
-
-/** @debugoperatorenum{Magnum::OvrIntegration::LayerHudMode} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, LayerHudMode value);
 
 /** @debugoperatorenum{Magnum::OvrIntegration::ErrorType} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ErrorType value);

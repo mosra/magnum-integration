@@ -27,9 +27,7 @@
 */
 
 /** @file
- * @brief Forward declarations for the @ref Magnum::OvrIntegration namespace.
- *
- * @author Jonathan Hale (Squareys)
+ * @brief Forward declarations for the @ref Magnum::OvrIntegration namespace
  */
 
 #include <Magnum/Magnum.h>

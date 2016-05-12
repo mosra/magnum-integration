@@ -27,11 +27,7 @@
 */
 
 /** @file
- * @brief Converters and conversion methods
- *
- * Tools for converting libOVR math and texture types to Magnum types and back.
- *
- * @author Jonathan Hale (Squareys)
+ * @brief Conversion of libOVR math types
  */
 
 #include <Magnum/Magnum.h>

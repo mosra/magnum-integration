@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Context
+ * @brief Class @ref Magnum::OvrIntegration::Context, struct @ref Magnum::OvrIntegration::Error, enum @ref Magnum::OvrIntegration::DetectResult, enum set @ref Magnum::OvrIntegration::DetectResults
  */
 
 #include <memory>
@@ -42,9 +42,10 @@
 namespace Magnum { namespace OvrIntegration {
 
 /**
- * @brief Error
- * @see @ref Context::error()
- */
+@brief Error
+
+@see @ref Context::error()
+*/
 struct Error {
     ErrorType type;         /**< @brief Error type */
     std::string message;    /**< @brief Error message */

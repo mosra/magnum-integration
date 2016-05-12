@@ -27,9 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Session, @ref Magnum::OvrIntegration::TextureSwapChain
- *
- * @author Jonathan Hale (Squareys)
+ * @brief Class @ref Magnum::OvrIntegration::PoseState, @ref Magnum::OvrIntegration::InputState, @ref Magnum::OvrIntegration::TextureSwapChain, @ref Magnum::OvrIntegration::Session,
  */
 
 #include <array>
@@ -46,12 +44,12 @@
 namespace Magnum { namespace OvrIntegration {
 
 /**
- * @brief A full pose (rigid body) configuration with first and second derivatives.
- *
- * Body refers to any object for which ovrPoseStatef is providing data.
- * It can be the HMD, Touch controller, sensor or something else. The context
- * depends on the usage of the struct.
- */
+@brief A full pose (rigid body) configuration with first and second derivatives
+
+Body refers to any object for which ovrPoseStatef is providing data.
+It can be the HMD, Touch controller, sensor or something else. The context
+depends on the usage of the struct.
+*/
 class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
     public:
 
@@ -77,55 +75,41 @@ class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
         /**
          * @brief Constructor with initial `ovrPoseStatef`
          *
-         * Initializes underlying `ovrPoseStatef` with given `state`.
+         * Initializes underlying `ovrPoseStatef` with given @p state.
          */
         PoseState(const ovrPoseStatef& state): _state(state) {}
 
-        /**
-         * @brief Position and orientation
-         */
+        /** @brief Position and orientation */
         DualQuaternion pose() const {
             return DualQuaternion{_state.ThePose};
         }
 
-        /**
-         * @brief Angular velocity in radians per second
-         */
+        /** @brief Angular velocity in radians per second */
         Vector3 angularVelocity() const {
             return Vector3{_state.AngularVelocity};
         }
 
-        /**
-         * @brief Velocity in meters per second
-         */
+        /** @brief Velocity in meters per second */
         Vector3 LinearVelocity() const {
             return Vector3{_state.LinearVelocity};
         }
 
-        /**
-         * @brief Angular acceleration in radians per second per second
-         */
+        /** @brief Angular acceleration in radians per second per second */
         Vector3 angularAcceleration() const {
             return Vector3{_state.AngularAcceleration};
         }
 
-        /**
-         * @brief Acceleration in meters per second per second
-         */
+        /** @brief Acceleration in meters per second per second */
         Vector3 linearAcceleration() const {
             return Vector3{_state.LinearAcceleration};
         }
 
-        /**
-         * @brief Absolute time that this pose refers to (in seconds)
-         */
+        /** @brief Absolute time that this pose refers to (in seconds) */
         Double time() const {
             return _state.TimeInSeconds;
         }
 
-        /**
-         * @brief The underlying `ovrPoseStatef`
-         */
+        /** @brief The underlying `ovrPoseStatef` */
         ::ovrPoseStatef& ovrPoseStatef() {
             return _state;
         }
@@ -135,26 +119,32 @@ class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
 };
 
 /**
- * @brief Input state
- *
- * ovrInputState describes the complete controller input state, including
- * Oculus Touch, and XBox gamepad. If multiple inputs are connected and used at
- * the same time, their inputs are combined.
- */
+@brief Input state
+
+Describes the complete controller input state, including Oculus Touch and XBox
+gamepad. If multiple inputs are connected and used at the same time, their
+inputs are combined.
+*/
 class MAGNUM_OVRINTEGRATION_EXPORT InputState {
     public:
-
+        /**
+         * @brief Constructor
+         *
+         * Default initializes underlying `ovrInputState`.
+         */
         InputState(): _state() {}
+
+        /**
+         * @brief Constructor with initial `ovrInputState`
+         *
+         * Initializes underlying `ovrInputState` with given @p state.
+         */
         InputState(const ovrInputState& state): _state(state) {}
 
-        /**
-         * @brief Values for buttons described by ovrButton
-         */
+        /** @brief Values for buttons described by `ovrButton` */
         Buttons buttons() const;
 
-        /**
-         * @brief Touch values for buttons and sensors as described by ovrTouch
-         */
+        /** @brief Touch values for buttons and sensors as described by `ovrTouch` */
         Touches touches() const;
 
         /**
@@ -184,23 +174,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
             return Vector2{_state.Thumbstick[hand]};
         }
 
-        /**
-         * @brief System time when the controller state was last updated (in seconds)
-         */
+        /** @brief System time when the controller state was last updated (in seconds) */
         Double time() const {
             return _state.TimeInSeconds;
         }
 
-        /**
-         * @brief The type of the controller this state is for
-         */
+        /** @brief The type of the controller this state is for */
         ControllerType controllerType() const {
             return static_cast<ControllerType>(_state.ControllerType);
         }
 
-        /**
-         * @brief The underlying `ovrInputState`
-         */
+        /** @brief The underlying `ovrInputState` */
         ::ovrInputState& ovrInputState() {
             return _state;
         }
@@ -384,14 +368,15 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * @brief Create a @ref TextureSwapChain for this HMD
          * @param size      Size for the textures in the created set
          *
-         * @see @ref createTextureSwapChain(TextureFormat, Int)
+         * @see @ref createTextureSwapChain(Int)
          */
         std::unique_ptr<TextureSwapChain> createTextureSwapChain(const Vector2i& size);
 
         /**
          * @brief Get the current translation for the eyes from the head pose tracked by the HMD
          *
-         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         * Returns array of two DualQuaternions describing tranformation and
+         * orientation of each eye.
          */
         const PoseState& headPoseState() const {
             return PoseState::wrap(_trackingState.HeadPose);
@@ -400,7 +385,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Get the current translation for the eyes from the head pose tracked by the HMD
          *
-         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         * Returns array of two DualQuaternions describing tranformation and
+         * orientation of each eye.
          */
         DualQuaternion calibratedOrigin() const {
             return DualQuaternion(_trackingState.CalibratedOrigin);
@@ -409,7 +395,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Get translation for the eyes from the head pose of last @ref pollEyePoses()
          *
-         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         * Returns array of two DualQuaternions describing tranformation and
+         * orientation of each eye.
          */
         std::array<DualQuaternion, 2> eyePoses() const {
             return std::array<DualQuaternion, 2>{{DualQuaternion(_ovrPoses[0]), DualQuaternion(_ovrPoses[1])}};
@@ -418,7 +405,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Get the current translation for the eyes from the head pose tracked by the HMD
          *
-         * Returns array of two DualQuaternions describing tranformation and orientation of each eye.
+         * Returns array of two DualQuaternions describing tranformation and
+         * orientation of each eye.
          */
         std::array<std::reference_wrapper<const PoseState>, 2> handPoseStates() const {
             return std::array<std::reference_wrapper<const PoseState>, 2>{{
@@ -522,29 +510,31 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * @brief ovrHandPoseStates
          *
          * The most recent calculated pose for each hand when hand controller
-         * tracking is present. HandPoses[ovrHand_Left] refers to the left hand
-         * and HandPoses[ovrHand_Right] to the right hand.
-         * These values can be combined with the result of @ref pollController()
-         * with @ref ControllerType::Touch for complete hand controller information.
+         * tracking is present. `HandPoses[ovrHand_Left]` refers to the left
+         * hand and `HandPoses[ovrHand_Right]` to the right hand. These values
+         * can be combined with the result of @ref pollController() with
+         * @ref ControllerType::Touch for complete hand controller information.
          */
         const ovrPoseStatef* ovrHandPoseStates() const { return _trackingState.HandPoses; }
 
         /**
          * @brief Re-centers the sensor position and orientation.
          *
-         * This resets the (x,y,z) positional components and the yaw orientation
-         * component. The Roll and pitch orientation components are always determined by
-         * gravity and cannot be redefined. All future tracking will report values
-         * relative to this new reference position.
-         * If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose
-         * after this, because the sensor position(s) will change as a result of this.
+         * This resets the (x,y,z) positional components and the yaw
+         * orientation component. The Roll and pitch orientation components are
+         * always determined by gravity and cannot be redefined. All future
+         * tracking will report values relative to this new reference position.
+         * If you are using `ovrTrackerPoses` then you will need to call
+         * `ovr_GetTrackerPose` after this, because the sensor position(s) will
+         * change as a result of this.
          *
-         * The headset cannot be facing vertically upward or downward but rather must be
-         * roughly level otherwise this function will fail with
+         * The headset cannot be facing vertically upward or downward but
+         * rather must be roughly level otherwise this function will fail with
          * @ref OvrIntegration::Error::InvalidHeadsetOrientation.
          *
-         * For more info, see the notes on each ovrTrackingOrigin enumeration to understand how
-         * recenter will vary slightly in its behavior based on the current ovrTrackingOrigin setting.
+         * For more info, see the notes on each `ovrTrackingOrigin` enumeration
+         * to understand how recenter will vary slightly in its behavior based
+         * on the current ovrTrackingOrigin setting.
          */
         void recenterTrackingOrigin() const {
             ovr_RecenterTrackingOrigin(_session);
@@ -553,8 +543,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Sets the tracking origin type
          *
-         * When the tracking origin is changed, all of the calls that either provide
-         * or accept ovrPosef will use the new tracking origin provided.
+         * When the tracking origin is changed, all of the calls that either
+         * provide or accept ovrPosef will use the new tracking origin provided.
          */
         void setTrackingOrigin(TrackingOrigin origin) const {
             ovr_SetTrackingOriginType(_session, ovrTrackingOrigin(origin));
@@ -563,9 +553,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
          *
-         * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing further recenter
-         * requests to be detected. Since this is automatically done by @ref Session::recenterTrackingOrigin(),
-         * this is only needs to be called when application is doing its own re-centering.
+         * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing
+         * further recenter requests to be detected. Since this is
+         * automatically done by @ref Session::recenterTrackingOrigin(), this
+         * is only needs to be called when application is doing its own
+         * re-centering.
          */
         void clearShouldRecenterFlag() const {
             ovr_ClearShouldRecenterFlag(_session);
@@ -596,11 +588,13 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Set debug HUD Setero Mode
          *
-         * Debug HUD is provided to help developers gauge and debug the fidelity of their app's
-         * stereo rendering characteristics. Using the provided quad and crosshair guides,
-         * the developer can verify various aspects such as VR tracking units (e.g. meters),
-         * stereo camera-parallax properties (e.g. making sure objects at infinity are rendered
-         * with the proper separation), measuring VR geometry sizes and distances and more.
+         * Debug HUD is provided to help developers gauge and debug the
+         * fidelity of their app's stereo rendering characteristics. Using the
+         * provided quad and crosshair guides, the developer can verify various
+         * aspects such as VR tracking units (e.g. meters), stereo
+         * camera-parallax properties (e.g. making sure objects at infinity are
+         * rendered with the proper separation), measuring VR geometry sizes
+         * and distances and more.
          */
         void setDebugHudStereoMode(DebugHudStereoMode mode) const;
 

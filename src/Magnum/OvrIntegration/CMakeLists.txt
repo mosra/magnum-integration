@@ -3,8 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
 #             Vladimír Vondruš <mosra@centrum.cz>
-#   Copyright © 2015, 2016
-#             Jonathan Hale <squareys@googlemail.com>
+#   Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -66,5 +65,5 @@ if(BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 
-# Magnum Bullet integration target alias for superprojects
+# Magnum OVR integration target alias for superprojects
 add_library(MagnumIntegration::Ovr ALIAS MagnumOvrIntegration)
