@@ -8,10 +8,6 @@ clone_depth: 1
 
 os: Visual Studio 2015
 
-environment:
-  matrix:
-  - BUILD_STATIC: OFF
-
 notifications:
 - provider: Webhook
   url: https://webhooks.gitter.im/e/415ae90928ba0dbd3df4
@@ -35,7 +31,7 @@ install:
 - cd corrade
 - mkdir build
 - cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DBUILD_STATIC=%BUILD_STATIC% -G Ninja
+- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -G Ninja
 - cmake --build .
 - cmake --build . --target install
 - cd ..
@@ -46,7 +42,7 @@ install:
 - cd magnum
 - mkdir build
 - cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_AUDIO=OFF -DWITH_DEBUGTOOLS=OFF -DWITH_PRIMITIVES=OFF -DWITH_SCENEGRAPH=ON -DWITH_SHADERS=OFF -DWITH_SHAPES=OFF -DWITH_TEXT=OFF -DWITH_TEXTURETOOLS=OFF -DBUILD_STATIC=%BUILD_STATIC% -G Ninja
+- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_AUDIO=OFF -DWITH_DEBUGTOOLS=OFF -DWITH_PRIMITIVES=OFF -DWITH_SCENEGRAPH=ON -DWITH_SHADERS=OFF -DWITH_SHAPES=OFF -DWITH_TEXT=OFF -DWITH_TEXTURETOOLS=OFF -G Ninja
 - cmake --build .
 - cmake --build . --target install
 - cd ..
@@ -55,7 +51,7 @@ install:
 build_script:
 - mkdir build
 - cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_OVR=ON -DBUILD_TESTS=ON -DBUILD_STATIC=%BUILD_STATIC% -G Ninja
+- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_OVR=ON -DBUILD_TESTS=ON -G Ninja
 - cmake --build .
 - cmake --build . --target install
 - cmake . -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/Deploy -DBUILD_TESTS=OFF
