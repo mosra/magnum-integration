@@ -58,6 +58,9 @@ endif()
 
 if(BUILD_TESTS)
     find_package(Corrade REQUIRED TestSuite)
+    if(CORRADE_TARGET_IOS)
+        set(CORRADE_TESTSUITE_BUNDLE_IDENTIFIER_PREFIX "cz.mosra.magnum-integration")
+    endif()
     enable_testing()
 endif()
 
