@@ -372,27 +372,24 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         std::unique_ptr<TextureSwapChain> createTextureSwapChain(const Vector2i& size);
 
         /**
-         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
-         *
-         * Returns array of two DualQuaternions describing tranformation and
-         * orientation of each eye.
+         * @brief Get the current tracked head pose as a PoseState.
          */
         const PoseState& headPoseState() const {
             return PoseState::wrap(_trackingState.HeadPose);
         }
 
         /**
-         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         * @brief The pose of the origin captured during calibration.
          *
-         * Returns array of two DualQuaternions describing tranformation and
-         * orientation of each eye.
+         * Returns the origin of recentered space. As long as @ref Session::recenterTrackingOrigin()
+         * has not been called, this method returns an identity transformation.
          */
         DualQuaternion calibratedOrigin() const {
             return DualQuaternion(_trackingState.CalibratedOrigin);
         }
 
         /**
-         * @brief Get translation for the eyes from the head pose of last @ref pollEyePoses()
+         * @brief Get transformation for the eyes since last @ref Session::pollEyePoses() call
          *
          * Returns array of two DualQuaternions describing tranformation and
          * orientation of each eye.
@@ -402,10 +399,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         }
 
         /**
-         * @brief Get the current translation for the eyes from the head pose tracked by the HMD
+         * @brief Get the transformation of hand trackers since last @ref Session::pollTrackers() call
          *
-         * Returns array of two DualQuaternions describing tranformation and
-         * orientation of each eye.
+         * Returns array of two PoseStates describing tranformation and
+         * orientation of each hand. The first referring to the left hand,
+         * the second referring to the right hand.
          */
         std::array<std::reference_wrapper<const PoseState>, 2> handPoseStates() const {
             return std::array<std::reference_wrapper<const PoseState>, 2>{{
