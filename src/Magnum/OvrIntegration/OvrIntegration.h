@@ -41,7 +41,6 @@ class Compositor;
 class Layer;
 class LayerEyeFov;
 class LayerQuad;
-class TimewarpProjectionDescription;
 
 enum class StatusFlag: Int;
 enum class HmdType: Int;

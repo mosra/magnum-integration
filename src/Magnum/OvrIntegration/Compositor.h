@@ -202,21 +202,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
         LayerEyeFov& setFov(const Session& session);
 };
 
-/** @brief Timewarp projection description */
-class MAGNUM_OVRINTEGRATION_EXPORT TimewarpProjectionDescription {
-    public:
-        /** @brief Constructor */
-        explicit TimewarpProjectionDescription(const Matrix4& projectionMatrix);
-
-        /** @brief Corresponding `ovrTimewarpProjectionDesc` */
-        const ::ovrTimewarpProjectionDesc& ovrTimewarpProjectionDesc() const {
-            return _projectionDesc;
-        }
-
-    private:
-        ::ovrTimewarpProjectionDesc _projectionDesc;
-};
-
 /** @brief Wrapper around `ovrLayerQuad` */
 class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
     public:

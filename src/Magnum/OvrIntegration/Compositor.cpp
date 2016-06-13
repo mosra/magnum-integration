@@ -77,11 +77,6 @@ LayerEyeFov& LayerEyeFov::setFov(const Session& session) {
     return *this;
 }
 
-TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& projectionMatrix) {
-    _projectionDesc = ovrTimewarpProjectionDesc_FromProjection(
-                ovrMatrix4f(projectionMatrix), ovrProjection_ClipRangeOpenGL);
-}
-
 LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {}
 
 LayerQuad& LayerQuad::setColorTexture(const TextureSwapChain& swapChain) {
