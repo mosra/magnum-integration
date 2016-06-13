@@ -189,17 +189,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
 
         /**
          * @brief Set the render pose
-         * @param hmd           HMD to get the render pose from
+         * @param session       to get the render pose from
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setRenderPoses(const Session& hmd);
+        LayerEyeFov& setRenderPoses(const Session& session);
 
         /**
          * @brief Set fov for this layer
-         * @param hmd           HMD to get the default eye fov to set to
+         * @param session       to get the default eye fov from
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setFov(const Session& hmd);
+        LayerEyeFov& setFov(const Session& session);
 };
 
 /** @brief Timewarp projection description */
@@ -278,7 +278,7 @@ Vector2i textureSize[2] = // ...
 
 // setup compositor layers
 LayerEyeFov& layer = Context::get().compositor().addLayerEyeFov();
-layer.setFov(hmd.get());
+layer.setFov(session.get());
 layer.setHighQuality(true);
 
 for(Int eye = 0; eye < 2; ++eye) {
@@ -291,9 +291,9 @@ After that you need to render every frame by first rendering to the texture
 swap chains and then submitting the compositor frame via @ref Compositor::submitFrame().
 
 @code
-layer.setRenderPoses(hmd);
+layer.setRenderPoses(session);
 
-Context::get().compositor().submitFrame(hmd);
+Context::get().compositor().submitFrame(session);
 @endcode
 
 @see @ref Session, @ref TextureSwapChain, @ref Context::compositor()
@@ -335,10 +335,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
 
         /**
          * @brief Submit the frame to the compositor
-         * @param hmd       HMD to render to
+         * @param session Session of the HMD to render to
          * @return Reference to self (for method chaining)
          */
-        Compositor& submitFrame(Session& hmd);
+        Compositor& submitFrame(Session& session);
 
     private:
         explicit Compositor();

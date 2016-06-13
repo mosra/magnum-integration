@@ -99,8 +99,8 @@ Texture2D& TextureSwapChain::activeTexture() {
     return _textures[_curIndex];
 }
 
-Session::Session(::ovrSession hmd):
-    _session(hmd),
+Session::Session(::ovrSession session):
+    _session(session),
     _hmdDesc(ovr_GetHmdDesc(_session)),
     _ovrMirrorTexture(nullptr),
     /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice

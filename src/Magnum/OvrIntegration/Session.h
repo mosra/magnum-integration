@@ -475,11 +475,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * @param proj      Projection matrix, usually created by
          *      @ref Session::projectionMatrix()
          * @param scale     Scale for the 2D plane
-         * @param distance  Distance of the plane from hmd position
+         * @param distance  Distance of the plane from HMD position
          * @return The projection matrix for eye
          *
          * Get a projection matrix which can be used for projection onto a 2D
-         * plane orthogonal to the hmds view/screen with distance from hmds
+         * plane orthogonal to the HMDs view/screen with distance from HMDs
          * position.
          * @see @ref Session::projectionMatrix()
          */

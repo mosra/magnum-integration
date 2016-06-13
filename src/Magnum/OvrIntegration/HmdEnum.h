@@ -405,7 +405,7 @@ CORRADE_ENUMSET_OPERATORS(StatusFlags)
 */
 enum class HmdStatusFlag: UnsignedByte {
     /**
-     * A mirror texture was created for the hmd and needs to be destroyed on
+     * A mirror texture was created for the HMD and needs to be destroyed on
      * destruction of the HMD
      */
     HasMirrorTexture = 1 << 0,
