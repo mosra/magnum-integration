@@ -346,7 +346,8 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType valu
 
 Flags describing the current status of sensor tracking. The values must be the
 same as in enum `StatusBits`.
-@see @ref StatusFlags, @ref Hmd::configureTracking()
+Flags describing the current status of sensor tracking.
+@see @ref StatusFlags, @ref Session::trackingState()
 */
 enum class StatusFlag: Int {
     /** Orientation is currently tracked (connected and in use) */
@@ -362,7 +363,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
 /**
 @brief Status flags
 
-@see @ref Hmd::configureTracking()
+@see @ref Session::trackingState()
 */
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 

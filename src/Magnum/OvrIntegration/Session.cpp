@@ -132,7 +132,7 @@ Vector2i Session::fovTextureSize(const Int eye) {
 
 Texture2D& Session::createMirrorTexture(const Vector2i& size) {
     CORRADE_ASSERT(!(_flags & HmdStatusFlag::HasMirrorTexture),
-           "Hmd::createMirrorTexture may only be called once, returning result of previous call.",
+           "Session::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
 
     ovrMirrorTextureDesc desc;
