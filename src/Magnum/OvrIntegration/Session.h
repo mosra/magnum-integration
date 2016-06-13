@@ -488,6 +488,19 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /** @brief Get the underlying `ovrViewScale` */
         const ::ovrViewScaleDesc& ovrViewScaleDesc() const { return _viewScale; }
 
+        /** @brief World scale (in meters per unit) */
+        Float worldScale() const { return _viewScale.HmdSpaceToWorldScaleInMeters; }
+
+        /**
+         * @brief Set world scale
+         * @param scale world scale (in meters per unit)
+         * @return Reference to self (for method chaining)
+         */
+        Session& setWorldScale(Float scale) {
+            _viewScale.HmdSpaceToWorldScaleInMeters = scale;
+            return *this;
+        }
+
         /** @brief Whether this HMD is a connection to a virtual or real device */
         bool isDebugHmd() const;
 
