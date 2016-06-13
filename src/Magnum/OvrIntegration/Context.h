@@ -34,8 +34,7 @@
 #include <Magnum/Texture.h>
 
 #include "Magnum/OvrIntegration/Compositor.h"
-#include "Magnum/OvrIntegration/Session.h" /* required for std::unique_ptr */
-#include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Session.h" /* required for std::unique_ptr<Session> */
 #include "Magnum/OvrIntegration/OvrIntegration.h"
 #include "Magnum/OvrIntegration/visibility.h"
 
@@ -175,13 +174,6 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
 
 /** @debugoperatorenum{Magnum::OvrIntegration::DetectResult} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DetectResult value);
-
-inline Error Context::error() const {
-    ovrErrorInfo info;
-    ovr_GetLastErrorInfo(&info);
-
-    return Error{ErrorType(info.Result), info.ErrorString};
-}
 
 }}
 

@@ -80,4 +80,11 @@ std::unique_ptr<Session> Context::createSession() {
     return std::unique_ptr<Session>(new Session(session));
 }
 
+Error Context::error() const {
+    ovrErrorInfo info;
+    ovr_GetLastErrorInfo(&info);
+
+    return Error{ErrorType(info.Result), info.ErrorString};
+}
+
 }}
