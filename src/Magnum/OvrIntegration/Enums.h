@@ -344,8 +344,6 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType valu
 /**
 @brief Status flag
 
-Flags describing the current status of sensor tracking. The values must be the
-same as in enum `StatusBits`.
 Flags describing the current status of sensor tracking.
 @see @ref StatusFlags, @ref Session::trackingState()
 */
