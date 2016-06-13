@@ -174,10 +174,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
         /**
          * @brief Set color texture
          * @param eye           Index of the eye the color texture is set for
-         * @param textureSet    Swap texture set to set as color texture
+         * @param swapChain     Texture swap chain to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerEyeFov& setColorTexture(Int eye, const TextureSwapChain& textureSet);
+        LayerEyeFov& setColorTexture(Int eye, const TextureSwapChain& swapChain);
 
         /**
          * @brief Set the viewport
@@ -225,10 +225,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
 
         /**
          * @brief Set color texture
-         * @param textureSet    Swap texture set to set as color texture
+         * @param swapChain     Texture swap chain to set as color texture
          * @return Reference to self (for method chaining)
          */
-        LayerQuad& setColorTexture(const TextureSwapChain& textureSet);
+        LayerQuad& setColorTexture(const TextureSwapChain& swapChain);
 
         /**
          * @brief Set the viewport

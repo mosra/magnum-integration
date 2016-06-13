@@ -271,7 +271,7 @@ A setup for such a @ref TextureSwapChain for an eye could look like this:
 @code
 const Int eye = 0; // left eye
 Vector2i textureSize = session.fovTextureSize(eye);
-std::unique_ptr<TextureSwapChain> textureSet = session.createTextureSwapChain(textureSize);
+std::unique_ptr<TextureSwapChain> swapChain = session.createTextureSwapChain(textureSize);
 
 // create the framebuffer which will be used to render to the current texture
 // of the texture chain later.
@@ -296,7 +296,7 @@ framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureChain->active
 // ... render scene
 
 // commit changes to the TextureSwapChain
-textureSet->commit();
+swapChain->commit();
 
 framebuffer.detach(Framebuffer::ColorAttachment(0))
            .detach(Framebuffer::BufferAttachment::Depth);

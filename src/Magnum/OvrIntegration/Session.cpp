@@ -71,7 +71,7 @@ TextureSwapChain::TextureSwapChain(const Session& session, const Vector2i& size)
     Int length = 0;
     ovr_GetTextureSwapChainLength(_session.ovrSession(), _textureSwapChain, &length);
 
-    /* wrap the texture set for magnum */
+    /* wrap the texture swap chain for magnum */
     _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(length)};
 
     for(UnsignedInt i = 0; i < _textures.size(); ++i) {

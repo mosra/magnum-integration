@@ -49,8 +49,8 @@ Layer& Layer::setEnabled(bool enabled) {
 
 LayerEyeFov::LayerEyeFov(): HeadLockableLayer(LayerType::EyeFov) {}
 
-LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const TextureSwapChain& textureSet) {
-    _layer.EyeFov.ColorTexture[eye] = textureSet.ovrTextureSwapChain();
+LayerEyeFov& LayerEyeFov::setColorTexture(const Int eye, const TextureSwapChain& swapChain) {
+    _layer.EyeFov.ColorTexture[eye] = swapChain.ovrTextureSwapChain();
 
     return *this;
 }
@@ -84,8 +84,8 @@ TimewarpProjectionDescription::TimewarpProjectionDescription(const Matrix4& proj
 
 LayerQuad::LayerQuad(): HeadLockableLayer(LayerType::Quad) {}
 
-LayerQuad& LayerQuad::setColorTexture(const TextureSwapChain& textureSet) {
-    _layer.Quad.ColorTexture = textureSet.ovrTextureSwapChain();
+LayerQuad& LayerQuad::setColorTexture(const TextureSwapChain& swapChain) {
+    _layer.Quad.ColorTexture = swapChain.ovrTextureSwapChain();
 
     return *this;
 }
