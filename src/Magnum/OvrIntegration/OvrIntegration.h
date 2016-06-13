@@ -59,6 +59,7 @@ enum class DebugHudStereoMode: Int;
 enum class DetectResult: UnsignedByte;
 enum class LayerHudMode: Int;
 enum class LayerType: Int;
+enum class ErrorType: Int;
 
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
