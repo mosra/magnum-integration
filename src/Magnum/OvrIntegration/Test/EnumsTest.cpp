@@ -40,7 +40,6 @@ struct EnumTest: TestSuite::Tester {
     explicit EnumTest();
 
     void hmdType();
-    void hmdTrackingCapability();
     void trackingOrigin();
     void trackerFlag();
     void button();
@@ -57,7 +56,6 @@ struct EnumTest: TestSuite::Tester {
 
 EnumTest::EnumTest() {
     addTests({&EnumTest::hmdType,
-              &EnumTest::hmdTrackingCapability,
               &EnumTest::trackingOrigin,
               &EnumTest::trackerFlag,
               &EnumTest::button,
@@ -80,16 +78,6 @@ void EnumTest::hmdType() {
     out.str("");
     Debug(&out) << HmdType(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::HmdType::(invalid)\n");
-}
-
-void EnumTest::hmdTrackingCapability() {
-    std::ostringstream out;
-    Debug(&out) << HmdTrackingCapability::Position;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::HmdTrackingCapability::Position\n");
-
-    out.str("");
-    Debug(&out) << HmdTrackingCapability(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::HmdTrackingCapability::(invalid)\n");
 }
 
 void EnumTest::trackingOrigin() {

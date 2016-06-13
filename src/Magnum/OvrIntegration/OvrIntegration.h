@@ -46,7 +46,6 @@ class TimewarpProjectionDescription;
 enum class StatusFlag: Int;
 enum class HmdType: Int;
 enum class HmdCapability: Int;
-enum class HmdTrackingCapability: Int;
 enum class Button: UnsignedInt;
 enum class Touch: UnsignedInt;
 enum class TrackingOrigin: Int;
@@ -62,7 +61,6 @@ enum class LayerType: Int;
 enum class ErrorType: Int;
 
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
-typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
 typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
 struct Buttons;
 struct Touches;

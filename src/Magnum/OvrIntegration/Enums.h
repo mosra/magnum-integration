@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::HmdTrackingCapability, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::HmdStatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::HmdStatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
+ * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::HmdStatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::HmdStatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
  */
 
 #include <memory>
@@ -81,34 +81,6 @@ enum class HmdType: Int {
 
 /** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
-
-/**
-@brief HMD tracking capability
-
-@see @ref HmdTrackingCapabilities, @ref Hmd::configureTracking()
-*/
-enum class HmdTrackingCapability: Int {
-    /** Supports orientation tracking (IMU) */
-    Orientation = ovrTrackingCap_Orientation,
-
-    /** Supports yaw drift correction via a magnetometer or other means */
-    MagYawCorrection = ovrTrackingCap_MagYawCorrection,
-
-    /** Supports positional tracking */
-    Position = ovrTrackingCap_Position,
-};
-
-/** @debugoperatorenum{Magnum::OvrIntegration::HmdTrackingCapability} */
-MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdTrackingCapability value);
-
-/**
-@brief HMD tracking capabilities
-
-@see @ref Hmd::configureTracking()
-*/
-typedef Containers::EnumSet<HmdTrackingCapability> HmdTrackingCapabilities;
-
-CORRADE_ENUMSET_OPERATORS(HmdTrackingCapabilities)
 
 /**
 @brief Tracking origin

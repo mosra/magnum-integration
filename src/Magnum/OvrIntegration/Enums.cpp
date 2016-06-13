@@ -57,18 +57,6 @@ Debug& operator<<(Debug& debug, const HmdType value) {
     return debug << "OvrIntegration::HmdType::(invalid)";
 }
 
-Debug& operator<<(Debug& debug, const HmdTrackingCapability value) {
-    switch(value) {
-        #define _c(value) case HmdTrackingCapability::value: return debug << "OvrIntegration::HmdTrackingCapability::" #value;
-        _c(Orientation)
-        _c(MagYawCorrection)
-        _c(Position)
-        #undef _c
-    }
-
-    return debug << "OvrIntegration::HmdTrackingCapability::(invalid)";
-}
-
 Debug& operator<<(Debug& debug, const TrackingOrigin value) {
     switch(value) {
         #define _c(value) case TrackingOrigin::value: return debug << "OvrIntegration::TrackingOrigin::" #value;
