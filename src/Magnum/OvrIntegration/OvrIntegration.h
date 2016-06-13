@@ -50,7 +50,6 @@ enum class Touch: UnsignedInt;
 enum class TrackingOrigin: Int;
 enum class TrackerFlag: Int;
 enum class ControllerType: Int;
-enum class HmdStatusFlag: UnsignedByte;
 enum class SessionStatusFlag: UnsignedByte;
 enum class PerformanceHudMode: Int;
 enum class DebugHudStereoMode: Int;
@@ -63,7 +62,6 @@ typedef Containers::EnumSet<StatusFlag> StatusFlags;
 typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
 struct Buttons;
 struct Touches;
-typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 typedef Containers::EnumSet<DetectResult> DetectResults;
 

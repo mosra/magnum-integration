@@ -37,6 +37,29 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+namespace Implementation {
+/**
+@brief HMD status flag
+
+@see @ref HmdStatusFlags
+*/
+enum class HmdStatusFlag: UnsignedByte {
+    /**
+     * A mirror texture was created for the HMD and needs to be destroyed on
+     * destruction of the HMD
+     */
+    HasMirrorTexture = 1 << 0,
+
+    /** The HMD was created as a debug HMD (without real hardware) */
+    Debug = ovrHmdCap_DebugDevice /* 0x0010 */
+};
+
+/** @brief HMD status flags */
+typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
+
+CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
+}
+
 Buttons InputState::buttons() const {
     return Buttons{static_cast<Button>(_state.Buttons)};
 }
@@ -105,10 +128,10 @@ Session::Session(::ovrSession session):
     _ovrMirrorTexture(nullptr),
     /* _hmdDesc.AvailableHmdCaps is either 0 or ovrHmdCap_DebugDevice
        and therefore can be simply cast to HmdStatusFlag */
-    _flags(HmdStatusFlag(_hmdDesc.AvailableHmdCaps)) {}
+    _flags(Implementation::HmdStatusFlag(_hmdDesc.AvailableHmdCaps)) {}
 
 Session::~Session() {
-    if(_flags & HmdStatusFlag::HasMirrorTexture)
+    if(_flags & Implementation::HmdStatusFlag::HasMirrorTexture)
         ovr_DestroyMirrorTexture(_session, _ovrMirrorTexture);
 
     ovr_Destroy(_session);
@@ -131,7 +154,7 @@ Vector2i Session::fovTextureSize(const Int eye) {
 }
 
 Texture2D& Session::createMirrorTexture(const Vector2i& size) {
-    CORRADE_ASSERT(!(_flags & HmdStatusFlag::HasMirrorTexture),
+    CORRADE_ASSERT(!(_flags & Implementation::HmdStatusFlag::HasMirrorTexture),
            "Session::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
 
@@ -209,7 +232,7 @@ SessionStatusFlags Session::sessionStatus() const {
 }
 
 bool Session::isDebugHmd() const {
-    return (_flags & HmdStatusFlag::Debug) != HmdStatusFlags{};
+    return (_flags & Implementation::HmdStatusFlag::Debug) != Implementation::HmdStatusFlags{};
 }
 
 void Session::setPerformanceHudMode(const PerformanceHudMode mode) const {

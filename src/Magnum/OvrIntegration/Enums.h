@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::HmdStatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::HmdStatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
+ * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
  */
 
 #include <memory>
@@ -366,27 +366,6 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
 typedef Containers::EnumSet<StatusFlag> StatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(StatusFlags)
-
-/**
-@brief HMD status flag
-
-@see @ref HmdStatusFlags
-*/
-enum class HmdStatusFlag: UnsignedByte {
-    /**
-     * A mirror texture was created for the HMD and needs to be destroyed on
-     * destruction of the HMD
-     */
-    HasMirrorTexture = 1 << 0,
-
-    /** The HMD was created as a debug HMD (without real hardware) */
-    Debug = ovrHmdCap_DebugDevice /* 0x0010 */
-};
-
-/** @brief HMD status flags */
-typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
-
-CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
 
 /**
 @brief Session status flag

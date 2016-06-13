@@ -43,6 +43,11 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+namespace Implementation {
+    enum class HmdStatusFlag: UnsignedByte;
+    typedef Corrade::Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
+}
+
 /** @brief A full rigid body pose with first and second derivatives */
 class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
     public:
@@ -674,7 +679,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         ovrMirrorTexture _ovrMirrorTexture;
         std::unique_ptr<Texture2D> _mirrorTexture;
 
-        HmdStatusFlags _flags;
+        Implementation::HmdStatusFlags _flags;
 };
 
 }}
