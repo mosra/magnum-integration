@@ -660,7 +660,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         }
 
         /** @brief Status of the OVR session */
-        SessionStatusFlags sessionStatus() const;
+        SessionStatusFlags status() const;
 
     private:
         explicit Session(::ovrSession session);

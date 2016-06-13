@@ -218,7 +218,7 @@ Session& Session::pollController(const ControllerType types, InputState& state) 
     return *this;
 }
 
-SessionStatusFlags Session::sessionStatus() const {
+SessionStatusFlags Session::status() const {
     ovrSessionStatus status;
     ovr_GetSessionStatus(_session, &status);
     const SessionStatusFlags none = SessionStatusFlags{};
