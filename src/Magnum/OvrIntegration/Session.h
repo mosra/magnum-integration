@@ -516,18 +516,22 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * polled eye poses.
          * @see @ref pollEyePoses()
          */
-        const ovrPosef* ovrEyePoses() const { return _ovrPoses; }
+        const Containers::StaticArrayView<2, const ovrPosef> ovrEyePoses() const {
+            return _ovrPoses;
+        }
 
         /**
          * @brief ovrHandPoseStates
          *
          * The most recent calculated pose for each hand when hand controller
-         * tracking is present. `HandPoses[ovrHand_Left]` refers to the left
-         * hand and `HandPoses[ovrHand_Right]` to the right hand. These values
+         * tracking is present. The first element refers to the left
+         * hand and the second to the right hand. These values
          * can be combined with the result of @ref pollController() with
          * @ref ControllerType::Touch for complete hand controller information.
          */
-        const ovrPoseStatef* ovrHandPoseStates() const { return _trackingState.HandPoses; }
+        const Containers::StaticArrayView<2, const ovrPoseStatef> ovrHandPoseStates() const {
+            return _trackingState.HandPoses;
+        }
 
         /**
          * @brief Re-centers the sensor position and orientation.
