@@ -25,4 +25,4 @@
 #
 
 corrade_add_test(OvrConversionTest ConversionTest.cpp LIBRARIES MagnumOvrIntegration)
-corrade_add_test(OvrEnumTest EnumTest.cpp LIBRARIES MagnumOvrIntegration)
+corrade_add_test(OvrEnumsTest EnumsTest.cpp LIBRARIES MagnumOvrIntegration)

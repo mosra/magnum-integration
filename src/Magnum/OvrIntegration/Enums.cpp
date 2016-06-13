@@ -24,7 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Enums.h"
 
 namespace Magnum { namespace OvrIntegration {
 

@@ -31,7 +31,7 @@
 #include <Magnum/Math/DualQuaternion.h>
 
 #include "Magnum/OvrIntegration/Session.h"
-#include "Magnum/OvrIntegration/HmdEnum.h"
+#include "Magnum/OvrIntegration/Enums.h"
 #include "Magnum/OvrIntegration/Context.h"
 
 namespace Magnum { namespace OvrIntegration { namespace Test {

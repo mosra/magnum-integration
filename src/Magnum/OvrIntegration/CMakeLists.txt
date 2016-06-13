@@ -37,12 +37,12 @@ set(MagnumOvrIntegration_SRCS
     Compositor.cpp
     Context.cpp
     Session.cpp
-    HmdEnum.cpp)
+    Enums.cpp)
 
 set(MagnumOvrIntegration_HEADERS
     OvrIntegration.h
     Conversion.h
-    HmdEnum.h
+    Enums.h
     Context.h
     Session.h
     Compositor.h

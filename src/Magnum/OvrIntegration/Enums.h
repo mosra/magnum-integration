@@ -1,5 +1,5 @@
-#ifndef Magnum_OvrIntegration_HmdEnum_h
-#define Magnum_OvrIntegration_HmdEnum_h
+#ifndef Magnum_OvrIntegration_Enums_h
+#define Magnum_OvrIntegration_Enums_h
 /*
     This file is part of Magnum.
 
