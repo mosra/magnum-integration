@@ -96,12 +96,11 @@ enum class TrackingOrigin: Int {
      * the height of the floor. Cockpit-based, or 3rd-person experiences are
      * ideal candidates.
      *
-     * When used, all poses in ovrTrackingState are reported as an offset
-     * transform from the profile calibrated or recentered HMD pose. It is
-     * recommended that apps using this origin type call
-     * @ref Session::recenterTrackingOrigin() prior to starting the VR
-     * experience, but notify the user before doing so to make sure the user is
-     * in a comfortable pose, facing a comfortable direction.
+     * When used, all poses are reported as an offset transform from the profile
+     * calibrated or recentered HMD pose. It is recommended that apps using this
+     * origin type call @ref Session::recenterTrackingOrigin() prior to starting
+     * the VR experience, but notify the user before doing so to make sure the
+     * user is in a comfortable pose, facing a comfortable direction.
      */
     EyeLevel = ovrTrackingOrigin_EyeLevel,
 
@@ -112,11 +111,10 @@ enum class TrackingOrigin: Int {
      * floor height to match the virtual floor height, such as standing
      * experiences.
      *
-     * When used, all poses in ovrTrackingState are reported as an offset
-     * transform from the profile calibrated floor pose. Calling
-     * @ref Session::recenterTrackingOrigin() will recenter the X & Z axes as
-     * well as yaw, but the Y-axis (i.e. height) will continue to be reported
-     * using the floor height as the origin for all poses.
+     * When used, all poses are reported as an offset transform from the profile
+     * calibrated floor pose. Calling @ref Session::recenterTrackingOrigin() will
+     * recenter the X & Z axes as well as yaw, but the Y-axis (i.e. height) will
+     * continue to be reported using the floor height as the origin for all poses.
      */
     FloorLevel = ovrTrackingOrigin_FloorLevel,
 };
@@ -135,7 +133,7 @@ enum class TrackerFlag: Int {
 
     /**
      * The sensor has a valid pose, else the pose is unavailable. This will
-     * only be set if `ovrTracker_Connected` is set.
+     * only be set if @ref Connected is set.
      */
     PoseTracked = ovrTracker_PoseTracked
 };

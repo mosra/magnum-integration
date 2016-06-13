@@ -43,13 +43,7 @@
 
 namespace Magnum { namespace OvrIntegration {
 
-/**
-@brief A full pose (rigid body) configuration with first and second derivatives
-
-Body refers to any object for which ovrPoseStatef is providing data.
-It can be the HMD, Touch controller, sensor or something else. The context
-depends on the usage of the struct.
-*/
+/** @brief A full rigid body pose with first and second derivatives */
 class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
     public:
 
@@ -491,7 +485,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /** @brief Get the underlying `ovrHmdDesc` */
         ::ovrHmdDesc ovrHmdDesc() const { return _hmdDesc; }
 
-        /** @brief Get the `ovrViewScale` */
+        /** @brief Get the underlying `ovrViewScale` */
         const ::ovrViewScaleDesc& ovrViewScaleDesc() const { return _viewScale; }
 
         /** @brief Whether this HMD is a connection to a virtual or real device */
@@ -524,17 +518,15 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * orientation component. The Roll and pitch orientation components are
          * always determined by gravity and cannot be redefined. All future
          * tracking will report values relative to this new reference position.
-         * If you are using `ovrTrackerPoses` then you will need to call
-         * `ovr_GetTrackerPose` after this, because the sensor position(s) will
-         * change as a result of this.
          *
          * The headset cannot be facing vertically upward or downward but
          * rather must be roughly level otherwise this function will fail with
          * @ref OvrIntegration::Error::InvalidHeadsetOrientation.
          *
-         * For more info, see the notes on each `ovrTrackingOrigin` enumeration
+         * For more info, see the notes on each @ref TrackingOrigin enumeration
          * to understand how recenter will vary slightly in its behavior based
-         * on the current ovrTrackingOrigin setting.
+         * on the current tracking origin setting, see
+         * @ref Session::setTrackingOrigin(TrackingOrigin).
          */
         void recenterTrackingOrigin() const {
             ovr_RecenterTrackingOrigin(_session);
@@ -553,7 +545,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
          *
-         * Clears the ShouldRecenter status bit in ovrSessionStatus, allowing
+         * Clears the ShouldRecenter status bit in the session status, allowing
          * further recenter requests to be detected. Since this is
          * automatically done by @ref Session::recenterTrackingOrigin(), this
          * is only needs to be called when application is doing its own
