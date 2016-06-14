@@ -199,7 +199,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             endforeach()
         endif()
 
-        # Decide if the plugin was found
+        # Decide if the library was found
         if(_component MATCHES ${_MAGNUMINTEGRATION_LIBRARY_COMPONENTS} AND _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR AND (MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE))
             set(MagnumIntegration_${_component}_FOUND TRUE)
         else()
