@@ -46,8 +46,8 @@ namespace Magnum { namespace OvrIntegration {
 @see @ref Context::error()
 */
 struct Error {
-    ErrorType type;         /**< @brief Error type */
-    std::string message;    /**< @brief Error message */
+    ErrorType type;     /**< @brief Error type */
+    char message[512];  /**< @brief Error message */
 };
 
 /**

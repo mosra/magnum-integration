@@ -84,7 +84,11 @@ Error Context::error() const {
     ovrErrorInfo info;
     ovr_GetLastErrorInfo(&info);
 
-    return Error{ErrorType(info.Result), info.ErrorString};
+    Error err;
+    err.type = ErrorType(info.Result);
+    std::strncpy(err.message, info.ErrorString, 512);
+
+    return err;
 }
 
 }}
