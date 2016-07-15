@@ -499,17 +499,17 @@ enum class ErrorType: Int {
 
     /**
      * The headset was in an invalid orientation for the requested operation
-     * (e.g. vertically oriented during `ovr_RecenterPose`)
+     * (e.g. vertically oriented during @ref Session::recenterTrackingOrigin() )
      */
     InvalidHeadsetOrientation = ovrError_InvalidHeadsetOrientation,
 
     /**
-     * The client failed to call `ovr_Destroy` on an active session before
-     * calling `ovr_Shutdown`. Or the client crashed.
+     * The client failed to call @ref Session::~Session() on an active session before
+     * calling @ref OvrIntegration::Context::~Context(). Or the client crashed.
      */
     ClientSkippedDestroy = ovrError_ClientSkippedDestroy,
 
-    /** The client failed to call ovr_Shutdown or the client crashed */
+    /** The client failed to call @ref OvrIntegration::Context::~Context() or the client crashed */
     ClientSkippedShutdown = ovrError_ClientSkippedShutdown,
 
     /* Audio errors */
@@ -700,13 +700,13 @@ enum class ErrorType: Int {
     DisplayLost = ovrError_DisplayLost,
 
     /**
-     * `ovr_CommitTextureSwapChain` was called too many times on a texture
+     * @ref TextureSwapChain::commit() was called too many times on a texture
      * swapchain without calling submit to use the chain
      */
     TextureSwapChainFull = ovrError_TextureSwapChainFull,
 
     /**
-     * The `ovrTextureSwapChain` is in an incomplete or inconsistent state.
+     * The @ref TextureSwapChain is in an incomplete or inconsistent state.
      * Ensure @ref TextureSwapChain::commit() was called at least once first.
      */
     TextureSwapChainInvalid = ovrError_TextureSwapChainInvalid,
