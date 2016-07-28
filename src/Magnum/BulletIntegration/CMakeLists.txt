@@ -27,6 +27,13 @@
 find_package(Magnum REQUIRED SceneGraph Shapes)
 find_package(Bullet REQUIRED)
 
+if(BUILD_STATIC)
+    set(MAGNUM_BULLETINTEGRATION_BUILD_STATIC 1)
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
+
 set(MagnumBulletIntegration_SRCS
     ConvertShape.cpp
     MotionState.cpp)
@@ -42,7 +49,9 @@ set(MagnumBulletIntegration_HEADERS
 add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
     ${MagnumBulletIntegration_SRCS}
     ${MagnumBulletIntegration_HEADERS})
-target_include_directories(MagnumBulletIntegration PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(MagnumBulletIntegration PUBLIC
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_BINARY_DIR}/src)
 # Silence pedantic warnings in Bullet headers
 target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
 set_target_properties(MagnumBulletIntegration PROPERTIES DEBUG_POSTFIX "-d")
@@ -60,6 +69,7 @@ install(TARGETS MagnumBulletIntegration
     LIBRARY DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR})
 install(FILES ${MagnumBulletIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/BulletIntegration)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/BulletIntegration)
 
 if(BUILD_TESTS)
     add_subdirectory(Test)

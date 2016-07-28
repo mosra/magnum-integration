@@ -1,11 +1,8 @@
-#ifndef Magnum_BulletIntegration_visibility_h
-#define Magnum_BulletIntegration_visibility_h
 /*
     This file is part of Magnum.
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -26,19 +23,4 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <Corrade/Utility/VisibilityMacros.h>
-
-#include "Magnum/BulletIntegration/configure.h"
-
-#ifndef MAGNUM_BULLETINTEGRATION_BUILD_STATIC
-    #ifdef MagnumBulletIntegration_EXPORTS
-        #define MAGNUM_BULLETINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
-    #else
-        #define MAGNUM_BULLETINTEGRATION_EXPORT CORRADE_VISIBILITY_IMPORT
-    #endif
-#else
-    #define MAGNUM_BULLETINTEGRATION_EXPORT CORRADE_VISIBILITY_STATIC
-#endif
-#define MAGNUM_BULLETINTEGRATION_LOCAL CORRADE_VISIBILITY_LOCAL
-
-#endif
+#cmakedefine MAGNUM_BULLETINTEGRATION_BUILD_STATIC
