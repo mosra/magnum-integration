@@ -26,6 +26,13 @@
 
 find_package(OVR REQUIRED)
 
+if(BUILD_STATIC)
+    set(MAGNUM_OVRINTEGRATION_BUILD_STATIC 1)
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
+
 set(MagnumOvrIntegration_SRCS
     Compositor.cpp
     Context.cpp
@@ -46,7 +53,9 @@ set(MagnumOvrIntegration_HEADERS
 add_library(MagnumOvrIntegration SHARED
     ${MagnumOvrIntegration_SRCS}
     ${MagnumOvrIntegration_HEADERS})
-target_include_directories(MagnumOvrIntegration PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(MagnumOvrIntegration PUBLIC
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_BINARY_DIR}/src)
 set_target_properties(MagnumOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(BUILD_STATIC_PIC)
     set_target_properties(MagnumOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -60,6 +69,7 @@ install(TARGETS MagnumOvrIntegration
     LIBRARY DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR})
 install(FILES ${MagnumOvrIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/OvrIntegration)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/OvrIntegration)
 
 if(BUILD_TESTS)
     add_subdirectory(Test)
