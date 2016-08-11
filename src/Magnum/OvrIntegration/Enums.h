@@ -470,9 +470,6 @@ enum class ErrorType: Int {
     /** Failure to allocate memory */
     MemoryAllocationFailure = ovrError_MemoryAllocationFailure,
 
-    /** Failure to create a socket */
-    SocketCreationFailure = ovrError_SocketCreationFailure,
-
     /** Invalid ovrSession parameter provided */
     InvalidSession = ovrError_InvalidSession,
 
@@ -591,106 +588,6 @@ enum class ErrorType: Int {
     /** Failed to get the interface for an attached tracker */
     TrackerDriverInit = ovrError_TrackerDriverInit,
 
-    /* Hardware errors */
-
-    /** Headset has no bundle adjustment data */
-    InvalidBundleAdjustment = ovrError_InvalidBundleAdjustment,
-
-    /** The USB hub cannot handle the camera frame bandwidth */
-    UsbBandwidth = ovrError_USBBandwidth,
-
-    /** The USB camera is not enumerating at the correct device speed */
-    UsbEnumeratedSpeed = ovrError_USBEnumeratedSpeed,
-
-    /** Unable to communicate with the image sensor */
-    ImageSensorCommError = ovrError_ImageSensorCommError,
-
-    /**
-     * We use this to report various tracker issues that don't fit in an easily
-     * classifiable bucket.
-     */
-    GeneralTrackerFailure = ovrError_GeneralTrackerFailure,
-
-    /** A more than acceptable number of frames are coming back truncated */
-    ExcessiveFrameTruncation = ovrError_ExcessiveFrameTruncation,
-
-    /** A more than acceptable number of frames have been skipped */
-    ExcessiveFrameSkipping = ovrError_ExcessiveFrameSkipping,
-
-    /** The tracker is not receiving the sync signal (cable disconnected?) */
-    SyncDisconnected = ovrError_SyncDisconnected,
-
-    /** Failed to read memory from the tracker */
-    TrackerMemoryReadFailure = ovrError_TrackerMemoryReadFailure,
-
-    /** Failed to write memory from the tracker */
-    TrackerMemoryWriteFailure = ovrError_TrackerMemoryWriteFailure,
-
-    /** Timed out waiting for a camera frame */
-    TrackerFrameTimeout = ovrError_TrackerFrameTimeout,
-
-    /** Truncated frame returned from tracker */
-    TrackerTruncatedFrame = ovrError_TrackerTruncatedFrame,
-
-    /** The sensor driver has encountered a problem */
-    TrackerDriverFailure = ovrError_TrackerDriverFailure,
-
-    /** The sensor wireless subsystem has encountered a problem */
-    TrackerNRFFailure = ovrError_TrackerNRFFailure,
-
-    /** The hardware has been unplugged */
-    HardwareGone = ovrError_HardwareGone,
-
-    /**
-     * The nordic indicates that sync is enabled but it is not sending sync
-     * pulses.
-     */
-    NordicEnabledNoSync = ovrError_NordicEnabledNoSync,
-
-    /**
-     * It looks like we're getting a sync signal, but no camera frames have
-     * been received.
-     */
-    NordicSyncNoFrames = ovrError_NordicSyncNoFrames,
-
-    /**
-     * A catastrophic failure has occurred.  We will attempt to recover by
-     * resetting the device.
-     */
-    CatastrophicFailure = ovrError_CatastrophicFailure,
-
-    /** The HMD firmware is out of date and is unacceptable */
-    HmdFirmwareMismatch = ovrError_HMDFirmwareMismatch,
-
-    /** The tracker firmware is out of date and is unacceptable */
-    TrackerFirmwareMismatch = ovrError_TrackerFirmwareMismatch,
-
-    /** A bootloader HMD is detected by the service */
-    BootloaderDeviceDetected = ovrError_BootloaderDeviceDetected,
-
-    /** The tracker calibration is missing or incorrect */
-    TrackerCalibrationError = ovrError_TrackerCalibrationError,
-
-    /** The controller firmware is out of date and is unacceptable */
-    ControllerFirmwareMismatch = ovrError_ControllerFirmwareMismatch,
-
-    /** Too many lost IMU samples */
-    IMUTooManyLostSamples = ovrError_IMUTooManyLostSamples,
-
-    /** IMU rate is outside of the expected range */
-    IMURateError = ovrError_IMURateError,
-
-    /** A feature report has failed */
-    FeatureReportFailure = ovrError_FeatureReportFailure,
-
-    /* Synchronization errors */
-
-    /** Requested async work not yet complete. */
-    Incomplete = ovrError_Incomplete,
-
-    /** Requested async work was abandoned and result is incomplete */
-    Abandoned = ovrError_Abandoned,
-
     /* Rendering errors */
 
     /**
@@ -719,40 +616,6 @@ enum class ErrorType: Int {
      */
     RuntimeException = ovrError_RuntimeException,
 
-    /* Metrics */
-
-    /** Metrics unknown app */
-    MetricsUnknownApp = ovrError_MetricsUnknownApp,
-
-    /** Metrics duplicate app */
-    MetricsDuplicateApp = ovrError_MetricsDuplicateApp,
-
-    /** Metrics no events */
-    MetricsNoEvents = ovrError_MetricsNoEvents,
-
-    /** Metrics runtime */
-    MetricsRuntime = ovrError_MetricsRuntime,
-
-    /** Metrics file */
-    MetricsFile  = ovrError_MetricsFile,
-
-    /** Metrics no client info */
-    MetricsNoClientInfo = ovrError_MetricsNoClientInfo,
-
-    /** Metrics no app meta data */
-    MetricsNoAppMetaData = ovrError_MetricsNoAppMetaData,
-
-    /** Metrics no app */
-    MetricsNoApp = ovrError_MetricsNoApp,
-
-    /** Metrics oaf failure */
-    MetricsOafFailure = ovrError_MetricsOafFailure,
-
-    /** Metrics session already active */
-    MetricsSessionAlreadyActive = ovrError_MetricsSessionAlreadyActive,
-
-    /** Metrics session not active */
-    MetricsSessionNotActive = ovrError_MetricsSessionNotActive,
 };
 
 /** @debugoperatorenum{Magnum::OvrIntegration::ErrorType} */
