@@ -50,7 +50,7 @@ set(MagnumOvrIntegration_HEADERS
     visibility.h)
 
 # OvrIntegration library
-add_library(MagnumOvrIntegration SHARED
+add_library(MagnumOvrIntegration ${SHARED_OR_STATIC}
     ${MagnumOvrIntegration_SRCS}
     ${MagnumOvrIntegration_HEADERS})
 target_include_directories(MagnumOvrIntegration PUBLIC
