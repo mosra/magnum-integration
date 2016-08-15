@@ -36,16 +36,16 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
 set(MagnumOvrIntegration_SRCS
     Compositor.cpp
     Context.cpp
-    Session.cpp
-    Enums.cpp)
+    Enums.cpp
+    Session.cpp)
 
 set(MagnumOvrIntegration_HEADERS
-    OvrIntegration.h
+    Compositor.h
+    Context.h
     Conversion.h
     Enums.h
-    Context.h
+    OvrIntegration.h
     Session.h
-    Compositor.h
 
     visibility.h)
 
