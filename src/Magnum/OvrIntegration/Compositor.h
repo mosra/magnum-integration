@@ -189,14 +189,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerEyeFov: public HeadLockableLayer {
 
         /**
          * @brief Set the render pose
-         * @param session       to get the render pose from
+         * @param session       Session to get the render pose from
          * @return Reference to self (for method chaining)
          */
         LayerEyeFov& setRenderPoses(const Session& session);
 
         /**
          * @brief Set fov for this layer
-         * @param session       to get the default eye fov from
+         * @param session       Session to get the default eye fov from
          * @return Reference to self (for method chaining)
          */
         LayerEyeFov& setFov(const Session& session);
@@ -320,7 +320,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
 
         /**
          * @brief Submit the frame to the compositor
-         * @param session Session of the HMD to render to
+         * @param session       Session of the HMD to render to
          * @return Reference to self (for method chaining)
          */
         Compositor& submitFrame(Session& session);

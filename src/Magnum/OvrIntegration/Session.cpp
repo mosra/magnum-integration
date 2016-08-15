@@ -38,6 +38,7 @@
 namespace Magnum { namespace OvrIntegration {
 
 namespace Implementation {
+
 /**
 @brief HMD status flag
 
@@ -58,6 +59,7 @@ enum class HmdStatusFlag: UnsignedByte {
 typedef Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(HmdStatusFlags)
+
 }
 
 Buttons InputState::buttons() const {
