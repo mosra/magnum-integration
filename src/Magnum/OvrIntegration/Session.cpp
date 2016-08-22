@@ -85,6 +85,7 @@ TextureSwapChain::TextureSwapChain(const Session& session, const Vector2i& size)
     desc.SampleCount = 1;
     desc.StaticImage = ovrFalse;
     desc.MiscFlags = ovrTextureMisc_None;
+    desc.BindFlags = ovrTextureBind_None;
 
     ovrResult result = ovr_CreateTextureSwapChainGL(_session.ovrSession(), &desc, &_textureSwapChain);
 
