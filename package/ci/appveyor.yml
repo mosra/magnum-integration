@@ -1,12 +1,19 @@
 # kate: indent-width 2;
 
-version: '{branch}-{build}'
-
-skip_tags: true
-shallow_clone: true
 clone_depth: 1
 
 os: Visual Studio 2015
+
+environment:
+  matrix:
+  - TARGET: desktop
+    COMPILER: msvc
+  - TARGET: desktop
+    COMPILER: mingw
+  - TARGET: rt
+    TARGET_GLES2: ON
+  - TARGET: rt
+    TARGET_GLES2: OFF
 
 notifications:
 - provider: Webhook
@@ -16,56 +23,18 @@ notifications:
   on_build_status_changed: true
 
 install:
-- call "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/vcvarsall.bat"
-- set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
-
-# Ninja
 - cinst ninja
+- set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" cinst mingw /f >nul
 
 # OVR SDK
-- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.3.0_public.zip appveyor DownloadFile http://static.oculus.com/sdk-downloads/1.3.0/Public/1459135039/ovr_sdk_win_1.3.0_public.zip
-- 7z x ovr_sdk_win_1.3.0_public.zip -oC:/Sys
+- IF "%TARGET%" == "desktop" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.3.0_public.zip appveyor DownloadFile http://static.oculus.com/sdk-downloads/1.3.0/Public/1459135039/ovr_sdk_win_1.3.0_public.zip
+- IF "%TARGET%" == "desktop" 7z x ovr_sdk_win_1.3.0_public.zip -o%APPVEYOR_BUILD_FOLDER%\deps
 
-# Corrade
-- git clone --depth 1 git://github.com/mosra/corrade.git
-- cd corrade
-- mkdir build
-- cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -G Ninja
-- cmake --build .
-- cmake --build . --target install
-- cd ..
-- cd ..
-
-# Magnum
-- git clone --depth 1 git://github.com/mosra/magnum.git
-- cd magnum
-- mkdir build
-- cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_AUDIO=OFF -DWITH_DEBUGTOOLS=OFF -DWITH_PRIMITIVES=OFF -DWITH_SCENEGRAPH=ON -DWITH_SHADERS=OFF -DWITH_SHAPES=OFF -DWITH_TEXT=OFF -DWITH_TEXTURETOOLS=OFF -G Ninja
-- cmake --build .
-- cmake --build . --target install
-- cd ..
-- cd ..
+build_script:
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" call package\ci\appveyor-desktop.bat
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" call package\ci\appveyor-desktop-mingw.bat
+- IF "%TARGET%" == "rt" call package\ci\appveyor-rt.bat
 
 cache:
 - ovr_sdk_win_1.3.0_public.zip
-
-build_script:
-- mkdir build
-- cd build
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/Sys -DWITH_OVR=ON -DBUILD_TESTS=ON -G Ninja
-- cmake --build .
-- cmake --build . --target install
-- cmake . -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/Deploy -DBUILD_TESTS=OFF
-- cmake --build . --target install
-- cd ../Deploy
-- 7z a ../magnum-integration.zip *
-
-test_script:
-- cd %APPVEYOR_BUILD_FOLDER%/build
-- SET fail=0
-- ctest --output-on-failure || SET fail=1 & ver > nul
-- cd %APPVEYOR_BUILD_FOLDER%
-- appveyor PushArtifact magnum-integration.zip
-- exit %fail%
