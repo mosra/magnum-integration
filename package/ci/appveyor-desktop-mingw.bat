@@ -38,12 +38,16 @@ cmake --build . --target install -- -j || exit /b
 cd .. && cd ..
 
 rem Build
+rem For MinGW it's not possible to use the OVR SDK directly, the Oculus Runtime
+rem is needed to be installed, but that's apparently not possible from a
+rem command-line so I'm just disabling it.
+rem https://forums.oculus.com/community/discussion/18303/silent-installation-of-oculus-runtime-windows
 mkdir build && cd build || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DWITH_BULLET=OFF ^
-    -DWITH_OVR=ON ^
+    -DWITH_OVR=OFF ^
     -DBUILD_TESTS=ON ^
     -DBUILD_GL_TESTS=ON ^
     -G "MinGW Makefiles" || exit /b
