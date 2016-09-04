@@ -27,6 +27,8 @@ namespace Magnum {
 /** @page cmake-integration Integration library usage with CMake
 @brief Guide how to find and use Magnum integration libraries with CMake build system
 
+@tableofcontents
+
 The logic is in module `FindMagnumIntegration.cmake` distributed in integration
 repository in `modules/` directory, you are encouraged to copy it into your
 project and add path to the files to `CMAKE_MODULE_PATH`. Otherwise, if CMake
@@ -80,6 +82,15 @@ are included just for backwards compatibility and only if
     target. Use `MagnumIntegration::*` target directly instead.
 
 See also @ref cmake "Magnum usage with CMake" for more information.
+
+@section cmake-integration-modules Other CMake modules
+
+The `modules/` directory contains more useful CMake modules:
+
+-   `FindOVR.cmake` -- CMake module for finding the OVR SDK. Copy this to your
+    module directory if you want to use the @ref OvrIntegration library.
+
+See also @ref cmake-modules "relevant section for the main Magnum project".
 
 */
 }
