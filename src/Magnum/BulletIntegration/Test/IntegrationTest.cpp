@@ -4,6 +4,7 @@
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
+    Copyright © 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -24,10 +25,12 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 
 #include "Magnum/Magnum.h"
 #include "Magnum/BulletIntegration/Integration.h"
+#include "Magnum/BulletIntegration/DebugDraw.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
 
@@ -37,12 +40,14 @@ typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
+    void debugDrawMode();
     void vector();
     void matrix();
 };
 
 IntegrationTest::IntegrationTest() {
-    addTests({&IntegrationTest::vector,
+    addTests({&IntegrationTest::debugDrawMode,
+              &IntegrationTest::vector,
               &IntegrationTest::matrix});
 }
 
@@ -53,6 +58,16 @@ void IntegrationTest::vector() {
     CORRADE_COMPARE(Vector3{b}, a);
     /* Clang can't handle {} (huh?) */
     CORRADE_VERIFY(btVector3(a) == b);
+}
+
+void IntegrationTest::debugDrawMode() {
+    std::ostringstream out;
+    Debug(&out) << DebugDraw::Mode::DrawAabb;
+    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb\n");
+
+    out.str("");
+    Debug(&out) << DebugDraw::Mode(-1);
+    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::(invalid)\n");
 }
 
 void IntegrationTest::matrix() {
