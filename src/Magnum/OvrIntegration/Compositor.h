@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::Layer, @ref Magnum::OvrIntegration::HeadLockableLayer, @ref Magnum::OvrIntegration::LayerEyeFov, @ref Magnum::OvrIntegration::TimewarpProjectionDescription, @ref Magnum::OvrIntegration::LayerQuad, @ref Magnum::OvrIntegration::Compositor, enum @ref Magnum::OvrIntegration::LayerType
+ * @brief Class @ref Magnum::OvrIntegration::Layer, @ref Magnum::OvrIntegration::HeadLockableLayer, @ref Magnum::OvrIntegration::LayerEyeFov, @ref Magnum::OvrIntegration::LayerQuad, @ref Magnum::OvrIntegration::Compositor, enum @ref Magnum::OvrIntegration::LayerType
  */
 
 #include <memory>

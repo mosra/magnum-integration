@@ -546,7 +546,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * For more info, see the notes on each @ref TrackingOrigin enumeration
          * to understand how recenter will vary slightly in its behavior based
          * on the current tracking origin setting, see
-         * @ref Session::setTrackingOrigin(TrackingOrigin).
+         * @ref setTrackingOrigin().
          */
         void recenterTrackingOrigin() const {
             ovr_RecenterTrackingOrigin(_session);

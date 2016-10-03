@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::HmdTrackingCapabilities, @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
+ * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
  */
 
 #include <memory>
@@ -133,7 +133,7 @@ enum class TrackerFlag: Int {
 
     /**
      * The sensor has a valid pose, else the pose is unavailable. This will
-     * only be set if @ref Connected is set.
+     * only be set if @ref TrackerFlag::Connected is set.
      */
     PoseTracked = ovrTracker_PoseTracked
 };
@@ -370,7 +370,7 @@ CORRADE_ENUMSET_OPERATORS(StatusFlags)
 /**
 @brief Session status flag
 
-@see @ref SessionStatusFlags, @ref Session::sessionStatus()
+@see @ref SessionStatusFlags, @ref Session::status()
 */
 enum class SessionStatusFlag: UnsignedByte {
     /** Set when the process has VR focus and thus is visible in the HMD */
@@ -398,7 +398,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag v
 /**
 @brief Session status flags
 
-@see @ref Session::sessionStatus()
+@see @ref Session::status()
 */
 typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
@@ -496,17 +496,17 @@ enum class ErrorType: Int {
 
     /**
      * The headset was in an invalid orientation for the requested operation
-     * (e.g. vertically oriented during @ref Session::recenterTrackingOrigin() )
+     * (e.g. vertically oriented during @ref Session::recenterTrackingOrigin())
      */
     InvalidHeadsetOrientation = ovrError_InvalidHeadsetOrientation,
 
     /**
-     * The client failed to call @ref Session::~Session() on an active session before
-     * calling @ref OvrIntegration::Context::~Context(). Or the client crashed.
+     * The client failed to destroy @ref Session on an active session  before
+     * destroying @ref Context. Or the client crashed.
      */
     ClientSkippedDestroy = ovrError_ClientSkippedDestroy,
 
-    /** The client failed to call @ref OvrIntegration::Context::~Context() or the client crashed */
+    /** The client failed to destroy @ref Context or the client crashed */
     ClientSkippedShutdown = ovrError_ClientSkippedShutdown,
 
     /* Audio errors */
