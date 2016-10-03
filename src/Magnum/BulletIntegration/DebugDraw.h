@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Implementation of @ref btIDebugDraw for physics visualization in bullet
+ * @brief Implementation of `btIDebugDraw` for physics visualization in Bullet
  */
 
 #include <vector>
@@ -40,7 +40,7 @@
 #include <Magnum/Mesh.h>
 #include <Magnum/Shaders/VertexColor.h>
 
-#include <bullet/LinearMath/btIDebugDraw.h>
+#include <LinearMath/btIDebugDraw.h>
 
 #include "Magnum/BulletIntegration/Integration.h"
 
@@ -49,8 +49,8 @@ namespace Magnum { namespace BulletIntegration {
 /**
 @brief Bullet physics debug visualization
 
-This class implements @ref btIDebugDraw, which allows rendering a visualization
-of a bullet physics world for debugging purposes.
+This class implements `btIDebugDraw`, which allows rendering a visualization
+of a Bullet physics world for debugging purposes.
 
 ## Usage
 
@@ -63,7 +63,7 @@ btWorld->setDebugDrawer(&debugDraw);
 
 // Per frame call:
 
-debugDraw.setViewProjectionMatrix(projection*view);
+debugDraw.setTransformationProjectionMatrix(projection*view*transformation);
 btWorld->debugDrawWorld();
 @endcode
 */
@@ -91,6 +91,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             DrawFrames = DBG_DrawFrames,                /**< Draw frames */
         };
 
+        /** @brief Debug draw mode flags */
         typedef Containers::EnumSet<Mode> Modes;
 
         /**
@@ -100,65 +101,50 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
          *
          * Sets up @ref Shaders::VertexColor3D, @ref Buffer and @ref Mesh for physics debug rendering.
          */
-        DebugDraw(UnsignedInt initialBufferCapacity=0):
-            btIDebugDraw(),
-            _mesh{MeshPrimitive::Lines}
-        {
-            _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color{});
-            _bufferData.reserve(initialBufferCapacity*4);
-        }
-
-        /** @brief Set debug mode */
-        virtual void setDebugMode(int debugMode) override {
-            _debugMode = Mode(debugMode);
-        }
-
-        /** @overload */
-        virtual void setDebugMode(Modes debugMode) {
-            _debugMode = debugMode;
-        }
+        explicit DebugDraw(UnsignedInt initialBufferCapacity=0);
+        ~DebugDraw();
 
         /** @brief Debug mode */
-        virtual int getDebugMode() const override {
-            return Int(_debugMode);
+        Modes debugMode() const {
+            return _debugMode;
         }
 
-        /** @brief Draw a line with one color */
-        virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override {
-            drawLine(from, to, color, color);
+        /**
+         * @brief Set debug mode
+         * @return Reference to self (for method chaining)
+         */
+        DebugDraw& setDebugMode(Modes debugMode) {
+            _debugMode = debugMode;
+            return *this;
         }
 
-        /** @brief Draw a line with color gradient. */
-        virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) override;
-
-        /** @brief Draw contact point */
-        void drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int CORRADE_UNUSED lifeTime, const btVector3& color) override {
-            drawLine(pointOnB, pointOnB + normalOnB*distance, color);
-        }
-
-        /** @brief Print a warning */
-        virtual void reportErrorWarning(const char *warningString) override {
-            Warning() << "DebugDraw:" << warningString;
-        }
-
-        /** @brief Draw text */
-        virtual void draw3dText(const btVector3& CORRADE_UNUSED location, const char* CORRADE_UNUSED textString) override {
-            // TODO: Implement once debug text drawing is implemented.
-        }
-
-        /** @brief Flush lines to be drawn on screen */
-        virtual void flushLines() override;
-
-        /** @brief Set view projection matrix used for rendering */
-        DebugDraw& setViewProjectionMatrix(const Matrix4& viewProj) {
-            _viewProjectionMatrix = viewProj;
+        /** @brief Set transformation projection matrix used for rendering */
+        DebugDraw& setTransformationProjectionMatrix(const Matrix4& transProj) {
+            _transformationProjectionMatrix = transProj;
             return *this;
         }
 
     private:
+
+        void setDebugMode(int debugMode) override;
+
+        int getDebugMode() const override;
+
+        void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override;
+
+        void drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) override;
+
+        void drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int CORRADE_UNUSED lifeTime, const btVector3& color) override;
+
+        void reportErrorWarning(const char *warningString) override;
+
+        void draw3dText(const btVector3& CORRADE_UNUSED location, const char* CORRADE_UNUSED textString) override;
+
+        void flushLines() override;
+
         Modes _debugMode;
 
-        Matrix4 _viewProjectionMatrix;
+        Matrix4 _transformationProjectionMatrix;
         Shaders::VertexColor3D _shader;
 
         Buffer _buffer;

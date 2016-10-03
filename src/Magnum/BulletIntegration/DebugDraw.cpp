@@ -51,14 +51,48 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
         #undef _c
     }
 
-    return debug << "BulletIntegration::DebugDraw::Mode::(invalid)";
+    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(Int(value)) << Debug::nospace << ")";
+}
+
+DebugDraw::DebugDraw(const UnsignedInt initialBufferCapacity):
+    btIDebugDraw(),
+    _mesh{MeshPrimitive::Lines}
+{
+    _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color{});
+    _bufferData.reserve(initialBufferCapacity*4);
+}
+
+DebugDraw::~DebugDraw() = default;
+
+void DebugDraw::setDebugMode(int debugMode) {
+    _debugMode = Mode(debugMode);
+}
+
+int DebugDraw::getDebugMode() const {
+    return Int(_debugMode);
+}
+
+void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& color) {
+    drawLine(from, to, color, color);
 }
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) {
    _bufferData.push_back(Vector3(from));
-   _bufferData.push_back(Color3::from(fromColor));
+   _bufferData.push_back(Color3(fromColor));
    _bufferData.push_back(Vector3(to));
-   _bufferData.push_back(Color3::from(toColor));
+   _bufferData.push_back(Color3(toColor));
+}
+
+void DebugDraw::drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, const btScalar distance, const int, const btVector3& color) {
+    drawLine(pointOnB, pointOnB + normalOnB*distance, color);
+}
+
+void DebugDraw::reportErrorWarning(const char *warningString) {
+    Warning() << "DebugDraw:" << warningString;
+}
+
+void DebugDraw::draw3dText(const btVector3&, const char*) {
+    /** @todo Implement once debug text drawing is implemented. */
 }
 
 void DebugDraw::flushLines() {
@@ -67,7 +101,7 @@ void DebugDraw::flushLines() {
                    BufferUsage::DynamicDraw);
 
    /* Update shader and draw */
-   _shader.setTransformationProjectionMatrix(_viewProjectionMatrix);
+   _shader.setTransformationProjectionMatrix(_transformationProjectionMatrix);
    _mesh.setCount(_bufferData.size()/2)
         .draw(_shader);
 

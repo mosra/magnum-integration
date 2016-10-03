@@ -51,6 +51,13 @@ IntegrationTest::IntegrationTest() {
               &IntegrationTest::matrix});
 }
 
+void IntegrationTest::debugDrawMode() {
+    std::ostringstream out;
+
+    Debug(&out) << DebugDraw::Mode::DrawAabb << DebugDraw::Mode(0xbaadcafe);
+    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
+}
+
 void IntegrationTest::vector() {
     Vector3 a{1.0f, 2.0f, 3.0f};
     btVector3 b{1.0f, 2.0f, 3.0f};
@@ -58,16 +65,6 @@ void IntegrationTest::vector() {
     CORRADE_COMPARE(Vector3{b}, a);
     /* Clang can't handle {} (huh?) */
     CORRADE_VERIFY(btVector3(a) == b);
-}
-
-void IntegrationTest::debugDrawMode() {
-    std::ostringstream out;
-    Debug(&out) << DebugDraw::Mode::DrawAabb;
-    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb\n");
-
-    out.str("");
-    Debug(&out) << DebugDraw::Mode(-1);
-    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::(invalid)\n");
 }
 
 void IntegrationTest::matrix() {
