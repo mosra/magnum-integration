@@ -24,7 +24,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED SceneGraph Shapes)
+find_package(Magnum REQUIRED SceneGraph Shapes Shaders)
 find_package(Bullet REQUIRED)
 
 if(BUILD_STATIC)
@@ -36,10 +36,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
 
 set(MagnumBulletIntegration_SRCS
     ConvertShape.cpp
+    DebugDraw.cpp
     MotionState.cpp)
 
 set(MagnumBulletIntegration_HEADERS
     ConvertShape.h
+    DebugDraw.h
     Integration.h
     MotionState.h
 
@@ -62,6 +64,7 @@ target_link_libraries(MagnumBulletIntegration
     Magnum::Magnum
     Magnum::SceneGraph
     Magnum::Shapes
+    Magnum::Shaders
     ${BULLET_LIBRARIES})
 
 install(TARGETS MagnumBulletIntegration

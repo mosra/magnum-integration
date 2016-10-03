@@ -4,6 +4,7 @@
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
               Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
+    Copyright © 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -24,10 +25,12 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 
 #include "Magnum/Magnum.h"
 #include "Magnum/BulletIntegration/Integration.h"
+#include "Magnum/BulletIntegration/DebugDraw.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
 
@@ -37,13 +40,22 @@ typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
+    void debugDrawMode();
     void vector();
     void matrix();
 };
 
 IntegrationTest::IntegrationTest() {
-    addTests({&IntegrationTest::vector,
+    addTests({&IntegrationTest::debugDrawMode,
+              &IntegrationTest::vector,
               &IntegrationTest::matrix});
+}
+
+void IntegrationTest::debugDrawMode() {
+    std::ostringstream out;
+
+    Debug(&out) << DebugDraw::Mode::DrawAabb << DebugDraw::Mode(0xbaadcafe);
+    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
 }
 
 void IntegrationTest::vector() {
