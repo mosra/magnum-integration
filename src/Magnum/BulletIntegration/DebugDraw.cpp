@@ -51,7 +51,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
         #undef _c
     }
 
-    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(Int(value)) << Debug::nospace << ")";
+    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
 }
 
 DebugDraw::DebugDraw(const UnsignedInt initialBufferCapacity): _mesh{MeshPrimitive::Lines} {
