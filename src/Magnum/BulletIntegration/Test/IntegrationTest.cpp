@@ -40,22 +40,15 @@ typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
-    void debugDrawMode();
     void vector();
     void matrix();
+    void debugDrawMode();
 };
 
 IntegrationTest::IntegrationTest() {
-    addTests({&IntegrationTest::debugDrawMode,
-              &IntegrationTest::vector,
-              &IntegrationTest::matrix});
-}
-
-void IntegrationTest::debugDrawMode() {
-    std::ostringstream out;
-
-    Debug(&out) << DebugDraw::Mode::DrawAabb << DebugDraw::Mode(0xbaadcafe);
-    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
+    addTests({&IntegrationTest::vector,
+              &IntegrationTest::matrix,
+              &IntegrationTest::debugDrawMode});
 }
 
 void IntegrationTest::vector() {
@@ -84,6 +77,13 @@ void IntegrationTest::matrix() {
     const btScalar* pb = &b[0][0];
     for(std::size_t i = 0; i < 9; ++i, ++pb, ++pa)
         CORRADE_COMPARE(*pa, *pb);
+}
+
+void IntegrationTest::debugDrawMode() {
+    std::ostringstream out;
+
+    Debug(&out) << DebugDraw::Mode::DrawAabb << DebugDraw::Mode(0xbaadcafe);
+    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
 }
 
 }}}

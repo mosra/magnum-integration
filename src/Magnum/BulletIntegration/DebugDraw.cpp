@@ -54,10 +54,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
     return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(Int(value)) << Debug::nospace << ")";
 }
 
-DebugDraw::DebugDraw(const UnsignedInt initialBufferCapacity):
-    btIDebugDraw(),
-    _mesh{MeshPrimitive::Lines}
-{
+DebugDraw::DebugDraw(const UnsignedInt initialBufferCapacity): _mesh{MeshPrimitive::Lines} {
     _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color{});
     _bufferData.reserve(initialBufferCapacity*4);
 }
