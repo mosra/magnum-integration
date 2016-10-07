@@ -47,15 +47,6 @@ option(BUILD_STATIC "Build static libraries (default are shared)" OFF)
 cmake_dependent_option(BUILD_STATIC_PIC "Build static libraries with position-independent code" ON "BUILD_STATIC" OFF)
 option(BUILD_TESTS "Build unit tests" OFF)
 
-# Check compiler compatibility
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.7.0")
-    message(FATAL_ERROR "Compatibility branch of Magnum Integration is needed for use with GCC < 4.7. See the documentation for more information.")
-elseif(MSVC)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0")
-        message(FATAL_ERROR "Compatibility branch of Magnum Integration is needed for use with MSVC < 2015. See the documentation for more information.")
-    endif()
-endif()
-
 if(BUILD_TESTS)
     find_package(Corrade REQUIRED TestSuite)
     if(CORRADE_TARGET_IOS)
