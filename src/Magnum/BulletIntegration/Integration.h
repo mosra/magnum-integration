@@ -33,6 +33,7 @@
 #include <LinearMath/btMatrix3x3.h>
 #include <LinearMath/btTransform.h>
 #include <Magnum/Math/RectangularMatrix.h>
+#include <Magnum/Math/Quaternion.h>
 
 #include "Magnum/BulletIntegration/visibility.h"
 
@@ -73,6 +74,16 @@ template<> struct RectangularMatrixConverter<4, 4, btScalar, btTransform> {
         btTransform transform;
         transform.setFromOpenGLMatrix(other.data());
         return transform;
+    }
+};
+
+template<> struct QuaternionConverter<btScalar, btQuaternion> {
+    static Quaternion<Float> from(const btQuaternion& other) {
+        return {{other.x(), other.y(), other.z()}, other.w()};
+    }
+
+    static btQuaternion to(const Quaternion<Float>& other) {
+        return {other.vector().x(), other.vector().y(), other.vector().z(), other.scalar()};
     }
 };
 
