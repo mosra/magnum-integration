@@ -6,6 +6,7 @@
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017
               Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
+    Copyright © 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -41,9 +42,32 @@ namespace Magnum { namespace BulletIntegration {
 /**
 @brief Bullet Physics motion state
 
-Encapsulates `btMotionState` as @ref SceneGraph feature.
+Encapsulates `btMotionState` as a @ref SceneGraph feature.
 
-@todoc Usage...
+## Usage
+
+Common usage is to either create a `btRigidBody` to share transformation with
+a @ref SceneGraph::Object by passing the motion state in its constructor:
+
+@code
+SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
+btRigidBody rigidBody{mass, &(new MotionState{object}).btMotionState(), collisionShape};
+
+// rigidBody will be affected when changing the transform of object and
+// object will be affected when transformation of rigidBody is changed.
+@endcode
+
+Or setting the motion state afterwards:
+
+@code
+SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
+btRigidBody rigidBody{...};
+rigidBody.setMotionState(&(new MotionState{object}).btMotionState());
+@endcode
+
+Note that changes to a rigidBody using `btRigidBody::setWorldTransform()` may
+only update the motion state of non-static objects and while
+`btDynamicsWorld::stepSimulation()` is called.
 */
 class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
     public:
