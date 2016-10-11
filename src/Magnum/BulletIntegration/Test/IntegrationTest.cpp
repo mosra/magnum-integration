@@ -43,6 +43,8 @@ struct IntegrationTest: TestSuite::Tester {
     void vector();
     void matrix3();
     void matrix4();
+    void quaternion();
+
     void debugDrawMode();
 };
 
@@ -50,6 +52,7 @@ IntegrationTest::IntegrationTest() {
     addTests({&IntegrationTest::vector,
               &IntegrationTest::matrix3,
               &IntegrationTest::matrix4,
+              &IntegrationTest::quaternion,
               &IntegrationTest::debugDrawMode});
 }
 
@@ -93,6 +96,14 @@ void IntegrationTest::matrix4() {
     const btTransform btA = btTransform(a);
     CORRADE_COMPARE(Quaternion{btA.getRotation()}, rotation);
     CORRADE_COMPARE(Vector3{btA.getOrigin()}, translation);
+}
+
+void IntegrationTest::quaternion() {
+    Quaternion a{{1.0f, 2.0f, 3.0f}, 4.0f};
+    btQuaternion b{1.0f, 2.0f, 3.0f, 4.0f};
+
+    CORRADE_COMPARE(Quaternion{b}, a);
+    CORRADE_VERIFY(btQuaternion{a} == b);
 }
 
 void IntegrationTest::debugDrawMode() {
