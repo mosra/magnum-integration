@@ -31,6 +31,7 @@
  */
 
 #include <LinearMath/btMatrix3x3.h>
+#include <LinearMath/btTransform.h>
 #include <Magnum/Math/RectangularMatrix.h>
 
 #include "Magnum/BulletIntegration/visibility.h"
@@ -58,6 +59,20 @@ template<> struct RectangularMatrixConverter<3, 3, btScalar, btMatrix3x3> {
         return {other[0][0], other[0][1], other[0][2],
                 other[1][0], other[1][1], other[1][2],
                 other[2][0], other[2][1], other[2][2]};
+    }
+};
+
+template<> struct RectangularMatrixConverter<4, 4, btScalar, btTransform> {
+    static RectangularMatrix<4, 4, Float> from(const btTransform& other) {
+        RectangularMatrix<4, 4, Float> mat;
+        other.getOpenGLMatrix(mat.data());
+        return mat;
+    }
+
+    static btTransform to(const RectangularMatrix<4, 4, Float>& other) {
+        btTransform transform;
+        transform.setFromOpenGLMatrix(other.data());
+        return transform;
     }
 };
 

@@ -28,7 +28,7 @@
 #include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 
-#include "Magnum/Magnum.h"
+#include <Magnum/Magnum.h>
 #include "Magnum/BulletIntegration/Integration.h"
 #include "Magnum/BulletIntegration/DebugDraw.h"
 
@@ -41,13 +41,15 @@ struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
     void vector();
-    void matrix();
+    void matrix3();
+    void matrix4();
     void debugDrawMode();
 };
 
 IntegrationTest::IntegrationTest() {
     addTests({&IntegrationTest::vector,
-              &IntegrationTest::matrix,
+              &IntegrationTest::matrix3,
+              &IntegrationTest::matrix4,
               &IntegrationTest::debugDrawMode});
 }
 
@@ -60,13 +62,13 @@ void IntegrationTest::vector() {
     CORRADE_VERIFY(btVector3(a) == b);
 }
 
-void IntegrationTest::matrix() {
-    Matrix3 a{Vector3{3.0f,  5.0f, 8.0f},
-              Vector3{4.5f,  4.0f, 7.0f},
-              Vector3{7.9f, -1.0f, 8.0f}};
-    btMatrix3x3 b{3.0f,  5.0f, 8.0f,
-                  4.5f,  4.0f, 7.0f,
-                  7.9f, -1.0f, 8.0f};
+void IntegrationTest::matrix3() {
+    constexpr Matrix3 a{Vector3{3.0f,  5.0f, 8.0f},
+                        Vector3{4.5f,  4.0f, 7.0f},
+                        Vector3{7.9f, -1.0f, 8.0f}};
+    const btMatrix3x3 b{3.0f,  5.0f, 8.0f,
+                        4.5f,  4.0f, 7.0f,
+                        7.9f, -1.0f, 8.0f};
 
     CORRADE_COMPARE(Matrix3{b}, a);
 
@@ -77,6 +79,20 @@ void IntegrationTest::matrix() {
     const btScalar* pb = &b[0][0];
     for(std::size_t i = 0; i < 9; ++i, ++pb, ++pa)
         CORRADE_COMPARE(*pa, *pb);
+}
+
+void IntegrationTest::matrix4() {
+    const Quaternion rotation = Quaternion{{1.0f, 2.0f, 3.0f}, 4.0f}.normalized();
+    constexpr Vector3 translation{1.0f, 2.0f, 3.0f};
+
+    const Matrix4 a = Matrix4::from(rotation.toMatrix(), translation);
+    const btTransform b{btQuaternion{rotation}, btVector3{translation}};
+
+    CORRADE_COMPARE(Matrix4{b}, a);
+
+    const btTransform btA = btTransform(a);
+    CORRADE_COMPARE(Quaternion{btA.getRotation()}, rotation);
+    CORRADE_COMPARE(Vector3{btA.getOrigin()}, translation);
 }
 
 void IntegrationTest::debugDrawMode() {
