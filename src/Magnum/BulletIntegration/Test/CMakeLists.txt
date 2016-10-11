@@ -4,6 +4,7 @@
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016
 #             Vladimír Vondruš <mosra@centrum.cz>
 #   Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
+#   Copyright © 2016 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -24,5 +25,5 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
+corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration ${BULLET_LIBRARIES})
 corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
