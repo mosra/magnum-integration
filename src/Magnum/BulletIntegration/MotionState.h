@@ -69,7 +69,7 @@ only update the motion state of non-static objects and while
 `btDynamicsWorld::stepSimulation()` is called.
 
 */
-class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
+class MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
     public:
         /**
          * @brief Constructor
@@ -77,17 +77,19 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBa
          */
         template<class T> MotionState(T& object);
 
+        ~MotionState() = default;
+
         /** @brief Motion state */
         btMotionState& btMotionState() { return *this; }
 
     private:
-        void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
-        void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
+        void MAGNUM_BULLETINTEGRATION_EXPORT getWorldTransform(btTransform& worldTrans) const override;
+        void MAGNUM_BULLETINTEGRATION_EXPORT setWorldTransform(const btTransform& worldTrans) override;
 
-        SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation;
+        SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& _transformation;
 };
 
-template<class T> MotionState::MotionState(T& object): SceneGraph::AbstractBasicFeature3D<btScalar>(object), transformation(object) {}
+template<class T> MotionState::MotionState(T& object): SceneGraph::AbstractBasicFeature3D<btScalar>(object), _transformation(object) {}
 
 }}
 
