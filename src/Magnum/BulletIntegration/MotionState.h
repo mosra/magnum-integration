@@ -31,7 +31,7 @@
  */
 
 #include <LinearMath/btMotionState.h>
-#include <Magnum/SceneGraph/Object.h>
+#include <Magnum/SceneGraph/AbstractFeature.h>
 #include <Magnum/SceneGraph/AbstractTranslationRotation3D.h>
 
 #include "Magnum/BulletIntegration/visibility.h"
