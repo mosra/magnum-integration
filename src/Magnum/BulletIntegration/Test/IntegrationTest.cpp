@@ -29,15 +29,13 @@
 #include <Corrade/TestSuite/Tester.h>
 
 #include <Magnum/Magnum.h>
-
 #include <Magnum/Math/Vector3.h>
-
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include <Magnum/SceneGraph/Object.h>
 #include <Magnum/SceneGraph/Scene.h>
 
-#include "Magnum/BulletIntegration/Integration.h"
 #include "Magnum/BulletIntegration/DebugDraw.h"
+#include "Magnum/BulletIntegration/Integration.h"
 #include "Magnum/BulletIntegration/MotionState.h"
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
