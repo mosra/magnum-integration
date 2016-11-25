@@ -10,6 +10,18 @@ matrix:
     - TARGET=desktop
     # Otherwise the job gets killed (probably because using too much memory)
     - JOBS_LIMIT=4
+  - os: linux
+    compiler: gcc
+    env:
+    - TARGET=desktop-gles
+    - TARGET_GLES2=ON
+    - JOBS_LIMIT=4
+  - os: linux
+    compiler: gcc
+    env:
+    - TARGET=desktop-gles
+    - TARGET_GLES2=OFF
+    - JOBS_LIMIT=4
   - os: osx
     compiler: clang
     env: TARGET=desktop
@@ -62,10 +74,10 @@ cache:
   - $HOME/lets-summon-the-black-demons-to-stop-travis-from-crashing
 
 install:
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then pip install --user cpp-coveralls && export COVERAGE="--coverage"; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then pip install --user cpp-coveralls && export COVERAGE="--coverage"; fi
 
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CXX=g++-4.7; fi
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PLATFORM_GL_API=GLX; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then export PLATFORM_GL_API=GLX; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export WITH_BULLET=OFF; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then export WITH_BULLET=ON; fi
@@ -75,7 +87,8 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "emscripten" ]; then brew install emscripten && export LLVM=/usr/local/opt/emscripten/libexec/llvm/bin && emcc; fi
 
 script:
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./package/ci/travis-desktop.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then ./package/ci/travis-desktop.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-gles" ]; then ./package/ci/travis-desktop-gles.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then ./package/ci/travis-desktop.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "ios-simulator" ]; then ./package/ci/travis-ios-simulator.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "emscripten" ]; then ./package/ci/travis-emscripten.sh; fi
@@ -83,4 +96,4 @@ script:
 - sync
 
 after_success:
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then coveralls --gcov /usr/bin/gcov-4.7 -i src/ -E ".*/(Test)/.*" --gcov-options '\-lp'; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then coveralls --gcov /usr/bin/gcov-4.7 -i src/ -E ".*/(Test)/.*" --gcov-options '\-lp'; fi
