@@ -1,5 +1,16 @@
 # kate: indent-width 2;
 
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - kubuntu-backports
+    packages:
+    - g++-4.7
+    - cmake
+    # Not yet (https://github.com/travis-ci/apt-package-whitelist/issues/1190)
+    #- libbullet-dev
+
 matrix:
   include:
   - language: cpp
@@ -9,6 +20,24 @@ matrix:
     - TARGET=desktop
     # Otherwise the job gets killed (probably because using too much memory)
     - JOBS_LIMIT=4
+  - language: cpp
+    os: linux
+    compiler: clang
+    env:
+    - TARGET=desktop-sanitizers
+    - CMAKE_CXX_FLAGS=-fsanitize=address
+    - JOBS_LIMIT=4
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.8
+        - kubuntu-backports
+        packages:
+        - clang-3.8
+        - cmake
+        # Not yet (https://github.com/travis-ci/apt-package-whitelist/issues/1190)
+        #- libbullet-dev
   - language: cpp
     os: linux
     compiler: gcc
@@ -76,17 +105,6 @@ matrix:
       - android-19
       - sys-img-armeabi-v7a-android-19
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - kubuntu-backports
-    packages:
-    - g++-4.7
-    - cmake
-    # Not yet (https://github.com/travis-ci/apt-package-whitelist/issues/1190)
-    #- libbullet-dev
-
 notifications:
   webhooks:
     urls:
@@ -104,11 +122,12 @@ cache:
   - $HOME/lets-summon-the-black-demons-to-stop-travis-from-crashing
 
 install:
-- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then pip install --user cpp-coveralls && export COVERAGE="--coverage"; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then pip install --user cpp-coveralls && export CMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS --coverage"; fi
 
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CXX=g++-4.7; fi
-- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then export PLATFORM_GL_API=GLX; fi
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then export WITH_BULLET=OFF; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ ! "$TARGET" == "desktop-sanitizers" ]; then export CXX=g++-4.7; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-sanitizers" ]; then export CXX=clang++-3.8; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PLATFORM_GL_API=GLX; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then export WITH_BULLET=OFF; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ]; then wget -nc http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin && chmod +x android-*.bin && ./android-*.bin -y | grep -v Extracting; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then export WITH_BULLET=ON; fi
@@ -118,7 +137,7 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "emscripten" ]; then brew install emscripten && export LLVM=/usr/local/opt/emscripten/libexec/llvm/bin && emcc; fi
 
 script:
-- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop" ]; then ./package/ci/travis-desktop.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then ./package/ci/travis-desktop.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-gles" ]; then ./package/ci/travis-desktop-gles.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ]; then ./package/ci/travis-android-arm.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then ./package/ci/travis-desktop.sh; fi

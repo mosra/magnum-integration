@@ -36,7 +36,7 @@ cd ../..
 
 mkdir build && cd build
 cmake .. \
-    -DCMAKE_CXX_FLAGS=$COVERAGE \
+    -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_PREFIX_PATH="$HOME/deps" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
@@ -46,4 +46,4 @@ cmake .. \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON
 make -j${JOBS_LIMIT}
-CORRADE_TEST_COLOR=ON ctest -V -E GLTest
+ASAN_OPTIONS="color=always" LSAN_OPTIONS="color=always" CORRADE_TEST_COLOR=ON ctest -V -E GLTest
