@@ -3,6 +3,7 @@ set -ev
 
 git submodule update --init
 
+# Corrade
 git clone --depth 1 git://github.com/mosra/corrade.git
 cd corrade
 
