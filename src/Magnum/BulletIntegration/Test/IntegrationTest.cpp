@@ -82,8 +82,8 @@ void IntegrationTest::matrix() {
 void IntegrationTest::debugDrawMode() {
     std::ostringstream out;
 
-    Debug(&out) << DebugDraw::Mode::DrawAabb << DebugDraw::Mode(0xbaadcafe);
-    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
+    Debug(&out) << DebugDraw::DebugMode::DrawAabb << DebugDraw::DebugMode(0xbaadcafe);
+    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::DebugMode::DrawAabb BulletIntegration::DebugDraw::DebugMode(0xbaadcafe)\n");
 }
 
 }}}

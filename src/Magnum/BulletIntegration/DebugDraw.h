@@ -32,6 +32,7 @@
 
 #include <vector>
 #include <Corrade/Containers/ArrayView.h>
+#include <Corrade/Utility/Macros.h>
 #include <Magnum/Buffer.h>
 #include <Magnum/DebugOutput.h>
 #include <Magnum/Magnum.h>
@@ -66,8 +67,12 @@ btWorld->debugDrawWorld();
 */
 class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
     public:
-        /** @brief Debug mode enum */
-        enum class Mode: Int {
+        /**
+         * @brief Debug mode
+         *
+         * @see @ref DebugModes, @ref setDebugMode()
+         */
+        enum class DebugMode: Int {
             /** Disable debug rendering */
             NoDebug = DBG_NoDebug,
 
@@ -120,8 +125,26 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             DrawFrames = DBG_DrawFrames
         };
 
-        /** @brief Debug draw mode flags */
-        typedef Containers::EnumSet<Mode> Modes;
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /** @copybrief DebugMode
+         * @deprecated Use @ref DebugMode instead.
+         */
+        typedef CORRADE_DEPRECATED("use DebugMode instead") DebugMode Mode;
+        #endif
+
+        /**
+         * @brief Debug modes
+         *
+         * @see @ref setDebugMode()
+         */
+        typedef Containers::EnumSet<DebugMode> DebugModes;
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /** @copybrief DebugModes
+         * @deprecated Use @ref DebugModes instead.
+         */
+        typedef CORRADE_DEPRECATED("use DebugModes instead") DebugModes Modes;
+        #endif
 
         /**
          * @brief Constructor
@@ -131,26 +154,25 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
          * Sets up @ref Shaders::VertexColor3D, @ref Buffer and @ref Mesh for
          * physics debug rendering.
          */
-        explicit DebugDraw(UnsignedInt initialBufferCapacity = 0);
+        explicit DebugDraw(std::size_t initialBufferCapacity = 0);
+
         ~DebugDraw();
 
         /** @brief Debug mode */
-        Modes debugMode() const {
-            return _debugMode;
-        }
+        DebugModes debugMode() const { return _debugMode; }
 
         /**
          * @brief Set debug mode
          * @return Reference to self (for method chaining)
          */
-        DebugDraw& setDebugMode(Modes debugMode) {
-            _debugMode = debugMode;
+        DebugDraw& setDebugMode(DebugModes mode) {
+            _debugMode = mode;
             return *this;
         }
 
         /** @brief Set transformation projection matrix used for rendering */
-        DebugDraw& setTransformationProjectionMatrix(const Matrix4& transProj) {
-            _transformationProjectionMatrix = transProj;
+        DebugDraw& setTransformationProjectionMatrix(const Matrix4& matrix) {
+            _transformationProjectionMatrix = matrix;
             return *this;
         }
 
@@ -159,12 +181,12 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         int getDebugMode() const override;
         void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override;
         void drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) override;
-        void drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int CORRADE_UNUSED lifeTime, const btVector3& color) override;
+        void drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) override;
         void reportErrorWarning(const char *warningString) override;
-        void draw3dText(const btVector3& CORRADE_UNUSED location, const char* CORRADE_UNUSED textString) override;
+        void draw3dText(const btVector3& location, const char* textString) override;
         void flushLines() override;
 
-        Modes _debugMode;
+        DebugModes _debugMode;
 
         Matrix4 _transformationProjectionMatrix;
         Shaders::VertexColor3D _shader;
@@ -174,10 +196,10 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         std::vector<Vector3> _bufferData;
 };
 
-CORRADE_ENUMSET_OPERATORS(DebugDraw::Modes)
+CORRADE_ENUMSET_OPERATORS(DebugDraw::DebugModes)
 
-/** @debugoperatorenum{Magnum::BulletIntegration::DebugDraw::Mode} */
-MAGNUM_BULLETINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugDraw::Mode value);
+/** @debugoperatorenum{Magnum::BulletIntegration::DebugDraw::DebugMode} */
+MAGNUM_BULLETINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugDraw::DebugMode value);
 
 }}
 

@@ -28,9 +28,9 @@
 
 namespace Magnum { namespace BulletIntegration {
 
-Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
+Debug& operator<<(Debug& debug, const DebugDraw::DebugMode value) {
     switch(value) {
-        #define _c(value) case DebugDraw::Mode::value: return debug << "BulletIntegration::DebugDraw::Mode::" #value;
+        #define _c(value) case DebugDraw::DebugMode::value: return debug << "BulletIntegration::DebugDraw::DebugMode::" #value;
         _c(NoDebug)
         _c(DrawWireframe)
         _c(DrawAabb)
@@ -51,22 +51,22 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
         #undef _c
     }
 
-    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
+    return debug << "BulletIntegration::DebugDraw::DebugMode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
 }
 
-DebugDraw::DebugDraw(const UnsignedInt initialBufferCapacity): _mesh{MeshPrimitive::Lines} {
+DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{MeshPrimitive::Lines} {
     _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color{});
     _bufferData.reserve(initialBufferCapacity*4);
 }
 
 DebugDraw::~DebugDraw() = default;
 
-void DebugDraw::setDebugMode(int debugMode) {
-    _debugMode = Mode(debugMode);
+void DebugDraw::setDebugMode(int mode) {
+    _debugMode = DebugMode(mode);
 }
 
 int DebugDraw::getDebugMode() const {
-    return Int(_debugMode);
+    return int(_debugMode);
 }
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& color) {
