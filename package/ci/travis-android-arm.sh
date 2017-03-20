@@ -64,6 +64,7 @@ ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r10e cmake .. \
     -DWITH_BULLET=OFF \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON
+# Otherwise the job gets killed (probably because using too much memory)
 make -j4
 
 # Start simulator and run tests
