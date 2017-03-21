@@ -51,3 +51,4 @@ build_script:
 cache:
 - ovr_sdk_win_1.3.0_public.zip
 - x86_64-6.3.0-release-posix-seh-rt_v5-rev1.7z
+- 2.86.1.zip
