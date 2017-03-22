@@ -31,7 +31,7 @@
  */
 
 #include <LinearMath/btMotionState.h>
-#include <Magnum/SceneGraph/Object.h>
+#include <Magnum/SceneGraph/AbstractFeature.h>
 #include <Magnum/SceneGraph/AbstractTranslationRotation3D.h>
 
 #include "Magnum/BulletIntegration/visibility.h"
@@ -43,9 +43,33 @@ namespace Magnum { namespace BulletIntegration {
 
 Encapsulates `btMotionState` as @ref SceneGraph feature.
 
-@todoc Usage...
+# Usage
+
+Common usage is to either create a `btRigidBody` to share transformation with
+a @ref SceneGraph::Object by passing the motion state in its constructor:
+
+@code
+    SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
+    btRigidBody rigidBody{mass, &(new MotionState{object}).btMotionState(), collisionShape};
+
+    // rigidBody will be affected when changing the transform of object and
+    // object will be affected when transformation of rigidBody is changed.
+@endcode
+
+Or setting the motion state afterwards:
+
+@code
+    SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
+    btRigidBody rigidBody{...};
+    rigidBody.setMotionState(&(new MotionState{object}).btMotionState());
+@endcode
+
+Note that changes to a rigidBody using `btRigidBody::setWorldTransform()` may
+only update the motion state of non-static objects and while
+`btDynamicsWorld::stepSimulation()` is called.
+
 */
-class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
+class MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
     public:
         /**
          * @brief Constructor
@@ -53,17 +77,19 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBa
          */
         template<class T> MotionState(T& object);
 
+        ~MotionState() = default;
+
         /** @brief Motion state */
         btMotionState& btMotionState() { return *this; }
 
     private:
-        void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
-        void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
+        void MAGNUM_BULLETINTEGRATION_EXPORT getWorldTransform(btTransform& worldTrans) const override;
+        void MAGNUM_BULLETINTEGRATION_EXPORT setWorldTransform(const btTransform& worldTrans) override;
 
-        SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation;
+        SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& _transformation;
 };
 
-template<class T> MotionState::MotionState(T& object): SceneGraph::AbstractBasicFeature3D<btScalar>(object), transformation(object) {}
+template<class T> MotionState::MotionState(T& object): SceneGraph::AbstractBasicFeature3D<btScalar>(object), _transformation(object) {}
 
 }}
 

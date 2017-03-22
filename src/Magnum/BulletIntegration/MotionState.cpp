@@ -26,27 +26,50 @@
 
 #include "MotionState.h"
 
+#include <Magnum/Math/Angle.h>
 #include <Magnum/Math/Matrix4.h>
 
 #include "Magnum/BulletIntegration/Integration.h"
 
+
 namespace Magnum { namespace BulletIntegration {
 
+using namespace Math::Literals;
+
 void MotionState::getWorldTransform(btTransform& worldTrans) const {
-    const Matrix4 transformation = object().transformationMatrix();
-    worldTrans.setOrigin(btVector3(transformation.translation()));
-    worldTrans.setBasis(btMatrix3x3(transformation.rotationScaling()));
+    /* Bullet transforms are always world space */
+    worldTrans = btTransform{object().absoluteTransformationMatrix()};
 }
 
 void MotionState::setWorldTransform(const btTransform& worldTrans) {
-    btVector3 bPosition = worldTrans.getOrigin();
-    btVector3 bAxis = worldTrans.getRotation().getAxis();
-    Rad bRotation(worldTrans.getRotation().getAngle());
+    auto parent = object().parent();
+    if(parent) {
+        /* Get local transform Bullet world transform by removing parent transform */
+        const Matrix4 parentTransform = parent->absoluteTransformationMatrix();
 
-    /** @todo Verify that all objects have common parent */
-    transformation.resetTransformation()
-        .rotate(bRotation, Vector3(bAxis).normalized())
-        .translate(Vector3(bPosition));
+        CORRADE_ASSERT(parentTransform.isRigidTransformation(), "MotionState::setWorldTransform(): parent of object with MotionState cannot have scaling", );
+        const Quaternion parentRotation = Quaternion::fromMatrix(parentTransform.rotationScaling());
+
+        const Quaternion rotation = (parentRotation.inverted()*Quaternion{worldTrans.getRotation()})
+                                    .normalized(); /* Avoid floating point drift */
+        const Vector3 translation = Vector3{worldTrans.getOrigin()} - parentTransform.translation();
+
+        /* Apply calculated transformation to object */
+        _transformation.resetTransformation();
+
+        const Rad angle = rotation.angle();
+        if(angle != 0.0_radf) {
+            /* If angle is 0, the axis would be a NaN vector */
+            _transformation.rotate(angle, rotation.axis());
+        }
+
+        _transformation.translate(translation);
+    } else {
+        const Quaternion rotation = Quaternion{worldTrans.getRotation()};
+        _transformation.resetTransformation()
+                       .rotate(rotation.angle(), rotation.axis())
+                       .translate(Vector3{worldTrans.getOrigin()});
+    }
 }
 
 }}
