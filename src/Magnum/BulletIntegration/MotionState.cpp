@@ -39,7 +39,7 @@ void MotionState::getWorldTransform(btTransform& worldTrans) const {
 }
 
 void MotionState::setWorldTransform(const btTransform& worldTrans) {
-    btVector3 bPosition = worldTrans.getOrigin();
+    const btVector3& bPosition = worldTrans.getOrigin();
     btVector3 bAxis = worldTrans.getRotation().getAxis();
     Rad bRotation(worldTrans.getRotation().getAngle());
 

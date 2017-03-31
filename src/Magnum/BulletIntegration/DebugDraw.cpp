@@ -74,9 +74,9 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 }
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) {
-   _bufferData.push_back(Vector3(from));
+   _bufferData.emplace_back(from);
    _bufferData.push_back(Color3(fromColor));
-   _bufferData.push_back(Vector3(to));
+   _bufferData.emplace_back(to);
    _bufferData.push_back(Color3(toColor));
 }
 
