@@ -29,7 +29,7 @@ cmake .. \
     -DWITH_MESHTOOLS=OFF \
     -DWITH_PRIMITIVES=OFF \
     -DWITH_SCENEGRAPH=ON \
-    -DWITH_SHADERS=OFF \
+    -DWITH_SHADERS=ON \
     -DWITH_SHAPES=ON \
     -DWITH_TEXT=OFF \
     -DWITH_TEXTURETOOLS=OFF \
@@ -39,11 +39,11 @@ cd ../..
 
 mkdir build && cd build
 cmake .. \
-    -DCMAKE_PREFIX_PATH="$HOME/deps" \
+    -DCMAKE_PREFIX_PATH="$HOME/deps;$HOME/bullet" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=Release \
-    -DWITH_BULLET=OFF \
+    -DWITH_BULLET=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON
