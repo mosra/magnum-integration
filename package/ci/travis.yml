@@ -2,30 +2,29 @@
 
 addons:
   apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - kubuntu-backports
     packages:
     - g++-4.7
-    - cmake
-    # Not yet (https://github.com/travis-ci/apt-package-whitelist/issues/1190)
+    # TODO: https://github.com/travis-ci/apt-package-whitelist/issues/4129
     #- libbullet-dev
 
 matrix:
   include:
   - language: cpp
     os: linux
+    dist: trusty
     compiler: gcc
     env:
     - TARGET=desktop
   - language: cpp
     os: linux
+    dist: trusty
     compiler: gcc
     env:
     - TARGET=desktop
     - BUILD_DEPRECATED=OFF
   - language: cpp
     os: linux
+    dist: trusty
     compiler: clang
     env:
     - TARGET=desktop-sanitizers
@@ -33,24 +32,25 @@ matrix:
     addons:
       apt:
         sources:
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.8
-        - kubuntu-backports
+        - llvm-toolchain-trusty
         packages:
         - clang-3.8
-        - cmake
+        # TODO: https://github.com/travis-ci/apt-package-whitelist/issues/4129
+        #- libbullet-dev
   - language: cpp
     os: linux
+    dist: trusty
     compiler: gcc
     env:
     - TARGET=desktop-gles
     - TARGET_GLES2=ON
-  #- language: cpp
-    #os: linux
-    #compiler: gcc
-    #env:
-    #- TARGET=desktop-gles
-    #- TARGET_GLES2=OFF
+  - language: cpp
+    os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+    - TARGET=desktop-gles
+    - TARGET_GLES2=OFF
   - language: cpp
     os: osx
     compiler: clang
@@ -81,9 +81,16 @@ matrix:
     - TARGET_GLES2=OFF
   - language: android
     os: linux
+    dist: precise
     env:
     - TARGET=android
     - TARGET_GLES2=ON
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-4.7
     android:
       components:
       - build-tools-19.0.0
@@ -91,9 +98,16 @@ matrix:
       - sys-img-armeabi-v7a-android-19
   - language: android
     os: linux
+    dist: precise
     env:
     - TARGET=android
     - TARGET_GLES2=OFF
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-4.7
     android:
       components:
       - build-tools-19.0.0
@@ -121,6 +135,11 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PLATFORM_GL_API=GLX; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then export WITH_BULLET=OFF; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ]; then wget -nc http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin && chmod +x android-*.bin && ./android-*.bin -y | grep -v Extracting; fi
+# Because Android build has to use 12.04 and CMake 2.8.12 stopped working there
+# since May 2017, I have to manually download a prebuilt version. Also, the
+# PATH setting can't be cached, so it's separate (bit me two times already)
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ] && [ ! -e "$HOME/cmake/bin" ]; then cd $HOME ; wget -nc --no-check-certificate https://cmake.org/files/v2.8/cmake-2.8.12.2-Linux-i386.tar.gz && mkdir -p cmake && cd cmake && tar --strip-components=1 -xzvf ../cmake-2.8.12.2-Linux-i386.tar.gz && cd $TRAVIS_BUILD_DIR ; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ]; then export PATH=$HOME/cmake/bin:$PATH; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then export PLATFORM_GL_API=CGL; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "ios-simulator" ]; then gem install xcpretty; fi
@@ -129,6 +148,7 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "emscripten" ]; then brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/53f53f6498ba0f507c443dd4f0c6217937f1ddf2/Formula/emscripten.rb && export LLVM=/usr/local/opt/emscripten/libexec/llvm/bin && emcc; fi
 
 # Bullet (cached)
+# TODO: https://github.com/travis-ci/apt-package-whitelist/issues/4129
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] || [ "$TARGET" == "desktop-gles" ] ) && [ ! -e "$HOME/bullet/include" ]; then wget -nc https://github.com/bulletphysics/bullet3/archive/2.86.1.tar.gz && tar -xzvf 2.86.1.tar.gz && cd bullet3-2.86.1 && mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/bullet -DCMAKE_BUILD_TYPE=Release -DUSE_GRAPHICAL_BENCHMARK=OFF -DBUILD_CPU_DEMOS=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_OPENGL3_DEMOS=OFF -DINSTALL_LIBS=ON -DBUILD_UNIT_TESTS=OFF && make -j install && cd ../..; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then brew install bullet; fi
 
