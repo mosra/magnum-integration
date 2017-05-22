@@ -1,5 +1,5 @@
 call "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/vcvarsall.bat" x64 || exit /b
-set PATH=%APPVEYOR_BUILD_FOLDER%\deps\bin;%APPVEYOR_BUILD_FOLDER%\bullet\bin;%PATH%
+set PATH=%APPVEYOR_BUILD_FOLDER%\deps\bin;%PATH%
 
 rem Build Bullet
 IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\2.86.1.zip appveyor DownloadFile https://github.com/bulletphysics/bullet3/archive/2.86.1.zip || exit /b
