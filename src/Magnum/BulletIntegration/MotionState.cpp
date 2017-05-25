@@ -32,6 +32,14 @@
 
 namespace Magnum { namespace BulletIntegration {
 
+/* The original btMotionState is not dllexported on Windows, so the constructor
+   and destructor of this class have to be non-inline in order to avoid the
+   need for having btMotionState constructor exported */
+
+MotionState::MotionState(SceneGraph::AbstractBasicObject3D<btScalar>& object, SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation): SceneGraph::AbstractBasicFeature3D<btScalar>{object}, _transformation(transformation) {}
+
+MotionState::~MotionState() = default;
+
 void MotionState::getWorldTransform(btTransform& worldTrans) const {
     const Matrix4 transformation = object().transformationMatrix();
     worldTrans.setOrigin(btVector3(transformation.translation()));

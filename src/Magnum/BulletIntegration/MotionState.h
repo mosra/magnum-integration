@@ -75,19 +75,21 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBa
          * @brief Constructor
          * @param object    Object this motion state belongs to
          */
-        template<class T> MotionState(T& object);
+        template<class T> MotionState(T& object): MotionState{object, object} {}
+
+        ~MotionState();
 
         /** @brief Motion state */
         btMotionState& btMotionState() { return *this; }
 
     private:
+        explicit MotionState(SceneGraph::AbstractBasicObject3D<btScalar>& object, SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation);
+
         void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
         void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
 
         SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& _transformation;
 };
-
-template<class T> MotionState::MotionState(T& object): SceneGraph::AbstractBasicFeature3D<btScalar>{object}, _transformation{object} {}
 
 }}
 
