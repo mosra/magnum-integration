@@ -44,7 +44,7 @@ void MotionState::setWorldTransform(const btTransform& worldTrans) {
     Rad bRotation(worldTrans.getRotation().getAngle());
 
     /** @todo Verify that all objects have common parent */
-    transformation.resetTransformation()
+    _transformation.resetTransformation()
         .rotate(bRotation, Vector3(bAxis).normalized())
         .translate(Vector3(bPosition));
 }
