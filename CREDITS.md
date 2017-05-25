@@ -10,7 +10,7 @@ Contributors to Magnum Integration library
 --------------------------------------
 
 *   Jonathan Hale ([@Squareys](https://github.com/Squareys)) -- Oculus VR
-    integration
+    integration, improvements to Bullet integration
 *   Konstantinos Chatzilygeroudis ([@costashatz](https://github.com/costashatz)) --
     Debian package
 *   Olga Turanksaya ([@olga-python](https://github.com/olga-python)) -- Gentoo
