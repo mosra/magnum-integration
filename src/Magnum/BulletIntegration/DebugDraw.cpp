@@ -74,10 +74,10 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 }
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) {
-   _bufferData.emplace_back(from);
-   _bufferData.push_back(Color3(fromColor));
-   _bufferData.emplace_back(to);
-   _bufferData.push_back(Color3(toColor));
+    _bufferData.emplace_back(from);
+    _bufferData.push_back(Color3(fromColor));
+    _bufferData.emplace_back(to);
+    _bufferData.push_back(Color3(toColor));
 }
 
 void DebugDraw::drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, const btScalar distance, const int, const btVector3& color) {
