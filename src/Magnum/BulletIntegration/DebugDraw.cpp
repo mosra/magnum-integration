@@ -47,7 +47,11 @@ Debug& operator<<(Debug& debug, const DebugDraw::DebugMode value) {
         _c(DrawConstraintLimits)
         _c(FastWirefram)
         _c(DrawNormals)
+        #if BT_BULLET_VERSION >= 284
+        /* Actually, it was at some point between 2.83 and 2.83.4. Relevant
+           commit: https://github.com/bulletphysics/bullet3/commit/4af9c5a4c98cd2ecd8595f728af2f3d70512f8b2 */
         _c(DrawFrames)
+        #endif
         #undef _c
     }
 
@@ -78,6 +82,19 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
     _bufferData.push_back(Color3(fromColor));
     _bufferData.emplace_back(to);
     _bufferData.push_back(Color3(toColor));
+
+    /* The flushLines() API was added at some point between 2.83 and 2.83.4,
+       but that's below the resolution of the constant below. Moreover, 284
+       corresponds to 2.83.6, while 2.84 is 285. Fun, right? Relevant commit:
+       https://github.com/bulletphysics/bullet3/commit/7b28e86c7b9ab3c4bb8d479f843b9b5c2e1c9a06
+       The Bullet API and documentation and everything is utter crap, so I'm
+       not bothering more here. Yes, every call to drawLine() will cause a new
+       drawcall with a single line segment to be submitted. Just to be clear
+       why I did that: Ubuntu 14.04, which is now the oldest supported
+       platform, has only 2.81 in the repositories. */
+    #if BT_BULLET_VERSION < 284
+    flushLines();
+    #endif
 }
 
 void DebugDraw::drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, const btScalar distance, const int, const btVector3& color) {

@@ -121,8 +121,14 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             /** Draw normals */
             DrawNormals = DBG_DrawNormals,
 
-            /** Draw frames */
+            #if BT_BULLET_VERSION >= 284
+            /**
+             * Draw frames
+             *
+             * @note Supported since Bullet 2.83.5.
+             */
             DrawFrames = DBG_DrawFrames
+            #endif
         };
 
         #ifdef MAGNUM_BUILD_DEPRECATED
@@ -184,7 +190,12 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         void drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) override;
         void reportErrorWarning(const char *warningString) override;
         void draw3dText(const btVector3& location, const char* textString) override;
-        void flushLines() override;
+        void flushLines()
+            /* See comment in drawLine() for detailed rant */
+            #if BT_BULLET_VERSION >= 284
+            override
+            #endif
+            ;
 
         DebugModes _debugMode;
 
