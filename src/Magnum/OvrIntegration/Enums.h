@@ -219,7 +219,7 @@ struct MAGNUM_OVRINTEGRATION_EXPORT Buttons: Containers::EnumSet<Button> {
         #endif
         PrivateMask = Button::VolUp | Button::VolDown | Button::Home;
 
-    #ifndef CORRADE_MSVC2015_COMPATIBILITY
+    #ifndef CORRADE_MSVC2017_COMPATIBILITY
     using EnumSet::EnumSet;
     #else
     /* MSVC tries to inherit also the private constructor and dies. Grr. */
@@ -311,7 +311,7 @@ struct MAGNUM_OVRINTEGRATION_EXPORT Touches: Containers::EnumSet<Touch> {
         #endif
         LPoseMask = Touch::LIndexPointing | Touch::LThumbUp;
 
-    #ifndef CORRADE_MSVC2015_COMPATIBILITY
+    #ifndef CORRADE_MSVC2017_COMPATIBILITY
     using EnumSet::EnumSet;
     #else
     /* MSVC tries to inherit also the private constructor and dies. Grr. */
