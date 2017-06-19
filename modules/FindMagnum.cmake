@@ -10,6 +10,9 @@
 # following:
 #
 #  Magnum_FOUND                 - Whether the base library was found
+#  MAGNUM_DEPLOY_PREFIX         - Prefix where to put final application
+#   executables, defaults to empty string. If a relative path is used, it's
+#   relative to :variable:`CMAKE_INSTALL_PREFIX`.
 #  MAGNUM_PLUGINS_DEBUG_DIR     - Base directory with dynamic plugins for
 #   debug builds, defaults to magnum-d/ subdirectory of dir where Magnum
 #   library was found
@@ -64,6 +67,7 @@
 #  EglContext                   - EGL context
 #  GlxContext                   - GLX context
 #  WglContext                   - WGL context
+#  OpenGLTester                 - OpenGLTester class
 #  MagnumFont                   - Magnum bitmap font plugin
 #  MagnumFontConverter          - Magnum bitmap font converter plugin
 #  ObjImporter                  - OBJ importer plugin
@@ -208,6 +212,7 @@ mark_as_advanced(MAGNUM_INCLUDE_DIR)
 # Configuration file
 find_file(_MAGNUM_CONFIGURE_FILE configure.h
     HINTS ${MAGNUM_INCLUDE_DIR}/Magnum/)
+mark_as_advanced(_MAGNUM_CONFIGURE_FILE)
 
 # We need to open configure.h file from MAGNUM_INCLUDE_DIR before we check for
 # the components. Bail out with proper error message if it wasn't found. The
@@ -330,6 +335,26 @@ foreach(_component ${Magnum_FIND_COMPONENTS})
         set(_MAGNUM_${_COMPONENT}_DEPENDENCIES TextureTools)
     elseif(_component STREQUAL DebugTools)
         set(_MAGNUM_${_COMPONENT}_DEPENDENCIES MeshTools Primitives SceneGraph Shaders Shapes)
+    elseif(_component STREQUAL OpenGLTester)
+        if(MAGNUM_TARGET_HEADLESS)
+            set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessEglApplication)
+        elseif(CORRADE_TARGET_IOS)
+            set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessIosApplication)
+        elseif(CORRADE_TARGET_APPLE)
+            set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessCglApplication)
+        elseif(CORRADE_TARGET_UNIX)
+            if(MAGNUM_TARGET_GLES AND NOT MAGNUM_TARGET_DESKTOP_GLES)
+                set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessEglApplication)
+            else()
+                set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessGlxApplication)
+            endif()
+        elseif(CORRADE_TARGET_WINDOWS)
+            if(NOT MAGNUM_TARGET_GLES OR MAGNUM_TARGET_DESKTOP_GLES)
+                set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessWglApplication)
+            else()
+                set(_MAGNUM_${_COMPONENT}_DEPENDENCIES WindowlessWindowsEglApplication)
+            endif()
+        endif()
     elseif(_component STREQUAL MagnumFont)
         set(_MAGNUM_${_COMPONENT}_DEPENDENCIES TgaImporter) # and below
     elseif(_component STREQUAL MagnumFontConverter)
@@ -364,7 +389,7 @@ endif()
 
 # Component distinction (listing them explicitly to avoid mistakes with finding
 # components from other repositories)
-set(_MAGNUM_LIBRARY_COMPONENTS "^(Audio|DebugTools|MeshTools|Primitives|SceneGraph|Shaders|Shapes|Text|TextureTools|AndroidApplication|GlfwApplication|GlutApplication|GlxApplication|NaClApplication|Sdl2Application|XEglApplication|WindowlessCglApplication|WindowlessEglApplication|WindowlessGlxApplication|WindowlessIosApplication|WindowlessNaClApplication|WindowlessWglApplication|WindowlessWindowsEglApplication|CglContext|EglContext|GlxContext|WglContext)$")
+set(_MAGNUM_LIBRARY_COMPONENTS "^(Audio|DebugTools|MeshTools|Primitives|SceneGraph|Shaders|Shapes|Text|TextureTools|AndroidApplication|GlfwApplication|GlutApplication|GlxApplication|NaClApplication|Sdl2Application|XEglApplication|WindowlessCglApplication|WindowlessEglApplication|WindowlessGlxApplication|WindowlessIosApplication|WindowlessNaClApplication|WindowlessWglApplication|WindowlessWindowsEglApplication|CglContext|EglContext|GlxContext|WglContext|OpenGLTester)$")
 set(_MAGNUM_PLUGIN_COMPONENTS "^(MagnumFont|MagnumFontConverter|ObjImporter|TgaImageConverter|TgaImporter|WavAudioImporter)$")
 set(_MAGNUM_EXECUTABLE_COMPONENTS "^(distancefieldconverter|fontconverter|imageconverter|info|al-info)$")
 
@@ -593,9 +618,13 @@ foreach(_component ${Magnum_FIND_COMPONENTS})
 
         # No special setup for DebugTools library
 
-        # Mesh tools library
+        # MeshTools library
         elseif(_component STREQUAL MeshTools)
             set(_MAGNUM_${_COMPONENT}_INCLUDE_PATH_NAMES CompressIndices.h)
+
+        # OpenGLTester library
+        elseif(_component STREQUAL OpenGLTester)
+            set(_MAGNUM_${_COMPONENT}_INCLUDE_PATH_SUFFIX Magnum)
 
         # Primitives library
         elseif(_component STREQUAL Primitives)
@@ -764,11 +793,14 @@ if(_MAGNUM_CONTEXT_ALIAS AND NOT TARGET Magnum::Context)
     unset(_MAGNUM_CONTEXT_ALIAS)
 endif()
 
-# Installation dirs
+# Installation and deploy dirs
+set(MAGNUM_DEPLOY_PREFIX ""
+    CACHE STRING "Prefix where to put final application executables")
+
 include(${CORRADE_LIB_SUFFIX_MODULE})
-set(MAGNUM_BINARY_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/bin)
-set(MAGNUM_LIBRARY_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-set(MAGNUM_DATA_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/magnum)
+set(MAGNUM_BINARY_INSTALL_DIR bin)
+set(MAGNUM_LIBRARY_INSTALL_DIR lib${LIB_SUFFIX})
+set(MAGNUM_DATA_INSTALL_DIR share/magnum)
 set(MAGNUM_PLUGINS_DEBUG_BINARY_INSTALL_DIR ${MAGNUM_BINARY_INSTALL_DIR}/magnum-d)
 set(MAGNUM_PLUGINS_DEBUG_LIBRARY_INSTALL_DIR ${MAGNUM_LIBRARY_INSTALL_DIR}/magnum-d)
 set(MAGNUM_PLUGINS_RELEASE_BINARY_INSTALL_DIR ${MAGNUM_BINARY_INSTALL_DIR}/magnum)
@@ -791,16 +823,19 @@ set(MAGNUM_PLUGINS_AUDIOIMPORTER_DEBUG_BINARY_INSTALL_DIR ${MAGNUM_PLUGINS_DEBUG
 set(MAGNUM_PLUGINS_AUDIOIMPORTER_DEBUG_LIBRARY_INSTALL_DIR ${MAGNUM_PLUGINS_DEBUG_LIBRARY_INSTALL_DIR}/audioimporters)
 set(MAGNUM_PLUGINS_AUDIOIMPORTER_RELEASE_BINARY_INSTALL_DIR ${MAGNUM_PLUGINS_RELEASE_BINARY_INSTALL_DIR}/audioimporters)
 set(MAGNUM_PLUGINS_AUDIOIMPORTER_RELEASE_LIBRARY_INSTALL_DIR ${MAGNUM_PLUGINS_RELEASE_LIBRARY_INSTALL_DIR}/audioimporters)
-set(MAGNUM_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/Magnum)
-set(MAGNUM_PLUGINS_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/MagnumPlugins)
+set(MAGNUM_INCLUDE_INSTALL_DIR include/Magnum)
+set(MAGNUM_PLUGINS_INCLUDE_INSTALL_DIR include/MagnumPlugins)
 
-# Get base plugin directory from main library location
+# Get base plugin directory from main library location. This is *not* PATH,
+# because CMake always converts the path to an absolute location internally,
+# making it impossible to specify relative paths there. Sorry in advance for
+# not having the dir selection button in CMake GUI.
 set(MAGNUM_PLUGINS_DEBUG_DIR ${_MAGNUM_PLUGINS_DIR_PREFIX}/magnum-d
-    CACHE PATH "Base directory where to look for Magnum plugins for debug builds")
+    CACHE STRING "Base directory where to look for Magnum plugins for debug builds")
 set(MAGNUM_PLUGINS_RELEASE_DIR ${_MAGNUM_PLUGINS_DIR_PREFIX}/magnum
-    CACHE PATH "Base directory where to look for Magnum plugins for release builds")
+    CACHE STRING "Base directory where to look for Magnum plugins for release builds")
 set(MAGNUM_PLUGINS_DIR ${_MAGNUM_PLUGINS_DIR_PREFIX}/magnum${_MAGNUM_PLUGINS_DIR_SUFFIX}
-    CACHE PATH "Base directory where to look for Magnum plugins")
+    CACHE STRING "Base directory where to look for Magnum plugins")
 
 # Plugin directories
 set(MAGNUM_PLUGINS_FONT_DIR ${MAGNUM_PLUGINS_DIR}/fonts)
