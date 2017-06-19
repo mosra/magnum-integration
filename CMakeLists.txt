@@ -66,7 +66,7 @@ else()
     set(SHARED_OR_STATIC STATIC)
 endif()
 
-set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/cmake/MagnumIntegration)
+set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR share/cmake/MagnumIntegration)
 
 add_subdirectory(modules)
 add_subdirectory(src)
