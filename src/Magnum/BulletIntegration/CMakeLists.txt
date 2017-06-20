@@ -56,7 +56,9 @@ target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_BINARY_DIR}/src)
 # Silence pedantic warnings in Bullet headers
 target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
-set_target_properties(MagnumBulletIntegration PROPERTIES DEBUG_POSTFIX "-d")
+set_target_properties(MagnumBulletIntegration PROPERTIES
+    DEBUG_POSTFIX "-d"
+    FOLDER "Magnum/BulletIntegration")
 if(BUILD_STATIC_PIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()

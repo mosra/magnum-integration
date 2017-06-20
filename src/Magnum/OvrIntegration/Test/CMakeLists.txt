@@ -26,3 +26,8 @@
 
 corrade_add_test(OvrConversionTest ConversionTest.cpp LIBRARIES MagnumOvrIntegration)
 corrade_add_test(OvrEnumsTest EnumsTest.cpp LIBRARIES MagnumOvrIntegration)
+
+set_target_properties(
+    OvrConversionTest
+    OvrEnumsTest
+    PROPERTIES FOLDER "Magnum/OvrIntegration/Test")

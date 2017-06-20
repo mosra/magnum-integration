@@ -27,3 +27,9 @@
 corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationMotionStateTest MotionStateTest.cpp LIBRARIES MagnumBulletIntegration)
+
+set_target_properties(
+    BulletIntegrationTest
+    BulletIntegrationConvertShapeTest
+    BulletIntegrationMotionStateTest
+    PROPERTIES FOLDER "Magnum/BulletIntegration/Test")

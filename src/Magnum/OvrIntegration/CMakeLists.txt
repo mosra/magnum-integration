@@ -56,7 +56,9 @@ add_library(MagnumOvrIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumOvrIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-set_target_properties(MagnumOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
+set_target_properties(MagnumOvrIntegration PROPERTIES
+    DEBUG_POSTFIX "-d"
+    FOLDER "Magnum/OvrIntegration")
 if(BUILD_STATIC_PIC)
     set_target_properties(MagnumOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
