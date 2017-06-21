@@ -56,10 +56,8 @@ install:
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" cd C:\tools && 7z x %APPVEYOR_BUILD_FOLDER%\x86_64-6.3.0-release-posix-seh-rt_v5-rev1.7z && cd %APPVEYOR_BUILD_FOLDER%
 
 # OVR SDK
-- IF "%TARGET%" == "desktop" set DO_OVR=1
-- IF "%TARGET%" == "desktop-gles" set DO_OVR=1
-- IF "%DO_OVR%" == "1" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.4.0_public.zip appveyor DownloadFile https://static.oculus.com/sdk-downloads/1.4.0/Public/1463687419/ovr_sdk_win_1.4.0_public.zip
-- IF "%DO_OVR%" == "1" 7z x ovr_sdk_win_1.4.0_public.zip -o%APPVEYOR_BUILD_FOLDER%\deps
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.4.0_public.zip appveyor DownloadFile https://static.oculus.com/sdk-downloads/1.4.0/Public/1463687419/ovr_sdk_win_1.4.0_public.zip
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" 7z x ovr_sdk_win_1.4.0_public.zip -o%APPVEYOR_BUILD_FOLDER%\deps
 
 build_script:
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" call package\ci\appveyor-desktop.bat

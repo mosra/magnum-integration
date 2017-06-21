@@ -73,7 +73,7 @@ cmake .. ^
     -DBULLET_MATH_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/LinearMath_Debug.lib ^
     -DBULLET_SOFTBODY_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletSoftBody_Debug.lib ^
     -DWITH_BULLET=ON ^
-    -DWITH_OVR=ON ^
+    -DWITH_OVR=OFF ^
     -DBUILD_TESTS=ON ^
     -DBUILD_GL_TESTS=ON ^
     -G Ninja || exit /b
