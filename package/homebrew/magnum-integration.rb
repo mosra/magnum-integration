@@ -2,7 +2,7 @@
 
 class MagnumIntegration < Formula
   desc "Integration libraries for Magnum graphics engine"
-  homepage "https://github.com/mosra/magnum"
+  homepage "http://magnum.graphics"
   head "git://github.com/mosra/magnum-integration.git"
 
   depends_on "cmake"

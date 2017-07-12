@@ -9,7 +9,7 @@ EGIT_REPO_URI="git://github.com/mosra/magnum-integration.git"
 inherit cmake-utils git-r3
 
 DESCRIPTION="Integration libraries for Magnum OpenGL graphics engine"
-HOMEPAGE="http://mosra.cz/blog/magnum.php"
+HOMEPAGE="http://magnum.graphics"
 
 LICENSE="MIT"
 SLOT="0"
