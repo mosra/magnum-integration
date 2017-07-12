@@ -36,7 +36,8 @@ namespace Magnum { namespace BulletIntegration {
    and destructor of this class have to be non-inline in order to avoid the
    need for having btMotionState constructor exported */
 
-MotionState::MotionState(SceneGraph::AbstractBasicObject3D<btScalar>& object, SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation): SceneGraph::AbstractBasicFeature3D<btScalar>{object}, _transformation(transformation) {}
+/* Doxygen gets confused when using {} to initialize parent object */
+MotionState::MotionState(SceneGraph::AbstractBasicObject3D<btScalar>& object, SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation): SceneGraph::AbstractBasicFeature3D<btScalar>(object), _transformation(transformation) {}
 
 MotionState::~MotionState() = default;
 
