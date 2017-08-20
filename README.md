@@ -13,7 +13,6 @@ SUPPORTED PLATFORMS
 *   **iOS** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 *   **Android** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 *   **Windows RT** [![Build Status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
-*   **Google Chrome**
 *   **HTML5/JavaScript** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 
 INSTALLATION

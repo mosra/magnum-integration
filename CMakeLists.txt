@@ -64,11 +64,6 @@ if(BUILD_TESTS)
     enable_testing()
 endif()
 
-# Newlib toolchain supports only static linking
-if(CORRADE_TARGET_NACL_NEWLIB)
-    set(BUILD_STATIC ON)
-endif()
-
 if(NOT BUILD_STATIC)
     set(SHARED_OR_STATIC SHARED)
 else()
