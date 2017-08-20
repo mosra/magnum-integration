@@ -9,7 +9,7 @@ SUPPORTED PLATFORMS
 
 *   **Linux** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration) [![Coverage Status](https://coveralls.io/repos/github/mosra/magnum-integration/badge.svg?branch=master)](https://coveralls.io/github/mosra/magnum-integration?branch=master)
 *   **Windows** [![Build Status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
-*   **OS X** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
+*   **macOS** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 *   **iOS** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 *   **Android** [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 *   **Windows RT** [![Build Status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
