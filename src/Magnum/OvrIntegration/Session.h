@@ -5,7 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016, 2017 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -669,7 +669,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
-        ovrVector3f _hmdToEyeOffset[2];
+        ovrPosef _hmdToEyePose[2];
         ::ovrViewScaleDesc _viewScale;
 
         Double _predictedDisplayTime;

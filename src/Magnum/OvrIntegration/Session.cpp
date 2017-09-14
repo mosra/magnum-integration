@@ -3,7 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2015, 2016, 2017 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -141,12 +141,12 @@ Session::~Session() {
 
 Session& Session::configureRendering() {
     /* get offset from center to left/right eye. The offset lengths may differ. */
-    _hmdToEyeOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeOffset;
-    _hmdToEyeOffset[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeOffset;
+    _hmdToEyePose[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyePose;
+    _hmdToEyePose[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyePose;
 
     _viewScale.HmdSpaceToWorldScaleInMeters = 1.0f;
-    _viewScale.HmdToEyeOffset[0] = _hmdToEyeOffset[0];
-    _viewScale.HmdToEyeOffset[1] = _hmdToEyeOffset[1];
+    _viewScale.HmdToEyePose[0] = _hmdToEyePose[0];
+    _viewScale.HmdToEyePose[1] = _hmdToEyePose[1];
 
     return *this;
 }
@@ -199,7 +199,7 @@ Matrix4 Session::projectionMatrix(const Int eye, Float near, Float far) const {
 
 Matrix4 Session::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     const ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj),
-        ovrVector2f(scale), distance, _hmdToEyeOffset[eye].x);
+        ovrVector2f(scale), distance, _hmdToEyePose[eye].Position.x);
     return Matrix4(sub);
 }
 
@@ -211,7 +211,7 @@ Session& Session::pollTrackers() {
 
 Session& Session::pollEyePoses() {
     pollTrackers();
-    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeOffset, _ovrPoses);
+    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyePose, _ovrPoses);
     return *this;
 }
 
