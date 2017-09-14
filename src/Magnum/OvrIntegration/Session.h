@@ -32,6 +32,7 @@
 
 #include <array>
 #include <memory>
+
 #include <Corrade/Containers/Array.h>
 #include <Magnum/GL/Texture.h>
 #include <OVR_CAPI.h>
@@ -669,7 +670,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
-        ovrVector3f _hmdToEyeOffset[2];
+        ovrPosef _hmdToEyePose[2];
         ::ovrViewScaleDesc _viewScale;
 
         Double _predictedDisplayTime;
