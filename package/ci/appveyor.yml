@@ -62,8 +62,8 @@ install:
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" pip install codecov
 
 # OVR SDK
-- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.4.0_public.zip appveyor DownloadFile https://static.oculus.com/sdk-downloads/1.4.0/Public/1463687419/ovr_sdk_win_1.4.0_public.zip
-- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" 7z x ovr_sdk_win_1.4.0_public.zip -o%APPVEYOR_BUILD_FOLDER%\deps
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.17.0_public.zip powershell -Command "$cli = New-Object System.Net.WebClient;$cli.Headers['User-Agent']='myUserAgentString';$cli.DownloadFile('https://securecdn.oculus.com/binaries/download/?id=1473319522726128&access_token=OC|1196467420370658|', 'ovr_sdk_win_1.17.0_public.zip')"
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" 7z x ovr_sdk_win_1.17.0_public.zip -o%APPVEYOR_BUILD_FOLDER%\deps
 
 build_script:
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" call package\ci\appveyor-desktop.bat
@@ -72,5 +72,5 @@ build_script:
 - IF "%TARGET%" == "rt" call package\ci\appveyor-rt.bat
 
 cache:
-- ovr_sdk_win_1.4.0_public.zip -> package/ci/appveyor-cache-reset.txt
+- ovr_sdk_win_1.17.0_public.zip -> package/ci/appveyor-cache-reset.txt
 - 2.86.1.zip -> package/ci/appveyor-cache-reset.txt
