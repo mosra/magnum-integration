@@ -34,7 +34,6 @@
 #include <Corrade/Containers/ArrayView.h>
 #include <Corrade/Utility/Macros.h>
 #include <Magnum/Buffer.h>
-#include <Magnum/DebugOutput.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Mesh.h>
 #include <Magnum/Shaders/VertexColor.h>
