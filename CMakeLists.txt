@@ -64,6 +64,11 @@ if(BUILD_TESTS)
     enable_testing()
 endif()
 
+# Dynamic linking is meaningless on Emscripten and too inconvenient on Android
+if(CORRADE_TARGET_EMSCRIPTEN OR CORRADE_TARGET_ANDROID)
+    set(BUILD_STATIC ON)
+endif()
+
 if(NOT BUILD_STATIC)
     set(SHARED_OR_STATIC SHARED)
 else()
