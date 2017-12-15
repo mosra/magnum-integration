@@ -28,6 +28,7 @@ namespace Magnum {
 @brief Guide how to find and use Magnum integration libraries with CMake build system
 
 @tableofcontents
+@m_footernavigation
 
 The logic is in module `FindMagnumIntegration.cmake` distributed in integration
 repository in `modules/` directory, you are encouraged to copy it into your
@@ -45,29 +46,33 @@ separate them with semicolons.
 
 Basic usage is:
 
-    find_package(MagnumIntegration REQUIRED)
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED)
+@endcode
 
 This command tries to find Magnum integration library and then defines:
 
--   `MagnumIntegration_FOUND` -- Whether the library was found
+-   `MagnumIntegration_FOUND` --- Whether the library was found
 
 This command alone is useless without specifying the components:
 
--   `Bullet` -- @ref BulletIntegration library
--   `Ovr` -- @ref OvrIntegration library
+-   `Bullet` --- @ref BulletIntegration library
+-   `Ovr` --- @ref OvrIntegration library
 
-Note that [each <tt>*Integration</tt> namespace](namespaces.html) contains more
-detailed information about dependencies, availability on particular platform
-and also guide how to enable given library in build and use it with CMake.
+Note that [each *Integration namespace](namespaces.html) contains more detailed
+information about dependencies, availability on particular platform and also
+guide how to enable given library in build and use it with CMake.
 
 Example usage with specifying additional components is:
 
-    find_package(MagnumIntegration REQUIRED Bullet)
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Bullet)
+@endcode
 
 For each component is then defined:
 
--   `MagnumIntegration_*_FOUND` -- Whether the component was found
--   `MagnumIntegration::*` -- Component imported target
+-   `MagnumIntegration_*_FOUND` --- Whether the component was found
+-   `MagnumIntegration::*` --- Component imported target
 
 The package is found if either debug or release version of each requested
 library is found. If both debug and release libraries are found, proper version
@@ -78,7 +83,7 @@ Workflows without imported targets are deprecated and the following variables
 are included just for backwards compatibility and only if
 @ref MAGNUM_BUILD_DEPRECATED is enabled:
 
--   `MAGNUM_*INTEGRATION_LIBRARIES` -- Expands to `MagnumIntegration::*`
+-   `MAGNUM_*INTEGRATION_LIBRARIES` --- Expands to `MagnumIntegration::*`
     target. Use `MagnumIntegration::*` target directly instead.
 
 See also @ref cmake "Magnum usage with CMake" for more information.
@@ -87,10 +92,9 @@ See also @ref cmake "Magnum usage with CMake" for more information.
 
 The `modules/` directory contains more useful CMake modules:
 
--   `FindOVR.cmake` -- CMake module for finding the OVR SDK. Copy this to your
+-   `FindOVR.cmake` --- CMake module for finding the OVR SDK. Copy this to your
     module directory if you want to use the @ref OvrIntegration library.
 
 See also @ref cmake-modules "relevant section for the main Magnum project".
-
 */
 }
