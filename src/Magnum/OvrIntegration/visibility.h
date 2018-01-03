@@ -30,6 +30,7 @@
 
 #include "Magnum/OvrIntegration/configure.h"
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
 #ifndef MAGNUM_OVRINTEGRATION_BUILD_STATIC
     #ifdef MagnumOvrIntegration_EXPORTS
         #define MAGNUM_OVRINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
@@ -38,6 +39,9 @@
     #endif
 #else
     #define MAGNUM_OVRINTEGRATION_EXPORT CORRADE_VISIBILITY_STATIC
+#endif
+#else
+#define MAGNUM_OVRINTEGRATION_EXPORT
 #endif
 
 #endif
