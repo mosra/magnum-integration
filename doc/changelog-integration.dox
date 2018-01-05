@@ -31,7 +31,7 @@ namespace Magnum {
 
 @section changelog-integration-latest Changes since 2015-05 snapshot
 
-## Dependency changes
+@subsection changelog-integration-latest-dependencies Dependency changes
 
 -   Completely removed NaCl support (see https://blog.chromium.org/2017/05/goodbye-pnacl-hello-webassembly.html)
 -   Dropped support for the old MinGW32 (only MinGW-w64 is supported now)
@@ -40,7 +40,7 @@ namespace Magnum {
 -   Dropped the `compatibility` branch and all support for MSVC 2013 and GCC <
     4.7
 
-## New features
+@subsection changelog-integration-latest-new New features
 
 -   MSVC 2015 and MSVC 2017 support in `master` branch
 -   ANGLE ES2/ES3 support, ability to create desktop GLES contexts on Windows
@@ -52,14 +52,14 @@ namespace Magnum {
 -   New @ref BulletIntegration::DebugDraw class for simple and easy physics
     debugging
 
-## Changes and improvements
+@subsection changelog-integration-latest-changes Changes and improvements
 
 -   Extended math type conversion in @ref BulletIntegration, improved tests
     for @ref BulletIntegration::MotionState
 -   Fixed linker errors when using @ref BulletIntegration compiled as DLL on
     Windows
 
-## Build system
+@subsection changelog-integration-latest-buildsystem Build system
 
 -   Continuous testing for Linux, macOS, Windows MSVC, Windows MinGW, Windows RT,
     iOS, Android and Emscripten on [Travis CI](https://travis-ci.org/mosra/magnum-integration)
@@ -79,18 +79,18 @@ namespace Magnum {
 -   Enabling only C++ in CMake `project()` call, if possible, to speed up
     initial CMake run
 
-## Bug fixes
+@subsection changelog-integration-latest-bugfixes Bug fixes
 
 -   Properly respecting the `BUILD_STATIC` CMake option when building and
     avoiding treatment of static libraries as dynamic on Windows.
 
-## Deprecated APIs
+@subsection changelog-integration-latest-deprecated Deprecated APIs
 
 -   `BulletIntegration::DebugDraw::DebugMode` enum and `BulletIntegration::DebugDraw::DebugModes`
     enum set are deprecated, use @ref BulletIntegration::DebugDraw::Mode
     and @ref BulletIntegration::DebugDraw::Modes instead
 
-## Potential compatibility breakages, removed APIs
+@subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
 No APIs were removed since last release.
 
