@@ -35,12 +35,19 @@
 
 Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
-This library depends on **Bullet Physics** library and it is built if
-`WITH_BULLET` is enabled when building Magnum Integration. To use
-this library, you need to request `Bullet` component of `MagnumIntegration`
-package in CMake, add `${MAGNUM_BULLETINTEGRATION_INCLUDE_DIRS}` to include
-path and link to `${MAGNUM_BULLETINTEGRATION_LIBRARIES}`. See
-@ref building-integration and @ref cmake-integration for more information.
+This library depends on the [Bullet Physics](http://bulletphysics.org/) library
+and is built if `WITH_BULLET` is enabled when building Magnum Integration. To
+use this library with CMake, you need to request the `Bullet` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Bullet` target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Bullet)
+
+# ...
+target_link_libraries(your-app MagnumIntegration::Bullet)
+@endcode
+
+See @ref building-integration and @ref cmake-integration for more information.
 */
 
 /** @dir Magnum/OvrIntegration
@@ -51,10 +58,17 @@ path and link to `${MAGNUM_BULLETINTEGRATION_LIBRARIES}`. See
 
 Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 
-This library depends on **Oculus SDK 0.7.0.0-beta** and is built if `WITH_OVR`
-is enabled when building Magnum Integration. To use this library, you need to
-request `Ovr` component of `MagnumIntegration` package in CMake, add
-`${MAGNUM_OVRINTEGRATION_INCLUDE_DIRS}` to include path and link to
-`${MAGNUM_OVRINTEGRATION_LIBRARIES}`. See @ref building-integration and
-@ref cmake-integration for more information.
+This library depends on the [Oculus SDK](http://developer.oculus.com/) and is
+built if `WITH_OVR` is enabled when building Magnum Integration. To use this
+library with CMake, you need to request the `Ovr` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Ovr` target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Ovr)
+
+# ...
+target_link_libraries(your-app MagnumIntegration::Ovr)
+@endcode
+
+See @ref building-integration and @ref cmake-integration for more information.
 */

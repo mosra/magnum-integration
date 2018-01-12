@@ -25,100 +25,196 @@
 
 namespace Magnum {
 /** @page building-integration Downloading and building integration libraries
-@brief Guide how to download and build integration libraries for Magnum engine.
+@brief Guide how to download and build integration libraries for the Magnum engine.
 
 @tableofcontents
 @m_footernavigation
 
-Integration repository provides integration of various math and physics
-libraries with Magnum engine. This is not needed for essential usage, but it
+The integration repository provides integration of various math and physics
+libraries with Magnum engine. They are not needed for essential usage, but it
 might get handy if you want to use something other than builtin components and
 seamlessly integrate them with the rest of the engine.
 
-The source is available on GitHub: https://github.com/mosra/magnum-integration.
-Building integration libraries is very similar to building Magnum itself. See
-@ref building for additonal information about building and running tests,
-crosscompiling and platform-specific issues.
+@section building-integration-packages Prepared packages
 
-Similarly to Magnum, the libraries are build as shared by default. If you are
-developing for platform which doesn't support shared libraries or if you just
-want to link them statically, enable `BUILD_STATIC` to build the libraries as
-static. If you plan to use them with shared libraries later, enable also
-position-independent code with `BUILD_STATIC_PIC`.
+The easiest way to install Magnum Integration is to use one of the ready-made
+packages for your platform of choice. See @ref building-integration-manual if
+you want to have more control. Cross-compiling is very similar to
+@ref building-cross "cross-compiling of Magnum itself".
 
-Libraries built in `Debug` configuration (e.g. with `CMAKE_BUILD_TYPE` set
-to `Debug`) have `-d` suffix, similarly to what is done when
-@ref building "building Magnum itself".
+-   @ref building-integration-packages-arch
+-   @ref building-integration-packages-deb
+-   @ref building-integration-packages-gentoo
+-   @ref building-integration-packages-brew
 
-By default no integration libraries are built and you need to select them
-manually:
+@subsection building-integration-packages-arch ArchLinux packages
 
--   `WITH_BULLET` --- @ref BulletIntegration "BulletIntegration" library.
--   `WITH_OVR` --- @ref OvrIntegration "OvrIntegration" library.
+In `package/archlinux/magnum-integration-git` there is a package for Git
+development build. The package is also in AUR as
+[magnum-integration-git](https://aur.archlinux.org/packages/magnum-integration-git/).
+It depends on @ref building-corrade-packages-arch "Corrade" and
+@ref building-packages-arch "Magnum" ArchLinux packages.
 
-Note that [each *Integration namespace](namespaces.html) contains more
-detailed information about dependencies, availability on particular platform
-and also guide how to enable given library in build and use it with CMake.
-
-@section building-integration-doc Building Integration documentation
-
-The documentation is built as part of of the main Magnum documentation. Clone
-the projects next to each other and continue as described in @ref building-doc.
-
-@section building-integration-arch Building ArchLinux packages
-
-In `package/archlinux` directory is currently one package for Git development
-build. The package is also in AUR under the same name.
-
-There are also a few development PKGBUILDs in `package/archlinux`, which allow
-you to build and install the package directly from source tree without
-downloading anything. The native PKGBUILDs also contain @cb{.sh} check() @ce
-function which will run all unit tests before packaging.
-
-@section building-integration-gentoo Gentoo ebuilds
-
-Gentoo Git ebuild is available in `package/gentoo` directory.
-
-@section building-integration-deb Building DEB packages
-
-There is also `package/debian/` directory with all files needed for building
-Debian packages. You need to have `corrade-dev` and `magnum-dev` DEB packages
-installed and in addition also `dpkg-dev` and `debhelper` packages. Building is
-easy, just change directory to package root, link or copy `package/debian`
-directory there and run `dpkg-buildpackage`:
+There are also a few development packages for native builds, cross-compilation
+for Emscripten, Android and MinGW or various sanitizer/coverage builds. See the
+PKGBUILD files in the `package/archlinux` directory. They allow you to build
+and install the package directly from source tree. Example usage:
 
 @code{.sh}
+git clone git://github.com/mosra/magnum-integration && cd magnum-integration
+cd package/archlinux
+makepkg -fp PKGBUILD # or any other PKGBUILD file
+@endcode
+
+In most cases the development PKGBUILDs also contain a @cb{.sh} check() @ce
+function which will run all unit tests before packaging. That might sometimes
+fail or take too long, pass `--nocheck` to `makepkg` to skip that.
+
+Once built, install the package using `pacman`:
+
+@code{.sh}
+sudo pacman -U magnum-integration-*.pkg.tar.xz
+@endcode
+
+Edit the PKGBUILDs if you want to pass additional flags to CMake or
+@ref building-integration-features "enable / disable additional features".
+
+There are also ArchLinux packages for
+@ref building-plugins-packages-arch "Magnum Plugins",
+@ref building-extras-packages-arch "Magnum Extras" and
+@ref building-examples-packages-arch "Magnum Examples".
+
+@subsection building-integration-packages-deb Packages for Debian, Ubuntu and derivatives
+
+The `package/debian/` directory contains all files needed for building Debian
+packages. You need the @ref building-corrade-packages-deb "Corrade" and
+@ref building-packages-deb "Magnum" Debian packages installed and in addition
+also the `dpkg-dev` and `debhelper` packages. Building is easy, just change
+directory to package root, link or copy the `package/debian` directory there
+and run `dpkg-buildpackage`:
+
+@code{.sh}
+git clone git://github.com/mosra/magnum-integration && cd magnum-integration
 ln -s package/debian .
 dpkg-buildpackage
 @endcode
 
 This will compile binary and development packages, which will then appear in
-parent directory. If you need to modify CMake flags (enabling/disabling some
-libraries, for example), modify the last entry in `debian/rules`.
-
-@subsection building-integration-brew Homebrew formulas
-
-macOS Homebrew formulas are in `package/homebrew` directory. Either use the
-`*.rb` files directly or use the tap at https://github.com/mosra/homebrew-magnum :
+parent directory. Install them using `dpkg`:
 
 @code{.sh}
+sudo dpkg -i ../magnum-integration*.deb
+@endcode
+
+If you want to pass additional flags to CMake or
+@ref building-integration-features "enable / disable additional features", add
+them to `dh_auto_configure` at the bottom of `debian/rules`. Watch out, as
+indentation has to be done using tabs, not spaces.
+
+There are also Debian packages for
+@ref building-plugins-packages-deb "Magnum Plugins",
+@ref building-extras-packages-deb "Magnum Extras" and
+@ref building-examples-packages-deb "Magnum Examples".
+
+@subsection building-integration-packages-gentoo Gentoo Linux ebuilds
+
+Gentoo Git ebuild is available in the `package/gentoo` directory. Get the
+@ref building-corrade-packages-gentoo "Corrade" and
+@ref building-packages-gentoo "Magnum" Gentoo packages first and then build and
+install Magnum Integration like this:
+
+@code{.sh}
+git clone git://github.com/mosra/magnum-integration && cd magnum-integration
+cd package/gentoo
+sudo ebuild dev-libs/magnum-integration/magnum-integration-99999.ebuild manifest clean merge
+@endcode
+
+If you want to pass additional flags to CMake or
+@ref building-integration-features "enable / disable additional features", add
+them to `mycmakeargs` in the `*.ebuild` file.
+
+There are also Gentoo packages for
+@ref building-plugins-packages-gentoo "Magnum Plugins",
+@ref building-extras-packages-gentoo "Magnum Extras" and
+@ref building-examples-packages-gentoo "Magnum Examples".
+
+@subsection building-integration-packages-brew Homebrew formulas for macOS
+
+macOS [Homebrew](https://brew.sh) formulas building the latest Git revision are
+in the `package/homebrew` directory. Either use the `*.rb` files directly or
+use the tap at https://github.com/mosra/homebrew-magnum. When installing from
+the `*.rb` files you need to install the @ref building-corrade-packages-brew "Corrade"
+and @ref building-packages-brew "Magnum" Homebrew packages first, otherwise you
+can do just this:
+
+@code{.sh}
+brew install --HEAD mosra/magnum/corrade
+brew install --HEAD mosra/magnum/magnum
 brew install --HEAD mosra/magnum/magnum-integration
 @endcode
+
+If you want to pass additional flags to CMake or
+@ref building-integration-features "enable / disable additional features", edit
+the `*.rb` file.
+
+There are also Homebrew packages for
+@ref building-plugins-packages-brew "Magnum Plugins",
+@ref building-extras-packages-brew "Magnum Extras" and
+@ref building-examples-packages-brew "Magnum Examples".
+
+@section building-integration-manual Manual build
+
+The source is available on GitHub: https://github.com/mosra/magnum-integration.
+Building the integration libraries is very similar to building Magnum itself.
+See @ref building for additonal information about building and running tests,
+cross-compiling and platform-specific issues.
+
+@subsection building-integration-features Enabling or disabling features
+
+Similarly to Magnum, the libraries are build as shared by default. If you are
+developing for a platform which doesn't support shared libraries or if you just
+want to link them statically, enable `BUILD_STATIC` to build the libraries as
+static. If you plan to use them with shared libraries later, enable also
+position-independent code with `BUILD_STATIC_PIC`.
+
+Libraries built in the `Debug` configuration (e.g. with `CMAKE_BUILD_TYPE` set
+to `Debug`) have a `-d` suffix, similarly to what is done when
+@ref building "building Magnum itself".
+
+By default no integration libraries are built and you need to select them
+manually:
+
+-   `WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
+    library. Depends on [Bullet Physics](http://bulletphysics.org/).
+-   `WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration" library.
+    Depends on the [Oculus SDK](http://developer.oculus.com/).
+
+Note that each [*Integration namespace](namespaces.html) documentation contains
+more detailed information about its dependencies, availability on particular
+platforms and also a guide how to enable given library for building and hot to
+use it with CMake.
+
+@section building-integration-doc Building documentation
+
+The documentation for integration libraries is built as part of of the main
+Magnum documentation. Clone the projects next to each other and continue as
+described in @ref building-doc.
 
 @section building-integration-ci Continuous Integration
 
 @subsection building-integration-ci-travis Travis
 
-In `package/ci/` there is a `travis.yml` file with Linux GCC 4.7, macOS Clang,
-Linux desktop GLES2/GLES3, iOS GLES2/GLES3, Emscripten WebGL1/WebGL2, Android
+In `package/ci/` there is a `travis.yml` file with Linux GCC 4.7, macOS, Linux
+desktop GLES2/GLES3, iOS GLES2/GLES3, Emscripten WebGL1/WebGL2, Android
 GLES2/GLES3, AddressSanitizer and ThreadSanitizer configuration. Online at
 https://travis-ci.org/mosra/magnum-integration. The Linux build has code
-coverage reports available online at https://coveralls.io/github/mosra/magnum-integration.
+coverage reports available online at
+https://coveralls.io/github/mosra/magnum-integration.
 
 @subsection building-integration-ci-appveyor AppVeyor
 
-In `package/ci/` there is `appveyor.yml` file with Windows desktop MSVC, MinGW,
-Windows desktop GLES2/GLES3 and Windows RT GLES2/GLES3 configuration. Online at
-https://ci.appveyor.com/project/mosra/magnum-integration.
+In `package/ci/` there is an `appveyor.yml` file with Windows desktop MSVC,
+MinGW, Windows desktop GLES2/GLES3 and Windows RT GLES2/GLES3 configuration.
+Online at https://ci.appveyor.com/project/mosra/magnum-integration.
 */
 }
