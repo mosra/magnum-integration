@@ -1,0 +1,50 @@
+# Author: mosra <mosra@centrum.cz>
+pkgname=emscripten-magnum-integration
+pkgver=dev.wasm.webgl2
+pkgrel=1
+pkgdesc="Integration libraries for Magnum OpenGL graphics engine (Emscripten, WebGL 2.0, wasm)"
+arch=('any')
+url="http://magnum.graphics"
+license=('MIT')
+depends=('emscripten-magnum=dev.wasm.webgl2' 'emscripten-bullet')
+makedepends=('cmake' 'emscripten' 'corrade' 'ninja')
+options=('!strip' '!buildflags')
+
+_rootdir=$startdir/../../
+
+build() {
+    if [ ! -d "$_rootdir/build-emscripten-wasm-webgl2" ] ; then
+        mkdir "$_rootdir/build-emscripten-wasm-webgl2"
+        cd "$_rootdir/build-emscripten-wasm-webgl2"
+
+        cmake .. \
+            -DCMAKE_TOOLCHAIN_FILE="$_rootdir/toolchains/generic/Emscripten-wasm.cmake" \
+            -DCMAKE_PREFIX_PATH="/usr/lib/emscripten/system" \
+            -G Ninja
+    fi
+
+    cd "$_rootdir/build-emscripten-wasm-webgl2"
+
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr/lib/emscripten/system \
+        -DMAGNUM_DEPLOY_PREFIX=/srv/http/emscripten-webgl2 \
+        -DWITH_BULLET=ON \
+        -DBUILD_TESTS=OFF
+    ninja
+}
+
+check() {
+    cd "$_rootdir/build-emscripten-wasm-webgl2"
+
+    # So tests are not even built (takes AGES) when the user doesn't want to
+    cmake . -DBUILD_TESTS=ON
+    ninja
+
+    CORRADE_TEST_COLOR=ON ctest --output-on-failure
+}
+
+package() {
+    cd "$_rootdir/build-emscripten-wasm-webgl2"
+    DESTDIR="$pkgdir/" ninja install
+}
