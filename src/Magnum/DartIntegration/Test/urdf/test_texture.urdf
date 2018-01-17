@@ -1,0 +1,49 @@
+<robot
+  name="KR5sixxR650WP_description">
+  <link name="world"/>
+  <joint name="arm_to_world_fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 -0.5 0" rpy="-1.57 0 0" />
+  </joint>
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.017519394031846 8.11394768450848E-07 0.0975924044854325"
+        rpy="0 0 0" />
+      <mass
+        value="7.58585707666653" />
+      <inertia
+        ixx="0.0441803207364147"
+        ixy="5.37433593375545E-07"
+        ixz="0.004045564920652"
+        iyy="0.0584309411563095"
+        iyz="-4.8990117845347E-07"
+        izz="0.0514875586171667" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="texture.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="texture.dae" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -3,6 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2018 Konstantinos Chatzilygeroudis <costashatz@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -23,14 +24,25 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_DART)
-    add_subdirectory(DartIntegration)
+if(CORRADE_TARGET_EMSCRIPTEN OR CORRADE_TARGET_ANDROID)
+    set(DARTINTEGRATION_TEST_DIR ".")
+else()
+    set(DARTINTEGRATION_TEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
+find_package(DART CONFIG REQUIRED OPTIONAL_COMPONENTS io-urdf utils-urdf)
+
+# The DART URDF library is only needed for the tests
+if(DART_utils-urdf_FOUND OR DART_io-urdf_FOUND)
+    set(MAGNUM_DART_URDF_FOUND 1)
 endif()
 
-if(WITH_OVR)
-    add_subdirectory(OvrIntegration)
-endif()
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
+
+corrade_add_test(DartIntegrationDartSkeletonTest DartSkeletonTest.cpp LIBRARIES MagnumDartIntegration ${DART_LIBRARIES})
+target_include_directories(DartIntegrationDartSkeletonTest PUBLIC ${DART_INCLUDE_DIRS})
+
+set_target_properties(
+    DartIntegrationDartSkeletonTest
+    PROPERTIES FOLDER "Magnum/DartIntegration/Test")

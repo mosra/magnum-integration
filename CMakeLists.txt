@@ -3,6 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2018 Konstantinos Chatzilygeroudis <costashatz@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -57,6 +58,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/modules/")
 find_package(Magnum REQUIRED)
 
 # Parts of the library
+option(WITH_DART "Build DartIntegration library" OFF)
 option(WITH_BULLET "Build BulletIntegration library" OFF)
 option(WITH_OVR "Build OvrIntegration library" OFF)
 

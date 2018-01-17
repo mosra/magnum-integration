@@ -14,6 +14,7 @@
 # This command alone is useless without specifying the components:
 #
 #  Bullet                       - Bullet Physics integration library
+#  Dart                         - Dart Physics integration library
 #  Ovr                          - Oculus SDK integration library
 #
 # Example usage with specifying additional components is:
@@ -53,6 +54,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2018 Konstantinos Chatzilygeroudis <costashatz@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -80,6 +82,9 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
 
     if(_component STREQUAL Bullet)
         set(_MAGNUMINTEGRATION_${_COMPONENT}_MAGNUM_DEPENDENCIES SceneGraph Shapes)
+    endif()
+    if(_component STREQUAL Dart)
+        set(_MAGNUMINTEGRATION_${_COMPONENT}_MAGNUM_DEPENDENCIES SceneGraph Primitives MeshTools)
     endif()
 
     list(APPEND _MAGNUMINTEGRATION_DEPENDENCIES ${_MAGNUMINTEGRATION_${_COMPONENT}_MAGNUM_DEPENDENCIES})
@@ -118,7 +123,7 @@ endif()
 
 # Component distinction (listing them explicitly to avoid mistakes with finding
 # components from other repositories)
-set(_MAGNUMINTEGRATION_LIBRARY_COMPONENTS "^(Bullet|Ovr)$")
+set(_MAGNUMINTEGRATION_LIBRARY_COMPONENTS "^(Bullet|Dart|Ovr)$")
 
 # Additional components
 foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
@@ -174,6 +179,16 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             endforeach()
 
             set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES MotionState.h)
+
+        # Dart integration library
+        elseif(_component STREQUAL Dart)
+            find_package(DART CONFIG REQUIRED)
+            set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
+                INTERFACE_INCLUDE_DIRECTORIES ${DART_INCLUDE_DIRS})
+            set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES ${DART_LIBRARIES})
+
+            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES ConvertShapeNode.h)
 
         # Oculus SDK integration library
         elseif(_component STREQUAL Ovr)
