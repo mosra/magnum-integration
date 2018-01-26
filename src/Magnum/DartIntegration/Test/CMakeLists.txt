@@ -35,6 +35,8 @@ find_package(DART CONFIG REQUIRED OPTIONAL_COMPONENTS io-urdf utils-urdf)
 # The DART URDF library is only needed for the tests
 if(DART_utils-urdf_FOUND OR DART_io-urdf_FOUND)
     set(MAGNUM_DART_URDF_FOUND 1)
+else()
+    set(MAGNUM_DART_URDF_FOUND 0)
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake

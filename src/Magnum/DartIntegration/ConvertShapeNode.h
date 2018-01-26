@@ -55,6 +55,9 @@ namespace Magnum { namespace DartIntegration {
 @brief ShapeData struct
 */
 struct ShapeData {
+    /** explicit constructor needed for older compilers */
+    explicit ShapeData(Trade::MeshData3D mesh, Trade::PhongMaterialData mat, Containers::Array<Containers::Optional<Trade::ImageData2D>> imgs, Containers::Array<Containers::Optional<Trade::TextureData>> texs) : mesh(std::move(mesh)), material(std::move(mat)), images(std::move(imgs)), textures(std::move(texs)) {}
+
     /** mesh information */
     Trade::MeshData3D mesh;
     /** material information */

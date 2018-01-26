@@ -24,6 +24,9 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <assimp/defs.h> /* in assimp 3.0, version.h is missing this include for ASSIMP_API */
+#include <assimp/version.h>
+
 #include <dart/dynamics/BallJoint.hpp>
 #include <dart/dynamics/BodyNode.hpp>
 #include <dart/dynamics/BoxShape.hpp>
@@ -96,7 +99,7 @@ namespace {
         bn->setLocalCOM(center);
     }
 
-    dart::dynamics::BodyNode* makeRootBody(const dart::dynamics::SkeletonPtr& pendulum, const std::string& name) {
+    dart::dynamics::BodyNode* makeRootBody(const dart::dynamics::SkeletonPtr& pendulum, std::string name) {
         dart::dynamics::BallJoint::Properties properties;
         properties.mName = name + "_joint";
         properties.mRestPositions = Eigen::Vector3d::Constant(DefaultRestPosition);
@@ -120,7 +123,7 @@ namespace {
         return bn;
     }
 
-    dart::dynamics::BodyNode* addBody(const dart::dynamics::SkeletonPtr& pendulum, dart::dynamics::BodyNode* parent, const std::string& name) {
+    dart::dynamics::BodyNode* addBody(const dart::dynamics::SkeletonPtr& pendulum, dart::dynamics::BodyNode* parent, std::string name) {
         /* Set up the properties for the Joint */
         dart::dynamics::RevoluteJoint::Properties properties;
         properties.mName = name + "_joint";
@@ -177,7 +180,8 @@ DartSkeletonTest::DartSkeletonTest() {
 
 void DartSkeletonTest::test() {
     /* Create an empty Skeleton with the name "pendulum" */
-    dart::dynamics::SkeletonPtr pendulum = dart::dynamics::Skeleton::create("pendulum");
+    std::string name = "pendulum";
+    dart::dynamics::SkeletonPtr pendulum = dart::dynamics::Skeleton::create(name);
 
     /* Add each body to the last BodyNode in the pendulum */
     dart::dynamics::BodyNode* bn = makeRootBody(pendulum, "body1");
@@ -193,7 +197,7 @@ void DartSkeletonTest::test() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    DartSkeleton* skel = new DartSkeleton{*obj, pendulum};
+    auto skel = std::make_shared<DartSkeleton>(DartSkeleton{*obj, pendulum});
 
     /** Set the initial joint positions so that the pendulum
      * starts to swing right away
@@ -233,6 +237,8 @@ void DartSkeletonTest::urdf() {
     dart::io::DartLoader loader;
 #endif
 
+    const UnsignedInt version = aiGetVersionMajor()*100 + aiGetVersionMinor();
+
     std::string filename = std::string(DARTINTEGRATION_TEST_DIR) + std::string("/urdf/test.urdf");
     auto tmp_skel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmp_skel);
@@ -243,7 +249,7 @@ void DartSkeletonTest::urdf() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    DartSkeleton* skel = new DartSkeleton{*obj, tmp_skel};
+    auto skel = std::make_shared<DartSkeleton>(DartSkeleton{*obj, tmp_skel});
 
     world->step();
     skel->updateObjects();
@@ -256,8 +262,13 @@ void DartSkeletonTest::urdf() {
         auto mydata = convertShapeNode(dartObj);
         CORRADE_VERIFY(mydata);
         CORRADE_VERIFY(mydata->mesh.positions(0).size() == pts[j]);
-        Vector3 color{0.6f, 0.6f, 0.6f};
-        CORRADE_COMPARE(mydata->material.diffuseColor(), color);
+        /** Ignore the material test if old version of Assimp
+         * it does not load the materials correctly!
+         */
+        if(version >= 302) {
+            Vector3 color{0.6f, 0.6f, 0.6f};
+            CORRADE_COMPARE(mydata->material.diffuseColor(), color);
+        }
         CORRADE_VERIFY(mydata->textures.size() == 0);
         CORRADE_VERIFY(mydata->images.size() == 0);
         j++;
@@ -265,6 +276,10 @@ void DartSkeletonTest::urdf() {
 }
 
 void DartSkeletonTest::texture() {
+    const UnsignedInt version = aiGetVersionMajor()*100 + aiGetVersionMinor();
+    /* @todo Possibly works with earlier versions (definitely not 3.0) */
+    if(version < 302)
+        CORRADE_SKIP("Current version of assimp would not work on this test.");
 #if DART_MINOR_VERSION < 4
     dart::utils::DartLoader loader;
 #else
@@ -281,7 +296,7 @@ void DartSkeletonTest::texture() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    DartSkeleton* skel = new DartSkeleton{*obj, tmp_skel};
+    auto skel = std::make_shared<DartSkeleton>(DartSkeleton{*obj, tmp_skel});
 
     world->step();
     skel->updateObjects();

@@ -68,7 +68,7 @@ DartSkeleton* dartSkel = new DartSkeleton{object, skel};
 ## Limitations
 
 - `SoftBodyNode`s are not supported yet
-- When changing the structure of a `SkeletonPtr`, @ref DartObject will not automatically update
+- When changing the structure of a `SkeletonPtr`, @ref DartSkeleton will not automatically update
 */
 
 class MAGNUM_DARTINTEGRATION_EXPORT DartSkeleton {

@@ -127,13 +127,18 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         /*  Most probably it does not make sense that one ShapeNode has multiple materials */
         if (importer->materialCount() > 0) {
             auto matPtr = importer->material(0);
-            matData = std::move(*static_cast<Trade::PhongMaterialData*>(matPtr.release()));
+            matData = std::move(*static_cast<Trade::PhongMaterialData*>(matPtr.get()));
         }
 
         /* Most probably it does not make sense that one ShapeNode has multiple meshes */
         Containers::Optional<Trade::MeshData3D> meshData = importer->mesh3D(0);
         if (!meshData)
             return Containers::NullOpt;
+
+        Eigen::Vector3d scale = meshShape->getScale();
+        /* Scale only if scaling vector is different from (1., 1., 1.) */
+        if (((scale.array() - 1.).abs() > 1e-3).any())
+            MeshTools::transformPointsInPlace(Matrix4::scaling(Vector3(scale(0), scale(1), scale(2))), meshData->positions(0));
 
         Containers::Array<Containers::Optional<Trade::ImageData2D>> imgData(importer->textureCount());
         Containers::Array<Containers::Optional<Trade::TextureData>> texData(importer->textureCount());
