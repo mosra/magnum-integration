@@ -70,6 +70,7 @@ cmake .. \
     -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DWITH_BULLET=OFF \
+    -DWITH_DART=OFF \
     -DWITH_OVR=OFF \
     -DBUILD_STATIC=ON \
     -DBUILD_TESTS=ON \

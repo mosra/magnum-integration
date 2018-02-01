@@ -98,6 +98,7 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DWITH_BULLET=ON \
+    -DWITH_DART=OFF \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON
 # Otherwise the job gets killed (probably because using too much memory)

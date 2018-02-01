@@ -4,7 +4,7 @@ addons:
   apt:
     packages:
     - libgl1-mesa-dev
-    - g++-4.8
+    - g++-4.8 # Dart does not work with 4.7
     - libbullet-dev
     - libjpeg-dev
     - libpng12-dev
@@ -160,6 +160,7 @@ notifications:
 cache:
   directories:
   - $HOME/cmake
+  - $HOME/deps-dart
 
 install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export WITH_DART=OFF; fi
@@ -183,6 +184,10 @@ install:
 
 # Bullet
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then brew install bullet; fi
+
+# DART and its dependencies
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./package/ci/travis-dependencies.sh; fi
+# TODO: enable on macOS once brew install dartsim/dart/dartsim6 is fixed
 
 script:
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then ./package/ci/travis-desktop.sh; fi

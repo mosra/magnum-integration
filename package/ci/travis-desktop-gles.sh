@@ -26,8 +26,8 @@ cmake .. \
     -DTARGET_DESKTOP_GLES=ON \
     -DWITH_AUDIO=OFF \
     -DWITH_DEBUGTOOLS=OFF \
-    -DWITH_MESHTOOLS=OFF \
-    -DWITH_PRIMITIVES=OFF \
+    -DWITH_MESHTOOLS=$WITH_DART \
+    -DWITH_PRIMITIVES=$WITH_DART \
     -DWITH_SCENEGRAPH=ON \
     -DWITH_SHADERS=ON \
     -DWITH_SHAPES=ON \
@@ -37,12 +37,30 @@ cmake .. \
 make -j install
 cd ../..
 
+# DartIntegration needs plugins
+if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    # Magnum Plugins
+    git clone --depth 1 git://github.com/mosra/magnum-plugins.git
+    cd magnum-plugins
+    mkdir build && cd build
+    cmake .. \
+        -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+        -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DWITH_ASSIMPIMPORTER=ON \
+        -DWITH_STBIMAGEIMPORTER=ON
+    make -j install
+    cd ../..
+fi
+
 mkdir build && cd build
 cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+    -DCMAKE_PREFIX_PATH=$HOME/deps-dart \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_BULLET=ON \
+    -DWITH_DART=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON
