@@ -1,5 +1,5 @@
-#ifndef Magnum_DARTIntegration_DartObject_h
-#define Magnum_DARTIntegration_DartObject_h
+#ifndef Magnum_DartIntegration_DartObject_h
+#define Magnum_DartIntegration_DartObject_h
 /*
     This file is part of Magnum.
 
@@ -33,9 +33,9 @@
 #include <Magnum/SceneGraph/AbstractFeature.h>
 #include <Magnum/SceneGraph/AbstractTranslationRotation3D.h>
 
-#include <Magnum/DartIntegration/visibility.h>
+#include "Magnum/DartIntegration/visibility.h"
 
-namespace dart{ namespace dynamics{
+namespace dart { namespace dynamics {
     class BodyNode;
     class ShapeNode;
 }}
@@ -43,93 +43,82 @@ namespace dart{ namespace dynamics{
 namespace Magnum { namespace DartIntegration {
 
 /**
-@brief Dart Physics BodyNode or ShapeNode
+@brief DART Physics BodyNode or ShapeNode
 
 Encapsulates `BodyNode` or `ShapeNode` as a @ref SceneGraph feature.
 
-## Usage
+@section DartIntegration-DartObject-usage Usage
 
-Common usage is to create a `DartObject` to share transformation with
-a Dart `BodyNode` or `ShapeNode` by passing a pointer its constructor:
+Common usage is to create a @ref DartObject to share transformation with a DART
+`BodyNode` or `ShapeNode` by passing a pointer to its constructor:
 
-@code
+@code{.cpp}
 dart::dynamics::BodyNode* body = getBodyNodeFromDart();
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 DartObject* obj = new DartObject{&object, body};
-
-// only the Dart body can affect the transformation of the Magnum
-// object and not the other way around
-// to get the latest Dart transformation, you should update the obj
-// obj->update();
 @endcode
 
 or
 
-@code
+@code{.cpp}
 dart::dynamics::ShapeNode* node = getShapeNodeFromDart();
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 DartObject* obj = new DartObject{&object, node};
-
-// only the Dart node can affect the transformation of the Magnum
-// object and not the other way around
-// to get the latest Dart transformation, you should update the obj
-// obj->update();
 @endcode
-*/
 
-class MAGNUM_DARTINTEGRATION_EXPORT DartObject : public SceneGraph::AbstractBasicFeature3D<Float> {
+Only the DART body/node can affect the transformation of the Magnum object and
+not the other way around. To get the latest DART transformation, you should
+update the object with @ref update().
+*/
+class MAGNUM_DARTINTEGRATION_EXPORT DartObject: public SceneGraph::AbstractBasicFeature3D<Float> {
     public:
         /**
          * @brief Constructor
-         * @param object    Object this DartObject belongs to
-         * @param node      Dart ShapeNode to connect with
+         * @param object    Object this @ref DartObject belongs to
+         * @param node      DART `ShapeNode` to connect with
          */
-        template <class T> DartObject(T& object, dart::dynamics::ShapeNode* node = nullptr) : DartObject{object, object}
-        {
-            _node = node;
-            _body = nullptr;
-            if (_node)
-                this->update();
+        template<class T> DartObject(T& object, dart::dynamics::ShapeNode* node = nullptr): DartObject{object, object, node, nullptr} {
+            if(_node) update();
         }
 
         /**
          * @brief Constructor
-         * @param object    Object this DartObject belongs to
-         * @param body      Dart BodyNode to connect to
+         * @param object    Object this @ref DartObject belongs to
+         * @param body      DART `BodyNode` to connect with
          */
-        template <class T>
-        DartObject(T& object, dart::dynamics::BodyNode* body = nullptr) : DartObject{object, object}
-        {
-            _node = nullptr;
-            _body = body;
-            if (_body)
-                this->update();
+        template<class T> DartObject(T& object, dart::dynamics::BodyNode* body = nullptr): DartObject{object, object, nullptr, body} {
+            if(_body) update();
         }
 
-        /** @brief Connect with ShapeNode
-         * this will de-connect from the connected BodyNode, if any
+        /**
+         * @brief Connect with `ShapeNode`
+         *
+         * This will disconnect from any connected `BodyNode`.
          */
         DartObject& setShapeNode(dart::dynamics::ShapeNode* node);
 
-        /** @brief Connect with BodyNode
-         * this will de-connect from the connected ShapeNode, if any
+        /**
+         * @brief Connect with `BodyNode`
+         *
+         * This will disconnect from any connected `ShapeNode`.
          */
         DartObject& setBodyNode(dart::dynamics::BodyNode* body);
 
-        /** @brief get transformation from Dart */
+        /** @brief Get transformation from DART */
         DartObject& update();
 
-        /** @brief ShapeNode */
-        dart::dynamics::ShapeNode* shapeNode();
-        /** @brief BodyNode */
-        dart::dynamics::BodyNode* bodyNode();
+        /** @brief Underlying DART `ShapeNode` */
+        dart::dynamics::ShapeNode* shapeNode() { return _node; }
+
+        /** @brief Underlying DART `BodyNode` */
+        dart::dynamics::BodyNode* bodyNode() { return _body; }
 
     private:
-        explicit DartObject(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation);
+        explicit DartObject(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation, dart::dynamics::ShapeNode* node, dart::dynamics::BodyNode* body);
 
+        SceneGraph::AbstractBasicTranslationRotation3D<Float>& _transformation;
         dart::dynamics::ShapeNode* _node;
         dart::dynamics::BodyNode* _body;
-        SceneGraph::AbstractBasicTranslationRotation3D<Float>& _transformation;
 };
 
 }}

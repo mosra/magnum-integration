@@ -186,6 +186,8 @@ manually:
 
 -   `WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
     library. Depends on [Bullet Physics](http://bulletphysics.org/).
+-   `WITH_DART` -- Build the @ref DartIntegration "DartIntegration" library.
+    Depends on [DART](http://dartsim.github.io/).
 -   `WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration" library.
     Depends on the [Oculus SDK](http://developer.oculus.com/).
 

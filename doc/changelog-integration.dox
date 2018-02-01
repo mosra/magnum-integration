@@ -49,6 +49,8 @@ namespace Magnum {
 -   iOS support
 -   WebAssembly support when building for Emscripten
 -   WebGL 2.0 support
+-   New @ref DartIntegration library, integrating
+    [DART Dynamic Animation and Robotics Toolkit](http://dartsim.github.io/)
 -   New @ref OvrIntegration library, integrating Oculus SDK
 -   New @ref BulletIntegration::DebugDraw class for simple and easy physics
     debugging

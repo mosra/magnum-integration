@@ -50,6 +50,29 @@ target_link_libraries(your-app MagnumIntegration::Bullet)
 See @ref building-integration and @ref cmake-integration for more information.
 */
 
+/** @dir Magnum/DartIntegration
+ * @brief Namespace @ref Magnum::DartIntegration
+ */
+/** @namespace Magnum::DartIntegration
+@brief Integration with DART Dynamic Animation and Robotics Toolkit
+
+Conversion of nodes and shapes for visualizing physics simulation.
+
+This library depends on the [DART](http://dartsim.github.io/) library
+and is built if `WITH_DART` is enabled when building Magnum Integration. To
+use this library with CMake, you need to request the `Dart` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Dart` target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Dart)
+
+# ...
+target_link_libraries(your-app MagnumIntegration::Dart)
+@endcode
+
+See @ref building-integration and @ref cmake-integration for more information.
+*/
+
 /** @dir Magnum/OvrIntegration
  * @brief Namespace @ref Magnum::OvrIntegration
  */

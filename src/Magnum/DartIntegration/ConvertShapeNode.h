@@ -1,5 +1,5 @@
-#ifndef Magnum_DARTIntegration_ConvertShapeNode_h
-#define Magnum_DARTIntegration_ConvertShapeNode_h
+#ifndef Magnum_DartIntegration_ConvertShapeNode_h
+#define Magnum_DartIntegration_ConvertShapeNode_h
 /*
     This file is part of Magnum.
 
@@ -27,77 +27,76 @@
 */
 
 /** @file
- * @brief Function @ref Magnum::DartIntegration::convertShapeNode()
- * @brief Class @ref Magnum::DartIntegration::ShapeData
+ * @brief Class @ref Magnum::DartIntegration::ShapeData, function @ref Magnum::DartIntegration::convertShapeNode()
  */
 
 #include <Corrade/Containers/Array.h>
 #include <Corrade/Containers/Optional.h>
-
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
 #include <Magnum/Trade/TextureData.h>
 
-#include <Magnum/DartIntegration/DartObject.h>
-#include <Magnum/DartIntegration/visibility.h>
+#include "Magnum/DartIntegration/DartIntegration.h"
+#include "Magnum/DartIntegration/visibility.h"
 
-namespace Magnum { namespace Trade {
-    class MeshData3D;
-    class PhongMaterialData;
-    template<UnsignedInt dimensions> class ImageData;
-    typedef ImageData<2> ImageData2D;
-    class TextureData;
+namespace dart { namespace dynamics {
+    class BodyNode;
+    class ShapeNode;
 }}
 
 namespace Magnum { namespace DartIntegration {
+
 /**
-@brief ShapeData struct
+@brief Shape data
+
+@see @ref convertShapeNode()
 */
 struct ShapeData {
-    /** explicit constructor needed for older compilers */
-    explicit ShapeData(Trade::MeshData3D mesh, Trade::PhongMaterialData mat, Containers::Array<Containers::Optional<Trade::ImageData2D>> imgs, Containers::Array<Containers::Optional<Trade::TextureData>> texs) : mesh(std::move(mesh)), material(std::move(mat)), images(std::move(imgs)), textures(std::move(texs)) {}
+    #ifndef DOXYGEN_GENERATING_OUTPUT
+    explicit ShapeData(Trade::MeshData3D mesh, Trade::PhongMaterialData material, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures): mesh{std::move(mesh)}, material{std::move(material)}, images{std::move(images)}, textures{std::move(textures)} {}
+    #endif
 
-    /** mesh information */
+    /** @brief Mesh data */
     Trade::MeshData3D mesh;
-    /** material information */
+
+    /** @brief Material data */
     Trade::PhongMaterialData material;
-    /** ImageData2D (vector) */
+
+    /** @brief Image data */
     Containers::Array<Containers::Optional<Trade::ImageData2D>> images;
-    /** TextureData (vector) */
+
+    /** @brief Texture data */
     Containers::Array<Containers::Optional<Trade::TextureData>> textures;
 };
 
 /**
-@brief Convert Dart ShapeNode to @ref ShapeData that can be processed by Magnum
-@param shapeNode   Dart ShapeNode to convert
+@brief Convert `ShapeNode` to mesh and material data
 
-Returns `Corrade::Containers::NullOpt` if the shape of the given ShapeNode is not supported.
+Returns @ref Corrade::Containers::NullOpt if the shape of given `ShapeNode` is
+not supported. The following DART shapes are supported:
 
-## Supported/Unsupported Dart shapes
+-   `BoxShape`
+-   `CapsuleShape`
+-   `CylinderShape`
+-   `EllipsoidShape`
+-   `MeshShape`
+-   `SphereShape`
 
-The following Dart shapes are supported:
-   - BoxShape
-   - CapsuleShape
-   - CylinderShape
-   - EllipsoidShape
-   - MeshShape
-   - SphereShape
+The following DART shapes are not yet supported:
 
-The following Dart shapes are NOT yet supported:
-   - ConeShape
-   - LineSegmentShape
-   - MultiSphereConvexHullShape
-   - PlaneShape (this is infite plane with normal)
-   - SoftMeshShape
+-   `ConeShape`
+-   `LineSegmentShape`
+-   `MultiSphereConvexHullShape`
+-   `PlaneShape` (this is an infinite plane with normal)
+-   `SoftMeshShape`
 */
 Containers::Optional<ShapeData> MAGNUM_DARTINTEGRATION_EXPORT convertShapeNode(dart::dynamics::ShapeNode& shapeNode);
 
 /**
-@brief Convert DartObject to @ref ShapeData that can be processed by Magnum
+@brief Convert @ref DartObject to mesh and material data
 
-See @ref convertShape(dart::dynamics::ShapeNode* shapeNode)
-for more information.
+See @ref convertShapeNode(dart::dynamics::ShapeNode&) for more information.
 */
 Containers::Optional<ShapeData> MAGNUM_DARTINTEGRATION_EXPORT convertShapeNode(DartObject& object);
 

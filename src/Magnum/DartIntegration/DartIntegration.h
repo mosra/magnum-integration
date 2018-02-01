@@ -1,3 +1,5 @@
+#ifndef Magnum_DartIntegration_DartIntegration_h
+#define Magnum_DartIntegration_DartIntegration_h
 /*
     This file is part of Magnum.
 
@@ -24,39 +26,17 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "DartSkeleton.h"
+/** @file
+ * @brief Forward declarations for the @ref Magnum::DartIntegration namespace
+ */
 
 namespace Magnum { namespace DartIntegration {
 
-DartSkeleton& DartSkeleton::updateObjects() {
-    for(auto& obj: _objects)
-        obj->update();
-
-    return *this;
-}
-
-std::vector<std::reference_wrapper<DartObject>> DartSkeleton::objects() {
-    std::vector<std::reference_wrapper<DartObject>> objects;
-    for(auto& obj: _objects)
-        objects.emplace_back(std::ref(*obj));
-
-    return objects;
-}
-
-std::vector<std::reference_wrapper<DartObject>> DartSkeleton::shapeObjects() {
-    std::vector<std::reference_wrapper<DartObject>> objects;
-    for(auto& obj: _objects) if(obj->shapeNode())
-        objects.emplace_back(std::ref(*obj));
-
-    return objects;
-}
-
-std::vector<std::reference_wrapper<DartObject>> DartSkeleton::bodyObjects() {
-    std::vector<std::reference_wrapper<DartObject>> objects;
-    for(auto& obj: _objects) if(obj->bodyNode())
-        objects.emplace_back(std::ref(*obj));
-
-    return objects;
-}
+#ifndef DOXYGEN_GENERATING_OUTPUT
+class DartObject;
+class DartSkeleton;
+#endif
 
 }}
+
+#endif

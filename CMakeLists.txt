@@ -58,8 +58,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/modules/")
 find_package(Magnum REQUIRED)
 
 # Parts of the library
-option(WITH_DART "Build DartIntegration library" OFF)
 option(WITH_BULLET "Build BulletIntegration library" OFF)
+option(WITH_DART "Build DartIntegration library" OFF)
 option(WITH_OVR "Build OvrIntegration library" OFF)
 
 include(CMakeDependentOption)

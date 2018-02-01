@@ -24,21 +24,20 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <Magnum/DartIntegration/DartObject.h>
+#include "DartObject.h"
 
 #include <dart/dynamics/BodyNode.hpp>
 #include <dart/dynamics/ShapeNode.hpp>
 
 namespace Magnum { namespace DartIntegration {
 
-DartObject::DartObject(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation) : SceneGraph::AbstractBasicFeature3D<Float>(object), _transformation(transformation) {}
+DartObject::DartObject(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation, dart::dynamics::ShapeNode* node, dart::dynamics::BodyNode* body): SceneGraph::AbstractBasicFeature3D<Float>{object}, _transformation(transformation), _node{node}, _body{body} {}
 
 DartObject& DartObject::setShapeNode(dart::dynamics::ShapeNode* node) {
     _node = node;
     _body = nullptr;
 
-    if (_node)
-        this->update();
+    if(_node) update();
 
     return *this;
 }
@@ -47,18 +46,16 @@ DartObject& DartObject::setBodyNode(dart::dynamics::BodyNode* body) {
     _node = nullptr;
     _body = body;
 
-    if (_body)
-        this->update();
+    if(_body) update();
 
     return *this;
 }
 
 DartObject& DartObject::update() {
-    /** Get transform from DART
-     * @todo Check if getting translation like this is correct
-     */
+    /* Get transform from DART */
+    /** @todo Check if getting translation like this is correct */
     Eigen::Isometry3d trans;
-    if (!_node)
+    if(!_node)
         trans = _body->getRelativeTransform();
     else
         trans = _node->getRelativeTransform();
@@ -72,20 +69,12 @@ DartObject& DartObject::update() {
     Math::Vector3<Float> u(axis(0), axis(1), axis(2));
     Rad theta(R.angle());
 
-    /* pass it to Magnum */
+    /* Pass it to Magnum */
     _transformation.resetTransformation()
         .rotate(theta, u)
         .translate(t);
 
     return *this;
-}
-
-dart::dynamics::ShapeNode* DartObject::shapeNode() {
-    return _node;
-}
-
-dart::dynamics::BodyNode* DartObject::bodyNode() {
-    return _body;
 }
 
 }}

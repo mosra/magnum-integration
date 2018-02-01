@@ -41,6 +41,7 @@ set(MagnumDartIntegration_SRCS
 
 set(MagnumDartIntegration_HEADERS
     ConvertShapeNode.h
+    DartIntegration.h
     DartObject.h
     DartSkeleton.h
 
