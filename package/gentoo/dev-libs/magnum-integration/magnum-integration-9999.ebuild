@@ -23,6 +23,8 @@ src_configure() {
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_PREFIX="${EPREFIX}/usr"
 		-DCMAKE_BUILD_TYPE=Release
+		-DWITH_BULLET=ON
+		-DWITH_DART=OFF
 	)
 	cmake-utils_src_configure
 }
