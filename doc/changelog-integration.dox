@@ -101,6 +101,8 @@ No APIs were removed since last release.
 
 -   New documentation theme powered by [m.css](http://mcss.mosra.cz) and
     related massive updates of *everything*
+-   The @ref building-integration documentation now prefers package
+    installation instead of manual build
 
 @section changelog-integration-2015-05 2015-05 snapshot
 
