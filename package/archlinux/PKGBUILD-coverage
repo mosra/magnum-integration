@@ -1,0 +1,50 @@
+# Author: mosra <mosra@centrum.cz>
+pkgname=magnum-integration
+pkgver=dev
+pkgrel=1
+pkgdesc="Integration libraries for the Magnum C++11/C++14 graphics engine (coverage build)"
+arch=('i686' 'x86_64')
+url="http://magnum.graphics"
+license=('MIT')
+depends=('magnum' 'bullet' 'libdart')
+makedepends=('cmake' 'ninja')
+options=(!strip)
+provides=('magnum-integration-git')
+
+_rootdir=$startdir/../../
+
+build() {
+    mkdir -p "$_rootdir/build-coverage"
+    cd "$_rootdir/build-coverage"
+
+    # Disable optimization (saves A LOT of compilation time)
+    newcxxflags=$(echo $CXXFLAGS | sed s/-O.//g | sed s/-D_FORTIFY_SOURCE=.//g)
+    export CXXFLAGS="$newcxxflags"
+
+    cmake .. \
+        -DCMAKE_CXX_FLAGS="--coverage" \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_BULLET=ON \
+        -DWITH_DART=ON \
+        -DBUILD_TESTS=ON \
+        -G Ninja
+    ninja
+}
+
+check() {
+    cd "$_rootdir/build-coverage"
+    CORRADE_TEST_COLOR=ON ctest --output-on-failure
+
+    rm -rf coverage
+    mkdir coverage
+    lcov --directory . --capture --output-file coverage.info
+    lcov --extract coverage.info "*/src/Magnum*/*" --output-file coverage.info
+    lcov --remove coverage.info "*/Test/*" --output-file coverage.info
+    lcov --remove coverage.info "*/build-coverage/src/*" --output-file coverage.info
+    genhtml --output-directory ./coverage coverage.info
+}
+
+package() {
+    echo "Open build-coverage/coverage/index.html to see the results." && false
+}
