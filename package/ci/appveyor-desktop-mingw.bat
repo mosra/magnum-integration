@@ -7,10 +7,11 @@ IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\2.86.1.zip appveyor DownloadFile https://gi
 7z x 2.86.1.zip || exit /b
 cd bullet3-2.86.1 || exit /b
 mkdir build && cd build || exit /b
-rem CMake's Find module is not able to find Debug versions of the libraries
+rem CMAKE'S FIND MODULE IS NOT ABLE TO FIND DEBUG VERSIONS OF THE LIBRARIES!!
+rem WRITING THIS IN ALL CAPS BECAUSE I DIDN'T SEE THIS AND CHANGED TO DEBUG!!
 cmake .. ^
-    -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/bullet ^
     -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/bullet ^
     -DBUILD_SHARED_LIBS=ON ^
     -DUSE_GRAPHICAL_BENCHMARK=OFF ^
     -DBUILD_CPU_DEMOS=OFF ^
@@ -29,7 +30,8 @@ git clone --depth 1 git://github.com/mosra/corrade.git || exit /b
 cd corrade || exit /b
 mkdir build && cd build || exit /b
 cmake .. ^
-    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_CXX_FLAGS="--coverage" ^
+    -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DWITH_INTERCONNECT=OFF ^
     -G Ninja || exit /b
@@ -42,7 +44,8 @@ git clone --depth 1 git://github.com/mosra/magnum.git || exit /b
 cd magnum || exit /b
 mkdir build && cd build || exit /b
 cmake .. ^
-    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_CXX_FLAGS="--coverage" ^
+    -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DWITH_AUDIO=OFF ^
     -DWITH_DEBUGTOOLS=OFF ^
@@ -66,7 +69,8 @@ rem command-line so I'm just disabling it.
 rem https://forums.oculus.com/community/discussion/18303/silent-installation-of-oculus-runtime-windows
 mkdir build && cd build || exit /b
 cmake .. ^
-    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_CXX_FLAGS="--coverage" ^
+    -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DWITH_BULLET=ON ^
     -DWITH_DART=OFF ^
@@ -79,3 +83,8 @@ cmake --build . --target install || exit /b
 
 rem Test
 ctest -V -E GLTest || exit /b
+
+rem Coverage upload
+set PATH=C:\msys64\usr\bin;%PATH%
+bash %APPVEYOR_BUILD_FOLDER%\package\ci\appveyor-lcov.sh || exit /b
+codecov -f coverage.info -X gcov
