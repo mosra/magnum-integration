@@ -9,8 +9,9 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=Release \
-    -DWITH_INTERCONNECT=OFF
-make -j install
+    -DWITH_INTERCONNECT=OFF \
+    -G Ninja
+ninja install
 cd ../..
 
 # Magnum
@@ -33,8 +34,9 @@ cmake .. \
     -DWITH_SHAPES=ON \
     -DWITH_TEXT=OFF \
     -DWITH_TEXTURETOOLS=OFF \
-    -DWITH_WINDOWLESS${PLATFORM_GL_API}APPLICATION=ON
-make -j install
+    -DWITH_WINDOWLESS${PLATFORM_GL_API}APPLICATION=ON \
+    -G Ninja
+ninja install
 cd ../..
 
 # DartIntegration needs plugins
@@ -48,8 +50,9 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
         -DCMAKE_BUILD_TYPE=Release \
         -DWITH_ASSIMPIMPORTER=ON \
-        -DWITH_STBIMAGEIMPORTER=ON
-    make -j install
+        -DWITH_STBIMAGEIMPORTER=ON \
+        -G Ninja
+    ninja install
     cd ../..
 fi
 
@@ -63,7 +66,8 @@ cmake .. \
     -DWITH_DART=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
-    -DBUILD_GL_TESTS=ON
+    -DBUILD_GL_TESTS=ON \
+    -G Ninja
 # Otherwise the job gets killed (probably because using too much memory)
-make -j4
+ninja -j4
 CORRADE_TEST_COLOR=ON ctest -V -E GLTest
