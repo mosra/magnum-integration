@@ -71,6 +71,8 @@ target_link_libraries(your-app MagnumIntegration::Dart)
 @endcode
 
 See @ref building-integration and @ref cmake-integration for more information.
+
+@experimental
 */
 
 /** @dir Magnum/OvrIntegration

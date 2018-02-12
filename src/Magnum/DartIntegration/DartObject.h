@@ -69,6 +69,7 @@ DartObject* obj = new DartObject{&object, node};
 Only the DART body/node can affect the transformation of the Magnum object and
 not the other way around. To get the latest DART transformation, you should
 update the object with @ref update().
+@experimental
 */
 class MAGNUM_DARTINTEGRATION_EXPORT DartObject: public SceneGraph::AbstractBasicFeature3D<Float> {
     public:

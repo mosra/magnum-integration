@@ -51,6 +51,7 @@ namespace Magnum { namespace DartIntegration {
 @brief Shape data
 
 @see @ref convertShapeNode()
+@experimental
 */
 struct ShapeData {
     #ifndef DOXYGEN_GENERATING_OUTPUT
@@ -90,6 +91,8 @@ The following DART shapes are not yet supported:
 -   `MultiSphereConvexHullShape`
 -   `PlaneShape` (this is an infinite plane with normal)
 -   `SoftMeshShape`
+
+@experimental
 */
 Containers::Optional<ShapeData> MAGNUM_DARTINTEGRATION_EXPORT convertShapeNode(dart::dynamics::ShapeNode& shapeNode);
 
@@ -97,6 +100,7 @@ Containers::Optional<ShapeData> MAGNUM_DARTINTEGRATION_EXPORT convertShapeNode(d
 @brief Convert @ref DartObject to mesh and material data
 
 See @ref convertShapeNode(dart::dynamics::ShapeNode&) for more information.
+@experimental
 */
 Containers::Optional<ShapeData> MAGNUM_DARTINTEGRATION_EXPORT convertShapeNode(DartObject& object);
 

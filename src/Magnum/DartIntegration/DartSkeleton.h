@@ -68,6 +68,8 @@ transformations, you should update the objects using @ref updateObjects().
 -   `SoftBodyNode`s are not supported yet
 -   When changing the structure of a `SkeletonPtr`, @ref DartSkeleton will not
     automatically update
+
+@experimental
 */
 class MAGNUM_DARTINTEGRATION_EXPORT DartSkeleton {
     public:
