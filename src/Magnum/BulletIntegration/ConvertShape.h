@@ -48,7 +48,7 @@ namespace Magnum { namespace BulletIntegration {
 @param shape    Shape to convert
 @param shapes   Optional shape group to add the shape to
 
-Returns `nullptr` if given shape is not supported.
+Returns @cpp nullptr @ce if given shape is not supported.
 */
 Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes = nullptr);
 

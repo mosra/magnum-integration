@@ -244,7 +244,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT LayerQuad: public HeadLockableLayer {
 
 Wraps compositing related functions of LibOVR.
 
-## Usage
+@section OvrIntegration-Compositor-usage Usage
 
 The compositor handles distortion, chromatic abberation, timewarp and sending
 images to a HMD's display.
@@ -254,7 +254,7 @@ properties. See @ref LayerEyeFov and @ref LayerQuad.
 
 Setup of a distortion layer may look as follows:
 
-@code
+@code{.cpp}
 // setup TextureSwapChains etc
 Context context;
 Session& session = // ...
@@ -275,7 +275,7 @@ for(Int eye = 0; eye < 2; ++eye) {
 After that you need to render every frame by first rendering to the texture
 swap chains and then submitting the compositor frame via @ref Compositor::submitFrame().
 
-@code
+@code{.cpp}
 layer.setRenderPoses(session);
 
 Context::get().compositor().submitFrame(session);

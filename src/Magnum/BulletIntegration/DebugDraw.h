@@ -49,13 +49,13 @@ namespace Magnum { namespace BulletIntegration {
 This class implements `btIDebugDraw`, which allows rendering a visualization
 of a Bullet physics world for debugging purposes.
 
-## Usage
+@section BulletIntegration-DebugDraw-usage Usage
 
-@code
+@code{.cpp}
 btDynamicsWorld* btWorld = // ...
 DebugDraw debugDraw;
 
-debugDraw.setDebugMode(DebugDraw::Mode::DrawWireframe | DebugDraw::Mode::DrawConstraints);
+debugDraw.setDebugMode(DebugDraw::DebugMode::DrawWireframe|DebugDraw::DebugMode::DrawConstraints);
 btWorld->setDebugDrawer(&debugDraw);
 
 // Per frame call:
@@ -131,7 +131,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         };
 
         #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @copybrief DebugMode
+        /** @brief @copybrief DebugMode
          * @deprecated Use @ref DebugMode instead.
          */
         typedef CORRADE_DEPRECATED("use DebugMode instead") DebugMode Mode;
@@ -145,7 +145,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         typedef Containers::EnumSet<DebugMode> DebugModes;
 
         #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @copybrief DebugModes
+        /** @brief @copybrief DebugModes
          * @deprecated Use @ref DebugModes instead.
          */
         typedef CORRADE_DEPRECATED("use DebugModes instead") DebugModes Modes;

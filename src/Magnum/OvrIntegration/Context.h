@@ -75,14 +75,14 @@ CORRADE_ENUMSET_OPERATORS(DetectResults)
 Handles connection to devices, creation of debug HMDs and provides access to
 the Oculus SDK @ref Compositor.
 
-## Usage
+@section OvrIntegration-Context-usage Usage
 
 There should always only be one instance of @ref Context. As soon as this
 one instance is created, you can access it via @ref Context::get().
 
 Example:
 
-@code
+@code{.cpp}
 Context context;
 
 // ...
@@ -94,7 +94,7 @@ if(Context::get().detect()) {
 
 Or without initializing the service you can do:
 
-@code
+@code{.cpp}
 const OvrDetectResults result = Context::detect();
 if(result & OvrDetectResult::HmdConnected) {
     // ...
@@ -107,7 +107,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
     public:
         /**
          * @brief Detect if a device is currently connected
-         * @param timeout Timeout (in milliseconds) or 0 to poll
+         * @param timeout Timeout (in milliseconds) or @cpp 0 @ce to poll
          *
          * Checks for Oculus Runtime and Oculus HMD device status without
          * loading the LibOVRRT shared library.  This may be called before
@@ -154,7 +154,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Context {
         /**
          * @brief Create a handle to a Oculus Session
          *
-         * Returns instance of @ref Session, or `nullptr`,
+         * Returns instance of @ref Session, or @cpp nullptr @ce,
          * if there is none.
          */
         std::unique_ptr<Session> createSession();

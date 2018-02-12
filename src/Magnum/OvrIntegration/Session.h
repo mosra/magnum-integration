@@ -149,7 +149,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
         /**
          * @brief Left and right finger trigger values
          *
-         * In the range `[0.0f;1.0f]`
+         * In the range @f$ [0.0f; 1.0f] @f$
          */
         Float indexTrigger(UnsignedInt hand) const {
             return _state.IndexTrigger[hand];
@@ -158,7 +158,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
         /**
          * @brief Left and right hand trigger values
          *
-         * In the range `[0.0f;1.0f]`
+         * In the range @f$ [0.0f; 1.0f] @f$
          */
         Float handTrigger(UnsignedInt hand) const {
             return _state.HandTrigger[hand];
@@ -167,7 +167,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
         /**
          * @brief Horizontal and vertical thumbstick axis values
          *
-         * In the range `[-1.0f;1.0f]`
+         * In the range @f$ [-1.0f; 1.0f] @f$
          */
         Vector2 thumbstick(UnsignedInt hand) const {
             return Vector2{_state.Thumbstick[hand]};
@@ -238,11 +238,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
 Wraps `ovrSession`, `ovrHmdDesc` and methods from the Oculus SDK which directly
 affect an HMD and its properties.
 
-## Usage
+@section OvrIntegration-Session-usage Usage
 
 Instances of @ref Session are created by @ref Context.
 
-@code
+@code{.cpp}
 std::unique_ptr<Session> session = Context::get().initialize().createSession();
 session->configureRendering();
 
@@ -251,14 +251,14 @@ session->configureRendering();
 
 Once the HMD is configured, you can poll and get the head pose.
 
-@code
+@code{.cpp}
 std::unique_ptr<DualQuaternion> poses = session->pollEyePoses().eyePoses();
 
 DualQuaternion leftPose = poses.get()[0];
 DualQuaternion rightPose = poses.get()[1];
 @endcode
 
-### Rendering to the HMD
+@section OvrIntegration-Session-usage-rendering Rendering to the HMD
 
 Rendering to an HMD is done via the @ref Compositor. It's results are
 rendered directly to the Rift. The compositor layers usually require you to
@@ -267,7 +267,7 @@ distortion, chromatic abberation and possibly timewarp.
 
 A setup for such a @ref TextureSwapChain for an eye could look like this:
 
-@code
+@code{.cpp}
 const Int eye = 0; // left eye
 Vector2i textureSize = session.fovTextureSize(eye);
 std::unique_ptr<TextureSwapChain> swapChain = session.createTextureSwapChain(textureSize);
@@ -304,7 +304,7 @@ framebuffer.detach(Framebuffer::ColorAttachment(0))
 Usually, especially for debugging, you will want to have a *mirror* of the
 @ref Compositor result displayed to a window.
 
-@code
+@code{.cpp}
 Texture2D& mirrorTexture = session->createMirrorTexture(resolution);
 Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
 mirrorFramebuffer.attachTexture(Framebuffer::ColorAttachment(0), mirrorTexture, 0)

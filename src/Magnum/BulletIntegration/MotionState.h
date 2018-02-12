@@ -44,12 +44,12 @@ namespace Magnum { namespace BulletIntegration {
 
 Encapsulates `btMotionState` as a @ref SceneGraph feature.
 
-## Usage
+@section BulletIntegration-MotionState-usage Usage
 
 Common usage is to either create a `btRigidBody` to share transformation with
 a @ref SceneGraph::Object by passing the motion state in its constructor:
 
-@code
+@code{.cpp}
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 btRigidBody rigidBody{mass, &(new MotionState{object}).btMotionState(), collisionShape};
 
@@ -59,7 +59,7 @@ btRigidBody rigidBody{mass, &(new MotionState{object}).btMotionState(), collisio
 
 Or setting the motion state afterwards:
 
-@code
+@code{.cpp}
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 btRigidBody rigidBody{...};
 rigidBody.setMotionState(&(new MotionState{object}).btMotionState());
