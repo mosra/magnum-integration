@@ -59,7 +59,9 @@ target_include_directories(MagnumDartIntegration SYSTEM PUBLIC ${DART_INCLUDE_DI
 set_target_properties(MagnumDartIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/DartIntegration")
-if(BUILD_STATIC_PIC)
+if(NOT BUILD_STATIC)
+    set_target_properties(MagnumDartIntegration PROPERTIES VERSION ${MAGNUM_LIBRARY_VERSION} SOVERSION ${MAGNUM_LIBRARY_SOVERSION})
+elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumDartIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumDartIntegration
