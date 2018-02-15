@@ -30,9 +30,12 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@section changelog-integration-latest Changes since 2015-05 snapshot
+@section changelog-integration-2018-02 2018.02
 
-@subsection changelog-integration-latest-dependencies Dependency changes
+Released 2018-02-15, tagged as
+[v2018.02](https://github.com/mosra/magnum-integration/releases/tag/v2018.02).
+
+@subsection changelog-integration-2018-02-dependencies Dependency changes
 
 -   Completely removed NaCl support (see https://blog.chromium.org/2017/05/goodbye-pnacl-hello-webassembly.html)
 -   Dropped support for the old MinGW32 (only MinGW-w64 is supported now)
@@ -41,7 +44,7 @@ namespace Magnum {
 -   Dropped the `compatibility` branch and all support for MSVC 2013 and GCC <
     4.7
 
-@subsection changelog-integration-latest-new New features
+@subsection changelog-integration-2018-02-new New features
 
 -   MSVC 2015 and MSVC 2017 support in `master` branch
 -   ANGLE ES2/ES3 support, ability to create desktop GLES contexts on Windows
@@ -49,20 +52,38 @@ namespace Magnum {
 -   iOS support
 -   WebAssembly support when building for Emscripten
 -   WebGL 2.0 support
--   New @ref DartIntegration library, integrating
+-   New experimental @ref DartIntegration library, integrating
     [DART Dynamic Animation and Robotics Toolkit](http://dartsim.github.io/)
--   New @ref OvrIntegration library, integrating Oculus SDK
+    (see [mosra/magnum-integration#28](https://github.com/mosra/magnum-integration/pull/28))
+-   New @ref OvrIntegration library, integrating Oculus SDK (see
+    [mosra/magnum-integration#3](https://github.com/mosra/magnum-integration/pull/3),
+    [mosra/magnum-integration#4](https://github.com/mosra/magnum-integration/issues/4),
+    [mosra/magnum-integration#5](https://github.com/mosra/magnum-integration/pull/5),
+    [mosra/magnum-integration#6](https://github.com/mosra/magnum-integration/issues/6),
+    [mosra/magnum-integration#7](https://github.com/mosra/magnum-integration/pull/7),
+    [mosra/magnum-integration#8](https://github.com/mosra/magnum-integration/issues/8),
+    [mosra/magnum-integration#9](https://github.com/mosra/magnum-integration/pull/9),
+    [mosra/magnum-integration#10](https://github.com/mosra/magnum-integration/pull/10),
+    [mosra/magnum-integration#12](https://github.com/mosra/magnum-integration/pull/12),
+    [mosra/magnum-integration#13](https://github.com/mosra/magnum-integration/issues/13),
+    [mosra/magnum-integration#15](https://github.com/mosra/magnum-integration/pull/15),
+    [mosra/magnum-integration#17](https://github.com/mosra/magnum-integration/pull/17))
 -   New @ref BulletIntegration::DebugDraw class for simple and easy physics
-    debugging
+    debugging (see
+    [mosra/magnum-integration#11](https://github.com/mosra/magnum-integration/issues/11),
+    [mosra/magnum-integration#21](https://github.com/mosra/magnum-integration/pull/21))
 
-@subsection changelog-integration-latest-changes Changes and improvements
+@subsection changelog-integration-2018-02-changes Changes and improvements
 
 -   Extended math type conversion in @ref BulletIntegration, improved tests
-    for @ref BulletIntegration::MotionState
+    for @ref BulletIntegration::MotionState (see
+    [mosra/magnum-integration#22](https://github.com/mosra/magnum-integration/pull/22))
 -   Fixed linker errors when using @ref BulletIntegration compiled as DLL on
     Windows
+-   Various code modernization improvements (see
+    [mosra/magnum-integration#25](https://github.com/mosra/magnum-integration/pull/25))
 
-@subsection changelog-integration-latest-buildsystem Build system
+@subsection changelog-integration-2018-02-buildsystem Build system
 
 -   Continuous testing for Linux, macOS, Windows MSVC, Windows MinGW, Windows RT,
     iOS, Android and Emscripten on [Travis CI](https://travis-ci.org/mosra/magnum-integration)
@@ -79,50 +100,155 @@ namespace Magnum {
     experience in IDEs such as Visual Studio or Xcode
 -   Added a @ref building-integration-packages-brew "Homebrew package"
 -   `MACOSX_RPATH` is now enabled by default on CMake 3.0+
+-   `FindMagnumIntegration.cmake` now properly handles Bullet installations
+    with both debug and release libraries (see
+    [mosra/magnum-integration#14](https://github.com/mosra/magnum-integration/pull/14))
+-   Fixed static @ref BulletIntegration libraries being treated as dynamic (see
+    [mosra/magnum-integration#16](https://github.com/mosra/magnum-integration/pull/16))
 -   Enabling only C++ in CMake @cmake project() @ce call, if possible, to speed
     up initial CMake run
 
-@subsection changelog-integration-latest-bugfixes Bug fixes
+@subsection changelog-integration-2018-02-bugfixes Bug fixes
 
 -   Properly respecting the `BUILD_STATIC` CMake option when building and
-    avoiding treatment of static libraries as dynamic on Windows.
+    avoiding treatment of static libraries as dynamic on Windows
+-   Various compilation fixes (see
+    [mosra/magnum-integration#23](https://github.com/mosra/magnum-integration/issues/23),
+    [mosra/magnum-integration#24](https://github.com/mosra/magnum-integration/pull/24),
+    [mosra/magnum-integration#27](https://github.com/mosra/magnum-integration/pull/27))
 
-@subsection changelog-integration-latest-deprecated Deprecated APIs
+@subsection changelog-integration-2018-02-deprecated Deprecated APIs
 
 -   `BulletIntegration::DebugDraw::DebugMode` enum and `BulletIntegration::DebugDraw::DebugModes`
     enum set are deprecated, use @ref BulletIntegration::DebugDraw::Mode
     and @ref BulletIntegration::DebugDraw::Modes instead
 
-@subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
+@subsection changelog-integration-2018-02-compatibility Potential compatibility breakages, removed APIs
 
 No APIs were removed since last release.
 
-@subsection changelog-integration-latest-documentation Documentation
+@subsection changelog-integration-2018-02-documentation Documentation
 
 -   New documentation theme powered by [m.css](http://mcss.mosra.cz) and
     related massive updates of *everything*
 -   The @ref building-integration documentation now prefers package
     installation instead of manual build
 
-@section changelog-integration-2015-05 2015-05 snapshot
+@section changelog-integration-2015-05 2015.05
 
-See the [release notes and full changelog](http://blog.magnum.graphics/announcements/may-2015-updates/#magnum-integration).
+Released 2015-05-09, tagged as
+[v2015.05](https://github.com/mosra/magnum-integration/releases/tag/v2015.05). See
+the [release announcement](http://blog.magnum.graphics/announcements/may-2015-updates/)
+for a high-level overview.
 
-@section changelog-integration-2014-06 2014-06 snapshot
+@subsection changelog-integration-2015-05-buildsystem Build system
 
-See the [release notes and full changelog](http://blog.magnum.graphics/announcements/june-2014-updates/#magnum-integration).
+-   CMake now always installs `FindMagnumIntegration.cmake` to
+    library-specific location, making it usable without providing own copy of
+    the file in depending projects. The `WITH_FIND_MODULE` option is no
+    longer needed.
+-   Displaying all header files, plugin metadata files and resource files in
+    project view to make use of some IDEs less painful (such as QtCreator).
+-   Gentoo ebuild (see [mosra/magnum-integration#2](https://github.com/mosra/magnum-integration/pull/2))
 
-@section changelog-integration-2014-01 2014-01 snapshot
+@subsection changelog-integration-2015-05-deprecated Deprecated APIs
 
-See the [release notes and full changelog](http://blog.magnum.graphics/announcements/january-2014-updates/#magnum-integration).
+No API was deprecated in this release.
 
-@section changelog-integration-2013-10 2013-10 snapshot
+@subsection changelog-integration-2015-05-compatibility Potential compatibility breakages, removed APIs
 
-See the [release notes and full changelog](http://blog.magnum.graphics/announcements/october-2013-updates/#magnum-integration).
+All functionality @ref changelog-integration-2014-01 "deprecated in 2014.01"
+has been removed, namely removed deprecated ability to use relative includes
+(e.g. @cpp #include <BulletIntegration/Integration.h> @ce), use absolute paths
+(@cpp #include <Magnum/BulletIntegration/Integration.h> @ce) instead.
 
-@section changelog-integration-initial Initial release
+@section changelog-integration-2014-06 2014.06
 
-See the [Magnum project announcement](http://blog.magnum.graphics/announcements/introducing-magnum/).
+Released 2014-06-30, tagged as
+[v2014.06](https://github.com/mosra/magnum-integration/releases/tag/v2014.06). See
+the [release announcement](http://blog.magnum.graphics/announcements/june-2014-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2014-06-dependencies Dependency changes
+
+-   Minimal required GCC version is now 4.7.
+
+@subsection changelog-integration-2014-06-changes Changes
+
+-   Libraries and plugins in debug build configuration are installed to
+    different locations, making it possible to have debug and release libraries
+    installed alongside each other.
+
+@subsection changelog-integration-2014-06-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2014-06-compatibility Potential compatibility breakages, removed APIs
+
+No deprecated API was removed in this release.
+
+@section changelog-integration-2014-01 2014.01
+
+Released 2014-01-21, tagged as
+[v2014.01](https://github.com/mosra/magnum-integration/releases/tag/v2014.01). See
+the [release announcement](http://blog.magnum.graphics/announcements/january-2014-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2014-01-dependencies Dependency changes
+
+No dependency changes in this release.
+
+@subsection changelog-integration-2014-01-new New features
+
+-   Initial documentation
+-   All classes in documentation are now shown with corresponding
+    @cpp #include @ce path
+
+@subsection changelog-integration-2014-01-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2014-01-compatibility Potential compatibility breakages, removed APIs
+
+No deprecated API was removed in this release.
+
+@subsection changelog-integration-2014-01-internal Internal changes
+
+-   All files from `src/` directory were moved to `src/Magnum` (required to
+    make inter-project includes absolute)
+
+@section changelog-integration-2013-10 2013.10
+
+Released 2013-10-30, tagged as
+[v2013.10](https://github.com/mosra/magnum-integration/releases/tag/v2013.10). See
+the [release announcement](http://blog.magnum.graphics/announcements/october-2013-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2013-10-dependencies Dependency changes
+
+No dependency changes in this release.
+
+@subsection changelog-integration-2013-10-changes Changes
+
+-   Documentation updates and improvements to make the library more accessible
+    for newcomers
+-   Various build system updates for better compile times and easier
+    installation
+
+@subsection changelog-integration-2013-10-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2013-10-compatibility Potential compatibility breakages, removed APIs
+
+No deprecated API was removed in this release.
+
+@section changelog-integration-2013-08 2013.08
+
+Released 2013-08-30, tagged as
+[v2013.08](https://github.com/mosra/magnum-integration/releases/tag/v2013.08). See
+the [project announcement](http://blog.magnum.graphics/announcements/introducing-magnum/)
+for a high-level overview.
 
 */
 
