@@ -55,6 +55,7 @@ cmake .. ^
     -DWITH_SHAPES=ON ^
     -DWITH_TEXT=OFF ^
     -DWITH_TEXTURETOOLS=OFF ^
+    -DWITH_OPENGLTESTER=ON ^
     -DWITH_WINDOWLESSWGLAPPLICATION=ON ^
     -G Ninja || exit /b
 cmake --build . || exit /b
