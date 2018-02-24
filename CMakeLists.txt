@@ -66,6 +66,7 @@ include(CMakeDependentOption)
 option(BUILD_STATIC "Build static libraries (default are shared)" OFF)
 cmake_dependent_option(BUILD_STATIC_PIC "Build static libraries with position-independent code" ON "BUILD_STATIC" OFF)
 option(BUILD_TESTS "Build unit tests" OFF)
+cmake_dependent_option(BUILD_GL_TESTS "Build unit tests for OpenGL code" OFF "BUILD_TESTS" OFF)
 
 if(BUILD_TESTS)
     find_package(Corrade REQUIRED TestSuite)
@@ -73,6 +74,10 @@ if(BUILD_TESTS)
         set(CORRADE_TESTSUITE_BUNDLE_IDENTIFIER_PREFIX "cz.mosra.magnum-integration")
     endif()
     enable_testing()
+endif()
+
+if(BUILD_GL_TESTS)
+    find_package(Magnum REQUIRED OpenGLTester)
 endif()
 
 # Dynamic linking is meaningless on Emscripten and too inconvenient on Android

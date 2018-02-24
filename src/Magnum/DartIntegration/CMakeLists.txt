@@ -25,7 +25,7 @@
 #
 
 find_package(Magnum REQUIRED SceneGraph MeshTools Primitives)
-find_package(DART CONFIG REQUIRED)
+find_package(DART 6.0.0 CONFIG REQUIRED)
 
 if(BUILD_STATIC)
     set(MAGNUM_DARTINTEGRATION_BUILD_STATIC 1)
@@ -36,14 +36,14 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
 
 set(MagnumDartIntegration_SRCS
     ConvertShapeNode.cpp
-    DartObject.cpp
-    DartSkeleton.cpp)
+    Object.cpp
+    World.cpp)
 
 set(MagnumDartIntegration_HEADERS
     ConvertShapeNode.h
     DartIntegration.h
-    DartObject.h
-    DartSkeleton.h
+    Object.h
+    World.h
 
     visibility.h)
 

@@ -182,7 +182,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
 
         # Dart integration library
         elseif(_component STREQUAL Dart)
-            find_package(DART CONFIG REQUIRED)
+            find_package(DART 6.0.0 CONFIG REQUIRED)
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_INCLUDE_DIRECTORIES ${DART_INCLUDE_DIRS})
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY

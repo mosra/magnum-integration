@@ -30,7 +30,7 @@ else()
     set(DARTINTEGRATION_TEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
-find_package(DART CONFIG REQUIRED OPTIONAL_COMPONENTS io-urdf utils-urdf)
+find_package(DART 6.0.0 CONFIG REQUIRED OPTIONAL_COMPONENTS io-urdf utils-urdf)
 
 # The DART URDF library is only needed for the tests
 if(DART_utils-urdf_FOUND OR DART_io-urdf_FOUND)
@@ -42,9 +42,16 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
 
-corrade_add_test(DartIntegrationDartSkeletonTest DartSkeletonTest.cpp LIBRARIES MagnumDartIntegration ${DART_LIBRARIES})
-target_include_directories(DartIntegrationDartSkeletonTest PUBLIC ${DART_INCLUDE_DIRS})
+corrade_add_test(DartIntegrationConvertShapeNodeTest ConvertShapeNodeTest.cpp LIBRARIES MagnumDartIntegration ${DART_LIBRARIES})
 
 set_target_properties(
-    DartIntegrationDartSkeletonTest
+    DartIntegrationConvertShapeNodeTest
     PROPERTIES FOLDER "Magnum/DartIntegration/Test")
+
+if(BUILD_GL_TESTS)
+    corrade_add_test(DartIntegrationWorldGLTest WorldGLTest.cpp LIBRARIES Magnum::OpenGLTester MagnumDartIntegration ${DART_LIBRARIES})
+
+    set_target_properties(
+        DartIntegrationWorldGLTest
+        PROPERTIES FOLDER "Magnum/DartIntegration/Test")
+endif()

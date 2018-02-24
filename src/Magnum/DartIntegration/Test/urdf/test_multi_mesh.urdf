@@ -1,11 +1,5 @@
 <robot
-  name="texture_urdf">
-  <link name="world"/>
-  <joint name="arm_to_world_fixed" type="fixed">
-    <parent link="world"/>
-    <child link="base_link"/>
-    <origin xyz="0 -0.5 0" rpy="-1.57 0 0" />
-  </joint>
+  name="double_mesh_urdf">
   <link
     name="base_link">
     <inertial>
@@ -28,7 +22,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="texture.dae" />
+          filename="suzanne.blend" />
       </geometry>
       <material
         name="">
@@ -42,7 +36,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="texture.dae" />
+          filename="suzanne.blend" />
       </geometry>
     </collision>
   </link>
