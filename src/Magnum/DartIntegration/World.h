@@ -190,10 +190,10 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         std::unique_ptr<Object>(*dartShapeObjectCreator)(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::ShapeNode* node);
 
         /** @brief Parse DART Skeleton and create/update shapes */
-        void parseSkeleton(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::Skeleton& skel);
+        void MAGNUM_DARTINTEGRATION_LOCAL parseSkeleton(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::Skeleton& skel);
 
         /** @brief Recursively parse DART BodyNode and all of its children */
-        void parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn);
+        void MAGNUM_DARTINTEGRATION_LOCAL parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn);
 
         SceneGraph::AbstractBasicObject3D<Float>& _object;
         PluginManager::Manager<Trade::AbstractImporter> _manager;

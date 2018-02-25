@@ -156,7 +156,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT Object: public SceneGraph::AbstractBasicFeat
     private:
         explicit Object(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation, dart::dynamics::ShapeNode* node, dart::dynamics::BodyNode* body);
 
-        bool extractDrawData(Trade::AbstractImporter* importer = nullptr);
+        bool MAGNUM_DARTINTEGRATION_LOCAL extractDrawData(Trade::AbstractImporter* importer = nullptr);
 
         SceneGraph::AbstractBasicTranslationRotation3D<Float>& _transformation;
         dart::dynamics::ShapeNode* _node;
