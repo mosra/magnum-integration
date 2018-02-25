@@ -120,7 +120,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
          * @param object    Parent object
          * @param skeleton  DART World shared pointer to parse
          */
-        template<class T> explicit World(T& object, std::shared_ptr<dart::simulation::World> world): World(static_cast<SceneGraph::AbstractBasicObject3D<Float>&>(object), world) {
+        template<class T> explicit World(T& object, dart::simulation::World& world): World(static_cast<SceneGraph::AbstractBasicObject3D<Float>&>(object), world) {
             objectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent) -> SceneGraph::AbstractBasicObject3D<Float>* {
                 return new T{static_cast<T*>(&parent)};
             };
@@ -175,7 +175,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
 
     private:
         /** @brief Non-templated constructor */
-        explicit World(SceneGraph::AbstractBasicObject3D<Float>& object, std::shared_ptr<dart::simulation::World> world);
+        explicit World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world);
 
         /** @brief Function to create new @ref SceneGraph::AbstractBasicObject3D of correct type */
         SceneGraph::AbstractBasicObject3D<Float>*(*objectCreator)(SceneGraph::AbstractBasicObject3D<Float>& parent);

@@ -126,7 +126,7 @@ void DartIntegrationTest::pendulum() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
 
     for(int i = 0; i < 10; i++)
         dartWorld->step();
@@ -164,7 +164,7 @@ void DartIntegrationTest::soft() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
 
     for(int i = 0; i < 10; i++)
         dartWorld->step();
@@ -195,7 +195,7 @@ void DartIntegrationTest::urdf() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
 
     for(Object& dartObj: dartWorld->shapeObjects()) {
         auto shape = dartObj.shapeNode()->getShape();
@@ -233,7 +233,7 @@ void DartIntegrationTest::multiMesh() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
 
     for(int i = 0; i < 1000; i++) {
         dartWorld->step();
@@ -279,7 +279,7 @@ void DartIntegrationTest::texture() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
 
     for(int i = 0; i < 1000; i++) {
         dartWorld->step();
@@ -331,7 +331,7 @@ void DartIntegrationTest::simpleSimulation() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
     CORRADE_BENCHMARK(5) {
         for(int i = 0; i < 1000; i++) {
             dartWorld->step();
@@ -365,7 +365,7 @@ void DartIntegrationTest::softSimulation() {
         Scene3D scene;
         Object3D* obj = new Object3D{&scene};
 
-        std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, world);
+        std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
 
         for(int i = 0; i < 1000; i++) {
             dartWorld->step();

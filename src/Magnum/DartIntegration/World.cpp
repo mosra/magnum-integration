@@ -32,7 +32,7 @@
 #include <Magnum/Trade/PhongMaterialData.h>
 
 namespace Magnum { namespace DartIntegration {
-World::World(SceneGraph::AbstractBasicObject3D<Float>& object, std::shared_ptr<dart::simulation::World> world): _object(object), _manager{MAGNUM_PLUGINS_IMPORTER_DIR}, _dartWorld(*world) {
+World::World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world): _object(object), _manager{MAGNUM_PLUGINS_IMPORTER_DIR}, _dartWorld(world) {
     /* load Assimp importer */
     _importer = _manager.loadAndInstantiate("AssimpImporter");
 }
