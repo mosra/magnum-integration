@@ -82,14 +82,6 @@ World& World::clearUnusedObjects() {
     return *this;
 }
 
-std::vector<std::reference_wrapper<Object>> World::unusedObjects() {
-    std::vector<std::reference_wrapper<Object>> objs;
-    for(auto& obj: _toRemove)
-        objs.emplace_back(std::ref(*obj));
-
-    return objs;
-}
-
 std::vector<std::reference_wrapper<Object>> World::objects() {
     std::vector<std::reference_wrapper<Object>> objs;
     for(auto& obj: _dartToMagnum)

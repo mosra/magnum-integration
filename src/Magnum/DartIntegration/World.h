@@ -148,7 +148,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         /** @brief Get unused objects; all objects that were not updated during the last refresh call
          * Note: this list will be cleared once a new refresh call is made
          */
-        std::vector<std::reference_wrapper<Object>> unusedObjects();
+        std::vector<std::unique_ptr<Object>>& unusedObjects() { return _toRemove; }
 
         /** @brief Get all @ref Objects */
         std::vector<std::reference_wrapper<Object>> objects();
