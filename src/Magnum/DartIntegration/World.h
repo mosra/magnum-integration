@@ -75,51 +75,14 @@ Common usage is to create a `dart::simulation::World` and then instantiate
 this class by passing a parent @ref SceneGraph::Object and the DART world to
 its constructor:
 
-@code{.cpp}
-dart::simulation::WorldPtr dartWorld = createWorldInDart();
-addDartSkeletonsToDartWorld();
-SceneGraph::Scene<SceneGraph::MatrixTransformation3D> scene;
-SceneGraph::Object<SceneGraph::MatrixTransformation3D> object{&scene};
-// object should never be a @ref SceneGraph::Scene
-auto world = std::make_shared<DartIntegration::World>(object, dartWorld);
-@endcode
+@snippet dartintegration.cpp world-init
 
 Only the DART world can affect the transformation of the Magnum world and not
 the other way around. Of course, one can change things directly in the DART
 world and observe the changes in Magnum world. To update the world and get the
 updated shapes you can do the following:
 
-@code{.cpp}
-DartIntegration::World world{...};
-
-// Simulate with time step of 0.001 seconds
-world.world()->setTimeStep(0.001);
-
-for(UnsignedInt i = 0; i < simulationSteps; ++i) {
-    world.step();
-    // update graphics at ~60Hz
-    // 15*0.001 ~= 60Hz
-    if(i%15 == 0) {
-        world.refresh();
-
-        // Get unused/deleted shapes
-        std::vector<std::shared_ptr<Object>> unusedObjects = world.unusedObjects();
-
-        // The user is expected to handle unused objects. One possible handling
-        // would be to remove them from the parent scene
-        deleteObjectsFromScene(unusedObjects);
-
-        // Get updated shapes -- ones that either the materials or the meshes
-        // have changed
-        std::vector<std::shared_ptr<Object>> updatedObjects = world.updatedShapeObjects();
-
-        updateMeshesAndMaterials(updatedObjects);
-
-        // Clear list of updated objects
-        world.clearUpdatedShapeObjects();
-    }
-}
-@endcode
+@snippet dartintegration.cpp world-loop
 
 @experimental
 */

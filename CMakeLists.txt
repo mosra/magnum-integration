@@ -99,3 +99,8 @@ set(MAGNUM_LIBRARY_SOVERSION 1)
 
 add_subdirectory(modules)
 add_subdirectory(src)
+
+# Build snippets as part of testing
+if(BUILD_TESTS)
+    add_subdirectory(doc/snippets)
+endif()
