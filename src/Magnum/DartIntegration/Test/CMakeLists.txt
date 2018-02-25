@@ -42,14 +42,18 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
 
-corrade_add_test(DartIntegrationConvertShapeNodeTest ConvertShapeNodeTest.cpp LIBRARIES MagnumDartIntegration ${DART_LIBRARIES})
+corrade_add_test(DartIntegrationConvertShapeNodeTest
+    ConvertShapeNodeTest.cpp common.h
+    LIBRARIES MagnumDartIntegration ${DART_LIBRARIES})
 
 set_target_properties(
     DartIntegrationConvertShapeNodeTest
     PROPERTIES FOLDER "Magnum/DartIntegration/Test")
 
 if(BUILD_GL_TESTS)
-    corrade_add_test(DartIntegrationWorldGLTest WorldGLTest.cpp LIBRARIES Magnum::OpenGLTester MagnumDartIntegration ${DART_LIBRARIES})
+    corrade_add_test(DartIntegrationWorldGLTest
+        WorldGLTest.cpp common.h
+        LIBRARIES Magnum::OpenGLTester MagnumDartIntegration ${DART_LIBRARIES})
 
     set_target_properties(
         DartIntegrationWorldGLTest
