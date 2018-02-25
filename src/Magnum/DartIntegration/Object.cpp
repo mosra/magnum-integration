@@ -30,10 +30,8 @@
 #include <dart/dynamics/MeshShape.hpp>
 #include <dart/dynamics/ShapeNode.hpp>
 #include <dart/dynamics/SoftMeshShape.hpp>
-
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/Utility/Directory.h>
-
 #include <Magnum/Buffer.h>
 #include <Magnum/Mesh.h>
 #include <Magnum/PixelFormat.h>
@@ -50,18 +48,15 @@
 
 namespace Magnum { namespace DartIntegration {
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 DrawData::DrawData(Containers::Array<Mesh> meshes, Containers::Array<Buffer> vertexBuffers, Containers::Array<Containers::Optional<Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Texture2D>> textures, const Vector3& scaling): meshes{std::move(meshes)}, vertexBuffers{std::move(vertexBuffers)}, indexBuffers{std::move(indexBuffers)}, materials{std::move(materials)}, textures{std::move(textures)}, scaling(scaling) {}
-#endif
 
 DrawData::~DrawData() = default;
 
 Object::Object(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation, dart::dynamics::ShapeNode* node, dart::dynamics::BodyNode* body): SceneGraph::AbstractBasicFeature3D<Float>{object}, _transformation(transformation), _node{node}, _body{body}, _updated(false), _updatedMesh(false) {}
 
 Object& Object::update(Trade::AbstractImporter* importer) {
-    /* If the object is has a shape and could not extract the DrawData,
-     * do not update it; i.e., the user can choose to delete it
-     */
+    /* If the object is has a shape and could not extract the DrawData, do not
+       update it; i.e., the user can choose to delete it */
     if(_node && !extractDrawData(importer))
         return *this;
 
@@ -96,7 +91,6 @@ Object& Object::update(Trade::AbstractImporter* importer) {
 
     /* Set update flag */
     _updated = true;
-
     return *this;
 }
 
@@ -104,13 +98,12 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
     _updatedMesh = false;
 
     /* This is not a valid object */
-    if(!_node && !_body)
-        return false;
-    /* This object has no shape */
-    if(!_node)
-        return true;
+    if(!_node && !_body) return false;
 
-    unsigned int dataVariance = _node->getShape()->getDataVariance();
+    /* This object has no shape */
+    if(!_node) return true;
+
+    UnsignedInt dataVariance = _node->getShape()->getDataVariance();
 
     if(_drawData && dataVariance == dart::dynamics::Shape::DataVariance::STATIC)
         return true;
@@ -128,26 +121,23 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
             loadType |= ConvertShapeType::Material;
         if(shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC_PRIMITIVE))
             loadType |= ConvertShapeType::Primitive;
-        if(shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC_VERTICES)
-                    || shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC_ELEMENTS)
-                    || shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC))
+        if(shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC_VERTICES) ||
+           shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC_ELEMENTS) ||
+           shape->checkDataVariance(dart::dynamics::Shape::DataVariance::DYNAMIC))
             loadType |= ConvertShapeType::Mesh;
     }
 
     Containers::Optional<ShapeData> shapeData = convertShapeNode(shapeNode, loadType, importer);
 
-    /* could not convertShapeNode to ShapeData */
-    if(!shapeData)
-        return false;
+    /* Could not convertShapeNode to ShapeData */
+    if(!shapeData) return false;
 
-    /* create the DrawData structure */
-    if(firstTime){
-        /* default scaling to (1,1,1) */
-        _drawData = DrawData{{}, {}, {}, {}, {}, Vector3{1.f, 1.f, 1.f}};
-    }
+    /* Create the DrawData structure, default scaling to identity */
+    if(firstTime) _drawData = DrawData{{}, {}, {}, {}, {}, Vector3{1.0f}};
 
+    /* Get the material */
     if(loadType & ConvertShapeType::Material) {
-        /* copy material data */
+        /* Copy material data */
         _drawData->materials = std::move(shapeData->materials);
 
         /* Create textures */
@@ -166,12 +156,11 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         }
     }
 
-    /* get scaling */
-    if (loadType & ConvertShapeType::Primitive) {
+    /* Get scaling */
+    if(loadType & ConvertShapeType::Primitive)
         _drawData->scaling = shapeData->scaling;
-    }
 
-    /* get meshes */
+    /* Get meshes */
     if(loadType & ConvertShapeType::Mesh) {
         _drawData->meshes = Containers::Array<Mesh>(Containers::NoInit, shapeData->meshes.size());
         _drawData->vertexBuffers = Containers::Array<Buffer>(shapeData->meshes.size());
@@ -190,10 +179,8 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         }
     }
 
-    /* If we got here, everything went OK;
-     * update flag for rendering */
+    /* If we got here, everything went OK; update flag for rendering */
     _updatedMesh = !!loadType;
-
     return true;
 }
 

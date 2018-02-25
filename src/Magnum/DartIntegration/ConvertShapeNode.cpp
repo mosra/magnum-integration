@@ -40,9 +40,7 @@
 #include <dart/dynamics/SoftBodyNode.hpp>
 #include <dart/dynamics/SoftMeshShape.hpp>
 #include <dart/dynamics/SphereShape.hpp>
-
 #include <Corrade/Utility/Directory.h>
-
 #include <Magnum/Mesh.h>
 #include <Magnum/MeshTools/CombineIndexedArrays.h>
 #include <Magnum/MeshTools/GenerateFlatNormals.h>
@@ -54,7 +52,6 @@
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData3D.h>
 #include <Magnum/Trade/MeshObjectData3D.h>
-#include <Magnum/Trade/ObjectData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
 #include <Magnum/Trade/TextureData.h>
 
@@ -79,14 +76,16 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
     Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, 80.f};
     if(convertTypes & ConvertShapeType::Material) {
-        /* Get material information -- we ignore the alpha value
-        Note that this material is not necessarily used for the MeshShapeNodes */
+        /* Get material information -- we ignore the alpha value. Note that
+           this material is not necessarily used for the MeshShapeNodes */
         Eigen::Vector4d col = shapeNode.getVisualAspect()->getRGBA();
-        /* @to-do: Create Trade Material Data that includes alpha channel */
 
-        /* get diffuse color from Dart ShapeNode */
+        /* Get diffuse color from Dart ShapeNode */
+        /** @todoc Create Trade Material Data that includes alpha channel */
         nodeMaterial.diffuseColor() = Color3(col(0), col(1), col(2));
-        /* default colors for ambient (black) and specular (white) */
+
+        /* Default colors for ambient (black) and specular (white) */
+        /** @todo remove once fixed in PhongMaterialData */
         nodeMaterial.ambientColor() = Vector3{0.f, 0.f, 0.f};
         nodeMaterial.specularColor() = Vector3{1.f, 1.f, 1.f};
 
@@ -96,19 +95,22 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
     }
 
+    /* Box */
     if(shape->getType() == dart::dynamics::BoxShape::getStaticType()) {
         if(convertTypes & ConvertShapeType::Primitive) {
             auto boxShape = std::static_pointer_cast<dart::dynamics::BoxShape>(shape);
             Eigen::Vector3d size = boxShape->getSize();
 
             /* Multiplying by 0.5f because the Primitives::Cube is 2x2x2 */
-            shapeData.scaling = Vector3(size(0), size(1), size(2)) * 0.5f;
+            shapeData.scaling = Vector3(size(0), size(1), size(2))*0.5f;
         }
 
         if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Cube::solid()};
         }
+
+    /* Capsule */
     } else if(shape->getType() == dart::dynamics::CapsuleShape::getStaticType()) {
         auto capsuleShape = std::static_pointer_cast<dart::dynamics::CapsuleShape>(shape);
 
@@ -118,12 +120,14 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.scaling = Vector3{r};
 
         if(convertTypes & ConvertShapeType::Mesh) {
-            Float h = Float(capsuleShape->getHeight());
-            Float halfLength = 0.5f * h / r;
+            Float h(capsuleShape->getHeight());
+            Float halfLength = 0.5f*h/r;
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Capsule3D::solid(32, 32, 32, halfLength)};
         }
+
+    /* Cylinder */
     } else if(shape->getType() == dart::dynamics::CylinderShape::getStaticType()) {
         auto cylinderShape = std::static_pointer_cast<dart::dynamics::CylinderShape>(shape);
 
@@ -133,12 +137,14 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.scaling = Vector3{r};
 
         if(convertTypes & ConvertShapeType::Mesh) {
-            Float h = Float(cylinderShape->getHeight());
-            Float halfLength = 0.5f * h / r;
+            Float h(cylinderShape->getHeight());
+            Float halfLength = 0.5f*h/r;
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Cylinder::solid(32, 32, halfLength, Primitives::Cylinder::Flag::CapEnds)};
         }
+
+    /* Ellipsoid */
     } else if(shape->getType() == dart::dynamics::EllipsoidShape::getStaticType()) {
         if(convertTypes & ConvertShapeType::Primitive) {
             auto ellipsoidShape = std::static_pointer_cast<dart::dynamics::EllipsoidShape>(shape);
@@ -151,8 +157,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Icosphere::solid(5)};
         }
+
+    /* Generic mesh */
     } else if(shape->getType() == dart::dynamics::MeshShape::getStaticType()) {
-        if (!importer) {
+        if(!importer) {
             Error{} << "DartIntegration::convertShapeNode(): AssimpImporter is not available and you are trying to load a dart::dynamics::MeshShape";
             return Containers::NullOpt;
         }
@@ -169,7 +177,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         bool loaded = importer->openState(aiMesh, meshPath);
         if(!loaded || importer->mesh3DCount() < 1) {
-            Error{} << "DartIntegration::convertShapeNode(): Could not load aiScene or there is no mesh in it";
+            Error{} << "DartIntegration::convertShapeNode(): could not load aiScene or there is no mesh in it";
             return Containers::NullOpt;
         }
 
@@ -186,49 +194,50 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         UnsignedInt j = 0;
         for(UnsignedInt i = 0; i < importer->object3DCount(); i++) {
             auto objectData = importer->object3D(i);
-            if(objectData->instanceType() != Trade::ObjectInstanceType3D::Mesh) continue;
+            if(objectData->instanceType() != Trade::ObjectInstanceType3D::Mesh)
+                continue;
 
             Trade::MeshObjectData3D& meshObjectData = static_cast<Trade::MeshObjectData3D&>(*objectData);
             Containers::Optional<Trade::MeshData3D> meshData = importer->mesh3D(meshObjectData.instance());
-            if(!meshData){
-                Error{} << "DartIntegration::convertShapeNode(): Could not load mesh with index" << meshObjectData.instance();
+            if(!meshData) {
+                Error{} << "DartIntegration::convertShapeNode(): could not load mesh with index" << meshObjectData.instance();
                 return Containers::NullOpt;
             }
 
             if(convertTypes & ConvertShapeType::Material) {
                 auto colorMode = meshShape->getColorMode();
-                /* only get materials from mesh if the appropriate color mode */
+                /* Only get materials from mesh if the appropriate color mode */
                 if(importer->materialCount() && convertTypes & ConvertShapeType::Material) {
                     if(colorMode == dart::dynamics::MeshShape::ColorMode::MATERIAL_COLOR) {
                         auto matPtr = importer->material(meshObjectData.material());
-                        if(matPtr)
+                        if(matPtr) {
                             materials[j] = std::move(*static_cast<Trade::PhongMaterialData*>(matPtr.get()));
-                        else {
-                            Warning{} << "DartIntegration::convertShapeNode(): Could not load material with index" << meshObjectData.material() << Debug::nospace << ".Falling back to SHAPE_COLOR mode";
+                        } else {
+                            Warning{} << "DartIntegration::convertShapeNode(): could not load material with index" << meshObjectData.material() << Debug::nospace << ". Falling back to SHAPE_COLOR mode";
                             materials[j] = std::move(nodeMaterial);
                         }
-                    }
-                    else if(colorMode == dart::dynamics::MeshShape::ColorMode::COLOR_INDEX) {
-                        /* get diffuse color from Mesh color */
+
+                    } else if(colorMode == dart::dynamics::MeshShape::ColorMode::COLOR_INDEX) {
+                        /* Get diffuse color from Mesh color */
                         if(meshData->hasColors()) {
-                            /* use max index if MeshShape color index is bigger than available;
-                             * this is the behavior described in Dart
-                             */
-                            Int colorIndex = (static_cast<UnsignedInt>(meshShape->getColorIndex())>=meshData->colors(0).size()) ? meshData->colors(0).size()-1: meshShape->getColorIndex();
+                            /* Use max index if MeshShape color index is bigger
+                               than available; this is the behavior described
+                               in DART */
+                            Int colorIndex = (UnsignedInt(meshShape->getColorIndex()) >= meshData->colors(0).size()) ? meshData->colors(0).size() - 1 : meshShape->getColorIndex();
                             Color4 meshColor = meshData->colors(0)[colorIndex];
-                            materials[j] = Trade::PhongMaterialData{Trade::PhongMaterialData::Flags{}, 80.f};
+                            materials[j] = Trade::PhongMaterialData{{}, 80.f};
                             materials[j]->diffuseColor() = Color3(meshColor[0], meshColor[1], meshColor[2]);
                             /* default colors for ambient (black) and specular (white) */
                             materials[j]->ambientColor() = Vector3{0.f, 0.f, 0.f};
                             materials[j]->specularColor() = Vector3{1.f, 1.f, 1.f};
-                        }
-                        /* fallback to SHAPE_COLOR if MeshData has no colors */
-                        else {
+
+                        /* Fallback to SHAPE_COLOR if MeshData has no colors */
+                        } else {
                             Warning{} << "DartIntegration::convertShapeNode(): Assimp mesh has no colors. Falling back to SHAPE_COLOR mode";
                             materials[j] = std::move(nodeMaterial);
                         }
-                    }
-                    else if (colorMode == dart::dynamics::MeshShape::ColorMode::SHAPE_COLOR) {
+
+                    } else if (colorMode == dart::dynamics::MeshShape::ColorMode::SHAPE_COLOR) {
                         materials[j] = std::move(nodeMaterial);
                     }
                 }
@@ -248,15 +257,15 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             for(UnsignedInt i = 0; i < importer->textureCount(); ++i) {
                 /* Cannot load, leave this element set to NullOpt */
                 Containers::Optional<Trade::TextureData> textureData = importer->texture(i);
-                if (!textureData || textureData->type() != Trade::TextureData::Type::Texture2D) {
-                    Warning{} << "Cannot load texture, skipping";
+                if(!textureData || textureData->type() != Trade::TextureData::Type::Texture2D) {
+                    Warning{} << "DartIntegration::convertShapeNode(): cannot load texture, skipping";
                     continue;
                 }
 
                 /* Cannot load, leave this element set to NullOpt */
                 Containers::Optional<Trade::ImageData2D> imageData = importer->image2D(textureData->image());
-                if (!imageData) {
-                    Warning{} << "Cannot load texture image, skipping";
+                if(!imageData) {
+                    Warning{} << "DartIntegration::convertShapeNode(): cannot load texture image, skipping";
                     continue;
                 }
 
@@ -281,8 +290,9 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         /* Close any file if opened */
         importer->close();
+
+    /* Soft mesh */
     } else if((convertTypes & ConvertShapeType::Mesh) && shape->getType() == dart::dynamics::SoftMeshShape::getStaticType()) {
-        /* Soft meshes should be drawn with face culling */
         auto meshShape = std::static_pointer_cast<dart::dynamics::SoftMeshShape>(shape);
 
         const dart::dynamics::SoftBodyNode* bn = meshShape->getSoftBodyNode();
@@ -298,9 +308,8 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             positions[0].push_back(Vector3(pos(0), pos(1), pos(2)));
         }
 
-        /* Add each face twice; once with the original orientation
-         * and once with reversed orientation
-         */
+        /* Add each face twice; once with the original orientation and once
+           with reversed orientation */
         for(UnsignedInt i = 0; i < bn->getNumFaces(); ++i) {
             const Eigen::Vector3i& F = bn->getFace(i);
             indices.insert(indices.end(), {
@@ -326,6 +335,8 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
         new(&shapeData.meshes[0]) Trade::MeshData3D{std::move(meshData)};
+
+    /* Sphere */
     } else if(shape->getType() == dart::dynamics::SphereShape::getStaticType()) {
         if(convertTypes & ConvertShapeType::Primitive) {
             auto sphereShape = std::static_pointer_cast<dart::dynamics::SphereShape>(shape);

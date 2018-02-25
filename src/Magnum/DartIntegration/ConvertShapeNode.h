@@ -27,7 +27,7 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::DartIntegration::ShapeData, function @ref Magnum::DartIntegration::convertShapeNode()
+ * @brief Struct @ref Magnum::DartIntegration::ShapeData, function @ref Magnum::DartIntegration::convertShapeNode()
  */
 
 #include <Corrade/Containers/Array.h>
@@ -40,7 +40,6 @@
 #include "Magnum/DartIntegration/visibility.h"
 
 namespace dart { namespace dynamics {
-    class BodyNode;
     class ShapeNode;
 }}
 
@@ -49,31 +48,62 @@ namespace Magnum { namespace DartIntegration {
 /**
 @brief Shape data
 
-@see @ref convertShapeNode()
+Returned from @ref convertShapeNode().
 @experimental
 */
 struct MAGNUM_DARTINTEGRATION_EXPORT ShapeData {
-    #ifndef DOXYGEN_GENERATING_OUTPUT
+    /**
+     * @brief Constructor
+     * @param meshes    Mesh data
+     * @param materials Material data
+     * @param images    Image data
+     * @param textures  Texture data
+     * @param scaling   Shape scaling
+     *
+     * Used internally by @ref convertShapeNode().
+     */
     explicit ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling);
 
+    /** @brief Copying is not allowed */
     ShapeData(const ShapeData&) = delete;
+
+    /** @brief Move constructor */
     ShapeData(ShapeData&&) noexcept = default;
+
+    /** @brief Copying is not allowed */
     ShapeData& operator=(const ShapeData&) = delete;
+
+    /** @brief Move assignment */
     ShapeData& operator=(ShapeData&&) noexcept = default;
 
     ~ShapeData();
-    #endif
 
-    /** @brief Mesh data */
+    /**
+     * @brief Mesh data
+     *
+     * Each mesh has corresponding material data in @ref materials and
+     * optionally texture data in @ref images and @ref textures at the same
+     * index.
+     */
     Containers::Array<Trade::MeshData3D> meshes;
 
-    /** @brief Material data */
+    /** @brief Material data corresponding to meshes */
     Containers::Array<Trade::PhongMaterialData> materials;
 
-    /** @brief Image data */
+    /**
+     * @brief Image data corresponding to meshes
+     *
+     * Set to @ref Corrade::Containers::NullOpt in case given mesh has no
+     * texture.
+     */
     Containers::Array<Containers::Optional<Trade::ImageData2D>> images;
 
-    /** @brief Texture data */
+    /**
+     * @brief Texture data corresponding to meshes
+     *
+     * Set to @ref Corrade::Containers::NullOpt in case given mesh has no
+     * texture.
+     */
     Containers::Array<Containers::Optional<Trade::TextureData>> textures;
 
     /** @brief Scaling */
@@ -81,23 +111,26 @@ struct MAGNUM_DARTINTEGRATION_EXPORT ShapeData {
 };
 
 /**
-@brief ConvertShapeType
+@brief Shape convert type
 
-What should be loaded from the dart::dynamics::ShapeNode, see @ref convertShapeNode()
+@see @ref convertShapeNode()
 @experimental
 */
-enum class ConvertShapeType: unsigned int {
-    /* @brief Load only material information */
-    Material = 1 << 0,
-    /* @brief Load scaling information */
-    Primitive = 1 << 1,
-    /* @brief Load full meshes */
-    Mesh = 1 << 2,
-    /* @brief Load everything */
-    All = Material | Primitive | Mesh
+enum class ConvertShapeType: UnsignedInt {
+    Material = 1 << 0,              /**< Load only material information */
+    Primitive = 1 << 1,             /**< Load scaling information */
+    Mesh = 1 << 2,                  /**< Load full meshes */
+    All = Material|Primitive|Mesh   /**< Load everything */
 };
 
+/**
+@brief Shape convert types
+
+@see @ref convertShapeNode()
+@experimental
+*/
 typedef Containers::EnumSet<ConvertShapeType> ConvertShapeTypes;
+
 CORRADE_ENUMSET_OPERATORS(ConvertShapeTypes)
 
 /**
@@ -121,17 +154,16 @@ The following DART shapes are not yet supported:
 -   `MultiSphereConvexHullShape`
 -   `PlaneShape` (this is an infinite plane with normal)
 
-The @ref Trade::AbstractImporter `importer` argument is only used when loading
-`dart::dynamics::ShapeNode` with a shape of type `dart::dynamics::MeshShape`.
-As a consequence, you can pass a nullptr if you do not want to load such a
-`dart::dynamics::ShapeNode`. On the contrary, when you are trying to load a
-`dart::dynamics::MeshShape` and the importer is a nullptr, the function will
-return @ref Corrade::Containers::NullOpt
+The @p importer argument is an optional instance of @ref Trade::AssimpImporter.
+It is only used when loading `dart::dynamics::ShapeNode`  with a shape of type
+`dart::dynamics::MeshShape`. As a consequence, you can omit it you do not want
+to load such a `dart::dynamics::ShapeNode`. On the contrary, when you are
+trying to load a `dart::dynamics::MeshShape` and the importer is a @cpp nullptr @ce,
+the function will return @ref Corrade::Containers::NullOpt.
 
-@attention
-Soft meshes should be drawn with @ref Renderer::Feature::FaceCulling enabled
-as each triangle is drawn twice (once with the original orientation and once
-with the reversed orientation)
+@attention Soft meshes should be drawn with @ref Renderer::Feature::FaceCulling
+    enabled as each triangle is drawn twice (once with the original orientation
+    and once with the reversed orientation).
 
 @experimental
 */

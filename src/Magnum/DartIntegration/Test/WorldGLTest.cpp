@@ -126,14 +126,14 @@ void DartIntegrationTest::pendulum() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
+    World dartWorld{*obj, *world};
 
-    for(int i = 0; i < 10; i++)
-        dartWorld->step();
-    dartWorld->refresh();
+    for(int i = 0; i < 10; ++i)
+        dartWorld.step();
+    dartWorld.refresh();
 
-    auto objects = dartWorld->objects();
-    Object& objTest = dartWorld->objectFromDartFrame(bn->getShapeNodesWith<dart::dynamics::VisualAspect>().back());
+    auto objects = dartWorld.objects();
+    Object& objTest = dartWorld.objectFromDartFrame(bn->getShapeNodesWith<dart::dynamics::VisualAspect>().back());
 
     Eigen::Isometry3d trans = bn->getShapeNodesWith<dart::dynamics::VisualAspect>().back()->getTransform();
 
@@ -164,15 +164,15 @@ void DartIntegrationTest::soft() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
+    World dartWorld{*obj, *world};
 
-    for(int i = 0; i < 10; i++)
-        dartWorld->step();
-    dartWorld->refresh();
+    for(int i = 0; i < 10; ++i)
+        dartWorld.step();
+    dartWorld.refresh();
 
-    auto objects = dartWorld->objects();
+    auto objects = dartWorld.objects();
     CORRADE_COMPARE(objects.size(), 2);
-    CORRADE_COMPARE(dartWorld->shapeObjects().size(), 1);
+    CORRADE_COMPARE(dartWorld.shapeObjects().size(), 1);
 }
 
 #if DART_URDF
@@ -186,18 +186,17 @@ void DartIntegrationTest::urdf() {
     const UnsignedInt assimpVersion = aiGetVersionMajor()*100 + aiGetVersionMinor();
 
     const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
-    auto tmp_skel = loader.parseSkeleton(filename);
-    CORRADE_VERIFY(tmp_skel);
+    auto tmpSkel = loader.parseSkeleton(filename);
+    CORRADE_VERIFY(tmpSkel);
 
     dart::simulation::WorldPtr world(new dart::simulation::World);
-    world->addSkeleton(tmp_skel);
+    world->addSkeleton(tmpSkel);
 
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
-
-    for(Object& dartObj: dartWorld->shapeObjects()) {
+    World dartWorld{*obj, *world};
+    for(Object& dartObj: dartWorld.shapeObjects()) {
         auto shape = dartObj.shapeNode()->getShape();
         CORRADE_COMPARE(shape->getType(), dart::dynamics::MeshShape::getStaticType());
         DrawData& mydata = dartObj.drawData();
@@ -224,28 +223,28 @@ void DartIntegrationTest::multiMesh() {
     #endif
 
     const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_multi_mesh.urdf");
-    auto tmp_skel = loader.parseSkeleton(filename);
-    CORRADE_VERIFY(tmp_skel);
+    auto tmpSkel = loader.parseSkeleton(filename);
+    CORRADE_VERIFY(tmpSkel);
 
     dart::simulation::WorldPtr world(new dart::simulation::World);
-    world->addSkeleton(tmp_skel);
+    world->addSkeleton(tmpSkel);
 
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
+    World dartWorld{*obj, *world};
 
-    for(int i = 0; i < 1000; i++) {
-        dartWorld->step();
+    for(int i = 0; i < 1000; ++i) {
+        dartWorld.step();
         /* refresh graphics at 60Hz */
         if(i%15 == 0) {
-            dartWorld->refresh();
-            dartWorld->clearUpdatedShapeObjects();
+            dartWorld.refresh();
+            dartWorld.clearUpdatedShapeObjects();
         }
     }
 
-    CORRADE_COMPARE(dartWorld->shapeObjects().size(), 1);
-    Object& dartObj = dartWorld->shapeObjects()[0];
+    CORRADE_COMPARE(dartWorld.shapeObjects().size(), 1);
+    Object& dartObj = dartWorld.shapeObjects()[0];
 
     auto shape = dartObj.shapeNode()->getShape();
     CORRADE_COMPARE(shape->getType(), dart::dynamics::MeshShape::getStaticType());
@@ -270,27 +269,26 @@ void DartIntegrationTest::texture() {
     #endif
 
     const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_texture.urdf");
-    auto tmp_skel = loader.parseSkeleton(filename);
-    CORRADE_VERIFY(tmp_skel);
+    auto tmpSkel = loader.parseSkeleton(filename);
+    CORRADE_VERIFY(tmpSkel);
 
     dart::simulation::WorldPtr world(new dart::simulation::World);
-    world->addSkeleton(tmp_skel);
+    world->addSkeleton(tmpSkel);
 
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
-
-    for(int i = 0; i < 1000; i++) {
-        dartWorld->step();
+    World dartWorld{*obj, *world};
+    for(int i = 0; i < 1000; ++i) {
+        dartWorld.step();
         /* refresh graphics at 60Hz */
         if(i%15 == 0) {
-            dartWorld->refresh();
-            dartWorld->clearUpdatedShapeObjects();
+            dartWorld.refresh();
+            dartWorld.clearUpdatedShapeObjects();
         }
     }
 
-    for(Object& dartObj: dartWorld->shapeObjects()) {
+    for(Object& dartObj: dartWorld.shapeObjects()) {
         auto shape = dartObj.shapeNode()->getShape();
         CORRADE_COMPARE(shape->getType(), dart::dynamics::MeshShape::getStaticType());
         DrawData& mydata = dartObj.drawData();
@@ -331,14 +329,14 @@ void DartIntegrationTest::simpleSimulation() {
     Scene3D scene;
     Object3D* obj = new Object3D{&scene};
 
-    std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
+    World dartWorld{*obj, *world};
     CORRADE_BENCHMARK(5) {
-        for(int i = 0; i < 1000; i++) {
-            dartWorld->step();
+        for(int i = 0; i < 1000; ++i) {
+            dartWorld.step();
             /* refresh graphics at 60Hz */
             if(i%15 == 0) {
-                dartWorld->refresh();
-                dartWorld->clearUpdatedShapeObjects();
+                dartWorld.refresh();
+                dartWorld.clearUpdatedShapeObjects();
             }
         }
     }
@@ -365,14 +363,13 @@ void DartIntegrationTest::softSimulation() {
         Scene3D scene;
         Object3D* obj = new Object3D{&scene};
 
-        std::shared_ptr<World> dartWorld = std::make_shared<World>(*obj, *world);
-
-        for(int i = 0; i < 1000; i++) {
-            dartWorld->step();
+        World dartWorld{*obj, *world};
+        for(int i = 0; i < 1000; ++i) {
+            dartWorld.step();
             /* refresh graphics at 60Hz */
             if(i%15 == 0) {
-                dartWorld->refresh();
-                dartWorld->clearUpdatedShapeObjects();
+                dartWorld.refresh();
+                dartWorld.clearUpdatedShapeObjects();
             }
         }
     }

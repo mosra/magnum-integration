@@ -26,41 +26,40 @@
 
 #include "World.h"
 
-#include <Magnum/Buffer.h>
-#include <Magnum/Mesh.h>
-#include <Magnum/Texture.h>
-#include <Magnum/Trade/PhongMaterialData.h>
+#include <dart/dynamics/BodyNode.hpp>
+#include <dart/dynamics/ShapeNode.hpp>
+#include <dart/simulation/World.hpp>
 
 namespace Magnum { namespace DartIntegration {
+
 World::World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world): _object(object), _manager{MAGNUM_PLUGINS_IMPORTER_DIR}, _dartWorld(world) {
-    /* load Assimp importer */
+    /* Load Assimp importer */
     _importer = _manager.loadAndInstantiate("AssimpImporter");
 }
 
 World::~World() = default;
 
 World& World::refresh() {
-    /* clear update flags */
+    /* Clear update flags */
     for(auto& obj: _dartToMagnum)
         obj.second->clearUpdateFlag();
 
-    /* parse all skeletons in _dartWorld */
+    /* Parse all skeletons in _dartWorld */
     for(size_t i = 0; i < _dartWorld.getNumSkeletons(); ++i) {
         for(size_t j = 0; j < _dartWorld.getSkeleton(i)->getNumTrees(); ++j)
             parseBodyNodeRecursive(_object, *_dartWorld.getSkeleton(i)->getRootBodyNode(j));
     }
 
     /* Find unused objects */
-    for(auto& object_pair: _dartToMagnum)
-    {
+    std::vector<dart::dynamics::Frame*> unusedFrames;
+    for(auto& object_pair: _dartToMagnum) {
         if(object_pair.second && !object_pair.second->isUpdated())
             unusedFrames.push_back(object_pair.first);
     }
 
-    /* Clear unused Objects */
+    /* Clear unused objects */
     _toRemove.clear();
-    for(dart::dynamics::Frame* frame: unusedFrames)
-    {
+    for(dart::dynamics::Frame* frame: unusedFrames) {
         auto it = _dartToMagnum.find(frame);
         _toRemove.emplace_back(std::move(it->second));
         _dartToMagnum.erase(it);
@@ -76,8 +75,9 @@ World& World::step() {
 
 std::vector<std::reference_wrapper<Object>> World::objects() {
     std::vector<std::reference_wrapper<Object>> objs;
+    objs.reserve(_dartToMagnum.size());
     for(auto& obj: _dartToMagnum)
-        objs.emplace_back(std::ref(*obj.second));
+        objs.emplace_back(*obj.second);
 
     return objs;
 }
@@ -86,6 +86,15 @@ std::vector<std::reference_wrapper<Object>> World::shapeObjects() {
     std::vector<std::reference_wrapper<Object>> objs;
     for(auto& obj: _dartToMagnum)
         if(obj.second->shapeNode())
+            objs.emplace_back(*obj.second);
+
+    return objs;
+}
+
+std::vector<std::reference_wrapper<Object>> World::bodyObjects() {
+    std::vector<std::reference_wrapper<Object>> objs;
+    for(auto& obj: _dartToMagnum)
+        if(obj.second->bodyNode())
             objs.emplace_back(std::ref(*obj.second));
 
     return objs;
@@ -104,52 +113,41 @@ World& World::clearUpdatedShapeObjects() {
     return *this;
 }
 
-std::vector<std::reference_wrapper<Object>> World::bodyObjects() {
-    std::vector<std::reference_wrapper<Object>> objs;
-    for(auto& obj: _dartToMagnum)
-        if(obj.second->bodyNode())
-            objs.emplace_back(std::ref(*obj.second));
-
-    return objs;
-}
 Object& World::objectFromDartFrame(dart::dynamics::Frame* frame) {
     return *_dartToMagnum.at(frame);
 }
 
 void World::parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn) {
-    /** parse the BodyNode
-     * we care only about visuals
-     */
+    /* Parse the BodyNode -- we care only about visuals */
     auto& visualShapes = bn.getShapeNodesWith<dart::dynamics::VisualAspect>();
 
-    /* create an object of the BodyNode to keep track of transformations */
+    /* Create an object of the BodyNode to keep track of transformations */
     SceneGraph::AbstractBasicObject3D<Float>* object = nullptr;
-    auto it = _dartToMagnum.insert(std::make_pair(static_cast<dart::dynamics::Frame*>(&bn), nullptr));
-    if (it.second) {
+    auto it = _dartToMagnum.emplace(static_cast<dart::dynamics::Frame*>(&bn), nullptr);
+    if(it.second) {
         object = objectCreator(parent);
         it.first->second = dartObjectCreator(*object, &bn);
-    }
-    else
+    } else
         object = static_cast<SceneGraph::AbstractBasicObject3D<Float>*>(&it.first->second->object());
+
     it.first->second->update();
-    for (auto& shape: visualShapes) {
-        auto it = _dartToMagnum.insert(std::make_pair(static_cast<dart::dynamics::Frame*>(shape), nullptr));
-        if (it.second) {
+
+    for(auto& shape: visualShapes) {
+        auto it = _dartToMagnum.emplace(static_cast<dart::dynamics::Frame*>(shape), nullptr);
+        if(it.second) {
             /* create object for the ShapeNode to keep track of inner transformations */
             auto shapeObj = objectCreator(*object);
             it.first->second = dartShapeObjectCreator(*shapeObj, shape);
         }
+
         it.first->second->update(_importer.get());
         if(it.first->second->hasUpdatedMesh())
             _updatedShapeObjects.insert(it.first->second.get());
     }
 
-    /* parse the children recursively */
-    std::size_t numChilds = bn.getNumChildBodyNodes();
-    for (std::size_t i = 0; i < numChilds; i++) {
-        /* pass as parent the newly created object */
+    /* Parse the children recursively, pass the newly created object as parent */
+    for(std::size_t i = 0; i < bn.getNumChildBodyNodes(); ++i)
         parseBodyNodeRecursive(*object, *bn.getChildBodyNode(i));
-    }
 }
 
 }}

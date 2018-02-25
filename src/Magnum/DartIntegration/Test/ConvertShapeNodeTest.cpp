@@ -112,8 +112,7 @@ void ConvertShapeNodeTest::basicShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(box);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(shapeDataAll);
-    }
-    {
+    } {
         /* CapsuleShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("CapsuleShape");
 
@@ -124,8 +123,7 @@ void ConvertShapeNodeTest::basicShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(capsule);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(shapeDataAll);
-    }
-    {
+    } {
         /* CylinderShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("CylinderShape");
 
@@ -136,8 +134,7 @@ void ConvertShapeNodeTest::basicShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(cylinder);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(shapeDataAll);
-    }
-    {
+    } {
         /* EllipsoidShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("EllipsoidShape");
 
@@ -148,8 +145,7 @@ void ConvertShapeNodeTest::basicShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(ellipsoid);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(shapeDataAll);
-    }
-    {
+    } {
         /* SphereShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("SphereShape");
 
@@ -176,8 +172,7 @@ void ConvertShapeNodeTest::assimpImporter() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(mesh);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All, nullptr);
         CORRADE_VERIFY(!shapeDataAll);
-    }
-    {
+    } {
         /* load AssimpImporter */
         PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
         std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
@@ -194,6 +189,7 @@ void ConvertShapeNodeTest::assimpImporter() {
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All, importer.get());
         CORRADE_VERIFY(!shapeDataAll);
     }
+
     #if DART_URDF
     #if DART_MAJOR_VERSION == 6
     dart::utils::DartLoader loader;
@@ -218,8 +214,7 @@ void ConvertShapeNodeTest::assimpImporter() {
 
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All, importer.get());
         CORRADE_VERIFY(!shapeDataAll);
-    }
-    {
+    } {
         PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
         std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
         CORRADE_VERIFY(importer);
@@ -270,8 +265,7 @@ void ConvertShapeNodeTest::unsupportedShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(cone);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(!shapeDataAll);
-    }
-    {
+    } {
         /* LineSegmentShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("LineSegmentShape");
 
@@ -282,8 +276,7 @@ void ConvertShapeNodeTest::unsupportedShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(line);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(!shapeDataAll);
-    }
-    {
+    } {
         /* MultiSphereConvexHullShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("MultiSphereConvexHullShape");
 
@@ -294,8 +287,7 @@ void ConvertShapeNodeTest::unsupportedShapes() {
         auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(multiSphere);
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(!shapeDataAll);
-    }
-    {
+    } {
         /* PlaneShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("PlaneShape");
 
@@ -409,10 +401,10 @@ void ConvertShapeNodeTest::urdf() {
     const UnsignedInt assimpVersion = aiGetVersionMajor()*100 + aiGetVersionMinor();
 
     const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
-    auto tmp_skel = loader.parseSkeleton(filename);
-    CORRADE_VERIFY(tmp_skel);
+    auto tmpSkel = loader.parseSkeleton(filename);
+    CORRADE_VERIFY(tmpSkel);
 
-    for(auto& bn: tmp_skel->getBodyNodes()) {
+    for(auto& bn: tmpSkel->getBodyNodes()) {
         for(auto& shapeNode: bn->getShapeNodesWith<dart::dynamics::VisualAspect>()) {
             auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All, importer.get());
             CORRADE_VERIFY(shapeDataAll);

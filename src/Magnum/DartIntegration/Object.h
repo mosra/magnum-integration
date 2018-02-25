@@ -27,14 +27,11 @@
 */
 
 /** @file
- * @brief Class @ref Magnum::DartIntegration::Object, Class @ref Magnum::DartIntegration::DrawData
+ * @brief Class @ref Magnum::DartIntegration::Object, struct @ref Magnum::DartIntegration::DrawData
  */
-
-#include <memory>
 
 #include <Corrade/Containers/Array.h>
 #include <Corrade/Containers/Optional.h>
-
 #include <Magnum/SceneGraph/AbstractFeature.h>
 #include <Magnum/SceneGraph/AbstractTranslationRotation3D.h>
 #include <Magnum/Trade/Trade.h>
@@ -49,28 +46,46 @@ namespace dart { namespace dynamics {
 namespace Magnum { namespace DartIntegration {
 
 /**
-@brief Shape data
+@brief Shape draw data
 
-@see @ref Object::convertShapeNode()
+@see @ref Object::drawData()
+@experimental
 */
 struct DrawData {
-    #ifndef DOXYGEN_GENERATING_OUTPUT
-    explicit DrawData(Containers::Array<Mesh> meshes, Containers::Array<Buffer> vertexBuffers, Containers::Array<Containers::Optional<Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Texture2D>> textures, const Vector3& scaling = Vector3{1.f, 1.f, 1.f});
+    /**
+     * @brief Constructor
+     * @param meshes            Meshes
+     * @param vertexBuffers     Vertex buffers
+     * @param indexBuffers      Index buffers
+     * @param materials         Material data
+     * @param textures          Textures
+     * @param scaling           Object scaling
+     *
+     * Used internally by @ref Object.
+     */
+    explicit DrawData(Containers::Array<Mesh> meshes, Containers::Array<Buffer> vertexBuffers, Containers::Array<Containers::Optional<Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Texture2D>> textures, const Vector3& scaling);
 
+    /** @brief Copying is not allowed */
     DrawData(const DrawData&) = delete;
+
+    /** @brief Move constructor */
     DrawData(DrawData&&) noexcept = default;
+
+    /** @brief Copying is not allowed */
     DrawData& operator=(const DrawData&) = delete;
+
+    /** @brief Move assignment */
     DrawData& operator=(DrawData&&) noexcept = default;
 
     ~DrawData();
-    #endif
+
     /** @brief Meshes */
     Containers::Array<Mesh> meshes;
 
-    /** @brief vertex Buffers */
+    /** @brief Vertex buffers */
     Containers::Array<Buffer> vertexBuffers;
 
-    /** @brief index Buffers */
+    /** @brief Index buffers */
     Containers::Array<Containers::Optional<Buffer>> indexBuffers;
 
     /** @brief Material data */
@@ -90,8 +105,9 @@ Encapsulates `BodyNode` or `ShapeNode` as a @ref SceneGraph feature.
 
 @section DartIntegration-Object-usage Usage
 
-Common usage is to create a @ref DartIntegration::Object to share transformation with a DART
-`BodyNode` or `ShapeNode` by passing a pointer to its constructor:
+Common usage is to create a @ref DartIntegration::Object to share
+transformation with a DART `BodyNode` or `ShapeNode` by passing a pointer to
+its constructor:
 
 @code{.cpp}
 dart::dynamics::BodyNode* body = getBodyNodeFromDart();
@@ -129,22 +145,32 @@ class MAGNUM_DARTINTEGRATION_EXPORT Object: public SceneGraph::AbstractBasicFeat
          */
         template<class T> Object(T& object, dart::dynamics::BodyNode* body = nullptr): Object{object, object, nullptr, body} {}
 
-        /** @brief Get transformation from DART */
+        /**
+         * @brief Get transformation from DART
+         * @return Reference to self (for method chaining)
+         */
         Object& update(Trade::AbstractImporter* importer = nullptr);
 
-        /** @brief Get whether Object was updated */
+        /**
+         * @brief Whether the object was updated
+         *
+         * @see @ref clearUpdateFlag()
+         */
         bool isUpdated() const { return _updated; }
 
-        /** @brief Clear update flag (i.e., set it to false) */
+        /**
+         * @brief Clear update flag
+         * @return Reference to self (for method chaining)
+         */
         Object& clearUpdateFlag() {
             _updated = false;
             return *this;
         }
 
-        /** @brief Get whether Object's mesh was updated */
+        /** @brief Whether object mesh was updated */
         bool hasUpdatedMesh() const { return _updatedMesh; }
 
-        /** @brief Get DrawData */
+        /** @brief Data for drawing */
         DrawData& drawData() { return *_drawData; }
 
         /** @brief Underlying DART `ShapeNode` */
