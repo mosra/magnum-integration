@@ -23,6 +23,7 @@ build() {
         -DWITH_BULLET=ON \
         -DWITH_DART=ON \
         -DBUILD_TESTS=ON \
+        -DBUILD_GL_TESTS=ON \
         -G Ninja
     ninja
 }
