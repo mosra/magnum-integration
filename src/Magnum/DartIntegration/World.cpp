@@ -49,20 +49,6 @@ World& World::refresh() {
         parseSkeleton(_object, *_dartWorld.getSkeleton(i));
     }
 
-    /* remove unused objects */
-    clearUnusedObjects();
-
-    return *this;
-}
-
-World& World::step() {
-    _dartWorld.step();
-    return *this;
-}
-
-World& World::clearUnusedObjects() {
-    std::vector<dart::dynamics::Frame*> unusedFrames;
-
     /* Find unused objects */
     for(auto& object_pair: _dartToMagnum)
     {
@@ -79,6 +65,11 @@ World& World::clearUnusedObjects() {
         _dartToMagnum.erase(it);
     }
 
+    return *this;
+}
+
+World& World::step() {
+    _dartWorld.step();
     return *this;
 }
 

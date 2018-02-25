@@ -142,9 +142,6 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         /** @brief Do a DART world step */
         World& step();
 
-        /** @brief Cleared all objects that were not updated during the last refresh call */
-        World& clearUnusedObjects();
-
         /** @brief Get unused objects; all objects that were not updated during the last refresh call
          * Note: this list will be cleared once a new refresh call is made
          */
