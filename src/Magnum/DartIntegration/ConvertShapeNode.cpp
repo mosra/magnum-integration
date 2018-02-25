@@ -64,7 +64,7 @@ ShapeData::ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Ar
 
 ShapeData::~ShapeData() = default;
 
-Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shapeNode, ConvertShapeTypes loadType, Trade::AbstractImporter* importer) {
+Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shapeNode, ConvertShapeTypes convertTypes, Trade::AbstractImporter* importer) {
     dart::dynamics::ShapePtr shape = shapeNode.getShape();
 
     if(shape->getType() == dart::dynamics::ConeShape::getStaticType() ||
@@ -78,7 +78,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
     ShapeData shapeData{{}, {}, {}, {}, Vector3{1.0f}};
 
     Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, 80.f};
-    if(loadType & ConvertShapeType::Material) {
+    if(convertTypes & ConvertShapeType::Material) {
         /* Get material information -- we ignore the alpha value
         Note that this material is not necessarily used for the MeshShapeNodes */
         Eigen::Vector4d col = shapeNode.getVisualAspect()->getRGBA();
@@ -97,7 +97,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
     }
 
     if(shape->getType() == dart::dynamics::BoxShape::getStaticType()) {
-        if(loadType & ConvertShapeType::Primitive) {
+        if(convertTypes & ConvertShapeType::Primitive) {
             auto boxShape = std::static_pointer_cast<dart::dynamics::BoxShape>(shape);
             Eigen::Vector3d size = boxShape->getSize();
 
@@ -105,7 +105,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.scaling = Vector3(size(0), size(1), size(2)) * 0.5f;
         }
 
-        if(loadType & ConvertShapeType::Mesh) {
+        if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Cube::solid()};
         }
@@ -114,10 +114,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         Float r = Float(capsuleShape->getRadius());
 
-        if(loadType & ConvertShapeType::Primitive)
+        if(convertTypes & ConvertShapeType::Primitive)
             shapeData.scaling = Vector3{r};
 
-        if(loadType & ConvertShapeType::Mesh) {
+        if(convertTypes & ConvertShapeType::Mesh) {
             Float h = Float(capsuleShape->getHeight());
             Float halfLength = 0.5f * h / r;
 
@@ -129,10 +129,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         Float r = Float(cylinderShape->getRadius());
 
-        if(loadType & ConvertShapeType::Primitive)
+        if(convertTypes & ConvertShapeType::Primitive)
             shapeData.scaling = Vector3{r};
 
-        if(loadType & ConvertShapeType::Mesh) {
+        if(convertTypes & ConvertShapeType::Mesh) {
             Float h = Float(cylinderShape->getHeight());
             Float halfLength = 0.5f * h / r;
 
@@ -140,14 +140,14 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Cylinder::solid(32, 32, halfLength, Primitives::Cylinder::Flag::CapEnds)};
         }
     } else if(shape->getType() == dart::dynamics::EllipsoidShape::getStaticType()) {
-        if(loadType & ConvertShapeType::Primitive) {
+        if(convertTypes & ConvertShapeType::Primitive) {
             auto ellipsoidShape = std::static_pointer_cast<dart::dynamics::EllipsoidShape>(shape);
 
             Eigen::Vector3d size = ellipsoidShape->getDiameters().array() * 0.5;
             shapeData.scaling = Vector3(size(0), size(1), size(2));
         }
 
-        if(loadType & ConvertShapeType::Mesh) {
+        if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Icosphere::solid(5)};
         }
@@ -158,7 +158,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
         auto meshShape = std::static_pointer_cast<dart::dynamics::MeshShape>(shape);
 
-        if(loadType & ConvertShapeType::Primitive) {
+        if(convertTypes & ConvertShapeType::Primitive) {
             /* @todo: check if scaling can be per mesh */
             Eigen::Vector3d scale = meshShape->getScale();
             shapeData.scaling = Vector3(scale(0), scale(1), scale(2));
@@ -195,10 +195,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                 return Containers::NullOpt;
             }
 
-            if(loadType & ConvertShapeType::Material) {
+            if(convertTypes & ConvertShapeType::Material) {
                 auto colorMode = meshShape->getColorMode();
                 /* only get materials from mesh if the appropriate color mode */
-                if(importer->materialCount() && loadType & ConvertShapeType::Material) {
+                if(importer->materialCount() && convertTypes & ConvertShapeType::Material) {
                     if(colorMode == dart::dynamics::MeshShape::ColorMode::MATERIAL_COLOR) {
                         auto matPtr = importer->material(meshObjectData.material());
                         if(matPtr)
@@ -234,7 +234,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                 }
             }
 
-            if(loadType & ConvertShapeType::Mesh) {
+            if(convertTypes & ConvertShapeType::Mesh) {
                 meshes[j] = std::move(*meshData);
             }
 
@@ -244,7 +244,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         Containers::Array<Containers::Optional<Trade::TextureData>> textures(importer->textureCount());
         Containers::Array<Containers::Optional<Trade::ImageData2D>> images(importer->textureCount());
 
-        if(loadType & ConvertShapeType::Material) {
+        if(convertTypes & ConvertShapeType::Material) {
             for(UnsignedInt i = 0; i < importer->textureCount(); ++i) {
                 /* Cannot load, leave this element set to NullOpt */
                 Containers::Optional<Trade::TextureData> textureData = importer->texture(i);
@@ -265,13 +265,13 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             }
         }
 
-        if(loadType & ConvertShapeType::Mesh) {
+        if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, meshes.size());
             for(UnsignedInt m = 0; m < meshes.size(); m++)
                 new(&shapeData.meshes[m]) Trade::MeshData3D{std::move(*meshes[m])};
         }
 
-        if(loadType & ConvertShapeType::Material) {
+        if(convertTypes & ConvertShapeType::Material) {
             shapeData.materials = Containers::Array<Trade::PhongMaterialData>(Containers::NoInit, materials.size());
             for(UnsignedInt m = 0; m < materials.size(); m++)
                 new(&shapeData.materials[m]) Trade::PhongMaterialData{std::move(*materials[m])};
@@ -281,7 +281,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         /* Close any file if opened */
         importer->close();
-    } else if(loadType & ConvertShapeType::Mesh && shape->getType() == dart::dynamics::SoftMeshShape::getStaticType()) {
+    } else if((convertTypes & ConvertShapeType::Mesh) && shape->getType() == dart::dynamics::SoftMeshShape::getStaticType()) {
         /* Soft meshes should be drawn with face culling */
         auto meshShape = std::static_pointer_cast<dart::dynamics::SoftMeshShape>(shape);
 
@@ -329,14 +329,14 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
         new(&shapeData.meshes[0]) Trade::MeshData3D{std::move(meshData)};
     } else if(shape->getType() == dart::dynamics::SphereShape::getStaticType()) {
-        if(loadType & ConvertShapeType::Primitive) {
+        if(convertTypes & ConvertShapeType::Primitive) {
             auto sphereShape = std::static_pointer_cast<dart::dynamics::SphereShape>(shape);
 
             Float r = Float(sphereShape->getRadius());
             shapeData.scaling = Vector3{r};
         }
 
-        if(loadType & ConvertShapeType::Mesh) {
+        if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Icosphere::solid(4)};
         }
