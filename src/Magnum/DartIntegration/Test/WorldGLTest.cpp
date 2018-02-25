@@ -96,7 +96,7 @@ DartIntegrationTest::DartIntegrationTest() {
               });
 
     addBenchmarks({&DartIntegrationTest::simpleSimulation,
-                   &DartIntegrationTest::softSimulation}, 5);
+                   &DartIntegrationTest::softSimulation}, 3);
 }
 
 using namespace Math::Literals;
@@ -330,8 +330,8 @@ void DartIntegrationTest::simpleSimulation() {
     Object3D* obj = new Object3D{&scene};
 
     World dartWorld{*obj, *world};
-    CORRADE_BENCHMARK(5) {
-        for(int i = 0; i < 1000; ++i) {
+    CORRADE_BENCHMARK(2) {
+        for(int i = 0; i < 250; ++i) {
             dartWorld.step();
             /* refresh graphics at 60Hz */
             if(i%15 == 0) {
@@ -343,7 +343,7 @@ void DartIntegrationTest::simpleSimulation() {
 }
 
 void DartIntegrationTest::softSimulation() {
-    CORRADE_BENCHMARK(5) {
+    CORRADE_BENCHMARK(2) {
         /* Create a soft body node */
         auto soft = dart::dynamics::Skeleton::create("soft");
         addSoftBody<dart::dynamics::FreeJoint>(soft, "soft box");
@@ -364,7 +364,7 @@ void DartIntegrationTest::softSimulation() {
         Object3D* obj = new Object3D{&scene};
 
         World dartWorld{*obj, *world};
-        for(int i = 0; i < 1000; ++i) {
+        for(int i = 0; i < 250; ++i) {
             dartWorld.step();
             /* refresh graphics at 60Hz */
             if(i%15 == 0) {
