@@ -133,7 +133,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT Object: public SceneGraph::AbstractBasicFeat
         Object& update(Trade::AbstractImporter* importer = nullptr);
 
         /** @brief Get whether Object was updated */
-        bool isUpdated() { return _updated; }
+        bool isUpdated() const { return _updated; }
 
         /** @brief Clear update flag (i.e., set it to false) */
         Object& clearUpdateFlag() {
@@ -142,7 +142,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT Object: public SceneGraph::AbstractBasicFeat
         }
 
         /** @brief Get whether Object's mesh was updated */
-        bool hasUpdatedMesh() { return _updatedMesh; }
+        bool hasUpdatedMesh() const { return _updatedMesh; }
 
         /** @brief Get DrawData */
         DrawData& drawData() { return *_drawData; }
