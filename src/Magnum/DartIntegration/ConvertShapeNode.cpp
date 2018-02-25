@@ -60,6 +60,10 @@
 
 namespace Magnum { namespace DartIntegration {
 
+ShapeData::ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling): meshes{std::move(meshes)}, materials{std::move(materials)}, images{std::move(images)}, textures{std::move(textures)}, scaling(scaling) {}
+
+ShapeData::~ShapeData() = default;
+
 Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shapeNode, ConvertShapeTypes loadType, Trade::AbstractImporter* importer) {
     dart::dynamics::ShapePtr shape = shapeNode.getShape();
 
@@ -71,7 +75,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         return Containers::NullOpt;
     }
 
-    ShapeData shapeData{{}, {}, {}, {}};
+    ShapeData shapeData{{}, {}, {}, {}, Vector3{1.0f}};
 
     Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, 80.f};
     if(loadType & ConvertShapeType::Material) {

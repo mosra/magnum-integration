@@ -32,12 +32,8 @@
 
 #include <Corrade/Containers/Array.h>
 #include <Corrade/Containers/EnumSet.h>
-#include <Corrade/Containers/EnumSet.hpp>
-#include <Corrade/Containers/Optional.h>
-#include <Magnum/Trade/ImageData.h>
-#include <Magnum/Trade/MeshData3D.h>
-#include <Magnum/Trade/PhongMaterialData.h>
-#include <Magnum/Trade/TextureData.h>
+#include <Magnum/Magnum.h>
+#include <Magnum/Math/Vector3.h>
 #include <Magnum/Trade/Trade.h>
 
 #include "Magnum/DartIntegration/DartIntegration.h"
@@ -56,16 +52,16 @@ namespace Magnum { namespace DartIntegration {
 @see @ref convertShapeNode()
 @experimental
 */
-struct ShapeData {
+struct MAGNUM_DARTINTEGRATION_EXPORT ShapeData {
     #ifndef DOXYGEN_GENERATING_OUTPUT
-    explicit ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling = Vector3{1.f, 1.f, 1.f}): meshes{std::move(meshes)}, materials{std::move(materials)}, images{std::move(images)}, textures{std::move(textures)}, scaling(scaling) {}
+    explicit ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling);
 
     ShapeData(const ShapeData&) = delete;
     ShapeData(ShapeData&&) noexcept = default;
     ShapeData& operator=(const ShapeData&) = delete;
     ShapeData& operator=(ShapeData&&) noexcept = default;
 
-    ~ShapeData() = default;
+    ~ShapeData();
     #endif
 
     /** @brief Mesh data */

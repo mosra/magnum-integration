@@ -49,7 +49,11 @@
 #include <Corrade/TestSuite/Tester.h>
 #include <Corrade/Utility/Directory.h>
 #include <Magnum/Trade/AbstractImporter.h>
+#include <Magnum/Trade/ImageData.h>
+#include <Magnum/Trade/MeshData3D.h>
+#include <Magnum/Trade/MeshObjectData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
+#include <Magnum/Trade/TextureData.h>
 
 #include "Magnum/DartIntegration/ConvertShapeNode.h"
 

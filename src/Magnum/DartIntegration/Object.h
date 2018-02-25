@@ -62,7 +62,7 @@ struct DrawData {
     DrawData& operator=(const DrawData&) = delete;
     DrawData& operator=(DrawData&&) noexcept = default;
 
-    ~DrawData() = default;
+    ~DrawData();
     #endif
     /** @brief Meshes */
     Containers::Array<Mesh> meshes;

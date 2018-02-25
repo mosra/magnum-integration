@@ -54,6 +54,8 @@ namespace Magnum { namespace DartIntegration {
 DrawData::DrawData(Containers::Array<Mesh> meshes, Containers::Array<Buffer> vertexBuffers, Containers::Array<Containers::Optional<Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Texture2D>> textures, const Vector3& scaling): meshes{std::move(meshes)}, vertexBuffers{std::move(vertexBuffers)}, indexBuffers{std::move(indexBuffers)}, materials{std::move(materials)}, textures{std::move(textures)}, scaling(scaling) {}
 #endif
 
+DrawData::~DrawData() = default;
+
 Object::Object(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation, dart::dynamics::ShapeNode* node, dart::dynamics::BodyNode* body): SceneGraph::AbstractBasicFeature3D<Float>{object}, _transformation(transformation), _node{node}, _body{body}, _updated(false), _updatedMesh(false) {}
 
 Object& Object::update(Trade::AbstractImporter* importer) {
