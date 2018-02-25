@@ -45,8 +45,9 @@ World& World::refresh() {
         obj.second->clearUpdateFlag();
 
     /* parse all skeletons in _dartWorld */
-    for(size_t i = 0; i < _dartWorld.getNumSkeletons(); i++) {
-        parseSkeleton(_object, *_dartWorld.getSkeleton(i));
+    for(size_t i = 0; i < _dartWorld.getNumSkeletons(); ++i) {
+        for(size_t j = 0; j < _dartWorld.getSkeleton(i)->getNumTrees(); ++j)
+            parseBodyNodeRecursive(_object, *_dartWorld.getSkeleton(i)->getRootBodyNode(j));
     }
 
     /* Find unused objects */
@@ -111,13 +112,6 @@ std::vector<std::reference_wrapper<Object>> World::bodyObjects() {
 
     return objs;
 }
-
-void World::parseSkeleton(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::Skeleton& skel){
-    for(size_t i = 0; i < skel.getNumTrees(); i++) {
-        parseBodyNodeRecursive(parent, *skel.getRootBodyNode(i));
-    }
-}
-
 Object& World::objectFromDartFrame(dart::dynamics::Frame* frame) {
     return *_dartToMagnum.at(frame);
 }

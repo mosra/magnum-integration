@@ -186,9 +186,6 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         /** @brief Function to create new @ref Object with shape with correct parent type */
         std::unique_ptr<Object>(*dartShapeObjectCreator)(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::ShapeNode* node);
 
-        /** @brief Parse DART Skeleton and create/update shapes */
-        void MAGNUM_DARTINTEGRATION_LOCAL parseSkeleton(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::Skeleton& skel);
-
         /** @brief Recursively parse DART BodyNode and all of its children */
         void MAGNUM_DARTINTEGRATION_LOCAL parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn);
 
