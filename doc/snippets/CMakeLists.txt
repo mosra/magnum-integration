@@ -31,5 +31,10 @@ if(WITH_DART)
     add_library(snippets STATIC
         dartintegration.cpp)
     target_link_libraries(snippets PRIVATE MagnumDartIntegration)
+    # CMAKE 2.8.12 IZ AMAZING LALALALA
+    if(CMAKE_VERSION VERSION_LESS 3.0)
+        find_package(DART 6.0.0 CONFIG REQUIRED)
+        target_include_directories(snippets SYSTEM PRIVATE ${DART_INCLUDE_DIRS})
+    endif()
     set_target_properties(snippets PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()
