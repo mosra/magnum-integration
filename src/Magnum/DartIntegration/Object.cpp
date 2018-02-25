@@ -189,9 +189,9 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
             std::tie(mesh, vertexBuffer, indexBuffer) = MeshTools::compile(meshData, BufferUsage::StaticDraw);
 
             new(&_drawData->meshes[i]) Mesh{std::move(mesh)};
-            _drawData->vertexBuffers[i] = std::move(*vertexBuffer.release());
+            _drawData->vertexBuffers[i] = std::move(*vertexBuffer);
             if(indexBuffer)
-                _drawData->indexBuffers[i] = std::move(*indexBuffer.release());
+                _drawData->indexBuffers[i] = std::move(*indexBuffer);
         }
     }
 
