@@ -55,7 +55,7 @@ target_include_directories(MagnumDartIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
 # Silence pedantic warnings in DART headers
-target_include_directories(MagnumDartIntegration SYSTEM PUBLIC ${DART_INCLUDE_DIRS} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(MagnumDartIntegration SYSTEM PUBLIC ${DART_INCLUDE_DIRS})
 set_target_properties(MagnumDartIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/DartIntegration")
