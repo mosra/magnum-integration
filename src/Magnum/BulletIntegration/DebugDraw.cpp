@@ -30,6 +30,7 @@ namespace Magnum { namespace BulletIntegration {
 
 Debug& operator<<(Debug& debug, const DebugDraw::DebugMode value) {
     switch(value) {
+        /* LCOV_EXCL_START */
         #define _c(value) case DebugDraw::DebugMode::value: return debug << "BulletIntegration::DebugDraw::DebugMode::" #value;
         _c(NoDebug)
         _c(DrawWireframe)
@@ -53,6 +54,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::DebugMode value) {
         _c(DrawFrames)
         #endif
         #undef _c
+        /* LCOV_EXCL_STOP */
     }
 
     return debug << "BulletIntegration::DebugDraw::DebugMode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
