@@ -303,14 +303,12 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
          */
         for(UnsignedInt i = 0; i < bn->getNumFaces(); ++i) {
             const Eigen::Vector3i& F = bn->getFace(i);
-            /* add original face */
-            indices.push_back(F[0]);
-            indices.push_back(F[1]);
-            indices.push_back(F[2]);
-            /* add reversed face */
-            indices.push_back(F[2]);
-            indices.push_back(F[1]);
-            indices.push_back(F[0]);
+            indices.insert(indices.end(), {
+                /* Original face */
+                UnsignedInt(F[0]), UnsignedInt(F[1]), UnsignedInt(F[2]),
+                /* Reversed face */
+                UnsignedInt(F[2]), UnsignedInt(F[1]), UnsignedInt(F[0])
+            });
         }
 
         /* Generate flat normals */
