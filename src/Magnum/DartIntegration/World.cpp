@@ -118,6 +118,10 @@ void World::parseSkeleton(SceneGraph::AbstractBasicObject3D<Float>& parent, dart
     }
 }
 
+Object& World::objectFromDartFrame(dart::dynamics::Frame* frame) {
+    return *_dartToMagnum.at(frame);
+}
+
 void World::parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn) {
     /** parse the BodyNode
      * we care only about visuals

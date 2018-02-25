@@ -166,7 +166,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
          * if the DART frame is not part of the World, the function throws an std::out_of_range
          * exception.
         */
-        Object& objectFromDartFrame(dart::dynamics::Frame* frame) { return *_dartToMagnum.at(frame); }
+        Object& objectFromDartFrame(dart::dynamics::Frame* frame);
 
         /** @brief Get the dart::simulation::World object
          * for making DART specific changes/updates
