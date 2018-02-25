@@ -157,7 +157,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         std::vector<std::reference_wrapper<Object>> shapeObjects();
 
         /** @brief Get all @ref Objects that have updated meshes */
-        std::vector<Object*> updatedShapeObjects();
+        std::vector<std::reference_wrapper<Object>> updatedShapeObjects();
 
         /** @brief Clear list of updated shape @ref Objects */
         World& clearUpdatedShapeObjects();

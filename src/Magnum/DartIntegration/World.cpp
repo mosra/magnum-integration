@@ -107,9 +107,11 @@ std::vector<std::reference_wrapper<Object>> World::shapeObjects() {
     return objs;
 }
 
-std::vector<Object*> World::updatedShapeObjects() {
-    std::vector<Object*> objs;
-    objs.insert(objs.end(), _updatedShapeObjects.begin(), _updatedShapeObjects.end());
+std::vector<std::reference_wrapper<Object>> World::updatedShapeObjects() {
+    std::vector<std::reference_wrapper<Object>> objs;
+    objs.reserve(_updatedShapeObjects.size());
+    for(auto& obj: _updatedShapeObjects)
+        objs.emplace_back(*obj);
     return objs;
 }
 
