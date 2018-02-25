@@ -148,25 +148,19 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         /* copy material data */
         _drawData->materials = std::move(shapeData->materials);
 
-        /* create textures, if needed */
-        if (shapeData->textures.size() > 0) {
-            _drawData->textures = Containers::Array<Containers::Optional<Texture2D>>(shapeData->textures.size());
-        }
+        /* Create textures */
+        _drawData->textures = Containers::Array<Containers::Optional<Texture2D>>(shapeData->textures.size());
         for(UnsignedInt i = 0; i < shapeData->textures.size(); i++) {
-            auto textureData = std::move(shapeData->textures[i]);
-            auto imageData = std::move(shapeData->images[i]);
-            /* this is to preserve indexing for materials */
-            if(!textureData || !imageData)
-                continue;
-            Texture2D texture;
-            texture.setMagnificationFilter(textureData->magnificationFilter())
-                .setMinificationFilter(textureData->minificationFilter(), textureData->mipmapFilter())
-                .setWrapping(textureData->wrapping().xy())
-                .setStorage(1, TextureFormat::RGB8, imageData->size())
-                .setSubImage(0, {}, *imageData)
-                .generateMipmap();
+            /* This is to preserve indexing for materials */
+            if(!shapeData->textures[i] || !shapeData->images[i]) continue;
 
-            _drawData->textures[i] = std::move(texture);
+            (*(_drawData->textures[i] = Texture2D{}))
+                .setMagnificationFilter(shapeData->textures[i]->magnificationFilter())
+                .setMinificationFilter(shapeData->textures[i]->minificationFilter(), shapeData->textures[i]->mipmapFilter())
+                .setWrapping(shapeData->textures[i]->wrapping().xy())
+                .setStorage(1, TextureFormat::RGB8, shapeData->images[i]->size())
+                .setSubImage(0, {}, *shapeData->images[i])
+                .generateMipmap();
         }
     }
 
@@ -182,13 +176,12 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         _drawData->indexBuffers = Containers::Array<Containers::Optional<Buffer>>(shapeData->meshes.size());
 
         for(UnsignedInt i = 0; i < shapeData->meshes.size(); i++) {
-            Trade::MeshData3D meshData = std::move(shapeData->meshes[i]);
             /* Create the mesh */
-            Mesh mesh{NoCreate};
+            new(&_drawData->meshes[i]) Mesh{NoCreate};
             std::unique_ptr<Buffer> vertexBuffer, indexBuffer;
-            std::tie(mesh, vertexBuffer, indexBuffer) = MeshTools::compile(meshData, BufferUsage::StaticDraw);
+            std::tie(_drawData->meshes[i], vertexBuffer, indexBuffer) =
+                MeshTools::compile(shapeData->meshes[i], BufferUsage::StaticDraw);
 
-            new(&_drawData->meshes[i]) Mesh{std::move(mesh)};
             _drawData->vertexBuffers[i] = std::move(*vertexBuffer);
             if(indexBuffer)
                 _drawData->indexBuffers[i] = std::move(*indexBuffer);
