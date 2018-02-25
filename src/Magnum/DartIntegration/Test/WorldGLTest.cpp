@@ -207,8 +207,8 @@ void DartIntegrationTest::urdf() {
         CORRADE_COMPARE(mydata.meshes.size(), mydata.indexBuffers.size());
         CORRADE_COMPARE(mydata.meshes.size(), mydata.materials.size());
         {
-            CORRADE_EXPECT_FAIL_IF(assimpVersion < 302,
-                "Old versions of Assimp do not load the material correctly");
+            CORRADE_EXPECT_FAIL_IF(assimpVersion < 302 || assimpVersion >= 400,
+                "Assimp < 3.2 and Assimp >= 4.0 do not load the material correctly.");
             CORRADE_COMPARE(mydata.materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
         }
         CORRADE_COMPARE(mydata.textures.size(), 0);

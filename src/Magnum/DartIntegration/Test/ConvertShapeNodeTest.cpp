@@ -429,8 +429,8 @@ void ConvertShapeNodeTest::urdf() {
             CORRADE_COMPARE(shapeDataAll->materials.size(), shapeDataMaterial->materials.size());
             CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), shapeDataMaterial->materials[0].diffuseColor());
             {
-                CORRADE_EXPECT_FAIL_IF(assimpVersion < 302,
-                    "Old versions of Assimp do not load the material correctly");
+                CORRADE_EXPECT_FAIL_IF(assimpVersion < 302 || assimpVersion >= 400,
+                    "Assimp < 3.2 and Assimp >= 4.0 do not load the material correctly.");
                 CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
                 CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
             }
