@@ -107,7 +107,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
-            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Cube::solid()};
+            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::cubeSolid()};
         }
 
     /* Capsule */
@@ -124,7 +124,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             Float halfLength = 0.5f*h/r;
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
-            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Capsule3D::solid(32, 32, 32, halfLength)};
+            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::capsule3DSolid(32, 32, 32, halfLength)};
         }
 
     /* Cylinder */
@@ -141,7 +141,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             Float halfLength = 0.5f*h/r;
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
-            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Cylinder::solid(32, 32, halfLength, Primitives::Cylinder::Flag::CapEnds)};
+            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::cylinderSolid(32, 32, halfLength, Primitives::CylinderFlag::CapEnds)};
         }
 
     /* Ellipsoid */
@@ -155,7 +155,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
-            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Icosphere::solid(5)};
+            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::icosphereSolid(5)};
         }
 
     /* Generic mesh */
@@ -347,7 +347,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         if(convertTypes & ConvertShapeType::Mesh) {
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
-            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::Icosphere::solid(4)};
+            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::icosphereSolid(4)};
         }
     }
 
