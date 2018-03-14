@@ -65,7 +65,7 @@ namespace Magnum { namespace DartIntegration {
 Parses a `dart::simulation::World` for easy usage in Magnum. It basically
 parses all the `dart::dynamics::Skeleton` objects in the DART world and keeps
 track of a list of @ref DartIntegration::Object instances. It automatically
-captures any change that ocurrs in the DART world. After each @ref refresh()
+captures any change that occurs in the DART world. After each @ref refresh()
 the user has access to deleted shapes via @ref unusedObjects() and can get
 updated shapes (material or mesh) via @ref updatedShapeObjects().
 
