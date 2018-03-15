@@ -1,8 +1,6 @@
 #!/bin/bash
 set -ev
 
-git submodule update --init
-
 # Corrade
 git clone --depth 1 git://github.com/mosra/corrade.git
 cd corrade
@@ -22,10 +20,15 @@ cd ..
 
 # Crosscompile Corrade
 mkdir build-android-arm && cd build-android-arm
-ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r10e cmake .. \
-    -DCMAKE_TOOLCHAIN_FILE=../toolchains/generic/Android-ARM.cmake \
-    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
+cmake .. \
+    -DCMAKE_ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r16b \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=22 \
+    -DCMAKE_ANDROID_ARCH_ABI=armeabi-v7a \
+    -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
+    -DCMAKE_ANDROID_STL_TYPE=c++_static \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DWITH_INTERCONNECT=OFF \
     -G Ninja
@@ -36,10 +39,15 @@ cd ../..
 git clone --depth 1 git://github.com/mosra/magnum.git
 cd magnum
 mkdir build-android-arm && cd build-android-arm
-ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r10e cmake .. \
-    -DCMAKE_TOOLCHAIN_FILE=../toolchains/generic/Android-ARM.cmake \
-    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
+cmake .. \
+    -DCMAKE_ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r16b \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=22 \
+    -DCMAKE_ANDROID_ARCH_ABI=armeabi-v7a \
+    -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
+    -DCMAKE_ANDROID_STL_TYPE=c++_static \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DWITH_AUDIO=OFF \
@@ -51,6 +59,7 @@ ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r10e cmake .. \
     -DWITH_SHAPES=OFF \
     -DWITH_TEXT=OFF \
     -DWITH_TEXTURETOOLS=OFF \
+    -DWITH_OPENGLTESTER=ON \
     -DTARGET_GLES2=$TARGET_GLES2 \
     -G Ninja
 ninja install
@@ -58,22 +67,28 @@ cd ../..
 
 # Crosscompile
 mkdir build-android-arm && cd build-android-arm
-ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r10e cmake .. \
-    -DCMAKE_TOOLCHAIN_FILE=../toolchains/generic/Android-ARM.cmake \
-    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
+cmake .. \
+    -DCMAKE_ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r16b \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=22 \
+    -DCMAKE_ANDROID_ARCH_ABI=armeabi-v7a \
+    -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
+    -DCMAKE_ANDROID_STL_TYPE=c++_static \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DWITH_BULLET=OFF \
     -DWITH_DART=OFF \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
+    -DBUILD_GL_TESTS=ON \
     -G Ninja
 # Otherwise the job gets killed (probably because using too much memory)
 ninja -j4
 
 # Start simulator and run tests
-echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
 emulator -avd test -no-audio -no-window &
 android-wait-for-emulator
-CORRADE_TEST_COLOR=ON ctest -V
+CORRADE_TEST_COLOR=ON ctest -V -E GLTest
