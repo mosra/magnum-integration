@@ -202,7 +202,7 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install bullet; fi
 
 # DART and its dependencies
-- if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./package/ci/travis-dependencies.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ ! "$TARGET" == "android" ]; then ./package/ci/travis-dependencies.sh; fi
 # TODO: enable on macOS once HOMEBREW_NO_AUTO_UPDATE=1 brew install dartsim is fixed
 
 script:
