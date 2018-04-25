@@ -48,6 +48,11 @@ namespace Magnum {
     which is now able to track updates to all shapes and propagate that to the
     user.
 
+@subsection changelog-integration-latest-buildsystem Build system
+
+-   Fixed the Debian package to not include a revision. While just a warning on
+    Ubuntu, it's a hard error on Debian.
+
 @section changelog-integration-2018-02 2018.02
 
 Released 2018-02-15, tagged as
