@@ -1,0 +1,151 @@
+/*
+    This file is part of Magnum.
+
+    Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
+              Vladimír Vondruš <mosra@centrum.cz>
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+*/
+
+namespace Magnum {
+
+/** @page changelog-integration-old Integration
+
+@tableofcontents
+@m_footernavigation
+
+@section changelog-integration-2015-05 2015.05
+
+Released 2015-05-09, tagged as
+[v2015.05](https://github.com/mosra/magnum-integration/releases/tag/v2015.05). See
+the [release announcement](http://blog.magnum.graphics/announcements/may-2015-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2015-05-buildsystem Build system
+
+-   CMake now always installs `FindMagnumIntegration.cmake` to
+    library-specific location, making it usable without providing own copy of
+    the file in depending projects. The `WITH_FIND_MODULE` option is no
+    longer needed.
+-   Displaying all header files, plugin metadata files and resource files in
+    project view to make use of some IDEs less painful (such as QtCreator).
+-   Gentoo ebuild (see [mosra/magnum-integration#2](https://github.com/mosra/magnum-integration/pull/2))
+
+@subsection changelog-integration-2015-05-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2015-05-compatibility Potential compatibility breakages, removed APIs
+
+All functionality @ref changelog-integration-2014-01 "deprecated in 2014.01"
+has been removed, namely removed deprecated ability to use relative includes
+(e.g. @cpp #include <BulletIntegration/Integration.h> @ce), use absolute paths
+(@cpp #include <Magnum/BulletIntegration/Integration.h> @ce) instead.
+
+@section changelog-integration-2014-06 2014.06
+
+Released 2014-06-30, tagged as
+[v2014.06](https://github.com/mosra/magnum-integration/releases/tag/v2014.06). See
+the [release announcement](http://blog.magnum.graphics/announcements/june-2014-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2014-06-dependencies Dependency changes
+
+-   Minimal required GCC version is now 4.7.
+
+@subsection changelog-integration-2014-06-changes Changes
+
+-   Libraries and plugins in debug build configuration are installed to
+    different locations, making it possible to have debug and release libraries
+    installed alongside each other.
+
+@subsection changelog-integration-2014-06-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2014-06-compatibility Potential compatibility breakages, removed APIs
+
+No deprecated API was removed in this release.
+
+@section changelog-integration-2014-01 2014.01
+
+Released 2014-01-21, tagged as
+[v2014.01](https://github.com/mosra/magnum-integration/releases/tag/v2014.01). See
+the [release announcement](http://blog.magnum.graphics/announcements/january-2014-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2014-01-dependencies Dependency changes
+
+No dependency changes in this release.
+
+@subsection changelog-integration-2014-01-new New features
+
+-   Initial documentation
+-   All classes in documentation are now shown with corresponding
+    @cpp #include @ce path
+
+@subsection changelog-integration-2014-01-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2014-01-compatibility Potential compatibility breakages, removed APIs
+
+No deprecated API was removed in this release.
+
+@subsection changelog-integration-2014-01-internal Internal changes
+
+-   All files from `src/` directory were moved to `src/Magnum` (required to
+    make inter-project includes absolute)
+
+@section changelog-integration-2013-10 2013.10
+
+Released 2013-10-30, tagged as
+[v2013.10](https://github.com/mosra/magnum-integration/releases/tag/v2013.10). See
+the [release announcement](http://blog.magnum.graphics/announcements/october-2013-updates/)
+for a high-level overview.
+
+@subsection changelog-integration-2013-10-dependencies Dependency changes
+
+No dependency changes in this release.
+
+@subsection changelog-integration-2013-10-changes Changes
+
+-   Documentation updates and improvements to make the library more accessible
+    for newcomers
+-   Various build system updates for better compile times and easier
+    installation
+
+@subsection changelog-integration-2013-10-deprecated Deprecated APIs
+
+No API was deprecated in this release.
+
+@subsection changelog-integration-2013-10-compatibility Potential compatibility breakages, removed APIs
+
+No deprecated API was removed in this release.
+
+@section changelog-integration-2013-08 2013.08
+
+Released 2013-08-30, tagged as
+[v2013.08](https://github.com/mosra/magnum-integration/releases/tag/v2013.08). See
+the [project announcement](http://blog.magnum.graphics/announcements/introducing-magnum/)
+for a high-level overview.
+
+*/
+
+}
