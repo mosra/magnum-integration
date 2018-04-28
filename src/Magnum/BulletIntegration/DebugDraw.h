@@ -33,9 +33,9 @@
 #include <vector>
 #include <Corrade/Containers/ArrayView.h>
 #include <Corrade/Utility/Macros.h>
-#include <Magnum/Buffer.h>
 #include <Magnum/Magnum.h>
-#include <Magnum/Mesh.h>
+#include <Magnum/GL/Buffer.h>
+#include <Magnum/GL/Mesh.h>
 #include <Magnum/Shaders/VertexColor.h>
 #include <LinearMath/btIDebugDraw.h>
 
@@ -156,8 +156,8 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
          * @param initialBufferCapacity     Amount of lines for which to
          *      reserve memory in the buffer vector.
          *
-         * Sets up @ref Shaders::VertexColor3D, @ref Buffer and @ref Mesh for
-         * physics debug rendering.
+         * Sets up @ref Shaders::VertexColor3D, @ref GL::Buffer and
+         * @ref GL::Mesh for physics debug rendering.
          */
         explicit DebugDraw(std::size_t initialBufferCapacity = 0);
 
@@ -201,8 +201,8 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         Matrix4 _transformationProjectionMatrix;
         Shaders::VertexColor3D _shader;
 
-        Buffer _buffer;
-        Mesh _mesh;
+        GL::Buffer _buffer;
+        GL::Mesh _mesh;
         std::vector<Vector3> _bufferData;
 };
 

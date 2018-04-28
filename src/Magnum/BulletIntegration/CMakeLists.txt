@@ -24,7 +24,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED SceneGraph Shapes Shaders)
+find_package(Magnum REQUIRED GL SceneGraph Shapes Shaders)
 find_package(Bullet REQUIRED)
 
 if(BUILD_STATIC)
@@ -65,6 +65,7 @@ elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumBulletIntegration
+    Magnum::GL
     Magnum::Magnum
     Magnum::SceneGraph
     Magnum::Shapes
