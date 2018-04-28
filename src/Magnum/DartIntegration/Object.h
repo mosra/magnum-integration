@@ -32,6 +32,7 @@
 
 #include <Corrade/Containers/Array.h>
 #include <Corrade/Containers/Optional.h>
+#include <Magnum/GL/GL.h>
 #include <Magnum/SceneGraph/AbstractFeature.h>
 #include <Magnum/SceneGraph/AbstractTranslationRotation3D.h>
 #include <Magnum/Trade/Trade.h>
@@ -63,7 +64,7 @@ struct DrawData {
      *
      * Used internally by @ref Object.
      */
-    explicit DrawData(Containers::Array<Mesh> meshes, Containers::Array<Buffer> vertexBuffers, Containers::Array<Containers::Optional<Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Texture2D>> textures, const Vector3& scaling);
+    explicit DrawData(Containers::Array<GL::Mesh> meshes, Containers::Array<GL::Buffer> vertexBuffers, Containers::Array<Containers::Optional<GL::Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<GL::Texture2D>> textures, const Vector3& scaling);
 
     /** @brief Copying is not allowed */
     DrawData(const DrawData&) = delete;
@@ -80,19 +81,19 @@ struct DrawData {
     ~DrawData();
 
     /** @brief Meshes */
-    Containers::Array<Mesh> meshes;
+    Containers::Array<GL::Mesh> meshes;
 
     /** @brief Vertex buffers */
-    Containers::Array<Buffer> vertexBuffers;
+    Containers::Array<GL::Buffer> vertexBuffers;
 
     /** @brief Index buffers */
-    Containers::Array<Containers::Optional<Buffer>> indexBuffers;
+    Containers::Array<Containers::Optional<GL::Buffer>> indexBuffers;
 
     /** @brief Material data */
     Containers::Array<Trade::PhongMaterialData> materials;
 
     /** @brief Textures */
-    Containers::Array<Containers::Optional<Texture2D>> textures;
+    Containers::Array<Containers::Optional<GL::Texture2D>> textures;
 
     /** @brief Scaling */
     Vector3 scaling;

@@ -24,7 +24,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED SceneGraph MeshTools Primitives)
+find_package(Magnum REQUIRED GL SceneGraph MeshTools Primitives)
 find_package(DART 6.0.0 CONFIG REQUIRED)
 
 if(BUILD_STATIC)
@@ -65,6 +65,7 @@ elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumDartIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumDartIntegration
+    Magnum::GL
     Magnum::Magnum
     Magnum::SceneGraph
     Magnum::Primitives

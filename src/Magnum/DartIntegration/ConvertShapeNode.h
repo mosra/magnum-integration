@@ -161,7 +161,7 @@ to load such a `dart::dynamics::ShapeNode`. On the contrary, when you are
 trying to load a `dart::dynamics::MeshShape` and the importer is a @cpp nullptr @ce,
 the function will return @ref Corrade::Containers::NullOpt.
 
-@attention Soft meshes should be drawn with @ref Renderer::Feature::FaceCulling
+@attention Soft meshes should be drawn with @ref GL::Renderer::Feature::FaceCulling
     enabled as each triangle is drawn twice (once with the original orientation
     and once with the reversed orientation).
 

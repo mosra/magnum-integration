@@ -39,10 +39,10 @@
 #include <dart/dynamics/WeldJoint.hpp>
 #include <dart/simulation/World.hpp>
 #include <Corrade/Utility/Directory.h>
-#include <Magnum/Buffer.h>
-#include <Magnum/Mesh.h>
-#include <Magnum/OpenGLTester.h>
-#include <Magnum/Texture.h>
+#include <Magnum/GL/Buffer.h>
+#include <Magnum/GL/Mesh.h>
+#include <Magnum/GL/OpenGLTester.h>
+#include <Magnum/GL/Texture.h>
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include <Magnum/SceneGraph/Object.hpp>
 #include <Magnum/SceneGraph/SceneGraph.h>
@@ -72,7 +72,7 @@ typedef SceneGraph::Scene<SceneGraph::MatrixTransformation3D> Scene3D;
 
 }
 
-struct DartIntegrationTest: Magnum::OpenGLTester {
+struct DartIntegrationTest: GL::OpenGLTester {
     explicit DartIntegrationTest();
 
     void pendulum();

@@ -32,11 +32,11 @@
 #include <dart/dynamics/SoftMeshShape.hpp>
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/Utility/Directory.h>
-#include <Magnum/Buffer.h>
-#include <Magnum/Mesh.h>
 #include <Magnum/PixelFormat.h>
-#include <Magnum/Texture.h>
-#include <Magnum/TextureFormat.h>
+#include <Magnum/GL/Buffer.h>
+#include <Magnum/GL/Mesh.h>
+#include <Magnum/GL/Texture.h>
+#include <Magnum/GL/TextureFormat.h>
 #include <Magnum/MeshTools/Compile.h>
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
@@ -48,7 +48,7 @@
 
 namespace Magnum { namespace DartIntegration {
 
-DrawData::DrawData(Containers::Array<Mesh> meshes, Containers::Array<Buffer> vertexBuffers, Containers::Array<Containers::Optional<Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Texture2D>> textures, const Vector3& scaling): meshes{std::move(meshes)}, vertexBuffers{std::move(vertexBuffers)}, indexBuffers{std::move(indexBuffers)}, materials{std::move(materials)}, textures{std::move(textures)}, scaling(scaling) {}
+DrawData::DrawData(Containers::Array<GL::Mesh> meshes, Containers::Array<GL::Buffer> vertexBuffers, Containers::Array<Containers::Optional<GL::Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<GL::Texture2D>> textures, const Vector3& scaling): meshes{std::move(meshes)}, vertexBuffers{std::move(vertexBuffers)}, indexBuffers{std::move(indexBuffers)}, materials{std::move(materials)}, textures{std::move(textures)}, scaling(scaling) {}
 
 DrawData::~DrawData() = default;
 
@@ -141,16 +141,16 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         _drawData->materials = std::move(shapeData->materials);
 
         /* Create textures */
-        _drawData->textures = Containers::Array<Containers::Optional<Texture2D>>(shapeData->textures.size());
+        _drawData->textures = Containers::Array<Containers::Optional<GL::Texture2D>>(shapeData->textures.size());
         for(UnsignedInt i = 0; i < shapeData->textures.size(); i++) {
             /* This is to preserve indexing for materials */
             if(!shapeData->textures[i] || !shapeData->images[i]) continue;
 
-            (*(_drawData->textures[i] = Texture2D{}))
+            (*(_drawData->textures[i] = GL::Texture2D{}))
                 .setMagnificationFilter(shapeData->textures[i]->magnificationFilter())
                 .setMinificationFilter(shapeData->textures[i]->minificationFilter(), shapeData->textures[i]->mipmapFilter())
                 .setWrapping(shapeData->textures[i]->wrapping().xy())
-                .setStorage(1, TextureFormat::RGB8, shapeData->images[i]->size())
+                .setStorage(1, GL::TextureFormat::RGB8, shapeData->images[i]->size())
                 .setSubImage(0, {}, *shapeData->images[i])
                 .generateMipmap();
         }
@@ -162,16 +162,16 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
 
     /* Get meshes */
     if(loadType & ConvertShapeType::Mesh) {
-        _drawData->meshes = Containers::Array<Mesh>(Containers::NoInit, shapeData->meshes.size());
-        _drawData->vertexBuffers = Containers::Array<Buffer>(shapeData->meshes.size());
-        _drawData->indexBuffers = Containers::Array<Containers::Optional<Buffer>>(shapeData->meshes.size());
+        _drawData->meshes = Containers::Array<GL::Mesh>(Containers::NoInit, shapeData->meshes.size());
+        _drawData->vertexBuffers = Containers::Array<GL::Buffer>(shapeData->meshes.size());
+        _drawData->indexBuffers = Containers::Array<Containers::Optional<GL::Buffer>>(shapeData->meshes.size());
 
         for(UnsignedInt i = 0; i < shapeData->meshes.size(); i++) {
             /* Create the mesh */
-            new(&_drawData->meshes[i]) Mesh{NoCreate};
-            std::unique_ptr<Buffer> vertexBuffer, indexBuffer;
+            new(&_drawData->meshes[i]) GL::Mesh{NoCreate};
+            std::unique_ptr<GL::Buffer> vertexBuffer, indexBuffer;
             std::tie(_drawData->meshes[i], vertexBuffer, indexBuffer) =
-                MeshTools::compile(shapeData->meshes[i], BufferUsage::StaticDraw);
+                MeshTools::compile(shapeData->meshes[i], GL::BufferUsage::StaticDraw);
 
             _drawData->vertexBuffers[i] = std::move(*vertexBuffer);
             if(indexBuffer)
