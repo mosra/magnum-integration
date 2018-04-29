@@ -26,7 +26,6 @@
 
 #include "Session.h"
 
-#include <Magnum/TextureFormat.h>
 #include <OVR_CAPI_GL.h>
 #undef near
 #undef far
@@ -156,7 +155,7 @@ Vector2i Session::fovTextureSize(const Int eye) {
     return Vector2i(ovr_GetFovTextureSize(_session, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
 }
 
-Texture2D& Session::createMirrorTexture(const Vector2i& size) {
+GL::Texture2D& Session::createMirrorTexture(const Vector2i& size) {
     CORRADE_ASSERT(!(_flags & Implementation::HmdStatusFlag::HasMirrorTexture),
            "Session::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
@@ -179,7 +178,7 @@ Texture2D& Session::createMirrorTexture(const Vector2i& size) {
     /* wrap the opengl texture id as magnum texture */
     UnsignedInt id;
     ovr_GetMirrorTextureBufferGL(_session, _ovrMirrorTexture, &id);
-    _mirrorTexture.reset(new Texture2D(std::move(Texture2D::wrap(id))));
+    _mirrorTexture.reset(new GL::Texture2D(GL::Texture2D::wrap(id)));
 
     return *_mirrorTexture;
 }

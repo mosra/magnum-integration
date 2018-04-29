@@ -24,6 +24,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+find_package(Magnum REQUIRED GL)
 find_package(OVR REQUIRED)
 
 if(BUILD_STATIC)
@@ -65,6 +66,7 @@ elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumOvrIntegration
+    Magnum::GL
     Magnum::Magnum
     OVR::OVR)
 

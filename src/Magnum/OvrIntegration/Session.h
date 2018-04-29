@@ -33,7 +33,7 @@
 #include <array>
 #include <memory>
 #include <Corrade/Containers/Array.h>
-#include <Magnum/Texture.h>
+#include <Magnum/GL/Texture.h>
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_Keys.h>
 
@@ -51,7 +51,6 @@ namespace Implementation {
 /** @brief A full rigid body pose with first and second derivatives */
 class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
     public:
-
         /**
          * @brief Wrap a `ovrPoseStatef` as @ref PoseState
          * @return `state` as @ref PoseState reference
@@ -210,7 +209,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
         ~TextureSwapChain();
 
         /** @brief Currently active texture in the set */
-        Texture2D& activeTexture();
+        GL::Texture2D& activeTexture();
 
         /**
          * @brief Increment to use the next texture in the set
@@ -229,7 +228,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
         Int _curIndex;
 
         ::ovrTextureSwapChain _textureSwapChain;
-        Containers::Array<Texture2D> _textures;
+        Containers::Array<GL::Texture2D> _textures;
 };
 
 /**
@@ -352,7 +351,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
          */
-        Texture2D& createMirrorTexture(const Vector2i& size);
+        GL::Texture2D& createMirrorTexture(const Vector2i& size);
 
         /**
          * @brief Convenience method to create a @ref TextureSwapChain for this HMD
@@ -679,7 +678,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         Long _frameIndex;
 
         ovrMirrorTexture _ovrMirrorTexture;
-        std::unique_ptr<Texture2D> _mirrorTexture;
+        std::unique_ptr<GL::Texture2D> _mirrorTexture;
 
         Implementation::HmdStatusFlags _flags;
 };

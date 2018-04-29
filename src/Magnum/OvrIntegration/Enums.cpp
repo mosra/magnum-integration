@@ -24,7 +24,9 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/OvrIntegration/Enums.h"
+#include "Enums.h"
+
+#include <Corrade/Utility/Debug.h>
 
 namespace Magnum { namespace OvrIntegration {
 

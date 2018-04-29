@@ -30,8 +30,7 @@
  * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
  */
 
-#include <memory>
-#include <Magnum/Texture.h>
+#include <Corrade/Containers/EnumSet.h>
 #include <Magnum/Magnum.h>
 #include <OVR_CAPI.h>
 
