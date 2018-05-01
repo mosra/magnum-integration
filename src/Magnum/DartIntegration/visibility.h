@@ -28,7 +28,7 @@
 
 #include <Corrade/Utility/VisibilityMacros.h>
 
-#include <Magnum/DartIntegration/configure.h>
+#include "Magnum/DartIntegration/configure.h"
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
 #ifndef MAGNUM_DARTINTEGRATION_BUILD_STATIC
