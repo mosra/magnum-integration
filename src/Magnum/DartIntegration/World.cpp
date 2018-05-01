@@ -32,7 +32,7 @@
 
 namespace Magnum { namespace DartIntegration {
 
-World::World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world): _object(object), _manager{MAGNUM_PLUGINS_IMPORTER_DIR}, _dartWorld(world) {
+World::World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world): _object(object), _dartWorld(world) {
     /* Load Assimp importer */
     _importer = _manager.loadAndInstantiate("AssimpImporter");
 }
