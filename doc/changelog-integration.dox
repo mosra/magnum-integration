@@ -30,9 +30,12 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@section changelog-integration-latest Changes since 2018.02
+@section changelog-integration-2018-04 2018.04
 
-@subsection changelog-integration-latest-dependencies Dependency changes
+Released 2018-05-01, tagged as
+[v2018.04](https://github.com/mosra/magnum-integration/releases/tag/v2018.04).
+
+@subsection changelog-integration-2018-04-dependencies Dependency changes
 
 -   Building for Android now requires CMake 3.7 with builtin Android
     crosscompilation support, the old toolchains were removed. Only the Clang
@@ -40,7 +43,7 @@ namespace Magnum {
     dropped, as it was still missing some important C++11 functionality. See
     @ref building-cross-android for more information.
 
-@subsection changelog-integration-latest-changes Changes and improvements
+@subsection changelog-integration-2018-04-changes Changes and improvements
 
 -   Second experimental version of the @ref DartIntegration library ---
     `DartIntegration::DartObject` and `DartIntegration::DartSkeleton` got
@@ -49,7 +52,7 @@ namespace Magnum {
     user. See [mosra/magnum-integration#29](https://github.com/mosra/magnum-integration/pull/29),
     [mosra/magnum-integration#30](https://github.com/mosra/magnum-integration/issues/30).
 
-@subsection changelog-integration-latest-buildsystem Build system
+@subsection changelog-integration-2018-04-buildsystem Build system
 
 -   Fixed the Debian package after introducing `SOVERSION` to all libraries
     (see [mosra/magnum#237](https://github.com/mosra/magnum/issues/237))
