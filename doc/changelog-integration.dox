@@ -54,6 +54,8 @@ Released 2018-05-01, tagged as
 
 @subsection changelog-integration-2018-04-buildsystem Build system
 
+-   Homebrew macOS packages were updated to install the stable version by
+    default
 -   Fixed the Debian package after introducing `SOVERSION` to all libraries
     (see [mosra/magnum#237](https://github.com/mosra/magnum/issues/237))
 -   Fixed the Debian package to not include a revision. While just a warning on
