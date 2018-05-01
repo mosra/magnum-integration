@@ -46,12 +46,15 @@ namespace Magnum {
     `DartIntegration::DartObject` and `DartIntegration::DartSkeleton` got
     replaced with @ref DartIntegration::Object and @ref DartIntegration::World,
     which is now able to track updates to all shapes and propagate that to the
-    user.
+    user. See [mosra/magnum-integration#29](https://github.com/mosra/magnum-integration/pull/29),
+    [mosra/magnum-integration#30](https://github.com/mosra/magnum-integration/issues/30).
 
 @subsection changelog-integration-latest-buildsystem Build system
 
+-   Fixed the Debian package after introducing `SOVERSION` to all libraries
+    (see [mosra/magnum#237](https://github.com/mosra/magnum/issues/237))
 -   Fixed the Debian package to not include a revision. While just a warning on
-    Ubuntu, it's a hard error on Debian.
+    Ubuntu, it's a hard error on Debian. (See [mosra/corrade#44](https://github.com/mosra/corrade/issues/44).)
 
 @section changelog-integration-2018-02 2018.02
 
