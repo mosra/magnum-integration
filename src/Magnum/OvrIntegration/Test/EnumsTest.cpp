@@ -137,7 +137,7 @@ void EnumTest::controllerType() {
     CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::Remote\n");
 
     out.str("");
-    Debug(&out) << ControllerType(-1);
+    Debug(&out) << ControllerType(-2);
     CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::(invalid)\n");
 }
 
