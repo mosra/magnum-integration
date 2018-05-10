@@ -345,13 +345,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Create a mirror texture
          * @param size      Size for the mirror texture
+         * @param mirrorOptions Mirror options
          * @return Reference to the created mirror texture. Its destruction is
          *      handled by the @ref Session.
          *
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
          */
-        GL::Texture2D& createMirrorTexture(const Vector2i& size);
+        GL::Texture2D& createMirrorTexture(const Vector2i& size, MirrorOptions mirrorOptions = {});
 
         /**
          * @brief Convenience method to create a @ref TextureSwapChain for this HMD

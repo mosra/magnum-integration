@@ -155,7 +155,7 @@ Vector2i Session::fovTextureSize(const Int eye) {
     return Vector2i(ovr_GetFovTextureSize(_session, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
 }
 
-GL::Texture2D& Session::createMirrorTexture(const Vector2i& size) {
+GL::Texture2D& Session::createMirrorTexture(const Vector2i& size, const MirrorOptions mirrorOptions) {
     CORRADE_ASSERT(!(_flags & Implementation::HmdStatusFlag::HasMirrorTexture),
            "Session::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
@@ -165,8 +165,9 @@ GL::Texture2D& Session::createMirrorTexture(const Vector2i& size) {
     desc.Width = size.x();
     desc.Height = size.y();
     desc.MiscFlags = ovrTextureMisc_None;
+    desc.MirrorOptions = UnsignedInt(mirrorOptions);
 
-    ovrResult result = ovr_CreateMirrorTextureGL(
+    ovrResult result = ovr_CreateMirrorTextureWithOptionsGL(
                 _session,
                 &desc,
                 &_ovrMirrorTexture);

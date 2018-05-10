@@ -51,6 +51,7 @@ enum class TrackingOrigin: Int;
 enum class TrackerFlag: Int;
 enum class ControllerType: Int;
 enum class SessionStatusFlag: UnsignedByte;
+enum class MirrorOption: UnsignedInt;
 enum class PerformanceHudMode: Int;
 enum class DebugHudStereoMode: Int;
 enum class DetectResult: UnsignedByte;
@@ -64,6 +65,7 @@ struct Buttons;
 struct Touches;
 typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 typedef Containers::EnumSet<DetectResult> DetectResults;
+typedef Corrade::Containers::EnumSet<MirrorOption> MirrorOptions;
 
 }}
 
