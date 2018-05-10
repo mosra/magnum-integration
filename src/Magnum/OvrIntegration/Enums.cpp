@@ -170,6 +170,22 @@ Debug& operator<<(Debug& debug, const SessionStatusFlag value) {
     return debug << "OvrIntegration::SessionStatusFlag::(invalid)";
 }
 
+Debug& operator<<(Debug& debug, const MirrorOption value) {
+    switch(value) {
+        #define _c(value) case MirrorOption::value: return debug << "OvrIntegration::MirrorOption::" #value;
+        _c(Default)
+        _c(PostDistortion)
+        _c(LeftEyeOnly)
+        _c(RightEyeOnly)
+        _c(IncludeGuardian)
+        _c(IncludeNotifications)
+        _c(IncludeSystemGui)
+        #undef _c
+    }
+
+    return debug << "OvrIntegration::MirrorOption::(invalid)";
+}
+
 Debug& operator<<(Debug& debug, const PerformanceHudMode value) {
     switch(value) {
         #define _c(value) case PerformanceHudMode::value: return debug << "OvrIntegration::PerformanceHudMode::" #value;
