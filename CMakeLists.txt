@@ -60,6 +60,7 @@ find_package(Magnum REQUIRED)
 # Parts of the library
 option(WITH_BULLET "Build BulletIntegration library" OFF)
 option(WITH_DART "Build DartIntegration library" OFF)
+option(WITH_GLM "Build GlmIntegration library" OFF)
 option(WITH_OVR "Build OvrIntegration library" OFF)
 
 include(CMakeDependentOption)

@@ -3,6 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2017 sigman78 <sigman78@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -23,18 +24,5 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
-endif()
-
-if(WITH_DART)
-    add_subdirectory(DartIntegration)
-endif()
-
-if(WITH_GLM)
-    add_subdirectory(GlmIntegration)
-endif()
-
-if(WITH_OVR)
-    add_subdirectory(OvrIntegration)
-endif()
+corrade_add_test(GlmIntegrationTest IntegrationTest.cpp LIBRARIES MagnumGlmIntegration)
+corrade_add_test(GlmIntegrationGtcIntegrationTest GtcIntegrationTest.cpp LIBRARIES MagnumGlmIntegration)

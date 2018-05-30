@@ -3,6 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2017 sigman78 <sigman78@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -23,18 +24,28 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
+find_package(Magnum REQUIRED)
+find_package(GLM REQUIRED)
+
+set(MagnumGlmIntegration_HEADERS
+    Integration.h
+    GtcIntegration.h)
+
+add_library(MagnumGlmIntegration INTERFACE)
+target_include_directories(MagnumGlmIntegration INTERFACE
+    ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(MagnumGlmIntegration INTERFACE
+    Magnum::Magnum
+    GLM::GLM)
+
+add_custom_target(MagnumGlmIntegrationHeaders SOURCES ${MagnumGlmIntegration_HEADERS})
+set_target_properties(MagnumGlmIntegrationHeaders PROPERTIES FOLDER "Magnum/GlmIntegration")
+
+install(FILES ${MagnumGlmIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/GlmIntegration)
+
+if(BUILD_TESTS)
+    add_subdirectory(Test)
 endif()
 
-if(WITH_DART)
-    add_subdirectory(DartIntegration)
-endif()
-
-if(WITH_GLM)
-    add_subdirectory(GlmIntegration)
-endif()
-
-if(WITH_OVR)
-    add_subdirectory(OvrIntegration)
-endif()
+# Magnum GLM integration target alias for superprojects
+add_library(MagnumIntegration::Glm ALIAS MagnumGlmIntegration)
