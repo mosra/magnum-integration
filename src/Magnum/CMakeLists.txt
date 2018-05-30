@@ -23,12 +23,12 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_DART)
-    add_subdirectory(DartIntegration)
-endif()
-
 if(WITH_BULLET)
     add_subdirectory(BulletIntegration)
+endif()
+
+if(WITH_DART)
+    add_subdirectory(DartIntegration)
 endif()
 
 if(WITH_OVR)

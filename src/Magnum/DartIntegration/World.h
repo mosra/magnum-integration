@@ -75,14 +75,14 @@ Common usage is to create a `dart::simulation::World` and then instantiate
 this class by passing a parent @ref SceneGraph::Object and the DART world to
 its constructor:
 
-@snippet dartintegration.cpp world-init
+@snippet DartIntegration.cpp world-init
 
 Only the DART world can affect the transformation of the Magnum world and not
 the other way around. Of course, one can change things directly in the DART
 world and observe the changes in Magnum world. To update the world and get the
 updated shapes you can do the following:
 
-@snippet dartintegration.cpp world-loop
+@snippet DartIntegration.cpp world-loop
 
 @experimental
 */
