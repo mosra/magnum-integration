@@ -27,13 +27,44 @@
 */
 
 /** @file
-@brief Integration of basic GLM vector and matrix types
+@brief Conversion of basic GLM vector and matrix types
+
+Provides conversion for the following types:
+
+| Magnum vector type                             | Equivalent GLM type      |
+| ---------------------------------------------- | ------------------------ |
+| @ref Magnum::Vector2 "Vector2", @ref Magnum::Vector3 "Vector3", @ref Magnum::Color3 "Color3", @ref Magnum::Vector4 "Vector4", @ref Magnum::Color4 "Color4" | `glm::vec2`, `glm::vec3`, `glm::vec4` |
+| @ref Magnum::Vector2ui "Vector2ui", @ref Magnum::Vector3ui "Vector3ui", @ref Magnum::Vector4ui "Vector4ui" | `glm::uvec2`, `glm::uvec3`, `glm::uvec4` |
+| @ref Magnum::Vector2i "Vector2i", @ref Magnum::Vector3i "Vector3i", @ref Magnum::Vector4i "Vector4i" | `glm::ivec2`, `glm::ivec3`, `glm::ivec4` |
+| @ref Magnum::Vector2d "Vector2d", @ref Magnum::Vector3d "Vector3d", @ref Magnum::Vector4d "Vector4d" | `glm::dvec2`, `glm::dvec3`, `glm::dvec4` |
+
+| Magnum matrix type                             | Equivalent GLM type      |
+| ---------------------------------------------- | ------------------------ |
+| @ref Magnum::Matrix2x2 "Matrix2x2" or @ref Magnum::Matrix2x2d "Matrix2x2d"                                | `glm::mat2` / `glm::mat2x2` or `glm::dmat2` / `glm::dmat2x2` |
+| @ref Magnum::Matrix3 "Matrix3" / @ref Magnum::Matrix3x3 "Matrix3x3" or @ref Magnum::Matrix3d "Matrix3d" / @ref Magnum::Matrix3x3d "Matrix3x3d" | `glm::mat3` / `glm::mat3x3` or `glm::dmat3` / `glm::dmat3x3` |
+| @ref Magnum::Matrix4 "Matrix4" / @ref Magnum::Matrix4x4 "Matrix4x4" or @ref Magnum::Matrix4d "Matrix4d" / @ref Magnum::Matrix4x4d "Matrix4x4d" | `glm::mat4` / `glm::mat4x4` or `glm::dmat4` / `glm::dmat4x4` |
+| @ref Magnum::Matrix2x3 "Matrix2x3" or @ref Magnum::Matrix2x3d "Matrix2x3d" | `glm::mat2x3` or `glm::dmat2x3` |
+| @ref Magnum::Matrix3x2 "Matrix3x2" or @ref Magnum::Matrix3x2d "Matrix3x2d" | `glm::mat3x2` or `glm::dmat3x2` |
+| @ref Magnum::Matrix2x4 "Matrix2x4" or @ref Magnum::Matrix2x4d "Matrix2x4d" | `glm::mat2x4` or `glm::dmat2x4` |
+| @ref Magnum::Matrix4x2 "Matrix4x2" or @ref Magnum::Matrix4x2d "Matrix4x2d" | `glm::mat4x2` or `glm::dmat4x2` |
+| @ref Magnum::Matrix3x4 "Matrix3x4" or @ref Magnum::Matrix3x4d "Matrix3x4d" | `glm::mat3x4` or `glm::dmat3x4` |
+| @ref Magnum::Matrix4x3 "Matrix4x3" or @ref Magnum::Matrix4x3d "Matrix4x3d" | `glm::mat4x3` or `glm::dmat4x3` |
+
+Types with extra qualifiers (such as `glm::mediump_dmat3x4`) are treated the
+same as types with no qualifier. Example usage:
+
+@snippet GlmIntegration.cpp Integration
+
+See @ref Magnum/GlmIntegration/GtcIntegration.h
+and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of more complex
+types.
 */
 
 #include <glm/matrix.hpp>
 
 #include "Magnum/Math/RectangularMatrix.h"
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* Vectors */
@@ -113,5 +144,6 @@ template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixCo
 };
 
 }}}
+#endif
 
 #endif

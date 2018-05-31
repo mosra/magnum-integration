@@ -259,6 +259,8 @@ manually:
     library. Depends on [Bullet Physics](http://bulletphysics.org/).
 -   `WITH_DART` -- Build the @ref DartIntegration "DartIntegration" library.
     Depends on [DART](http://dartsim.github.io/).
+-   `WITH_GLM` -- Build the @ref GlmIntegration "GlmIntegration" library.
+    Depends on [GLM](https://glm.g-truc.net/).
 -   `WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration" library.
     Depends on the [Oculus SDK](http://developer.oculus.com/).
 

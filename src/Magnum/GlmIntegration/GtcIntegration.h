@@ -28,12 +28,27 @@
 
 /** @file
 @brief Integration of GLM extension types
+
+Provides conversion for the following types:
+
+| Magnum type                           | Equivalent GLM type               |
+| ------------------------------------- | --------------------------------- |
+| @ref Magnum::Quaternion "Quaternion", @ref Magnum::Quaterniond "Quaterniond" | `glm::quat`, `glm::dquat` |
+
+Types with extra qualifiers (such as `glm::mediump_dquat`) are treated the
+same as types with no qualifier. Example usage:
+
+@snippet GlmIntegration.cpp GtcIntegration
+
+See @ref Magnum/GlmIntegration/Integration.h
+and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
 */
 
 #include <glm/gtc/quaternion.hpp>
 
 #include "Magnum/Math/Quaternion.h"
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* Quaternion */
@@ -49,5 +64,6 @@ template<class T, glm::qualifier q> struct QuaternionConverter<T, glm::tquat<T, 
 };
 
 }}}
+#endif
 
 #endif

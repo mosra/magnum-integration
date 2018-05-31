@@ -5,7 +5,6 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2017 sigman78 <sigman78@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -28,6 +27,20 @@
 
 /** @file
 @brief Integration of GLM experimental extension types
+
+Provides conversion for the following types:
+
+| Magnum type                           | Equivalent GLM type               |
+| ------------------------------------- | --------------------------------- |
+| @ref Magnum::DualQuaternion "DualQuaternion", @ref Magnum::DualQuaterniond "DualQuaterniond" | `glm::dualquat`, `glm::ddualquat` |
+
+Types with extra qualifiers (such as `glm::mediump_ddualquat`) are treated the
+same as types with no qualifier. Example usage:
+
+@snippet GlmIntegration.cpp GtxIntegration
+
+See @ref Magnum/GlmIntegration/Integration.h
+and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
 */
 
 #include <glm/gtx/dual_quaternion.hpp>
@@ -35,6 +48,7 @@
 #include "Magnum/Math/DualQuaternion.h"
 #include "Magnum/GlmIntegration/GtcIntegration.h"
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* Dual quaternion */
@@ -50,5 +64,6 @@ template<class T, glm::qualifier q> struct DualQuaternionConverter<T, glm::tdual
 };
 
 }}}
+#endif
 
 #endif

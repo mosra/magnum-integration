@@ -75,6 +75,33 @@ See @ref building-integration and @ref cmake-integration for more information.
 @experimental
 */
 
+/** @dir Magnum/GlmIntegration
+ * @brief Namespace @ref Magnum::GlmIntegration
+ */
+/** @namespace Magnum::GlmIntegration
+@brief Integration with OpenGL Mathematics (GLM)
+
+Conversion of math types from and to the GLM library.
+
+This library depends on the [GLM](https://glm.g-truc.net/) library and is built
+if `WITH_GLM` is enabled when building Magnum Integration. To use this library
+with CMake, you need to request the `Glm` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Glm)
+
+# ...
+target_link_libraries(your-app MagnumIntegration::Glm)
+@endcode
+
+The integration routines are provided in @ref Magnum/GlmIntegration/Integration.h,
+@ref Magnum/GlmIntegration/GtcIntegration.h and
+@ref Magnum/GlmIntegration/GtxIntegration.h headers, see their documentation
+for more information. See also @ref building-integration and
+@ref cmake-integration.
+*/
+
 /** @dir Magnum/OvrIntegration
  * @brief Namespace @ref Magnum::OvrIntegration
  */
