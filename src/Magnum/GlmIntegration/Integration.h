@@ -36,99 +36,79 @@
 
 namespace Magnum { namespace Math { namespace Implementation {
 
-/* Float vectors */
+/* Vectors */
 
-template<> struct VectorConverter<2, Float, glm::vec2> {
-    static Vector<2, Float> from(const glm::vec2& other) {
+template<class T, glm::qualifier q> struct VectorConverter<2, T, glm::vec<2, T, q>> {
+    static Vector<2, T> from(const glm::vec<2, T, q>& other) {
         return {other.x, other.y};
     }
 
-    static glm::vec2 to(const Vector<2, Float>& other) {
+    static glm::vec<2, T, q> to(const Vector<2, T>& other) {
         return {other[0], other[1]};
     }
 };
 
-template<> struct VectorConverter<3, Float, glm::vec3> {
-    static Vector<3, Float> from(const glm::vec3& other) {
+template<class T, glm::qualifier q> struct VectorConverter<3, T, glm::vec<3, T, q>> {
+    static Vector<3, T> from(const glm::vec<3, T, q>& other) {
         return {other.x, other.y, other.z};
     }
 
-    static glm::vec3 to(const Vector<3, Float>& other) {
+    static glm::vec<3, T, q> to(const Vector<3, T>& other) {
         return {other[0], other[1],  other[2]};
     }
 };
 
-template<> struct VectorConverter<4, Float, glm::vec4> {
-    static Vector<4, Float> from(const glm::vec4& other) {
+template<class T, glm::qualifier q> struct VectorConverter<4, T, glm::vec<4, T, q>> {
+    static Vector<4, T> from(const glm::vec<4, T, q>& other) {
         return {other.x, other.y, other.z, other.w};
     }
 
-    static glm::vec4 to(const Vector<4, Float>& other) {
+    static glm::vec<4, T, q> to(const Vector<4, T>& other) {
         return {other[0], other[1],  other[2], other[3]};
     }
 };
 
-/* Int vectors */
+/* Matrices */
 
-template<> struct VectorConverter<2, Int, glm::ivec2> {
-    static Vector<2, Int> from(const glm::ivec2& other) {
-        return {other.x, other.y};
+template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixConverter<2, rows, T, glm::mat<2, rows, T, q>> {
+    static RectangularMatrix<2, rows, T> from(const glm::mat<2, rows, T, q>& other) {
+        return {Vector<rows, T>(other[0]),
+                Vector<rows, T>(other[1])};
     }
 
-    static glm::ivec2 to(const Vector<2, Int>& other) {
-        return {other[0], other[1]};
-    }
-};
-
-template<> struct VectorConverter<3, Int, glm::ivec3> {
-    static Vector<3, Int> from(const glm::ivec3& other) {
-        return {other.x, other.y, other.z};
-    }
-
-    static glm::ivec3 to(const Vector<3, Int>& other) {
-        return {other[0], other[1],  other[2]};
+    static glm::mat<2, rows, T, q> to(const RectangularMatrix<2, rows, T>& other) {
+        return {glm::vec<rows, T, q>(other[0]),
+                glm::vec<rows, T, q>(other[1])};
     }
 };
 
-template<> struct VectorConverter<4, Int, glm::ivec4> {
-    static Vector<4, Int> from(const glm::ivec4& other) {
-        return {other.x, other.y, other.z, other.w};
+template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixConverter<3, rows, T, glm::mat<3, rows, T, q>> {
+    static RectangularMatrix<3, rows, T> from(const glm::mat<3, rows, T, q>& other) {
+        return {Vector<rows, T>(other[0]),
+                Vector<rows, T>(other[1]),
+                Vector<rows, T>(other[2])};
     }
 
-    static glm::ivec4 to(const Vector<4, Int>& other) {
-        return {other[0], other[1],  other[2], other[3]};
-    }
-};
-
-/* Float matrices */
-
-template<> struct RectangularMatrixConverter<3, 3, Float, glm::mat3> {
-    static RectangularMatrix<3, 3, Float> from(const glm::mat3& other) {
-        return {Vector<3, Float>(other[0]),
-                Vector<3, Float>(other[1]),
-                Vector<3, Float>(other[2])};
-    }
-
-    static glm::mat3 to(const RectangularMatrix<3, 3, Float>& other) {
-        return {other[0][0], other[0][1], other[0][2],
-                other[1][0], other[1][1], other[1][2],
-                other[2][0], other[2][1], other[2][2]};
+    static glm::mat<3, rows, T, q> to(const RectangularMatrix<3, rows, T>& other) {
+        return {glm::vec<rows, T, q>(other[0]),
+                glm::vec<rows, T, q>(other[1]),
+                glm::vec<rows, T, q>(other[2])};
     }
 };
 
-template<> struct RectangularMatrixConverter<4, 4, Float, glm::mat4> {
-    static RectangularMatrix<4, 4, Float> from(const glm::mat4& other) {
-        return {Vector<4, Float>(other[0]),
-                Vector<4, Float>(other[1]),
-                Vector<4, Float>(other[2]),
-                Vector<4, Float>(other[3])};
+template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixConverter<4, rows, T, glm::mat<4, rows, T, q>> {
+    static RectangularMatrix<4, rows, T> from(const glm::mat<4, rows, T, q>& other) {
+        return {Vector<rows, T>(other[0]),
+                Vector<rows, T>(other[1]),
+                Vector<rows, T>(other[2]),
+                Vector<rows, T>(other[3])};
     }
 
-    static glm::mat4 to(const RectangularMatrix<4, 4, Float>& other) {
-        return {other[0][0], other[0][1], other[0][2], other[0][3],
-                other[1][0], other[1][1], other[1][2], other[1][3],
-                other[2][0], other[2][1], other[2][2], other[2][3],
-                other[3][0], other[3][1], other[3][2], other[3][3]};
+    static glm::mat<4, rows, T, q> to(const RectangularMatrix<4, rows, T>& other) {
+        return {glm::vec<rows, T, q>(other[0]),
+                glm::vec<rows, T, q>(other[1]),
+                glm::vec<rows, T, q>(other[2]),
+                glm::vec<rows, T, q>(other[3])};
     }
 };
 
