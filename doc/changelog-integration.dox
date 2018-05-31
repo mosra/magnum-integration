@@ -37,6 +37,11 @@ namespace Magnum {
 -   New @ref GlmIntegration library that provides conversion and debug output
     for [GLM](https://glm.g-truc.net/) math types.
 
+@subsection changelog-integration-latest-buildsystem Build system
+
+-   There's now a PPA for Ubuntu packages. See @ref building-integration-packages-deb
+    for more information.
+
 @section changelog-integration-2018-04 2018.04
 
 Released 2018-05-01, tagged as

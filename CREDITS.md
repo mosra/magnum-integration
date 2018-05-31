@@ -23,5 +23,7 @@ Contributors to Magnum Integration library
     implementation
 -   Olga Turanksaya ([@olga-python](https://github.com/olga-python)) --- Gentoo
     ebuild
+-   Nathan Ollerenshaw ([@matjam](https://github.com/matjam)) --- Ubuntu
+    package updates, a PPA repository for stable versions
 
 Big thanks to everyone involved!
