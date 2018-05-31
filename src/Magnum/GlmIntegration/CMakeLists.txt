@@ -29,7 +29,8 @@ find_package(GLM REQUIRED)
 
 set(MagnumGlmIntegration_HEADERS
     Integration.h
-    GtcIntegration.h)
+    GtcIntegration.h
+    GtxIntegration.h)
 
 add_library(MagnumGlmIntegration INTERFACE)
 target_include_directories(MagnumGlmIntegration INTERFACE

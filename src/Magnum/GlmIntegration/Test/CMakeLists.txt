@@ -26,3 +26,4 @@
 
 corrade_add_test(GlmIntegrationTest IntegrationTest.cpp LIBRARIES MagnumGlmIntegration)
 corrade_add_test(GlmIntegrationGtcIntegrationTest GtcIntegrationTest.cpp LIBRARIES MagnumGlmIntegration)
+corrade_add_test(GlmIntegrationGtxIntegrationTest GtxIntegrationTest.cpp LIBRARIES MagnumGlmIntegration)
