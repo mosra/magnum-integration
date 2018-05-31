@@ -54,6 +54,9 @@ void GtcIntegrationTest::quat() {
 
     CORRADE_COMPARE(Quaternion{b}, a);
     CORRADE_COMPARE(glm::quat{a}, b);
+
+    CORRADE_COMPARE(Quaternion{b}.vector().z(), b.z);
+    CORRADE_COMPARE(glm::quat{a}.z, a.vector().z());
 }
 
 void GtcIntegrationTest::dquat() {
@@ -62,6 +65,9 @@ void GtcIntegrationTest::dquat() {
 
     CORRADE_COMPARE(Quaterniond{b}, a);
     CORRADE_COMPARE(glm::dquat{a}, b);
+
+    CORRADE_COMPARE(Quaterniond{b}.vector().z(), b.z);
+    CORRADE_COMPARE(glm::dquat{a}.z, a.vector().z());
 }
 
 void GtcIntegrationTest::debugQuat() {

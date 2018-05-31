@@ -57,6 +57,9 @@ void GtxIntegrationTest::dualquat() {
 
     CORRADE_COMPARE(DualQuaternion{b}, a);
     CORRADE_COMPARE(glm::dualquat{a}, b);
+
+    CORRADE_COMPARE(DualQuaternion{b}.dual().vector().z(), b.dual.z);
+    CORRADE_COMPARE(glm::dualquat{a}.dual.z, a.dual().vector().z());
 }
 
 void GtxIntegrationTest::ddualquat() {
@@ -67,6 +70,9 @@ void GtxIntegrationTest::ddualquat() {
 
     CORRADE_COMPARE(DualQuaterniond{b}, a);
     CORRADE_COMPARE(glm::ddualquat{a}, b);
+
+    CORRADE_COMPARE(DualQuaterniond{b}.dual().vector().z(), b.dual.z);
+    CORRADE_COMPARE(glm::ddualquat{a}.dual.z, a.dual().vector().z());
 }
 
 void GtxIntegrationTest::debugDualQuat() {
