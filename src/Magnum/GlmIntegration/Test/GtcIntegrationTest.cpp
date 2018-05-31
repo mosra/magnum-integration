@@ -24,6 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 
 #include "Magnum/Magnum.h"
@@ -36,11 +37,15 @@ struct GtcIntegrationTest: TestSuite::Tester {
 
     void quat();
     void dquat();
+
+    void debugQuat();
 };
 
 GtcIntegrationTest::GtcIntegrationTest() {
     addTests({&GtcIntegrationTest::quat,
-              &GtcIntegrationTest::dquat});
+              &GtcIntegrationTest::dquat,
+
+              &GtcIntegrationTest::debugQuat});
 }
 
 void GtcIntegrationTest::quat() {
@@ -48,7 +53,7 @@ void GtcIntegrationTest::quat() {
     glm::quat b{4.0f, 1.0f, 2.0f, 3.0f};
 
     CORRADE_COMPARE(Quaternion{b}, a);
-    CORRADE_VERIFY(glm::quat{a} == b);
+    CORRADE_COMPARE(glm::quat{a}, b);
 }
 
 void GtcIntegrationTest::dquat() {
@@ -56,7 +61,13 @@ void GtcIntegrationTest::dquat() {
     glm::dquat b{4.0, 1.0, 2.0, 3.0};
 
     CORRADE_COMPARE(Quaterniond{b}, a);
-    CORRADE_VERIFY(glm::dquat{a} == b);
+    CORRADE_COMPARE(glm::dquat{a}, b);
+}
+
+void GtcIntegrationTest::debugQuat() {
+    std::ostringstream out;
+    Debug{&out} << glm::mediump_quat{4.0f, 1.0f, 2.0f, 3.0f};
+    CORRADE_COMPARE(out.str(), "quat(4.000000, {1.000000, 2.000000, 3.000000})\n");
 }
 
 }}}

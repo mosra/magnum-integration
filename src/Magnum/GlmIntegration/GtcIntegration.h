@@ -36,7 +36,8 @@ Provides conversion for the following types:
 | @ref Magnum::Quaternion "Quaternion", @ref Magnum::Quaterniond "Quaterniond" | `glm::quat`, `glm::dquat` |
 
 Types with extra qualifiers (such as `glm::mediump_dquat`) are treated the
-same as types with no qualifier. Example usage:
+same as types with no qualifier. Debug output using @ref Corrade::Utility::Debug
+for all types is provided as well. Example usage:
 
 @snippet GlmIntegration.cpp GtcIntegration
 
@@ -65,5 +66,14 @@ template<class T, glm::qualifier q> struct QuaternionConverter<T, glm::tquat<T, 
 
 }}}
 #endif
+
+namespace glm {
+    /**
+     * @brief Debug output operator for GLM quaternion types
+     *
+     * Uses `glm::to_string()` internally.
+     */
+    template<class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tquat<T, q>& value);
+}
 
 #endif

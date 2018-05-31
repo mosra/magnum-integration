@@ -51,7 +51,8 @@ Provides conversion for the following types:
 | @ref Magnum::Matrix4x3 "Matrix4x3" or @ref Magnum::Matrix4x3d "Matrix4x3d" | `glm::mat4x3` or `glm::dmat4x3` |
 
 Types with extra qualifiers (such as `glm::mediump_dmat3x4`) are treated the
-same as types with no qualifier. Example usage:
+same as types with no qualifier. Debug output using @ref Corrade::Utility::Debug
+for all types is provided as well. Example usage:
 
 @snippet GlmIntegration.cpp Integration
 
@@ -145,5 +146,21 @@ template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixCo
 
 }}}
 #endif
+
+namespace glm {
+    /**
+     * @brief Debug output operator for GLM vector types
+     *
+     * Uses `glm::to_string()` internally.
+     */
+    template<length_t size, class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const vec<size, T, q>& value);
+
+    /**
+     * @brief Debug output operator for GLM matrix types
+     *
+     * Uses `glm::to_string()` internally.
+     */
+    template<length_t cols, length_t rows, class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const mat<cols, rows, T, q>& value);
+}
 
 #endif

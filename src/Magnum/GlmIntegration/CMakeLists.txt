@@ -27,22 +27,48 @@
 find_package(Magnum REQUIRED)
 find_package(GLM REQUIRED)
 
+if(BUILD_STATIC)
+    set(MAGNUM_GLMINTEGRATION_BUILD_STATIC 1)
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
+
+set(MagnumGlmIntegration_SRCS
+    Integration.cpp)
+
 set(MagnumGlmIntegration_HEADERS
     Integration.h
     GtcIntegration.h
-    GtxIntegration.h)
+    GtxIntegration.h
 
-add_library(MagnumGlmIntegration INTERFACE)
-target_include_directories(MagnumGlmIntegration INTERFACE
-    ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(MagnumGlmIntegration INTERFACE
+    visibility.h)
+
+# GlmIntegration library
+add_library(MagnumGlmIntegration ${SHARED_OR_STATIC}
+    ${MagnumGlmIntegration_SRCS}
+    ${MagnumGlmIntegration_HEADERS})
+target_include_directories(MagnumGlmIntegration PUBLIC
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_BINARY_DIR}/src)
+set_target_properties(MagnumGlmIntegration PROPERTIES
+    DEBUG_POSTFIX "-d"
+    FOLDER "Magnum/GlmIntegration")
+if(NOT BUILD_STATIC)
+    set_target_properties(MagnumGlmIntegration PROPERTIES VERSION ${MAGNUM_LIBRARY_VERSION} SOVERSION ${MAGNUM_LIBRARY_SOVERSION})
+elseif(BUILD_STATIC_PIC)
+    set_target_properties(MagnumGlmIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
+target_link_libraries(MagnumGlmIntegration PUBLIC
     Magnum::Magnum
     GLM::GLM)
 
-add_custom_target(MagnumGlmIntegrationHeaders SOURCES ${MagnumGlmIntegration_HEADERS})
-set_target_properties(MagnumGlmIntegrationHeaders PROPERTIES FOLDER "Magnum/GlmIntegration")
-
+install(TARGETS MagnumGlmIntegration
+    RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR})
 install(FILES ${MagnumGlmIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/GlmIntegration)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/GlmIntegration)
 
 if(BUILD_TESTS)
     add_subdirectory(Test)

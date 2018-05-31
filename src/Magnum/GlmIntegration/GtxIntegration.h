@@ -35,7 +35,8 @@ Provides conversion for the following types:
 | @ref Magnum::DualQuaternion "DualQuaternion", @ref Magnum::DualQuaterniond "DualQuaterniond" | `glm::dualquat`, `glm::ddualquat` |
 
 Types with extra qualifiers (such as `glm::mediump_ddualquat`) are treated the
-same as types with no qualifier. Example usage:
+same as types with no qualifier. Debug output using @ref Corrade::Utility::Debug
+for all types is provided as well. Example usage:
 
 @snippet GlmIntegration.cpp GtxIntegration
 
@@ -65,5 +66,14 @@ template<class T, glm::qualifier q> struct DualQuaternionConverter<T, glm::tdual
 
 }}}
 #endif
+
+namespace glm {
+    /**
+     * @brief Debug output operator for GLM dual quaternion types
+     *
+     * Uses `glm::to_string()` internally.
+     */
+    template<class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tdualquat<T, q>& value);
+}
 
 #endif

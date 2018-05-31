@@ -41,6 +41,8 @@ glm::vec3 a{1.0f, 2.0f, 3.0f};
 Vector3 b(a);
 
 glm::mat3 c = glm::mat3(Matrix3::rotation(35.0_degf));
+
+Debug{} << glm::lowp_ivec3{1, 42, -3}; // prints ivec3(1, 42, -3)
 /* [Integration] */
 static_cast<void>(b);
 static_cast<void>(c);
@@ -50,6 +52,9 @@ static_cast<void>(c);
 /* [GtcIntegration] */
 Quaterniond a = Quaterniond::rotation(35.0_deg, Vector3d::xAxis());
 glm::dquat b(a);
+
+Debug{} << glm::mediump_quat{4.0f, 1.0f, 2.0f, 3.0f};
+    // prints quat(4.000000, {1.000000, 2.000000, 3.000000})
 /* [GtcIntegration] */
 static_cast<void>(b);
 }
@@ -58,6 +63,11 @@ static_cast<void>(b);
 /* [GtxIntegration] */
 DualQuaternion a = DualQuaternion::translation({1.0f, 2.0f, 3.0f});
 glm::dualquat b(a);
+
+Debug{} << glm::highp_ddualquat{{4.0, 1.0, 2.0, 3.0},
+                                {8.0, 5.0, 6.0, 7.0}};
+    // prints ddualquat((4.000000, {1.000000, 2.000000, 3.000000}),
+    //                  (8.000000, {5.000000, 6.000000, 7.000000}))
 /* [GtxIntegration] */
 static_cast<void>(b);
 }

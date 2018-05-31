@@ -23,6 +23,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 
 #include "Magnum/Magnum.h"
@@ -37,11 +38,15 @@ struct GtxIntegrationTest: TestSuite::Tester {
 
     void dualquat();
     void ddualquat();
+
+    void debugDualQuat();
 };
 
 GtxIntegrationTest::GtxIntegrationTest() {
     addTests({&GtxIntegrationTest::dualquat,
-              &GtxIntegrationTest::ddualquat});
+              &GtxIntegrationTest::ddualquat,
+
+              &GtxIntegrationTest::debugDualQuat});
 }
 
 void GtxIntegrationTest::dualquat() {
@@ -51,7 +56,7 @@ void GtxIntegrationTest::dualquat() {
                     {8.0f, 5.0f, 6.0f, 7.0f}};
 
     CORRADE_COMPARE(DualQuaternion{b}, a);
-    CORRADE_VERIFY(glm::dualquat{a} == b);
+    CORRADE_COMPARE(glm::dualquat{a}, b);
 }
 
 void GtxIntegrationTest::ddualquat() {
@@ -61,8 +66,21 @@ void GtxIntegrationTest::ddualquat() {
                      {8.0, 5.0, 6.0, 7.0}};
 
     CORRADE_COMPARE(DualQuaterniond{b}, a);
-    CORRADE_VERIFY(glm::ddualquat{a} == b);
+    CORRADE_COMPARE(glm::ddualquat{a}, b);
 }
+
+void GtxIntegrationTest::debugDualQuat() {
+    #if GLM_VERSION <= 990
+    /* https://github.com/g-truc/glm/pull/773 */
+    CORRADE_SKIP("Segfaults in 0.9.9.0 due to a GLM bug.");
+    #endif
+
+    std::ostringstream out;
+    Debug{&out} << glm::highp_ddualquat{{4.0, 1.0, 2.0, 3.0},
+                                        {8.0, 5.0, 6.0, 7.0}};
+    CORRADE_COMPARE(out.str(), "ddualquat((4.000000, {1.000000, 2.000000, 3.000000}), (8.000000, {5.000000, 6.000000, 7.000000}))\n");
+}
+
 }}}
 
 CORRADE_TEST_MAIN(Magnum::GlmIntegration::Test::GtxIntegrationTest)

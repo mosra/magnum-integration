@@ -24,6 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 
 #include "Magnum/Magnum.h"
@@ -58,6 +59,9 @@ struct IntegrationTest: TestSuite::Tester {
     void dmat3x4();
     void dmat4x2();
     void dmat4x3();
+
+    void debugVec();
+    void debugMat();
 };
 
 IntegrationTest::IntegrationTest() {
@@ -82,7 +86,10 @@ IntegrationTest::IntegrationTest() {
               &IntegrationTest::dmat3x2,
               &IntegrationTest::dmat3x4,
               &IntegrationTest::dmat4x2,
-              &IntegrationTest::dmat4x3});
+              &IntegrationTest::dmat4x3,
+
+              &IntegrationTest::debugVec,
+              &IntegrationTest::debugMat});
 }
 
 void IntegrationTest::vec() {
@@ -91,19 +98,19 @@ void IntegrationTest::vec() {
         glm::vec2 b{1.0f, 2.0f};
 
         CORRADE_COMPARE(Vector2{b}, a);
-        CORRADE_VERIFY(glm::vec2(a) == b);
+        CORRADE_COMPARE(glm::vec2(a), b);
     } {
         Vector3 a{1.0f, 2.0f, 3.0f};
         glm::vec3 b{1.0f, 2.0f, 3.0f};
 
         CORRADE_COMPARE(Vector3{b}, a);
-        CORRADE_VERIFY(glm::vec3(a) == b);
+        CORRADE_COMPARE(glm::vec3(a), b);
     } {
         Vector4 a{1.0f, 2.0f, 3.0f, 4.0f};
         glm::vec4 b{1.0f, 2.0f, 3.0f, 4.0f};
 
         CORRADE_COMPARE(Vector4{b}, a);
-        CORRADE_VERIFY(glm::vec4(a) == b);
+        CORRADE_COMPARE(glm::vec4(a), b);
     }
 }
 
@@ -113,19 +120,19 @@ void IntegrationTest::dvec() {
         glm::dvec2 b{1.0, 2.0};
 
         CORRADE_COMPARE(Vector2d{b}, a);
-        CORRADE_VERIFY(glm::dvec2(a) == b);
+        CORRADE_COMPARE(glm::dvec2(a), b);
     } {
         Vector3d a{1.0, 2.0, 3.0};
         glm::dvec3 b{1.0, 2.0, 3.0};
 
         CORRADE_COMPARE(Vector3d{b}, a);
-        CORRADE_VERIFY(glm::dvec3(a) == b);
+        CORRADE_COMPARE(glm::dvec3(a), b);
     } {
         Vector4d a{1.0, 2.0, 3.0, 4.0};
         glm::dvec4 b{1.0, 2.0, 3.0, 4.0};
 
         CORRADE_COMPARE(Vector4d{b}, a);
-        CORRADE_VERIFY(glm::dvec4(a) == b);
+        CORRADE_COMPARE(glm::dvec4(a), b);
     }
 }
 
@@ -135,19 +142,19 @@ void IntegrationTest::ivec() {
         glm::ivec2 b{-1, 2};
 
         CORRADE_COMPARE(Vector2i{b}, a);
-        CORRADE_VERIFY(glm::ivec2(a) == b);
+        CORRADE_COMPARE(glm::ivec2(a), b);
     } {
         Vector3i a{1, -2, 3};
         glm::ivec3 b{1, -2, 3};
 
         CORRADE_COMPARE(Vector3i{b}, a);
-        CORRADE_VERIFY(glm::ivec3(a) == b);
+        CORRADE_COMPARE(glm::ivec3(a), b);
     } {
         Vector4i a{1, 2, 3, -4};
         glm::ivec4 b{1, 2, 3, -4};
 
         CORRADE_COMPARE(Vector4i{b}, a);
-        CORRADE_VERIFY(glm::ivec4(a) == b);
+        CORRADE_COMPARE(glm::ivec4(a), b);
     }
 }
 
@@ -157,19 +164,19 @@ void IntegrationTest::uvec() {
         glm::uvec2 b{1, 4294967295};
 
         CORRADE_COMPARE(Vector2ui{b}, a);
-        CORRADE_VERIFY(glm::uvec2(a) == b);
+        CORRADE_COMPARE(glm::uvec2(a), b);
     } {
         Vector3ui a{1, 4294967295, 3};
         glm::uvec3 b{1, 4294967295, 3};
 
         CORRADE_COMPARE(Vector3ui{b}, a);
-        CORRADE_VERIFY(glm::uvec3(a) == b);
+        CORRADE_COMPARE(glm::uvec3(a), b);
     } {
         Vector4ui a{1, 2, 3, 4294967295};
         glm::uvec4 b{1, 2, 3, 4294967295};
 
         CORRADE_COMPARE(Vector4ui{b}, a);
-        CORRADE_VERIFY(glm::uvec4(a) == b);
+        CORRADE_COMPARE(glm::uvec4(a), b);
     }
 }
 
@@ -183,7 +190,7 @@ void IntegrationTest::mat3() {
 
     CORRADE_COMPARE(Matrix3{b}, a);
     CORRADE_COMPARE(Matrix3{b}[2][0], a[2][0]);
-    CORRADE_VERIFY(glm::mat3(a) == b);
+    CORRADE_COMPARE(glm::mat3(a), b);
     CORRADE_COMPARE(glm::mat3(a)[0][2], b[0][2]);
 }
 
@@ -199,7 +206,7 @@ void IntegrationTest::mat4() {
 
     CORRADE_COMPARE(Matrix4{b}, a);
     CORRADE_COMPARE(Matrix4{b}[3][0], a[3][0]);
-    CORRADE_VERIFY(glm::mat4(a) == b);
+    CORRADE_COMPARE(glm::mat4(a), b);
     CORRADE_COMPARE(glm::mat4(a)[0][3], b[0][3]);
 }
 
@@ -211,7 +218,7 @@ void IntegrationTest::mat2x2() {
 
     CORRADE_COMPARE(Matrix2x2{b}, a);
     CORRADE_COMPARE(Matrix2x2{b}[1][0], a[1][0]);
-    CORRADE_VERIFY(glm::mat2x2(a) == b);
+    CORRADE_COMPARE(glm::mat2x2(a), b);
     CORRADE_COMPARE(glm::mat2x2(a)[0][1], b[0][1]);
 }
 
@@ -223,7 +230,7 @@ void IntegrationTest::mat2x3() {
 
     CORRADE_COMPARE(Matrix2x3{b}, a);
     CORRADE_COMPARE(Matrix2x3{b}[1][0], a[1][0]);
-    CORRADE_VERIFY(glm::mat2x3(a) == b);
+    CORRADE_COMPARE(glm::mat2x3(a), b);
     CORRADE_COMPARE(glm::mat2x3(a)[0][2], b[0][2]);
 }
 
@@ -235,7 +242,7 @@ void IntegrationTest::mat2x4() {
 
     CORRADE_COMPARE(Matrix2x4{b}, a);
     CORRADE_COMPARE(Matrix2x4{b}[1][0], a[1][0]);
-    CORRADE_VERIFY(glm::mat2x4(a) == b);
+    CORRADE_COMPARE(glm::mat2x4(a), b);
     CORRADE_COMPARE(glm::mat2x4(a)[0][3], b[0][3]);
 }
 
@@ -249,7 +256,7 @@ void IntegrationTest::mat3x2() {
 
     CORRADE_COMPARE(Matrix3x2{b}, a);
     CORRADE_COMPARE(Matrix3x2{b}[2][0], a[2][0]);
-    CORRADE_VERIFY(glm::mat3x2(a) == b);
+    CORRADE_COMPARE(glm::mat3x2(a), b);
     CORRADE_COMPARE(glm::mat3x2(a)[0][1], b[0][1]);
 }
 
@@ -263,7 +270,7 @@ void IntegrationTest::mat3x4() {
 
     CORRADE_COMPARE(Matrix3x4{b}, a);
     CORRADE_COMPARE(Matrix3x4{b}[2][0], a[2][0]);
-    CORRADE_VERIFY(glm::mat3x4(a) == b);
+    CORRADE_COMPARE(glm::mat3x4(a), b);
     CORRADE_COMPARE(glm::mat3x4(a)[0][3], b[0][3]);
 }
 
@@ -279,7 +286,7 @@ void IntegrationTest::mat4x2() {
 
     CORRADE_COMPARE(Matrix4x2{b}, a);
     CORRADE_COMPARE(Matrix4x2{b}[3][0], a[3][0]);
-    CORRADE_VERIFY(glm::mat4x2(a) == b);
+    CORRADE_COMPARE(glm::mat4x2(a), b);
     CORRADE_COMPARE(glm::mat4x2(a)[0][1], b[0][1]);
 }
 
@@ -295,7 +302,7 @@ void IntegrationTest::mat4x3() {
 
     CORRADE_COMPARE(Matrix4x3{b}, a);
     CORRADE_COMPARE(Matrix4x3{b}[3][0], a[3][0]);
-    CORRADE_VERIFY(glm::mat4x3(a) == b);
+    CORRADE_COMPARE(glm::mat4x3(a), b);
     CORRADE_COMPARE(glm::mat4x3(a)[0][2], b[0][2]);
 }
 
@@ -309,7 +316,7 @@ void IntegrationTest::dmat3() {
 
     CORRADE_COMPARE(Matrix3d{b}, a);
     CORRADE_COMPARE(Matrix3d{b}[2][0], a[2][0]);
-    CORRADE_VERIFY(glm::dmat3(a) == b);
+    CORRADE_COMPARE(glm::dmat3(a), b);
     CORRADE_COMPARE(glm::dmat3(a)[0][2], b[0][2]);
 }
 
@@ -325,7 +332,7 @@ void IntegrationTest::dmat4() {
 
     CORRADE_COMPARE(Matrix4d{b}, a);
     CORRADE_COMPARE(Matrix4d{b}[3][0], a[3][0]);
-    CORRADE_VERIFY(glm::dmat4(a) == b);
+    CORRADE_COMPARE(glm::dmat4(a), b);
     CORRADE_COMPARE(glm::dmat4(a)[0][3], b[0][3]);
 }
 
@@ -337,7 +344,7 @@ void IntegrationTest::dmat2x2() {
 
     CORRADE_COMPARE(Matrix2x2{b}, a);
     CORRADE_COMPARE(Matrix2x2{b}[1][0], a[1][0]);
-    CORRADE_VERIFY(glm::mat2x2(a) == b);
+    CORRADE_COMPARE(glm::mat2x2(a), b);
     CORRADE_COMPARE(glm::mat2x2(a)[0][1], b[0][1]);
 }
 
@@ -349,7 +356,7 @@ void IntegrationTest::dmat2x3() {
 
     CORRADE_COMPARE(Matrix2x3d{b}, a);
     CORRADE_COMPARE(Matrix2x3d{b}[1][0], a[1][0]);
-    CORRADE_VERIFY(glm::dmat2x3(a) == b);
+    CORRADE_COMPARE(glm::dmat2x3(a), b);
     CORRADE_COMPARE(glm::dmat2x3(a)[0][2], b[0][2]);
 }
 
@@ -361,7 +368,7 @@ void IntegrationTest::dmat2x4() {
 
     CORRADE_COMPARE(Matrix2x4d{b}, a);
     CORRADE_COMPARE(Matrix2x4d{b}[1][0], a[1][0]);
-    CORRADE_VERIFY(glm::dmat2x4(a) == b);
+    CORRADE_COMPARE(glm::dmat2x4(a), b);
     CORRADE_COMPARE(glm::dmat2x4(a)[0][3], b[0][3]);
 }
 
@@ -375,7 +382,7 @@ void IntegrationTest::dmat3x2() {
 
     CORRADE_COMPARE(Matrix3x2d{b}, a);
     CORRADE_COMPARE(Matrix3x2d{b}[2][0], a[2][0]);
-    CORRADE_VERIFY(glm::dmat3x2(a) == b);
+    CORRADE_COMPARE(glm::dmat3x2(a), b);
     CORRADE_COMPARE(glm::dmat3x2(a)[0][1], b[0][1]);
 }
 
@@ -389,7 +396,7 @@ void IntegrationTest::dmat3x4() {
 
     CORRADE_COMPARE(Matrix3x4d{b}, a);
     CORRADE_COMPARE(Matrix3x4d{b}[2][0], a[2][0]);
-    CORRADE_VERIFY(glm::dmat3x4(a) == b);
+    CORRADE_COMPARE(glm::dmat3x4(a), b);
     CORRADE_COMPARE(glm::dmat3x4(a)[0][3], b[0][3]);
 }
 
@@ -405,7 +412,7 @@ void IntegrationTest::dmat4x2() {
 
     CORRADE_COMPARE(Matrix4x2d{b}, a);
     CORRADE_COMPARE(Matrix4x2d{b}[3][0], a[3][0]);
-    CORRADE_VERIFY(glm::dmat4x2(a) == b);
+    CORRADE_COMPARE(glm::dmat4x2(a), b);
     CORRADE_COMPARE(glm::dmat4x2(a)[0][1], b[0][1]);
 }
 
@@ -421,8 +428,22 @@ void IntegrationTest::dmat4x3() {
 
     CORRADE_COMPARE(Matrix4x3d{b}, a);
     CORRADE_COMPARE(Matrix4x3d{b}[3][0], a[3][0]);
-    CORRADE_VERIFY(glm::dmat4x3(a) == b);
+    CORRADE_COMPARE(glm::dmat4x3(a), b);
     CORRADE_COMPARE(glm::dmat4x3(a)[0][2], b[0][2]);
+}
+
+void IntegrationTest::debugVec() {
+    std::ostringstream out;
+    Debug{&out} << glm::lowp_ivec3{1, 42, -3};
+    CORRADE_COMPARE(out.str(), "ivec3(1, 42, -3)\n");
+}
+
+void IntegrationTest::debugMat() {
+    std::ostringstream out;
+    Debug{&out} << glm::dmat2x4{3.0,  5.0, 8.0, 10.0,
+                                4.5,  4.0, 7.0, 11.0};
+    /* What the hell, how is this verbosity ever useful?! */
+    CORRADE_COMPARE(out.str(), "dmat2x4((3.000000, 5.000000, 8.000000, 10.000000), (4.500000, 4.000000, 7.000000, 11.000000))\n");
 }
 
 }}}
