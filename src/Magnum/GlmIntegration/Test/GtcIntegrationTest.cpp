@@ -35,10 +35,12 @@ struct GtcIntegrationTest: TestSuite::Tester {
     explicit GtcIntegrationTest();
 
     void quat();
+    void dquat();
 };
 
 GtcIntegrationTest::GtcIntegrationTest() {
-    addTests({&GtcIntegrationTest::quat});
+    addTests({&GtcIntegrationTest::quat,
+              &GtcIntegrationTest::dquat});
 }
 
 void GtcIntegrationTest::quat() {
@@ -47,6 +49,14 @@ void GtcIntegrationTest::quat() {
 
     CORRADE_COMPARE(Quaternion{b}, a);
     CORRADE_VERIFY(glm::quat{a} == b);
+}
+
+void GtcIntegrationTest::dquat() {
+    Quaterniond a{{1.0, 2.0, 3.0}, 4.0};
+    glm::dquat b{4.0, 1.0, 2.0, 3.0};
+
+    CORRADE_COMPARE(Quaterniond{b}, a);
+    CORRADE_VERIFY(glm::dquat{a} == b);
 }
 
 }}}

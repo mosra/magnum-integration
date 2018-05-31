@@ -38,12 +38,12 @@ namespace Magnum { namespace Math { namespace Implementation {
 
 /* Quaternion */
 
-template<> struct QuaternionConverter<Float, glm::quat> {
-    static Quaternion<Float> from(const glm::quat& other) {
+template<class T, glm::qualifier q> struct QuaternionConverter<T, glm::tquat<T, q>> {
+    static Quaternion<T> from(const glm::tquat<T, q>& other) {
         return {{other.x, other.y, other.z}, other.w};
     }
 
-    static glm::quat to(const Quaternion<Float>& other) {
+    static glm::tquat<T, q> to(const Quaternion<T>& other) {
         return {other.scalar(), other.vector().x(), other.vector().y(), other.vector().z()};
     }
 };
