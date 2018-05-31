@@ -31,6 +31,7 @@ build() {
         -DMAGNUM_DEPLOY_PREFIX=/srv/http/emscripten-webgl2 \
         -DWITH_BULLET=ON \
         -DWITH_DART=OFF \
+        -DWITH_GLM=OFF \
         -DBUILD_TESTS=OFF
     ninja
 }

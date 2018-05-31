@@ -32,22 +32,22 @@ environment:
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-es3-msvc2017
-  #- TARGET: rt
-    #TARGET_GLES2: ON
-    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #APPVEYOR_JOB_NAME: windows-rt-es2-msvc2015
-  #- TARGET: rt
-    #TARGET_GLES2: ON
-    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    #APPVEYOR_JOB_NAME: windows-rt-es2-msvc2017
-  #- TARGET: rt
-    #TARGET_GLES2: OFF
-    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #APPVEYOR_JOB_NAME: windows-rt-es3-msvc2015
-  #- TARGET: rt
-    #TARGET_GLES2: OFF
-    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    #APPVEYOR_JOB_NAME: windows-rt-es3-msvc2017
+  - TARGET: rt
+    TARGET_GLES2: ON
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    APPVEYOR_JOB_NAME: windows-rt-es2-msvc2015
+  - TARGET: rt
+    TARGET_GLES2: ON
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_JOB_NAME: windows-rt-es2-msvc2017
+  - TARGET: rt
+    TARGET_GLES2: OFF
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    APPVEYOR_JOB_NAME: windows-rt-es3-msvc2015
+  - TARGET: rt
+    TARGET_GLES2: OFF
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_JOB_NAME: windows-rt-es3-msvc2017
 
 notifications:
 - provider: Webhook
@@ -60,6 +60,10 @@ install:
 - cinst ninja
 - set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" pip install codecov
+
+# GLM
+- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\0.9.9.0.zip appveyor DownloadFile https://github.com/g-truc/glm/archive/0.9.9.0.zip
+- 7z x 0.9.9.0.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\glm-0.9.9.0 glm
 
 # OVR SDK
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.4.0_public.zip appveyor DownloadFile https://static.oculus.com/sdk-downloads/1.4.0/Public/1463687419/ovr_sdk_win_1.4.0_public.zip

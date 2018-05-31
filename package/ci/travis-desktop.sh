@@ -69,6 +69,7 @@ cmake .. \
     -DCMAKE_BUILD_TYPE=Debug \
     -DWITH_BULLET=ON \
     -DWITH_DART=$WITH_DART \
+    -DWITH_GLM=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON \

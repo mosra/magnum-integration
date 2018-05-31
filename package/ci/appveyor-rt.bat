@@ -72,12 +72,14 @@ mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/deps ^
+    -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DOPENGLES2_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DWITH_BULLET=OFF ^
     -DWITH_DART=OFF ^
+    -DWITH_GLM=ON ^
     -DWITH_OVR=OFF ^
     -DBUILD_STATIC=ON ^
     -G "%GENERATOR%" -A x64 || exit /b
