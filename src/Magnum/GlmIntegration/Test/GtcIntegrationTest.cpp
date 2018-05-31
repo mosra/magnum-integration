@@ -55,32 +55,54 @@ GtcIntegrationTest::GtcIntegrationTest() {
 
 void GtcIntegrationTest::quat() {
     Quaternion a{{1.0f, 2.0f, 3.0f}, 4.0f};
+    #if GLM_VERSION*10 + GLM_VERSION_REVISION < 952
+    /* Due to initializer list fiasco in < 0.9.5.2, using {} gives a totally
+       different result. https://github.com/g-truc/glm/issues/159 */
+    glm::quat b(4.0f, 1.0f, 2.0f, 3.0f);
+    #else
     glm::quat b{4.0f, 1.0f, 2.0f, 3.0f};
+    #endif
 
     CORRADE_COMPARE(Quaternion{b}, a);
     #if GLM_VERSION < 97
-    CORRADE_VERIFY(glm::quat{a} == b);
+    /* Can't use {} in < 0.9.5.2 because it matches *anything*. Too bad this
+       version is in 14.04 LTS. https://github.com/g-truc/glm/issues/159. Also,
+       glm::to_string() for quat is since O.9.7. */
+    CORRADE_VERIFY(glm::quat(a) == b);
     #else
     CORRADE_COMPARE(glm::quat{a}, b);
     #endif
 
     CORRADE_COMPARE(Quaternion{b}.vector().z(), b.z);
-    CORRADE_COMPARE(glm::quat{a}.z, a.vector().z());
+    /* Can't use {} in < 0.9.5.2 because it matches *anything*. Too bad this
+       version is in 14.04 LTS. https://github.com/g-truc/glm/issues/159 */
+    CORRADE_COMPARE(glm::quat(a).z, a.vector().z());
 }
 
 void GtcIntegrationTest::dquat() {
     Quaterniond a{{1.0, 2.0, 3.0}, 4.0};
+    #if GLM_VERSION*10 + GLM_VERSION_REVISION < 952
+    /* Due to initializer list fiasco in < 0.9.5.2, using {} gives a totally
+       different result. https://github.com/g-truc/glm/issues/159 */
+    glm::dquat b(4.0, 1.0, 2.0, 3.0);
+    #else
     glm::dquat b{4.0, 1.0, 2.0, 3.0};
+    #endif
 
     CORRADE_COMPARE(Quaterniond{b}, a);
     #if GLM_VERSION < 97
-    CORRADE_VERIFY(glm::dquat{a} == b);
+    /* Can't use {} in < 0.9.5.2 because it matches *anything*. Too bad this
+       version is in 14.04 LTS. https://github.com/g-truc/glm/issues/159. Also,
+       glm::to_string() for quat is since O.9.7. */
+    CORRADE_VERIFY(glm::dquat(a) == b);
     #else
     CORRADE_COMPARE(glm::dquat{a}, b);
     #endif
 
     CORRADE_COMPARE(Quaterniond{b}.vector().z(), b.z);
-    CORRADE_COMPARE(glm::dquat{a}.z, a.vector().z());
+    /* Can't use {} in < 0.9.5.2 because it matches *anything*. Too bad this
+       version is in 14.04 LTS. https://github.com/g-truc/glm/issues/159 */
+    CORRADE_COMPARE(glm::dquat(a).z, a.vector().z());
 }
 
 void GtcIntegrationTest::debugQuat() {

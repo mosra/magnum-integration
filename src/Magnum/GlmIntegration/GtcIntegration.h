@@ -74,7 +74,13 @@ q> struct QuaternionConverter<T, glm::tquat<T, q>> {
     }
 
     static glm::tquat<T, q> to(const Quaternion<T>& other) {
+        #if GLM_VERSION*10 + GLM_VERSION_REVISION < 952
+        /* Due to initializer list fiasco in 0.9.5.1, using {} gives a totally
+           different result. https://github.com/g-truc/glm/issues/159 */
+        return glm::tquat<T, q>(other.scalar(), other.vector().x(), other.vector().y(), other.vector().z());
+        #else
         return {other.scalar(), other.vector().x(), other.vector().y(), other.vector().z()};
+        #endif
     }
 };
 
