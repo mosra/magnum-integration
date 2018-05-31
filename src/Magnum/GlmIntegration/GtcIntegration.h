@@ -37,7 +37,7 @@ Provides conversion for the following types:
 
 Types with extra qualifiers (such as `glm::mediump_dquat`) are treated the
 same as types with no qualifier. Debug output using @ref Corrade::Utility::Debug
-for all types is provided as well. Example usage:
+for all types is provided as well on GLM >= 0.9.7. Example usage:
 
 @snippet GlmIntegration.cpp GtcIntegration
 
@@ -50,6 +50,14 @@ and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
 #include "Magnum/Math/Quaternion.h"
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
+#if GLM_VERSION < 96 /* Was just two decimals in the old days, now it's 3 */
+namespace glm {
+    /* The types were moved from glm::detail to glm in 0.9.6. Can't be bothered
+       so I'm just making aliases here. */
+    template<class T, glm::precision q> using tquat = detail::tquat<T, q>;
+}
+#endif
+
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* Quaternion */
@@ -73,11 +81,12 @@ q> struct QuaternionConverter<T, glm::tquat<T, q>> {
 }}}
 #endif
 
+#if defined(DOXYGEN_GENERATING_OUTPUT) || GLM_VERSION >= 97
 namespace glm {
     /**
      * @brief Debug output operator for GLM quaternion types
      *
-     * Uses `glm::to_string()` internally.
+     * Uses `glm::to_string()` internally. Available since GLM 0.9.7.
      */
     template<class T,
         #if GLM_VERSION < 990
@@ -87,5 +96,6 @@ namespace glm {
         #endif
     q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tquat<T, q>& value);
 }
+#endif
 
 #endif

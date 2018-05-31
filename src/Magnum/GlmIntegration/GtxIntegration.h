@@ -50,6 +50,14 @@ and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
 #include "Magnum/GlmIntegration/GtcIntegration.h"
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
+#if GLM_VERSION < 96 /* Was just two decimals in the old days, now it's 3 */
+namespace glm {
+    /* The types were moved from glm::detail to glm in 0.9.6. Can't be bothered
+       so I'm just making aliases here. */
+    template<class T, glm::precision q> using tdualquat = detail::tdualquat<T, q>;
+}
+#endif
+
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* Dual quaternion */
@@ -73,11 +81,12 @@ q> struct DualQuaternionConverter<T, glm::tdualquat<T, q>> {
 }}}
 #endif
 
+#if defined(DOXYGEN_GENERATING_OUTPUT) || GLM_VERSION >= 97
 namespace glm {
     /**
      * @brief Debug output operator for GLM dual quaternion types
      *
-     * Uses `glm::to_string()` internally.
+     * Uses `glm::to_string()` internally. Available since GLM 0.9.7.
      */
     template<class T,
         #if GLM_VERSION < 990
@@ -87,5 +96,6 @@ namespace glm {
         #endif
     q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tdualquat<T, q>& value);
 }
+#endif
 
 #endif

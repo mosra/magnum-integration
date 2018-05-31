@@ -24,16 +24,28 @@
 */
 
 #include "Integration.h"
-#include "GtcIntegration.h"
 
+#include <glm/fwd.hpp>
+#if GLM_VERSION < 96
+#define GLM_FORCE_RADIANS /* Otherwise 0.9.5 spits a lot of loud messages :/ */
+#endif
+#include "Magnum/GlmIntegration/GtcIntegration.h"
+
+#if GLM_VERSION >= 990
 #define GLM_ENABLE_EXPERIMENTAL /* WTF, GLM!! Yes, I'm going to repeat this every time. */
-#include "GtxIntegration.h"
+#endif
+#include "Magnum/GlmIntegration/GtxIntegration.h"
 
 #include "Magnum/GlmIntegration/visibility.h"
 
 #include <glm/gtx/string_cast.hpp>
 
 namespace glm {
+#if GLM_VERSION < 96
+/* All types were in glm::detail in 0.9.5, wrap the following as well in order
+   to make ADL work properly. */
+namespace detail {
+#endif
 
 template<class T,
     #if GLM_VERSION < 990
@@ -264,6 +276,7 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<double, lowp>&);
 #endif
 
+#if GLM_VERSION >= 97
 template<class T,
     #if GLM_VERSION < 990
     glm::precision
@@ -305,5 +318,9 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tdualquat<float, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tdualquat<double, lowp>&);
 #endif
+#endif
 
+#if GLM_VERSION < 96
+} /* Close the detail namespace */
+#endif
 }

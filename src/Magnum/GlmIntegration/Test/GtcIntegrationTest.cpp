@@ -28,6 +28,11 @@
 #include <Corrade/TestSuite/Tester.h>
 
 #include "Magnum/Magnum.h"
+
+#include <glm/fwd.hpp>
+#if GLM_VERSION < 96
+#define GLM_FORCE_RADIANS /* Otherwise 0.9.5 spits a lot of loud messages :/ */
+#endif
 #include "Magnum/GlmIntegration/GtcIntegration.h"
 
 namespace Magnum { namespace GlmIntegration { namespace Test {
@@ -53,7 +58,11 @@ void GtcIntegrationTest::quat() {
     glm::quat b{4.0f, 1.0f, 2.0f, 3.0f};
 
     CORRADE_COMPARE(Quaternion{b}, a);
+    #if GLM_VERSION < 97
+    CORRADE_VERIFY(glm::quat{a} == b);
+    #else
     CORRADE_COMPARE(glm::quat{a}, b);
+    #endif
 
     CORRADE_COMPARE(Quaternion{b}.vector().z(), b.z);
     CORRADE_COMPARE(glm::quat{a}.z, a.vector().z());
@@ -64,19 +73,27 @@ void GtcIntegrationTest::dquat() {
     glm::dquat b{4.0, 1.0, 2.0, 3.0};
 
     CORRADE_COMPARE(Quaterniond{b}, a);
+    #if GLM_VERSION < 97
+    CORRADE_VERIFY(glm::dquat{a} == b);
+    #else
     CORRADE_COMPARE(glm::dquat{a}, b);
+    #endif
 
     CORRADE_COMPARE(Quaterniond{b}.vector().z(), b.z);
     CORRADE_COMPARE(glm::dquat{a}.z, a.vector().z());
 }
 
 void GtcIntegrationTest::debugQuat() {
+    #if GLM_VERSION < 97
+    CORRADE_SKIP("Not available in GLM < 0.9.7.");
+    #else
     std::ostringstream out;
     Debug{&out} << glm::mediump_quat{4.0f, 1.0f, 2.0f, 3.0f};
     #if GLM_VERSION < 990
     CORRADE_COMPARE(out.str(), "quat(1.000000, 2.000000, 3.000000, 4.000000)\n");
     #else
     CORRADE_COMPARE(out.str(), "quat(4.000000, {1.000000, 2.000000, 3.000000})\n");
+    #endif
     #endif
 }
 

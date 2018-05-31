@@ -28,7 +28,13 @@
 
 #include "Magnum/Magnum.h"
 
+#include <glm/fwd.hpp>
+#if GLM_VERSION < 96
+#define GLM_FORCE_RADIANS /* Otherwise 0.9.5 spits a lot of loud messages :/ */
+#endif
+#if GLM_VERSION >= 990
 #define GLM_ENABLE_EXPERIMENTAL /* WTF, GLM! */
+#endif
 #include "Magnum/GlmIntegration/GtxIntegration.h"
 
 namespace Magnum { namespace GlmIntegration { namespace Test {
@@ -56,7 +62,11 @@ void GtxIntegrationTest::dualquat() {
                     {8.0f, 5.0f, 6.0f, 7.0f}};
 
     CORRADE_COMPARE(DualQuaternion{b}, a);
+    #if GLM_VERSION < 97
+    CORRADE_VERIFY(glm::dualquat{a} == b);
+    #else
     CORRADE_COMPARE(glm::dualquat{a}, b);
+    #endif
 
     CORRADE_COMPARE(DualQuaternion{b}.dual().vector().z(), b.dual.z);
     CORRADE_COMPARE(glm::dualquat{a}.dual.z, a.dual().vector().z());
@@ -69,13 +79,20 @@ void GtxIntegrationTest::ddualquat() {
                      {8.0, 5.0, 6.0, 7.0}};
 
     CORRADE_COMPARE(DualQuaterniond{b}, a);
+    #if GLM_VERSION < 97
+    CORRADE_VERIFY(glm::ddualquat{a} == b);
+    #else
     CORRADE_COMPARE(glm::ddualquat{a}, b);
+    #endif
 
     CORRADE_COMPARE(DualQuaterniond{b}.dual().vector().z(), b.dual.z);
     CORRADE_COMPARE(glm::ddualquat{a}.dual.z, a.dual().vector().z());
 }
 
 void GtxIntegrationTest::debugDualQuat() {
+    #if GLM_VERSION < 97
+    CORRADE_SKIP("Not available in GLM < 0.9.7.");
+    #else
     #if GLM_VERSION <= 990
     /* https://github.com/g-truc/glm/pull/773 */
     CORRADE_SKIP("Segfaults in 0.9.9.0 due to a GLM bug.");
@@ -85,6 +102,7 @@ void GtxIntegrationTest::debugDualQuat() {
     Debug{&out} << glm::highp_ddualquat{{4.0, 1.0, 2.0, 3.0},
                                         {8.0, 5.0, 6.0, 7.0}};
     CORRADE_COMPARE(out.str(), "ddualquat((4.000000, {1.000000, 2.000000, 3.000000}), (8.000000, {5.000000, 6.000000, 7.000000}))\n");
+    #endif
 }
 
 }}}

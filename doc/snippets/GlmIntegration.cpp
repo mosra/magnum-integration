@@ -26,9 +26,15 @@
 #include "Magnum/Magnum.h"
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/GlmIntegration/Integration.h"
+
+#if GLM_VERSION < 96
+#define GLM_FORCE_RADIANS /* Otherwise 0.9.5 spits a lot of loud messages :/ */
+#endif
 #include "Magnum/GlmIntegration/GtcIntegration.h"
 
+#if GLM_VERSION >= 990
 #define GLM_ENABLE_EXPERIMENTAL /* WTF, GLM! */
+#endif
 #include "Magnum/GlmIntegration/GtxIntegration.h"
 
 using namespace Magnum;
@@ -48,6 +54,7 @@ static_cast<void>(b);
 static_cast<void>(c);
 }
 
+#if GLM_VERSION >= 97
 {
 /* [GtcIntegration] */
 Quaterniond a = Quaterniond::rotation(35.0_deg, Vector3d::xAxis());
@@ -71,4 +78,5 @@ Debug{} << glm::highp_ddualquat{{4.0, 1.0, 2.0, 3.0},
 /* [GtxIntegration] */
 static_cast<void>(b);
 }
+#endif
 }

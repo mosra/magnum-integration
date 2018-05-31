@@ -67,6 +67,28 @@ types.
 #include "Magnum/Math/RectangularMatrix.h"
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
+#if GLM_VERSION < 96 /* Was just two decimals in the old days, now it's 3 */
+namespace glm {
+    /* The types were moved from glm::detail to glm in 0.9.6. Can't be bothered
+       so I'm just making aliases here. */
+    template<class T, glm::precision q> using tvec2 = detail::tvec2<T, q>;
+    template<class T, glm::precision q> using tvec3 = detail::tvec3<T, q>;
+    template<class T, glm::precision q> using tvec4 = detail::tvec4<T, q>;
+
+    template<class T, glm::precision q> using tmat2x2 = detail::tmat2x2<T, q>;
+    template<class T, glm::precision q> using tmat2x3 = detail::tmat2x3<T, q>;
+    template<class T, glm::precision q> using tmat2x4 = detail::tmat2x4<T, q>;
+
+    template<class T, glm::precision q> using tmat3x2 = detail::tmat3x2<T, q>;
+    template<class T, glm::precision q> using tmat3x3 = detail::tmat3x3<T, q>;
+    template<class T, glm::precision q> using tmat3x4 = detail::tmat3x4<T, q>;
+
+    template<class T, glm::precision q> using tmat4x2 = detail::tmat4x2<T, q>;
+    template<class T, glm::precision q> using tmat4x3 = detail::tmat4x3<T, q>;
+    template<class T, glm::precision q> using tmat4x4 = detail::tmat4x4<T, q>;
+}
+#endif
+
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* Bool vectors */
@@ -355,6 +377,11 @@ q> struct RectangularMatrixConverter<4, 4, T, glm::tmat4x4<T, q>> {
 #endif
 
 namespace glm {
+#if GLM_VERSION < 96
+/* All types were in glm::detail in 0.9.5, wrap the following as well in order
+   to make ADL work properly. */
+namespace detail {
+#endif
     /**
      * @brief Debug output operator for GLM vector types
      *
@@ -470,6 +497,10 @@ namespace glm {
         glm::qualifier /* thanks, GLM */
         #endif
     q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x4<T, q>& value);
+
+#if GLM_VERSION < 96
+} /* Close the detail namespace */
+#endif
 }
 
 #endif
