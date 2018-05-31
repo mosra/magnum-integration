@@ -54,7 +54,13 @@ namespace Magnum { namespace Math { namespace Implementation {
 
 /* Quaternion */
 
-template<class T, glm::qualifier q> struct QuaternionConverter<T, glm::tquat<T, q>> {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct QuaternionConverter<T, glm::tquat<T, q>> {
     static Quaternion<T> from(const glm::tquat<T, q>& other) {
         return {{other.x, other.y, other.z}, other.w};
     }
@@ -73,7 +79,13 @@ namespace glm {
      *
      * Uses `glm::to_string()` internally.
      */
-    template<class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tquat<T, q>& value);
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tquat<T, q>& value);
 }
 
 #endif

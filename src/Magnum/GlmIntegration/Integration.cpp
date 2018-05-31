@@ -35,124 +35,242 @@
 
 namespace glm {
 
-template<length_t size, class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const vec<size, T, q>& value) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tvec2<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tvec3<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tvec4<T, q>& value) {
     return debug << to_string(value);
 }
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, bool, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, bool, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, bool, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, int, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, int, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, int, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, unsigned int, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, unsigned int, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, unsigned int, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<bool, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<bool, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<bool, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<int, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<int, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<int, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<unsigned int, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<unsigned int, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<unsigned int, highp>&);
 
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, bool, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, bool, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, bool, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, int, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, int, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, int, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, unsigned int, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, unsigned int, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, unsigned int, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<bool, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<bool, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<bool, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<int, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<int, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<int, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<unsigned int, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<unsigned int, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<unsigned int, mediump>&);
 
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, bool, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, bool, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, bool, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, int, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, int, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, int, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<2, unsigned int, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<3, unsigned int, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const vec<4, unsigned int, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<bool, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<bool, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<bool, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<int, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<int, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<int, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<unsigned int, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<unsigned int, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<unsigned int, lowp>&);
 #endif
 
-template<length_t cols, length_t rows, class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const mat<cols, rows, T, q>& value) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat2x2<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat2x3<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat2x4<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat3x2<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat3x3<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat3x4<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x2<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x3<T, q>& value) {
+    return debug << to_string(value);
+}
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x4<T, q>& value) {
     return debug << to_string(value);
 }
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 2, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 3, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 4, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 2, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 3, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 4, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 2, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 3, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 4, float, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 2, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 3, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 4, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 2, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 3, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 4, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 2, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 3, double, highp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 4, double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x2<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x3<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x4<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<float, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x2<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x3<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x4<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<double, highp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<double, highp>&);
 
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 2, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 3, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 4, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 2, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 3, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 4, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 2, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 3, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 4, float, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 2, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 3, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 4, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 2, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 3, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 4, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 2, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 3, double, mediump>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 4, double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x2<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x3<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x4<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<float, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x2<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x3<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x4<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<double, mediump>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<double, mediump>&);
 
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 2, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 3, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 4, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 2, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 3, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 4, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 2, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 3, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 4, float, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 2, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 3, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<2, 4, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 2, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 3, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<3, 4, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 2, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 3, double, lowp>&);
-template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const mat<4, 4, double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x2<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x3<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x4<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<float, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x2<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x3<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat3x4<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<double, lowp>&);
+template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<double, lowp>&);
 #endif
 
-template<class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tquat<T, q>& value) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tquat<T, q>& value) {
     return debug << to_string(value);
 }
 
@@ -167,7 +285,13 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tquat<double, lowp>&);
 #endif
 
-template<class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tdualquat<T, q>& value) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tdualquat<T, q>& value) {
     return debug << to_string(value);
 }
 

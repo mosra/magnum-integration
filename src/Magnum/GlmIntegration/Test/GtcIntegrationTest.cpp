@@ -67,7 +67,11 @@ void GtcIntegrationTest::dquat() {
 void GtcIntegrationTest::debugQuat() {
     std::ostringstream out;
     Debug{&out} << glm::mediump_quat{4.0f, 1.0f, 2.0f, 3.0f};
+    #if GLM_VERSION < 990
+    CORRADE_COMPARE(out.str(), "quat(1.000000, 2.000000, 3.000000, 4.000000)\n");
+    #else
     CORRADE_COMPARE(out.str(), "quat(4.000000, {1.000000, 2.000000, 3.000000})\n");
+    #endif
 }
 
 }}}

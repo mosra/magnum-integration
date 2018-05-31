@@ -71,109 +71,283 @@ namespace Magnum { namespace Math { namespace Implementation {
 
 /* Bool vectors */
 
-template<glm::qualifier q> struct BoolVectorConverter<2, glm::vec<2, bool, q>> {
-    static BoolVector<2> from(const glm::vec<2, bool, q>& other) {
+template<
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct BoolVectorConverter<2, glm::tvec2<bool, q>> {
+    static BoolVector<2> from(const glm::tvec2<bool, q>& other) {
         return (other.x << 0)|(other.y << 1);
     }
 
-    static glm::bvec2 to(const BoolVector<2>& other) {
+    static glm::tvec2<bool, q> to(const BoolVector<2>& other) {
         return {other[0], other[1]};
     }
 };
 
-template<glm::qualifier q> struct BoolVectorConverter<3, glm::vec<3, bool, q>> {
-    static BoolVector<3> from(const glm::vec<3, bool, q>& other) {
+template<
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct BoolVectorConverter<3, glm::tvec3<bool, q>> {
+    static BoolVector<3> from(const glm::tvec3<bool, q>& other) {
         return (other.x << 0)|(other.y << 1)|(other.z << 2);
     }
 
-    static glm::bvec3 to(const BoolVector<3>& other) {
+    static glm::tvec3<bool, q> to(const BoolVector<3>& other) {
         return {other[0], other[1], other[2]};
     }
 };
 
-template<glm::qualifier q> struct BoolVectorConverter<4, glm::vec<4, bool, q>> {
-    static BoolVector<4> from(const glm::vec<4, bool, q>& other) {
+template<
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct BoolVectorConverter<4, glm::tvec4<bool, q>> {
+    static BoolVector<4> from(const glm::tvec4<bool, q>& other) {
         return (other.x << 0)|(other.y << 1)|(other.z << 2)|(other.w << 3);
     }
 
-    static glm::bvec4 to(const BoolVector<4>& other) {
+    static glm::tvec4<bool, q> to(const BoolVector<4>& other) {
         return {other[0], other[1], other[2], other[3]};
     }
 };
 
 /* Vectors */
 
-template<class T, glm::qualifier q> struct VectorConverter<2, T, glm::vec<2, T, q>> {
-    static Vector<2, T> from(const glm::vec<2, T, q>& other) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct VectorConverter<2, T, glm::tvec2<T, q>> {
+    static Vector<2, T> from(const glm::tvec2<T, q>& other) {
         return {other.x, other.y};
     }
 
-    static glm::vec<2, T, q> to(const Vector<2, T>& other) {
+    static glm::tvec2<T, q> to(const Vector<2, T>& other) {
         return {other[0], other[1]};
     }
 };
 
-template<class T, glm::qualifier q> struct VectorConverter<3, T, glm::vec<3, T, q>> {
-    static Vector<3, T> from(const glm::vec<3, T, q>& other) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct VectorConverter<3, T, glm::tvec3<T, q>> {
+    static Vector<3, T> from(const glm::tvec3<T, q>& other) {
         return {other.x, other.y, other.z};
     }
 
-    static glm::vec<3, T, q> to(const Vector<3, T>& other) {
+    static glm::tvec3<T, q> to(const Vector<3, T>& other) {
         return {other[0], other[1],  other[2]};
     }
 };
 
-template<class T, glm::qualifier q> struct VectorConverter<4, T, glm::vec<4, T, q>> {
-    static Vector<4, T> from(const glm::vec<4, T, q>& other) {
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct VectorConverter<4, T, glm::tvec4<T, q>> {
+    static Vector<4, T> from(const glm::tvec4<T, q>& other) {
         return {other.x, other.y, other.z, other.w};
     }
 
-    static glm::vec<4, T, q> to(const Vector<4, T>& other) {
+    static glm::tvec4<T, q> to(const Vector<4, T>& other) {
         return {other[0], other[1],  other[2], other[3]};
     }
 };
 
 /* Matrices */
 
-template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixConverter<2, rows, T, glm::mat<2, rows, T, q>> {
-    static RectangularMatrix<2, rows, T> from(const glm::mat<2, rows, T, q>& other) {
-        return {Vector<rows, T>(other[0]),
-                Vector<rows, T>(other[1])};
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<2, 2, T, glm::tmat2x2<T, q>> {
+    static RectangularMatrix<2, 2, T> from(const glm::tmat2x2<T, q>& other) {
+        return {Vector<2, T>(other[0]),
+                Vector<2, T>(other[1])};
     }
 
-    static glm::mat<2, rows, T, q> to(const RectangularMatrix<2, rows, T>& other) {
-        return {glm::vec<rows, T, q>(other[0]),
-                glm::vec<rows, T, q>(other[1])};
-    }
-};
-
-template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixConverter<3, rows, T, glm::mat<3, rows, T, q>> {
-    static RectangularMatrix<3, rows, T> from(const glm::mat<3, rows, T, q>& other) {
-        return {Vector<rows, T>(other[0]),
-                Vector<rows, T>(other[1]),
-                Vector<rows, T>(other[2])};
-    }
-
-    static glm::mat<3, rows, T, q> to(const RectangularMatrix<3, rows, T>& other) {
-        return {glm::vec<rows, T, q>(other[0]),
-                glm::vec<rows, T, q>(other[1]),
-                glm::vec<rows, T, q>(other[2])};
+    static glm::tmat2x2<T, q> to(const RectangularMatrix<2, 2, T>& other) {
+        return {glm::tvec2<T, q>(other[0]),
+                glm::tvec2<T, q>(other[1])};
     }
 };
 
-template<std::size_t rows, class T, glm::qualifier q> struct RectangularMatrixConverter<4, rows, T, glm::mat<4, rows, T, q>> {
-    static RectangularMatrix<4, rows, T> from(const glm::mat<4, rows, T, q>& other) {
-        return {Vector<rows, T>(other[0]),
-                Vector<rows, T>(other[1]),
-                Vector<rows, T>(other[2]),
-                Vector<rows, T>(other[3])};
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<2, 3, T, glm::tmat2x3<T, q>> {
+    static RectangularMatrix<2, 3, T> from(const glm::tmat2x3<T, q>& other) {
+        return {Vector<3, T>(other[0]),
+                Vector<3, T>(other[1])};
     }
 
-    static glm::mat<4, rows, T, q> to(const RectangularMatrix<4, rows, T>& other) {
-        return {glm::vec<rows, T, q>(other[0]),
-                glm::vec<rows, T, q>(other[1]),
-                glm::vec<rows, T, q>(other[2]),
-                glm::vec<rows, T, q>(other[3])};
+    static glm::tmat2x3<T, q> to(const RectangularMatrix<2, 3, T>& other) {
+        return {glm::tvec3<T, q>(other[0]),
+                glm::tvec3<T, q>(other[1])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<2, 4, T, glm::tmat2x4<T, q>> {
+    static RectangularMatrix<2, 4, T> from(const glm::tmat2x4<T, q>& other) {
+        return {Vector<4, T>(other[0]),
+                Vector<4, T>(other[1])};
+    }
+
+    static glm::tmat2x4<T, q> to(const RectangularMatrix<2, 4, T>& other) {
+        return {glm::tvec4<T, q>(other[0]),
+                glm::tvec4<T, q>(other[1])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<3, 2, T, glm::tmat3x2<T, q>> {
+    static RectangularMatrix<3, 2, T> from(const glm::tmat3x2<T, q>& other) {
+        return {Vector<2, T>(other[0]),
+                Vector<2, T>(other[1]),
+                Vector<2, T>(other[2])};
+    }
+
+    static glm::tmat3x2<T, q> to(const RectangularMatrix<3, 2, T>& other) {
+        return {glm::tvec2<T, q>(other[0]),
+                glm::tvec2<T, q>(other[1]),
+                glm::tvec2<T, q>(other[2])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<3, 3, T, glm::tmat3x3<T, q>> {
+    static RectangularMatrix<3, 3, T> from(const glm::tmat3x3<T, q>& other) {
+        return {Vector<3, T>(other[0]),
+                Vector<3, T>(other[1]),
+                Vector<3, T>(other[2])};
+    }
+
+    static glm::tmat3x3<T, q> to(const RectangularMatrix<3, 3, T>& other) {
+        return {glm::tvec3<T, q>(other[0]),
+                glm::tvec3<T, q>(other[1]),
+                glm::tvec3<T, q>(other[2])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<3, 4, T, glm::tmat3x4<T, q>> {
+    static RectangularMatrix<3, 4, T> from(const glm::tmat3x4<T, q>& other) {
+        return {Vector<4, T>(other[0]),
+                Vector<4, T>(other[1]),
+                Vector<4, T>(other[2])};
+    }
+
+    static glm::tmat3x4<T, q> to(const RectangularMatrix<3, 4, T>& other) {
+        return {glm::tvec4<T, q>(other[0]),
+                glm::tvec4<T, q>(other[1]),
+                glm::tvec4<T, q>(other[2])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<4, 2, T, glm::tmat4x2<T, q>> {
+    static RectangularMatrix<4, 2, T> from(const glm::tmat4x2<T, q>& other) {
+        return {Vector<2, T>(other[0]),
+                Vector<2, T>(other[1]),
+                Vector<2, T>(other[2]),
+                Vector<2, T>(other[3])};
+    }
+
+    static glm::tmat4x2<T, q> to(const RectangularMatrix<4, 2, T>& other) {
+        return {glm::tvec2<T, q>(other[0]),
+                glm::tvec2<T, q>(other[1]),
+                glm::tvec2<T, q>(other[2]),
+                glm::tvec2<T, q>(other[3])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<4, 3, T, glm::tmat4x3<T, q>> {
+    static RectangularMatrix<4, 3, T> from(const glm::tmat4x3<T, q>& other) {
+        return {Vector<3, T>(other[0]),
+                Vector<3, T>(other[1]),
+                Vector<3, T>(other[2]),
+                Vector<3, T>(other[3])};
+    }
+
+    static glm::tmat4x3<T, q> to(const RectangularMatrix<4, 3, T>& other) {
+        return {glm::tvec3<T, q>(other[0]),
+                glm::tvec3<T, q>(other[1]),
+                glm::tvec3<T, q>(other[2]),
+                glm::tvec3<T, q>(other[3])};
+    }
+};
+
+template<class T,
+    #if GLM_VERSION < 990
+    glm::precision
+    #else
+    glm::qualifier /* thanks, GLM */
+    #endif
+q> struct RectangularMatrixConverter<4, 4, T, glm::tmat4x4<T, q>> {
+    static RectangularMatrix<4, 4, T> from(const glm::tmat4x4<T, q>& other) {
+        return {Vector<4, T>(other[0]),
+                Vector<4, T>(other[1]),
+                Vector<4, T>(other[2]),
+                Vector<4, T>(other[3])};
+    }
+
+    static glm::tmat4x4<T, q> to(const RectangularMatrix<4, 4, T>& other) {
+        return {glm::tvec4<T, q>(other[0]),
+                glm::tvec4<T, q>(other[1]),
+                glm::tvec4<T, q>(other[2]),
+                glm::tvec4<T, q>(other[3])};
     }
 };
 
@@ -186,14 +360,116 @@ namespace glm {
      *
      * Uses `glm::to_string()` internally.
      */
-    template<length_t size, class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const vec<size, T, q>& value);
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tvec2<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tvec3<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tvec4<T, q>& value);
 
     /**
      * @brief Debug output operator for GLM matrix types
      *
      * Uses `glm::to_string()` internally.
      */
-    template<length_t cols, length_t rows, class T, glm::qualifier q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const mat<cols, rows, T, q>& value);
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat2x2<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat2x3<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat2x4<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat3x2<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat3x3<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat3x4<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x2<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x3<T, q>& value);
+
+    /** @overload */
+    template<class T,
+        #if GLM_VERSION < 990
+        glm::precision
+        #else
+        glm::qualifier /* thanks, GLM */
+        #endif
+    q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x4<T, q>& value);
 }
 
 #endif
