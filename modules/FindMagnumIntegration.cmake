@@ -15,6 +15,7 @@
 #
 #  Bullet                       - Bullet Physics integration library
 #  Dart                         - Dart Physics integration library
+#  Glm                          - GLM integration library
 #  Ovr                          - Oculus SDK integration library
 #
 # Example usage with specifying additional components is:
@@ -96,7 +97,7 @@ mark_as_advanced(MAGNUMINTEGRATION_INCLUDE_DIR)
 
 # Component distinction (listing them explicitly to avoid mistakes with finding
 # components from other repositories)
-set(_MAGNUMINTEGRATION_LIBRARY_COMPONENT_LIST Bullet Dart Ovr)
+set(_MAGNUMINTEGRATION_LIBRARY_COMPONENT_LIST Bullet Dart Glm Ovr)
 
 # Inter-component dependencies (none yet)
 # set(_MAGNUMINTEGRATION_Component_DEPENDENCIES Dependency)
@@ -183,6 +184,14 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             endforeach()
 
             set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES MotionState.h)
+
+        # GLM integration library
+        elseif(_component STREQUAL Glm)
+            find_package(GLM)
+            set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES GLM::GLM)
+
+            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES Integration.h)
 
         # Dart integration library
         elseif(_component STREQUAL Dart)
