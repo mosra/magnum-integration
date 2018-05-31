@@ -33,6 +33,7 @@ Provides conversion for the following types:
 
 | Magnum vector type                             | Equivalent GLM type      |
 | ---------------------------------------------- | ------------------------ |
+| @ref Magnum::Math::BoolVector "Math::BoolVector<2>", @ref Magnum::Math::BoolVector "Math::BoolVector<3>", @ref Magnum::Math::BoolVector "Math::BoolVector<4>" | `glm::bvec2`, `glm::bvec3`, `glm::bvec4` |
 | @ref Magnum::Vector2 "Vector2", @ref Magnum::Vector3 "Vector3", @ref Magnum::Color3 "Color3", @ref Magnum::Vector4 "Vector4", @ref Magnum::Color4 "Color4" | `glm::vec2`, `glm::vec3`, `glm::vec4` |
 | @ref Magnum::Vector2ui "Vector2ui", @ref Magnum::Vector3ui "Vector3ui", @ref Magnum::Vector4ui "Vector4ui" | `glm::uvec2`, `glm::uvec3`, `glm::uvec4` |
 | @ref Magnum::Vector2i "Vector2i", @ref Magnum::Vector3i "Vector3i", @ref Magnum::Vector4i "Vector4i" | `glm::ivec2`, `glm::ivec3`, `glm::ivec4` |
@@ -67,6 +68,38 @@ types.
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace Math { namespace Implementation {
+
+/* Bool vectors */
+
+template<glm::qualifier q> struct BoolVectorConverter<2, glm::vec<2, bool, q>> {
+    static BoolVector<2> from(const glm::vec<2, bool, q>& other) {
+        return (other.x << 0)|(other.y << 1);
+    }
+
+    static glm::bvec2 to(const BoolVector<2>& other) {
+        return {other[0], other[1]};
+    }
+};
+
+template<glm::qualifier q> struct BoolVectorConverter<3, glm::vec<3, bool, q>> {
+    static BoolVector<3> from(const glm::vec<3, bool, q>& other) {
+        return (other.x << 0)|(other.y << 1)|(other.z << 2);
+    }
+
+    static glm::bvec3 to(const BoolVector<3>& other) {
+        return {other[0], other[1], other[2]};
+    }
+};
+
+template<glm::qualifier q> struct BoolVectorConverter<4, glm::vec<4, bool, q>> {
+    static BoolVector<4> from(const glm::vec<4, bool, q>& other) {
+        return (other.x << 0)|(other.y << 1)|(other.z << 2)|(other.w << 3);
+    }
+
+    static glm::bvec4 to(const BoolVector<4>& other) {
+        return {other[0], other[1], other[2], other[3]};
+    }
+};
 
 /* Vectors */
 

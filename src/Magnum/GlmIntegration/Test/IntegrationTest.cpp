@@ -37,6 +37,7 @@ namespace Magnum { namespace GlmIntegration { namespace Test {
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
+    void bvec();
     void vec();
     void dvec();
     void ivec();
@@ -60,12 +61,14 @@ struct IntegrationTest: TestSuite::Tester {
     void dmat4x2();
     void dmat4x3();
 
+    void debugBVec();
     void debugVec();
     void debugMat();
 };
 
 IntegrationTest::IntegrationTest() {
-    addTests({&IntegrationTest::vec,
+    addTests({&IntegrationTest::bvec,
+              &IntegrationTest::vec,
               &IntegrationTest::dvec,
               &IntegrationTest::ivec,
               &IntegrationTest::uvec,
@@ -88,8 +91,31 @@ IntegrationTest::IntegrationTest() {
               &IntegrationTest::dmat4x2,
               &IntegrationTest::dmat4x3,
 
+              &IntegrationTest::debugBVec,
               &IntegrationTest::debugVec,
               &IntegrationTest::debugMat});
+}
+
+void IntegrationTest::bvec() {
+    {
+        Math::BoolVector<2> a{0x6};
+        glm::bvec2 b{false, true};
+
+        CORRADE_COMPARE(Math::BoolVector<2>{b}, a);
+        CORRADE_COMPARE(glm::bvec2(a), b);
+    } {
+        Math::BoolVector<3> a{0x6};
+        glm::bvec3 b{false, true, true};
+
+        CORRADE_COMPARE(Math::BoolVector<3>{b}, a);
+        CORRADE_COMPARE(glm::bvec3(a), b);
+    } {
+        Math::BoolVector<4> a{0xa};
+        glm::bvec4 b{false, true, false, true};
+
+        CORRADE_COMPARE(Math::BoolVector<4>{b}, a);
+        CORRADE_COMPARE(glm::bvec4(a), b);
+    }
 }
 
 void IntegrationTest::vec() {
@@ -430,6 +456,12 @@ void IntegrationTest::dmat4x3() {
     CORRADE_COMPARE(Matrix4x3d{b}[3][0], a[3][0]);
     CORRADE_COMPARE(glm::dmat4x3(a), b);
     CORRADE_COMPARE(glm::dmat4x3(a)[0][2], b[0][2]);
+}
+
+void IntegrationTest::debugBVec() {
+    std::ostringstream out;
+    Debug{&out} << glm::bvec3{false, true, true};
+    CORRADE_COMPARE(out.str(), "bvec3(false, true, true)\n");
 }
 
 void IntegrationTest::debugVec() {
