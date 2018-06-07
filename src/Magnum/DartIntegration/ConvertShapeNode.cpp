@@ -81,13 +81,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         Eigen::Vector4d col = shapeNode.getVisualAspect()->getRGBA();
 
         /* Get diffuse color from Dart ShapeNode */
-        /** @todoc Create Trade Material Data that includes alpha channel */
-        nodeMaterial.diffuseColor() = Color3(col(0), col(1), col(2));
-
-        /* Default colors for ambient (black) and specular (white) */
-        /** @todo remove once fixed in PhongMaterialData */
-        nodeMaterial.ambientColor() = Vector3{0.f, 0.f, 0.f};
-        nodeMaterial.specularColor() = Vector3{1.f, 1.f, 1.f};
+        nodeMaterial.diffuseColor() = Color4(col(0), col(1), col(2), col(3));
 
         if(shape->getType() != dart::dynamics::MeshShape::getStaticType()) {
             shapeData.materials = Containers::Array<Trade::PhongMaterialData>(Containers::NoInit, 1);
