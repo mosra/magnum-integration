@@ -161,7 +161,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         auto meshShape = std::static_pointer_cast<dart::dynamics::MeshShape>(shape);
 
         if(convertTypes & ConvertShapeType::Primitive) {
-            /* @todo: check if scaling can be per mesh */
+            /** @todo check if scaling can be per mesh */
             Eigen::Vector3d scale = meshShape->getScale();
             shapeData.scaling = Vector3(scale(0), scale(1), scale(2));
         }
@@ -241,7 +241,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                 meshes[j] = std::move(*meshData);
             }
 
-            j++;
+            ++j;
         }
 
         Containers::Array<Containers::Optional<Trade::TextureData>> textures(importer->textureCount());
