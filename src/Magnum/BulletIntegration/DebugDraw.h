@@ -181,6 +181,8 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         /**
          * @brief Set debug mode
          * @return Reference to self (for method chaining)
+         *
+         * By default, nothing is enabled.
          */
         DebugDraw& setDebugMode(DebugModes mode) {
             _debugMode = mode;
@@ -208,7 +210,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             #endif
             ;
 
-        DebugModes _debugMode;
+        DebugModes _debugMode{};
 
         Matrix4 _transformationProjectionMatrix;
         Shaders::VertexColor3D _shader;
