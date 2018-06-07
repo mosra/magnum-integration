@@ -33,11 +33,10 @@
 #include <vector>
 #include <Corrade/Containers/ArrayView.h>
 #include <Corrade/Utility/Macros.h>
-#include <Magnum/Magnum.h>
+#include <LinearMath/btIDebugDraw.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/Shaders/VertexColor.h>
-#include <LinearMath/btIDebugDraw.h>
 
 #include "Magnum/BulletIntegration/Integration.h"
 
@@ -226,6 +225,5 @@ CORRADE_ENUMSET_OPERATORS(DebugDraw::DebugModes)
 MAGNUM_BULLETINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugDraw::DebugMode value);
 
 }}
-
 
 #endif

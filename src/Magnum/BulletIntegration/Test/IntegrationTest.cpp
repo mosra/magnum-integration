@@ -27,8 +27,8 @@
 
 #include <sstream>
 #include <Corrade/TestSuite/Tester.h>
-
 #include <Magnum/Magnum.h>
+
 #include "Magnum/BulletIntegration/Integration.h"
 #include "Magnum/BulletIntegration/DebugDraw.h"
 

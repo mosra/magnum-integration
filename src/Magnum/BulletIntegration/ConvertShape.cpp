@@ -34,7 +34,7 @@
 #include <Magnum/Shapes/Shape.h>
 #include <Magnum/Shapes/Sphere.h>
 
-#include "Integration.h"
+#include "Magnum/BulletIntegration/Integration.h"
 
 namespace Magnum { namespace BulletIntegration {
 
