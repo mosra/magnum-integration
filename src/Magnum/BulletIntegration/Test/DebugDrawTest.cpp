@@ -35,11 +35,29 @@ namespace Magnum { namespace BulletIntegration { namespace Test {
 struct DebugDrawTest: TestSuite::Tester {
     explicit DebugDrawTest();
 
+    void constructNoInit();
+    void constructCopy();
+
     void debugMode();
 };
 
 DebugDrawTest::DebugDrawTest() {
-    addTests({&DebugDrawTest::debugMode});
+    addTests({&DebugDrawTest::constructNoInit,
+              &DebugDrawTest::constructCopy,
+              &DebugDrawTest::debugMode});
+}
+
+void DebugDrawTest::constructNoInit() {
+    {
+        DebugDraw debugDraw{NoCreate};
+    }
+
+    CORRADE_VERIFY(true);
+}
+
+void DebugDrawTest::constructCopy() {
+    CORRADE_VERIFY(!(std::is_constructible<DebugDraw, const DebugDraw&>{}));
+    CORRADE_VERIFY(!(std::is_assignable<DebugDraw, const DebugDraw&>{}));
 }
 
 void DebugDrawTest::debugMode() {

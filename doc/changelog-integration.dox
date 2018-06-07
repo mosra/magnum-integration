@@ -37,6 +37,11 @@ namespace Magnum {
 -   New @ref GlmIntegration library that provides conversion and debug output
     for [GLM](https://glm.g-truc.net/) math types.
 
+@subsection changelog-integration-latest-changes Changes and improvements
+
+-   It's now possible to construct @ref  BulletIntegration::DebugDraw without
+    an active GL context using the @ref NoCreate tag
+
 @subsection changelog-integration-latest-buildsystem Build system
 
 -   There's now a PPA for Ubuntu packages. See @ref building-integration-packages-deb

@@ -155,6 +155,16 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
          */
         explicit DebugDraw(std::size_t initialBufferCapacity = 0);
 
+        /**
+         * @brief Construct without creating the underlying OpenGL objects
+         *
+         * The constructed instance is equivalent to moved-from state. Useful
+         * for deferring the initialization to a later point, for example if
+         * the OpenGL context is not yet created. Move another instance over it
+         * to make it useful.
+         */
+        explicit DebugDraw(NoCreateT) noexcept;
+
         /** @brief Move constructor */
         DebugDraw(DebugDraw&&) noexcept;
 

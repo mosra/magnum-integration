@@ -65,6 +65,8 @@ DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{GL::MeshPri
     _bufferData.reserve(initialBufferCapacity*4);
 }
 
+DebugDraw::DebugDraw(NoCreateT) noexcept: _shader{NoCreate}, _buffer{NoCreate}, _mesh{NoCreate} {}
+
 DebugDraw::DebugDraw(DebugDraw&&) noexcept = default;
 
 DebugDraw::~DebugDraw() = default;
