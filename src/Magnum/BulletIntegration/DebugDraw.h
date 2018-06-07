@@ -161,7 +161,19 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
          */
         explicit DebugDraw(std::size_t initialBufferCapacity = 0);
 
+        /** @brief Move constructor */
+        DebugDraw(DebugDraw&&) noexcept;
+
+        /** @brief Copying is not allowed */
+        DebugDraw(const DebugDraw&) = delete;
+
         ~DebugDraw();
+
+        /** @brief Move assignment */
+        DebugDraw& operator=(DebugDraw&&) noexcept;
+
+        /** @brief Copying is not allowed */
+        DebugDraw& operator=(const DebugDraw&) = delete;
 
         /** @brief Debug mode */
         DebugModes debugMode() const { return _debugMode; }

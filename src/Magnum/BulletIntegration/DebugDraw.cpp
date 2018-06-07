@@ -65,7 +65,11 @@ DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{GL::MeshPri
     _bufferData.reserve(initialBufferCapacity*4);
 }
 
+DebugDraw::DebugDraw(DebugDraw&&) noexcept = default;
+
 DebugDraw::~DebugDraw() = default;
+
+DebugDraw& DebugDraw::operator=(DebugDraw&&) noexcept = default;
 
 void DebugDraw::setDebugMode(int mode) {
     _debugMode = DebugMode(mode);
