@@ -28,9 +28,9 @@
 #include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 #include <Magnum/Magnum.h>
+#include <Magnum/Math/Matrix4.h>
 
 #include "Magnum/BulletIntegration/Integration.h"
-#include "Magnum/BulletIntegration/DebugDraw.h"
 
 namespace Magnum { namespace BulletIntegration { namespace Test {
 
@@ -44,16 +44,13 @@ struct IntegrationTest: TestSuite::Tester {
     void matrix3();
     void matrix4();
     void quaternion();
-
-    void debugDrawMode();
 };
 
 IntegrationTest::IntegrationTest() {
     addTests({&IntegrationTest::vector,
               &IntegrationTest::matrix3,
               &IntegrationTest::matrix4,
-              &IntegrationTest::quaternion,
-              &IntegrationTest::debugDrawMode});
+              &IntegrationTest::quaternion});
 }
 
 void IntegrationTest::vector() {
@@ -104,13 +101,6 @@ void IntegrationTest::quaternion() {
 
     CORRADE_COMPARE(Quaternion{b}, a);
     CORRADE_VERIFY(btQuaternion{a} == b);
-}
-
-void IntegrationTest::debugDrawMode() {
-    std::ostringstream out;
-
-    Debug(&out) << DebugDraw::DebugMode::DrawAabb << DebugDraw::DebugMode(0xbaadcafe);
-    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::DebugMode::DrawAabb BulletIntegration::DebugDraw::DebugMode(0xbaadcafe)\n");
 }
 
 }}}
