@@ -42,6 +42,17 @@ namespace Magnum {
 -   There's now a PPA for Ubuntu packages. See @ref building-integration-packages-deb
     for more information.
 
+@subsection changelog-integration-latest-deprecated Deprecated APIs
+
+-   `BulletIntegration::DebugDraw::DebugMode`, `DebugModes`, `mode()` and
+    `setDebugMode()` are deprecated, use @ref BulletIntegration::DebugDraw::Mode,
+    @ref BulletIntegration::DebugDraw::Modes "Modes",
+    @ref BulletIntegration::DebugDraw::mode() "mode()" and
+    @ref BulletIntegration::DebugDraw::setMode() "setMode()" instead. The
+    @ref BulletIntegration::DebugDraw::Mode "Mode" and
+    @ref BulletIntegration::DebugDraw::Modes "Modes" enums were deprecated by
+    mistake in 2018.02, now they are revert back to non-deprecated state.
+
 @section changelog-integration-2018-04 2018.04
 
 Released 2018-05-01, tagged as
@@ -164,9 +175,10 @@ for a high-level overview.
 
 @subsection changelog-integration-2018-02-deprecated Deprecated APIs
 
--   `BulletIntegration::DebugDraw::Mode` enum and `BulletIntegration::DebugDraw::Modes`
-    enum set are deprecated, use @ref BulletIntegration::DebugDraw::DebugMode
-    and @ref BulletIntegration::DebugDraw::DebugModes instead
+-   @ref BulletIntegration::DebugDraw::Mode enum and
+    @ref BulletIntegration::DebugDraw::Modes
+    enum set are deprecated, use `BulletIntegration::DebugDraw::DebugMode`
+    and `BulletIntegration::DebugDraw::DebugModes` instead
 
 @subsection changelog-integration-2018-02-compatibility Potential compatibility breakages, removed APIs
 

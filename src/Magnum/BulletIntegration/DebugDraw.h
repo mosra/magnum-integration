@@ -68,9 +68,9 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         /**
          * @brief Debug mode
          *
-         * @see @ref DebugModes, @ref setDebugMode()
+         * @see @ref Modes, @ref setMode()
          */
-        enum class DebugMode: Int {
+        enum class Mode: Int {
             /** Disable debug rendering */
             NoDebug = DBG_NoDebug,
 
@@ -130,24 +130,24 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         };
 
         #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @brief @copybrief DebugMode
-         * @deprecated Use @ref DebugMode instead.
+        /** @brief @copybrief Mode
+         * @deprecated Use @ref Mode instead.
          */
-        typedef CORRADE_DEPRECATED("use DebugMode instead") DebugMode Mode;
+        typedef CORRADE_DEPRECATED("use Mode instead") Mode DebugMode;
         #endif
 
         /**
          * @brief Debug modes
          *
-         * @see @ref setDebugMode()
+         * @see @ref setMode()
          */
-        typedef Containers::EnumSet<DebugMode> DebugModes;
+        typedef Containers::EnumSet<Mode> Modes;
 
         #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @brief @copybrief DebugModes
-         * @deprecated Use @ref DebugModes instead.
+        /** @brief @copybrief Modes
+         * @deprecated Use @ref Modes instead.
          */
-        typedef CORRADE_DEPRECATED("use DebugModes instead") DebugModes Modes;
+        typedef CORRADE_DEPRECATED("use Modes instead") Modes DebugModes;
         #endif
 
         /**
@@ -175,7 +175,16 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         DebugDraw& operator=(const DebugDraw&) = delete;
 
         /** @brief Debug mode */
-        DebugModes debugMode() const { return _debugMode; }
+        Modes mode() const { return _mode; }
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /** @brief @copybrief mode()
+         * @deprecated Use @ref mode() instead.
+         */
+        CORRADE_DEPRECATED("use mode() instead") Modes debugMode() const {
+            return mode();
+        }
+        #endif
 
         /**
          * @brief Set debug mode
@@ -183,10 +192,19 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
          *
          * By default, nothing is enabled.
          */
-        DebugDraw& setDebugMode(DebugModes mode) {
-            _debugMode = mode;
+        DebugDraw& setMode(Modes mode) {
+            _mode = mode;
             return *this;
         }
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /** @brief @copybrief setMode()
+         * @deprecated Use @ref setMode() instead.
+         */
+        CORRADE_DEPRECATED("use setMode() instead") DebugDraw& setDebugMode(Modes mode) {
+            return setMode(mode);
+        }
+        #endif
 
         /** @brief Set transformation projection matrix used for rendering */
         DebugDraw& setTransformationProjectionMatrix(const Matrix4& matrix) {
@@ -209,7 +227,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             #endif
             ;
 
-        DebugModes _debugMode{};
+        Modes _mode{};
 
         Matrix4 _transformationProjectionMatrix;
         Shaders::VertexColor3D _shader;
@@ -219,10 +237,10 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
         std::vector<Vector3> _bufferData;
 };
 
-CORRADE_ENUMSET_OPERATORS(DebugDraw::DebugModes)
+CORRADE_ENUMSET_OPERATORS(DebugDraw::Modes)
 
-/** @debugoperatorenum{Magnum::BulletIntegration::DebugDraw::DebugMode} */
-MAGNUM_BULLETINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugDraw::DebugMode value);
+/** @debugoperatorenum{Magnum::BulletIntegration::DebugDraw::Mode} */
+MAGNUM_BULLETINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugDraw::Mode value);
 
 }}
 

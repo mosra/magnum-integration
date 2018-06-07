@@ -28,10 +28,10 @@
 
 namespace Magnum { namespace BulletIntegration {
 
-Debug& operator<<(Debug& debug, const DebugDraw::DebugMode value) {
+Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
     switch(value) {
         /* LCOV_EXCL_START */
-        #define _c(value) case DebugDraw::DebugMode::value: return debug << "BulletIntegration::DebugDraw::DebugMode::" #value;
+        #define _c(value) case DebugDraw::Mode::value: return debug << "BulletIntegration::DebugDraw::Mode::" #value;
         _c(NoDebug)
         _c(DrawWireframe)
         _c(DrawAabb)
@@ -57,7 +57,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::DebugMode value) {
         /* LCOV_EXCL_STOP */
     }
 
-    return debug << "BulletIntegration::DebugDraw::DebugMode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
+    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
 }
 
 DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{GL::MeshPrimitive::Lines} {
@@ -72,11 +72,11 @@ DebugDraw::~DebugDraw() = default;
 DebugDraw& DebugDraw::operator=(DebugDraw&&) noexcept = default;
 
 void DebugDraw::setDebugMode(int mode) {
-    _debugMode = DebugMode(mode);
+    _mode = Mode(mode);
 }
 
 int DebugDraw::getDebugMode() const {
-    return int(_debugMode);
+    return int(_mode);
 }
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& color) {
