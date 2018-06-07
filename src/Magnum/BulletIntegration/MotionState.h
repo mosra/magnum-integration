@@ -49,25 +49,22 @@ Encapsulates `btMotionState` as a @ref SceneGraph feature.
 Common usage is to either create a `btRigidBody` to share transformation with
 a @ref SceneGraph::Object by passing the motion state in its constructor:
 
-@code{.cpp}
-SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
-btRigidBody rigidBody{mass, &(new MotionState{object}).btMotionState(), collisionShape};
+@snippet BulletIntegration.cpp MotionState-usage
 
-// rigidBody will be affected when changing the transform of object and
-// object will be affected when transformation of rigidBody is changed.
-@endcode
+This way, the @p rigidBody will be affected when transformation of the object
+is changed from the scenegraph and also the other way around --- the @p object
+gets its position updated when the Bullet world changes. It's also possible to
+attach the motion state afterwards:
 
-Or setting the motion state afterwards:
-
-@code{.cpp}
-SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
-btRigidBody rigidBody{...};
-rigidBody.setMotionState(&(new MotionState{object}).btMotionState());
-@endcode
+@snippet BulletIntegration.cpp MotionState-usage-after
 
 Note that changes to a rigidBody using `btRigidBody::setWorldTransform()` may
 only update the motion state of non-static objects and while
 `btDynamicsWorld::stepSimulation()` is called.
+
+@attention All objects with a MotionState attached that are part of the same
+    Bullet world need to have a single common parent object, otherwise the
+    transformations will not propagate correctly.
 */
 class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {
     public:

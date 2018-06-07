@@ -50,18 +50,13 @@ of a Bullet physics world for debugging purposes.
 
 @section BulletIntegration-DebugDraw-usage Usage
 
-@code{.cpp}
-btDynamicsWorld* btWorld = // ...
-DebugDraw debugDraw;
+Set up an instance and attach it to Bullet world:
 
-debugDraw.setDebugMode(DebugDraw::DebugMode::DrawWireframe|DebugDraw::DebugMode::DrawConstraints);
-btWorld->setDebugDrawer(&debugDraw);
+@snippet BulletIntegration.cpp DebugDraw-usage
 
-// Per frame call:
+Then, at every frame, call this:
 
-debugDraw.setTransformationProjectionMatrix(projection*view*transformation);
-btWorld->debugDrawWorld();
-@endcode
+@snippet BulletIntegration.cpp DebugDraw-usage-per-frame
 */
 class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
     public:

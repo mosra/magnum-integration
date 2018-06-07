@@ -27,6 +27,12 @@ set_directory_properties(PROPERTIES
     CORRADE_CXX_STANDARD 11
     CORRADE_USE_PEDANTIC_FLAGS ON)
 
+if(WITH_BULLET)
+    add_library(snippets-BulletIntegration STATIC BulletIntegration.cpp)
+    target_link_libraries(snippets-BulletIntegration PRIVATE MagnumBulletIntegration)
+    set_target_properties(snippets-BulletIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
+endif()
+
 if(WITH_DART)
     add_library(snippets-DartIntegration STATIC DartIntegration.cpp)
     target_link_libraries(snippets-DartIntegration PRIVATE MagnumDartIntegration)
