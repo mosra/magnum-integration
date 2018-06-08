@@ -40,8 +40,36 @@ template<class T> void updateMeshesAndMaterials(T&);
 
 int main() {
 
+#ifdef __clang__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 {
-/* [world-init] */
+/* [Object-bodynode] */
+dart::dynamics::BodyNode* bodyNode;
+SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
+auto* obj = new DartIntegration::Object{object, bodyNode};
+/* [Object-bodynode] */
+static_cast<void>(obj);
+}
+
+{
+/* [Object-shapenode] */
+dart::dynamics::ShapeNode* shapeNode;
+SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
+auto* obj = new DartIntegration::Object{object, shapeNode};
+/* [Object-shapenode] */
+static_cast<void>(obj);
+}
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
+{
+/* [World-init] */
 dart::simulation::WorldPtr dartWorld = createWorldInDart();
 addDartSkeletonsToDartWorld();
 SceneGraph::Scene<SceneGraph::MatrixTransformation3D> scene;
@@ -49,10 +77,10 @@ SceneGraph::Object<SceneGraph::MatrixTransformation3D> object{&scene};
 
 /* object should never be a SceneGraph::Scene */
 DartIntegration::World world{object, *dartWorld};
-/* [world-init] */
+/* [World-init] */
 
 UnsignedInt simulationSteps{};
-/* [world-loop] */
+/* [World-loop] */
 /* Simulate with time step of 0.001 seconds */
 world.world().setTimeStep(0.001);
 
@@ -80,7 +108,7 @@ for(UnsignedInt i = 0; i < simulationSteps; ++i) {
         world.clearUpdatedShapeObjects();
     }
 }
-/* [world-loop] */
+/* [World-loop] */
 }
 
 }

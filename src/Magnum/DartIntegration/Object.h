@@ -110,19 +110,11 @@ Common usage is to create a @ref DartIntegration::Object to share
 transformation with a DART `BodyNode` or `ShapeNode` by passing a pointer to
 its constructor:
 
-@code{.cpp}
-dart::dynamics::BodyNode* body = getBodyNodeFromDart();
-SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
-DartIntegration::Object* obj = new Object{&object, body};
-@endcode
+@snippet DartIntegration.cpp Object-bodynode
 
 or
 
-@code{.cpp}
-dart::dynamics::ShapeNode* node = getShapeNodeFromDart();
-SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
-DartIntegration::Object* obj = new Object{&object, node};
-@endcode
+@snippet DartIntegration.cpp Object-shapenode
 
 Only the DART body/node can affect the transformation of the Magnum object and
 not the other way around. To get the latest DART transformation, you should
