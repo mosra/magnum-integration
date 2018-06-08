@@ -201,10 +201,6 @@ void DartIntegrationTest::urdf() {
         CORRADE_COMPARE(shape->getType(), dart::dynamics::MeshShape::getStaticType());
         DrawData& mydata = dartObj.drawData();
         CORRADE_VERIFY(mydata.meshes.size());
-        CORRADE_VERIFY(mydata.vertexBuffers.size());
-        CORRADE_VERIFY(mydata.indexBuffers.size());
-        CORRADE_COMPARE(mydata.meshes.size(), mydata.vertexBuffers.size());
-        CORRADE_COMPARE(mydata.meshes.size(), mydata.indexBuffers.size());
         CORRADE_COMPARE(mydata.meshes.size(), mydata.materials.size());
         {
             CORRADE_EXPECT_FAIL_IF(assimpVersion < 302 || assimpVersion >= 400,
@@ -250,8 +246,6 @@ void DartIntegrationTest::multiMesh() {
     CORRADE_COMPARE(shape->getType(), dart::dynamics::MeshShape::getStaticType());
     DrawData& mydata = dartObj.drawData();
     CORRADE_COMPARE(mydata.meshes.size(), 2);
-    CORRADE_COMPARE(mydata.meshes.size(), mydata.vertexBuffers.size());
-    CORRADE_COMPARE(mydata.meshes.size(), mydata.indexBuffers.size());
     CORRADE_COMPARE(mydata.meshes.size(), mydata.materials.size());
     CORRADE_COMPARE(mydata.textures.size(), 0);
 }
@@ -293,10 +287,6 @@ void DartIntegrationTest::texture() {
         CORRADE_COMPARE(shape->getType(), dart::dynamics::MeshShape::getStaticType());
         DrawData& mydata = dartObj.drawData();
         CORRADE_VERIFY(mydata.meshes.size());
-        CORRADE_VERIFY(mydata.vertexBuffers.size());
-        CORRADE_VERIFY(mydata.indexBuffers.size());
-        CORRADE_COMPARE(mydata.meshes.size(), mydata.vertexBuffers.size());
-        CORRADE_COMPARE(mydata.meshes.size(), mydata.indexBuffers.size());
         CORRADE_COMPARE(mydata.meshes.size(), mydata.materials.size());
         CORRADE_COMPARE(mydata.textures.size(), 1);
         CORRADE_VERIFY(mydata.textures[0]);

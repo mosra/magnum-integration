@@ -48,7 +48,7 @@
 
 namespace Magnum { namespace DartIntegration {
 
-DrawData::DrawData(Containers::Array<GL::Mesh> meshes, Containers::Array<GL::Buffer> vertexBuffers, Containers::Array<Containers::Optional<GL::Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<GL::Texture2D>> textures, const Vector3& scaling): meshes{std::move(meshes)}, vertexBuffers{std::move(vertexBuffers)}, indexBuffers{std::move(indexBuffers)}, materials{std::move(materials)}, textures{std::move(textures)}, scaling(scaling) {}
+DrawData::DrawData(Containers::Array<GL::Mesh> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<GL::Texture2D>> textures, const Vector3& scaling): meshes{std::move(meshes)}, materials{std::move(materials)}, textures{std::move(textures)}, scaling(scaling) {}
 
 DrawData::~DrawData() = default;
 
@@ -133,7 +133,7 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
     if(!shapeData) return false;
 
     /* Create the DrawData structure, default scaling to identity */
-    if(firstTime) _drawData = DrawData{{}, {}, {}, {}, {}, Vector3{1.0f}};
+    if(firstTime) _drawData = DrawData{{}, {}, {}, Vector3{1.0f}};
 
     /* Get the material */
     if(loadType & ConvertShapeType::Material) {
@@ -163,20 +163,8 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
     /* Get meshes */
     if(loadType & ConvertShapeType::Mesh) {
         _drawData->meshes = Containers::Array<GL::Mesh>(Containers::NoInit, shapeData->meshes.size());
-        _drawData->vertexBuffers = Containers::Array<GL::Buffer>(shapeData->meshes.size());
-        _drawData->indexBuffers = Containers::Array<Containers::Optional<GL::Buffer>>(shapeData->meshes.size());
-
-        for(UnsignedInt i = 0; i < shapeData->meshes.size(); i++) {
-            /* Create the mesh */
-            new(&_drawData->meshes[i]) GL::Mesh{NoCreate};
-            std::unique_ptr<GL::Buffer> vertexBuffer, indexBuffer;
-            std::tie(_drawData->meshes[i], vertexBuffer, indexBuffer) =
-                MeshTools::compile(shapeData->meshes[i], GL::BufferUsage::StaticDraw);
-
-            _drawData->vertexBuffers[i] = std::move(*vertexBuffer);
-            if(indexBuffer)
-                _drawData->indexBuffers[i] = std::move(*indexBuffer);
-        }
+        for(UnsignedInt i = 0; i < shapeData->meshes.size(); i++)
+            new(&_drawData->meshes[i]) GL::Mesh{MeshTools::compile(shapeData->meshes[i])};
     }
 
     /* If we got here, everything went OK; update flag for rendering */

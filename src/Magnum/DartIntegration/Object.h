@@ -56,15 +56,13 @@ struct DrawData {
     /**
      * @brief Constructor
      * @param meshes            Meshes
-     * @param vertexBuffers     Vertex buffers
-     * @param indexBuffers      Index buffers
      * @param materials         Material data
      * @param textures          Textures
      * @param scaling           Object scaling
      *
      * Used internally by @ref Object.
      */
-    explicit DrawData(Containers::Array<GL::Mesh> meshes, Containers::Array<GL::Buffer> vertexBuffers, Containers::Array<Containers::Optional<GL::Buffer>> indexBuffers, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<GL::Texture2D>> textures, const Vector3& scaling);
+    explicit DrawData(Containers::Array<GL::Mesh> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<GL::Texture2D>> textures, const Vector3& scaling);
 
     /** @brief Copying is not allowed */
     DrawData(const DrawData&) = delete;
@@ -82,12 +80,6 @@ struct DrawData {
 
     /** @brief Meshes */
     Containers::Array<GL::Mesh> meshes;
-
-    /** @brief Vertex buffers */
-    Containers::Array<GL::Buffer> vertexBuffers;
-
-    /** @brief Index buffers */
-    Containers::Array<Containers::Optional<GL::Buffer>> indexBuffers;
 
     /** @brief Material data */
     Containers::Array<Trade::PhongMaterialData> materials;
