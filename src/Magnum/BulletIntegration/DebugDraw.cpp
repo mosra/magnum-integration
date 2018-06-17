@@ -61,7 +61,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
 }
 
 DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{GL::MeshPrimitive::Lines} {
-    _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color{Shaders::VertexColor3D::Color::Components::Three});
+    _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color3{});
     _bufferData.reserve(initialBufferCapacity*4);
 }
 
