@@ -404,6 +404,31 @@ typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
 
 /**
+@brief Mirror option
+
+@see @ref Session::createMirrorTexture()
+*/
+enum class MirrorOption: UnsignedInt {
+    Default = ovrMirrorOption_Default,                  /**< Default */
+    PostDistortion = ovrMirrorOption_PostDistortion,    /**< Post distortion */
+    LeftEyeOnly = ovrMirrorOption_LeftEyeOnly,          /**< Left eye only */
+    RightEyeOnly = ovrMirrorOption_RightEyeOnly,        /**< Right eye only */
+    IncludeGuardian = ovrMirrorOption_IncludeGuardian,  /**< Include Guardian */
+    IncludeNotifications = ovrMirrorOption_IncludeNotifications,  /**< Include Notifications */
+    IncludeSystemGui = ovrMirrorOption_IncludeSystemGui /**< Include system GUI */
+};
+
+/** @debugoperatorenum{Magnum::OvrIntegration::MirrorOption} */
+MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, MirrorOption value);
+
+/**
+@brief Tracker flags
+*/
+typedef Containers::EnumSet<MirrorOption> MirrorOptions;
+
+CORRADE_ENUMSET_OPERATORS(MirrorOptions)
+
+/**
 @brief Performance HUD mode
 
 @see @ref Session::setPerformanceHudMode()

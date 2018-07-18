@@ -32,6 +32,7 @@
 
 #include <array>
 #include <memory>
+
 #include <Corrade/Containers/Array.h>
 #include <Magnum/GL/Texture.h>
 #include <OVR_CAPI.h>
@@ -345,13 +346,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         /**
          * @brief Create a mirror texture
          * @param size      Size for the mirror texture
+         * @param mirrorOptions Mirror options
          * @return Reference to the created mirror texture. Its destruction is
          *      handled by the @ref Session.
          *
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
          */
-        GL::Texture2D& createMirrorTexture(const Vector2i& size);
+        GL::Texture2D& createMirrorTexture(const Vector2i& size, MirrorOptions mirrorOptions = {});
 
         /**
          * @brief Convenience method to create a @ref TextureSwapChain for this HMD
@@ -669,7 +671,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         ::ovrSession _session;
         ::ovrHmdDesc _hmdDesc;
         ovrPosef _ovrPoses[2];
-        ovrVector3f _hmdToEyeOffset[2];
+        ovrPosef _hmdToEyePose[2];
         ::ovrViewScaleDesc _viewScale;
 
         Double _predictedDisplayTime;

@@ -141,12 +141,12 @@ Session::~Session() {
 
 Session& Session::configureRendering() {
     /* get offset from center to left/right eye. The offset lengths may differ. */
-    _hmdToEyeOffset[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyeOffset;
-    _hmdToEyeOffset[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyeOffset;
+    _hmdToEyePose[0] = ovr_GetRenderDesc(_session, ovrEye_Left, _hmdDesc.DefaultEyeFov[0]).HmdToEyePose;
+    _hmdToEyePose[1] = ovr_GetRenderDesc(_session, ovrEye_Right, _hmdDesc.DefaultEyeFov[1]).HmdToEyePose;
 
     _viewScale.HmdSpaceToWorldScaleInMeters = 1.0f;
-    _viewScale.HmdToEyeOffset[0] = _hmdToEyeOffset[0];
-    _viewScale.HmdToEyeOffset[1] = _hmdToEyeOffset[1];
+    _viewScale.HmdToEyePose[0] = _hmdToEyePose[0];
+    _viewScale.HmdToEyePose[1] = _hmdToEyePose[1];
 
     return *this;
 }
@@ -155,7 +155,7 @@ Vector2i Session::fovTextureSize(const Int eye) {
     return Vector2i(ovr_GetFovTextureSize(_session, ovrEyeType(eye), _hmdDesc.DefaultEyeFov[eye], 1.0));
 }
 
-GL::Texture2D& Session::createMirrorTexture(const Vector2i& size) {
+GL::Texture2D& Session::createMirrorTexture(const Vector2i& size, const MirrorOptions mirrorOptions) {
     CORRADE_ASSERT(!(_flags & Implementation::HmdStatusFlag::HasMirrorTexture),
            "Session::createMirrorTexture may only be called once, returning result of previous call.",
             *_mirrorTexture);
@@ -165,8 +165,9 @@ GL::Texture2D& Session::createMirrorTexture(const Vector2i& size) {
     desc.Width = size.x();
     desc.Height = size.y();
     desc.MiscFlags = ovrTextureMisc_None;
+    desc.MirrorOptions = UnsignedInt(mirrorOptions);
 
-    ovrResult result = ovr_CreateMirrorTextureGL(
+    ovrResult result = ovr_CreateMirrorTextureWithOptionsGL(
                 _session,
                 &desc,
                 &_ovrMirrorTexture);
@@ -199,7 +200,7 @@ Matrix4 Session::projectionMatrix(const Int eye, Float near, Float far) const {
 
 Matrix4 Session::orthoSubProjectionMatrix(const Int eye, const Matrix4& proj, const Vector2& scale, Float distance) const {
     const ovrMatrix4f sub = ovrMatrix4f_OrthoSubProjection(ovrMatrix4f(proj),
-        ovrVector2f(scale), distance, _hmdToEyeOffset[eye].x);
+        ovrVector2f(scale), distance, _hmdToEyePose[eye].Position.x);
     return Matrix4(sub);
 }
 
@@ -211,7 +212,7 @@ Session& Session::pollTrackers() {
 
 Session& Session::pollEyePoses() {
     pollTrackers();
-    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyeOffset, _ovrPoses);
+    ovr_CalcEyePoses(_trackingState.HeadPose.ThePose, _hmdToEyePose, _ovrPoses);
     return *this;
 }
 

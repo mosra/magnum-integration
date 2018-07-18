@@ -46,6 +46,7 @@ struct EnumTest: TestSuite::Tester {
     void touch();
     void controllerType();
     void statusFlag();
+    void mirrorOption();
     void performanceHudMode();
     void debugHudStereoMode();
     void layerHudMode();
@@ -62,6 +63,7 @@ EnumTest::EnumTest() {
               &EnumTest::touch,
               &EnumTest::controllerType,
               &EnumTest::statusFlag,
+              &EnumTest::mirrorOption,
               &EnumTest::performanceHudMode,
               &EnumTest::debugHudStereoMode,
               &EnumTest::layerHudMode,
@@ -135,7 +137,7 @@ void EnumTest::controllerType() {
     CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::Remote\n");
 
     out.str("");
-    Debug(&out) << ControllerType(-1);
+    Debug(&out) << ControllerType(-2);
     CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::(invalid)\n");
 }
 
@@ -147,6 +149,16 @@ void EnumTest::statusFlag() {
     out.str("");
     Debug(&out) << StatusFlag(-1);
     CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::(invalid)\n");
+}
+
+void EnumTest::mirrorOption() {
+    std::ostringstream out;
+    Debug(&out) << MirrorOption::IncludeGuardian;
+    CORRADE_COMPARE(out.str(), "OvrIntegration::MirrorOption::IncludeGuardian\n");
+
+    out.str("");
+    Debug(&out) << MirrorOption(-1);
+    CORRADE_COMPARE(out.str(), "OvrIntegration::MirrorOption::(invalid)\n");
 }
 
 void EnumTest::performanceHudMode() {
