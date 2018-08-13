@@ -22,6 +22,13 @@ SUPPORTED PLATFORMS
 -   **Web** ([asm.js](http://asmjs.org/) or [WebAssembly](http://webassembly.org/)),
     through [Emscripten](http://kripken.github.io/emscripten-site/)
 
+WHAT'S NEW?
+===========
+
+Curious about what was added or improved recently? Check out the
+[Changelog](http://doc.magnum.graphics/magnum/changelog-integration.html#changelog-integration-latest)
+page in the documentation.
+
 BUILDING MAGNUM INTEGRATION
 ===========================
 
