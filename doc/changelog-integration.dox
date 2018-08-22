@@ -39,8 +39,8 @@ namespace Magnum {
 
 @subsection changelog-integration-latest-changes Changes and improvements
 
--   It's now possible to construct @ref  BulletIntegration::DebugDraw without
-    an active GL context using the @ref NoCreate tag
+-   It's now possible to construct @ref BulletIntegration::DebugDraw without an
+    active GL context using the @ref NoCreate tag
 
 @subsection changelog-integration-latest-buildsystem Build system
 
@@ -57,6 +57,9 @@ namespace Magnum {
     @ref BulletIntegration::DebugDraw::Mode "Mode" and
     @ref BulletIntegration::DebugDraw::Modes "Modes" enums were deprecated by
     mistake in 2018.02, now they are revert back to non-deprecated state.
+-   `BulletIntegration::DebugDraw::Mode::FastWirefram` has a typo and is
+    deprecated, use @ref BulletIntegration::DebugDraw::Mode::FastWireframe
+    instead
 
 @section changelog-integration-2018-04 2018.04
 

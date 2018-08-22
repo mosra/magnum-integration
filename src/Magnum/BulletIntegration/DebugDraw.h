@@ -109,7 +109,14 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             DrawConstraintLimits = DBG_DrawConstraintLimits,
 
             /** Draw fast wireframes */
-            FastWirefram = DBG_FastWireframe,
+            FastWireframe = DBG_FastWireframe,
+
+            #ifdef MAGNUM_BUILD_DEPRECATED
+            /** Draw fast wireframes
+             * @deprecated Use @ref Mode::FastWireframe instead.
+             */
+            FastWirefram CORRADE_DEPRECATED_ENUM("use FastWireframe instead") = FastWireframe,
+            #endif
 
             /** Draw normals */
             DrawNormals = DBG_DrawNormals,

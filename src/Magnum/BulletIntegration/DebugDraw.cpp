@@ -46,7 +46,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
         _c(EnableCCD)
         _c(DrawConstraints)
         _c(DrawConstraintLimits)
-        _c(FastWirefram)
+        _c(FastWireframe)
         _c(DrawNormals)
         #if BT_BULLET_VERSION >= 284
         /* Actually, it was at some point between 2.83 and 2.83.4. Relevant
