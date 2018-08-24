@@ -214,9 +214,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         elseif(_component STREQUAL Ovr)
             find_package(OVR)
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
-                INTERFACE_INCLUDE_DIRECTORIES ${OVR_INCLUDE_DIR})
-            set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
-                INTERFACE_LINK_LIBRARIES ${OVR_LIBRARY})
+                INTERFACE_LINK_LIBRARIES OVR::OVR)
 
             set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES OvrIntegration.h)
         endif()
