@@ -40,6 +40,7 @@
 
 #include <glm/gtx/string_cast.hpp>
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace glm {
 #if GLM_VERSION < 96
 /* All types were in glm::detail in 0.9.5, wrap the following as well in order
@@ -77,7 +78,6 @@ q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tve
     return debug << to_string(value);
 }
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<bool, highp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<bool, highp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<bool, highp>&);
@@ -125,7 +125,6 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec2<unsigned int, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec3<unsigned int, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tvec4<unsigned int, lowp>&);
-#endif
 
 template<class T,
     #if GLM_VERSION < 990
@@ -217,7 +216,6 @@ q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tma
     return debug << to_string(value);
 }
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x2<float, highp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x3<float, highp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat2x4<float, highp>&);
@@ -274,7 +272,6 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x2<double, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x3<double, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tmat4x4<double, lowp>&);
-#endif
 
 #if GLM_VERSION >= 97
 template<class T,
@@ -287,7 +284,6 @@ q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tqu
     return debug << to_string(value);
 }
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tquat<float, highp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tquat<double, highp>&);
 
@@ -296,7 +292,6 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tquat<float, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tquat<double, lowp>&);
-#endif
 
 template<class T,
     #if GLM_VERSION < 990
@@ -308,7 +303,6 @@ q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tdu
     return debug << to_string(value);
 }
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tdualquat<float, highp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tdualquat<double, highp>&);
 
@@ -318,9 +312,9 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tdualquat<float, lowp>&);
 template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug&, const tdualquat<double, lowp>&);
 #endif
-#endif
 
 #if GLM_VERSION < 96
 } /* Close the detail namespace */
 #endif
 }
+#endif

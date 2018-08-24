@@ -88,6 +88,7 @@ namespace glm {
     template<class T, glm::precision q> using tmat4x4 = detail::tmat4x4<T, q>;
 }
 #endif
+#endif
 
 namespace Magnum { namespace Math { namespace Implementation {
 
@@ -374,10 +375,9 @@ q> struct RectangularMatrixConverter<4, 4, T, glm::tmat4x4<T, q>> {
 };
 
 }}}
-#endif
 
 namespace glm {
-#if GLM_VERSION < 96
+#if !defined(DOXYGEN_GENERATING_OUTPUT) && GLM_VERSION < 96
 /* All types were in glm::detail in 0.9.5, wrap the following as well in order
    to make ADL work properly. */
 namespace detail {
@@ -498,7 +498,7 @@ namespace detail {
         #endif
     q> Corrade::Utility::Debug& operator<<(Corrade::Utility::Debug& debug, const tmat4x4<T, q>& value);
 
-#if GLM_VERSION < 96
+#if !defined(DOXYGEN_GENERATING_OUTPUT) && GLM_VERSION < 96
 } /* Close the detail namespace */
 #endif
 }
