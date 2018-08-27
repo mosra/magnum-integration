@@ -15,15 +15,21 @@ Third-party components
 Contributors to Magnum Integration library
 ------------------------------------------
 
+Listing only people with code contributions, because otherwise there's too many
+:) Big thanks to everyone involved!
+
+-   Jan Dupal ([@JanDupal](https://github.com/JanDupal) -- Bullet integration
+    library
 -   Jonathan Hale ([@Squareys](https://github.com/Squareys)) --- Oculus VR
     integration, improvements to Bullet integration
 -   Konstantinos Chatzilygeroudis ([@costashatz](https://github.com/costashatz)) ---
     DART integration, Debian package
--   [@sigman78](https://github.com/sigman78) --- initial GLM integration
-    implementation
--   Olga Turanksaya ([@olga-python](https://github.com/olga-python)) --- Gentoo
-    ebuild
 -   Nathan Ollerenshaw ([@matjam](https://github.com/matjam)) --- Ubuntu
     package updates, a PPA repository for stable versions
+-   Olga Turanksaya ([@olga-python](https://github.com/olga-python)) --- Gentoo
+    ebuild
+-   [@sigman78](https://github.com/sigman78) --- initial GLM integration
+    implementation
 
-Big thanks to everyone involved!
+Is this list missing your name or something's wrong?
+[Let us know!](http://magnum.graphics/contact/)
