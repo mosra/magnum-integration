@@ -24,6 +24,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_DO_NOT_WARN_DEPRECATED_SHAPES
+
 #include "ConvertShape.h"
 
 #include <BulletCollision/CollisionShapes/btBoxShape.h>

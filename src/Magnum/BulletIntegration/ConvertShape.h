@@ -27,14 +27,27 @@
 */
 
 /** @file
- * @brief Function @ref Magnum::BulletIntegration::convertShape()
- */
+@brief Function @ref Magnum::BulletIntegration::convertShape()
+
+@deprecated The @ref Magnum::Shapes library is a failed design experiment and
+    is scheduled for removal in a future release, together with this
+    functionality. Please consider using @ref Magnum::BulletIntegration::DebugDraw
+    instead.
+*/
+
+#include <Magnum/Magnum.h>
+
+#ifndef MAGNUM_BUILD_DEPRECATED
+#error the Shapes library is scheduled for removal, use BulletIntegration::DebugDraw instead
+#endif
 
 #include <LinearMath/btScalar.h>
 #include <Magnum/Shapes/Shapes.h>
 #include <Magnum/SceneGraph/SceneGraph.h>
 
 #include "Magnum/BulletIntegration/visibility.h"
+
+/* deprecation warning provided by the Shapes.h header */
 
 class btCollisionShape;
 class btBoxShape;
@@ -49,24 +62,36 @@ namespace Magnum { namespace BulletIntegration {
 @param shapes   Optional shape group to add the shape to
 
 Returns @cpp nullptr @ce if given shape is not supported.
+
+@deprecated The @ref Shapes library is a failed design experiment and is
+    scheduled for removal in a future release, together with this function.
+    Please consider using @ref DebugDraw instead.
 */
-Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes = nullptr);
+CORRADE_DEPRECATED("the Shapes library is scheduled for removal, consider using BulletIntegration::DebugDraw instead") Shapes::AbstractShape3D MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes = nullptr);
 
 /**
 @brief Convert box Bullet collision shape to Magnum shape
 
+@deprecated The @ref Shapes library is a failed design experiment and is
+    scheduled for removal in a future release, together with this function.
+    Please consider using @ref DebugDraw instead.
+
 See @ref convertShape(SceneGraph::AbstractBasicObject3D<btScalar>&, const btCollisionShape&, Shapes::ShapeGroup3D*)
 for more information.
 */
-Shapes::Shape<Shapes::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btBoxShape& box, Shapes::ShapeGroup3D* shapes = nullptr);
+CORRADE_DEPRECATED("the Shapes library is scheduled for removal, consider using BulletIntegration::DebugDraw instead") Shapes::Shape<Shapes::Box3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btBoxShape& box, Shapes::ShapeGroup3D* shapes = nullptr);
 
 /**
 @brief Convert sphere Bullet collision shape to Magnum shape
 
+@deprecated The @ref Shapes library is a failed design experiment and is
+    scheduled for removal in a future release, together with this function.
+    Please consider using @ref DebugDraw instead.
+
 See @ref convertShape(SceneGraph::AbstractBasicObject3D<btScalar>&, const btCollisionShape&, Shapes::ShapeGroup3D*)
 for more information.
 */
-Shapes::Shape<Shapes::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btSphereShape& sphere, Shapes::ShapeGroup3D* shapes = nullptr);
+CORRADE_DEPRECATED("the Shapes library is scheduled for removal, consider using BulletIntegration::DebugDraw instead") Shapes::Shape<Shapes::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btSphereShape& sphere, Shapes::ShapeGroup3D* shapes = nullptr);
 
 }}
 

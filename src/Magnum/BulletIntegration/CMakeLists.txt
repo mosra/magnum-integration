@@ -24,7 +24,11 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED GL SceneGraph Shapes Shaders)
+find_package(Magnum REQUIRED GL SceneGraph Shaders)
+if(MAGNUM_BUILD_DEPRECATED)
+    find_package(Magnum OPTIONAL_COMPONENTS Shapes)
+endif()
+
 find_package(Bullet REQUIRED)
 
 if(BUILD_STATIC)
@@ -35,17 +39,20 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
 
 set(MagnumBulletIntegration_SRCS
-    ConvertShape.cpp
     DebugDraw.cpp
     MotionState.cpp)
 
 set(MagnumBulletIntegration_HEADERS
-    ConvertShape.h
     DebugDraw.h
     Integration.h
     MotionState.h
 
     visibility.h)
+
+if(Magnum_Shapes_FOUND)
+    list(APPEND MagnumBulletIntegration_SRCS ConvertShape.cpp)
+    list(APPEND MagnumBulletIntegration_HEADERS ConvertShape.h)
+endif()
 
 # BulletIntegration library
 add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
@@ -64,13 +71,15 @@ if(NOT BUILD_STATIC)
 elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
-target_link_libraries(MagnumBulletIntegration
+target_link_libraries(MagnumBulletIntegration PUBLIC
     Magnum::GL
     Magnum::Magnum
     Magnum::SceneGraph
-    Magnum::Shapes
     Magnum::Shaders
     ${BULLET_LIBRARIES})
+if(Magnum_Shapes_FOUND)
+    target_link_libraries(MagnumBulletIntegration PUBLIC Magnum::Shapes)
+endif()
 
 install(TARGETS MagnumBulletIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}

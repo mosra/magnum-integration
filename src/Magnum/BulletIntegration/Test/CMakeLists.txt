@@ -25,13 +25,16 @@
 #
 
 corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
-corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationDebugDrawTest DebugDrawTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationMotionStateTest MotionStateTest.cpp LIBRARIES MagnumBulletIntegration)
 
 set_target_properties(
     BulletIntegrationTest
-    BulletIntegrationConvertShapeTest
     BulletIntegrationDebugDrawTest
     BulletIntegrationMotionStateTest
     PROPERTIES FOLDER "Magnum/BulletIntegration/Test")
+
+if(Magnum_Shapes_FOUND)
+    corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
+    set_target_properties(BulletIntegrationConvertShapeTest PROPERTIES FOLDER "Magnum/BulletIntegration/Test")
+endif()
