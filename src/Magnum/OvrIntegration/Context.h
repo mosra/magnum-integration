@@ -31,7 +31,6 @@
  */
 
 #include <memory>
-#include <Magnum/Texture.h>
 
 #include "Magnum/OvrIntegration/Compositor.h"
 #include "Magnum/OvrIntegration/Session.h" /* required for std::unique_ptr<Session> */

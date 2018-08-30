@@ -97,15 +97,15 @@ TextureSwapChain::TextureSwapChain(const Session& session, const Vector2i& size)
     ovr_GetTextureSwapChainLength(_session.ovrSession(), _textureSwapChain, &length);
 
     /* wrap the texture swap chain for magnum */
-    _textures = Containers::Array<Texture2D>{Containers::NoInit, UnsignedInt(length)};
+    _textures = Containers::Array<GL::Texture2D>{Containers::NoInit, UnsignedInt(length)};
 
     for(UnsignedInt i = 0; i < _textures.size(); ++i) {
         UnsignedInt textureId;
         ovr_GetTextureSwapChainBufferGL(_session.ovrSession(), _textureSwapChain, i, &textureId);
-        new(&_textures[i]) Texture2D(Texture2D::wrap(textureId));
-        _textures[i].setMinificationFilter(Sampler::Filter::Linear)
-                    .setMagnificationFilter(Sampler::Filter::Linear)
-                    .setWrapping(Sampler::Wrapping::ClampToEdge);
+        new(&_textures[i]) GL::Texture2D(GL::Texture2D::wrap(textureId));
+        _textures[i].setMinificationFilter(GL::SamplerFilter::Linear)
+                    .setMagnificationFilter(GL::SamplerFilter::Linear)
+                    .setWrapping(GL::SamplerWrapping::ClampToEdge);
     }
 }
 
@@ -120,7 +120,7 @@ TextureSwapChain& TextureSwapChain::commit() {
     return *this;
 }
 
-Texture2D& TextureSwapChain::activeTexture() {
+GL::Texture2D& TextureSwapChain::activeTexture() {
     return _textures[_curIndex];
 }
 

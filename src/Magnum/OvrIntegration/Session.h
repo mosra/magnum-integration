@@ -273,51 +273,51 @@ std::unique_ptr<TextureSwapChain> swapChain = session.createTextureSwapChain(tex
 
 // create the framebuffer which will be used to render to the current texture
 // of the texture chain later.
-Framebuffer framebuffer{{}, textureSize};
-framebuffer.mapForDraw(Framebuffer::ColorAttachment(0));
+GL::Framebuffer framebuffer{{}, textureSize};
+framebuffer.mapForDraw(GL::Framebuffer::ColorAttachment(0));
 
 // setup depth attachment
-Texture2D* depth = new Texture2D();
-depth->setMinificationFilter(Sampler::Filter::Linear)
-      .setMagnificationFilter(Sampler::Filter::Linear)
-      .setWrapping(Sampler::Wrapping::ClampToEdge)
-      .setStorage(1, TextureFormat::DepthComponent24, textureSize);
+GL::Texture2D* depth = new GL::Texture2D();
+depth->setMinificationFilter(GL::Sampler::Filter::Linear)
+      .setMagnificationFilter(GL::Sampler::Filter::Linear)
+      .setWrapping(GL::Sampler::Wrapping::ClampToEdge)
+      .setStorage(1, GL::TextureFormat::DepthComponent24, textureSize);
 
 // ...
 
 // switch to framebuffer and attach textures
 framebuffer.bind();
-framebuffer.attachTexture(Framebuffer::ColorAttachment(0), _textureChain->activeTexture(), 0)
-           .attachTexture(Framebuffer::BufferAttachment::Depth, *depth, 0)
-           .clear(FramebufferClear::Color | FramebufferClear::Depth);
+framebuffer.attachTexture(GL::Framebuffer::ColorAttachment(0), _textureChain->activeTexture(), 0)
+           .attachTexture(GL::Framebuffer::BufferAttachment::Depth, *depth, 0)
+           .clear(GL::FramebufferClear::Color|GL::FramebufferClear::Depth);
 
 // ... render scene
 
 // commit changes to the TextureSwapChain
 swapChain->commit();
 
-framebuffer.detach(Framebuffer::ColorAttachment(0))
-           .detach(Framebuffer::BufferAttachment::Depth);
+framebuffer.detach(GL::Framebuffer::ColorAttachment(0))
+           .detach(GL::Framebuffer::BufferAttachment::Depth);
 @endcode
 
 Usually, especially for debugging, you will want to have a *mirror* of the
 @ref Compositor result displayed to a window.
 
 @code{.cpp}
-Texture2D& mirrorTexture = session->createMirrorTexture(resolution);
-Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
-mirrorFramebuffer.attachTexture(Framebuffer::ColorAttachment(0), mirrorTexture, 0)
-                 .mapForRead(Framebuffer::ColorAttachment(0));
+GL::Texture2D& mirrorTexture = session->createMirrorTexture(resolution);
+GL::Framebuffer mirrorFramebuffer{Range2Di::fromSize({}, resolution)};
+mirrorFramebuffer.attachTexture(GL::Framebuffer::ColorAttachment(0), mirrorTexture, 0)
+                 .mapForRead(GL::Framebuffer::ColorAttachment(0));
 
 // ...
 
 // blit mirror texture to defaultFramebuffer.
 const Vector2i size = mirrorTexture->imageSize(0);
-Framebuffer::blit(mirrorFramebuffer,
-                  defaultFramebuffer,
-                  {{0, size.y()}, {size.x(), 0}},
-                  {{}, size},
-                  FramebufferBlit::Color, FramebufferBlitFilter::Nearest);
+GL::Framebuffer::blit(mirrorFramebuffer,
+                      defaultFramebuffer,
+                      {{0, size.y()}, {size.x(), 0}},
+                      {{}, size},
+                      GL::FramebufferBlit::Color, GL::FramebufferBlitFilter::Nearest);
 @endcode
 
 @see @ref Context, @ref TextureSwapChain, @ref Compositor

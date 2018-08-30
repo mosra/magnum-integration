@@ -31,7 +31,6 @@
  */
 
 #include <Magnum/Magnum.h>
-#include <Magnum/Texture.h>
 #include <Magnum/Math/Range.h>
 #include <Magnum/Math/Vector.h>
 #include <Magnum/Math/Matrix4.h>
