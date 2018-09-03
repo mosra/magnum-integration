@@ -55,6 +55,7 @@ class btSphereShape;
 
 namespace Magnum { namespace BulletIntegration {
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 /**
 @brief Convert generic Bullet collision shape to Magnum shape
 @param object   Object the shape belongs to
@@ -92,6 +93,7 @@ See @ref convertShape(SceneGraph::AbstractBasicObject3D<btScalar>&, const btColl
 for more information.
 */
 CORRADE_DEPRECATED("the Shapes library is scheduled for removal, consider using BulletIntegration::DebugDraw instead") Shapes::Shape<Shapes::Sphere3D> MAGNUM_BULLETINTEGRATION_EXPORT * convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btSphereShape& sphere, Shapes::ShapeGroup3D* shapes = nullptr);
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}
 

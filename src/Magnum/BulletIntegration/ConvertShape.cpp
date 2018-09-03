@@ -40,6 +40,7 @@
 
 namespace Magnum { namespace BulletIntegration {
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 Shapes::AbstractShape3D* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btCollisionShape& shape, Shapes::ShapeGroup3D* shapes) {
     Int type = shape.getShapeType();
 
@@ -63,5 +64,6 @@ Shapes::Shape<Shapes::Box3D>* convertShape(SceneGraph::AbstractBasicObject3D<btS
 Shapes::Shape<Shapes::Sphere3D>* convertShape(SceneGraph::AbstractBasicObject3D<btScalar>& object, const btSphereShape& sphere, Shapes::ShapeGroup3D* shapes) {
     return new Shapes::Shape<Shapes::Sphere3D>(object, {{}, sphere.getRadius()}, shapes);
 }
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}

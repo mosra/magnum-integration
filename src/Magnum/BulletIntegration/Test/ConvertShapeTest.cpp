@@ -50,6 +50,7 @@ ConvertShapeTest::ConvertShapeTest() {
               &ConvertShapeTest::sphere});
 }
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 void ConvertShapeTest::box() {
     Object3D object;
     btBoxShape btBox({0.5f, 1.0f, 1.5f});
@@ -64,6 +65,7 @@ void ConvertShapeTest::sphere() {
     CORRADE_COMPARE(sphere->shape().radius(), 42.f);
     CORRADE_COMPARE(sphere->shape().position(), Vector3());
 }
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}}
 
