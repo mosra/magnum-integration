@@ -326,14 +326,17 @@ class MAGNUM_OVRINTEGRATION_EXPORT Compositor {
         Compositor& submitFrame(Session& session);
 
     private:
+        #ifndef DOXYGEN_GENERATING_OUTPUT
+        /* Doxygen copies the description from Magnum::Context here. Ugh. */
+        friend class Context;
+        #endif
+
         explicit Compositor();
 
         Layer& addLayer(std::unique_ptr<Layer> layer);
 
         std::vector<const ovrLayerHeader*> _layers;
         std::vector<std::unique_ptr<Layer>> _wrappedLayers;
-
-        friend class Context;
 };
 
 }}

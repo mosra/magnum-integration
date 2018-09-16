@@ -323,8 +323,6 @@ GL::Framebuffer::blit(mirrorFramebuffer,
 @see @ref Context, @ref TextureSwapChain, @ref Compositor
 */
 class MAGNUM_OVRINTEGRATION_EXPORT Session {
-    friend class Context;
-
     public:
         ~Session();
 
@@ -665,6 +663,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         SessionStatusFlags status() const;
 
     private:
+        #ifndef DOXYGEN_GENERATING_OUTPUT
+        /* Doxygen copies the description from Magnum::Context here. Ugh. */
+        friend class Context;
+        #endif
+
         explicit Session(::ovrSession session);
 
         ::ovrSession _session;
