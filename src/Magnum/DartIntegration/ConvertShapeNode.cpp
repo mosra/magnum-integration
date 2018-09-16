@@ -74,7 +74,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
     ShapeData shapeData{{}, {}, {}, {}, Vector3{1.0f}};
 
-    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, 80.f};
+    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 80.0f};
     if(convertTypes & ConvertShapeType::Material) {
         /* Get material information -- we ignore the alpha value. Note that
            this material is not necessarily used for the MeshShapeNodes */
@@ -219,7 +219,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                                in DART */
                             Int colorIndex = (UnsignedInt(meshShape->getColorIndex()) >= meshData->colors(0).size()) ? meshData->colors(0).size() - 1 : meshShape->getColorIndex();
                             Color4 meshColor = meshData->colors(0)[colorIndex];
-                            materials[j] = Trade::PhongMaterialData{{}, 80.f};
+                            materials[j] = Trade::PhongMaterialData{{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 80.0f};
                             materials[j]->diffuseColor() = Color3(meshColor[0], meshColor[1], meshColor[2]);
                             /* default colors for ambient (black) and specular (white) */
                             materials[j]->ambientColor() = Vector3{0.f, 0.f, 0.f};
