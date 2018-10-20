@@ -27,6 +27,7 @@
 #include "MotionState.h"
 
 #include <Magnum/Math/Matrix4.h>
+#include <Magnum/Math/Functions.h>
 
 #include "Magnum/BulletIntegration/Integration.h"
 
@@ -48,14 +49,23 @@ void MotionState::getWorldTransform(btTransform& worldTrans) const {
 }
 
 void MotionState::setWorldTransform(const btTransform& worldTrans) {
-    const btVector3& bPosition = worldTrans.getOrigin();
-    btVector3 bAxis = worldTrans.getRotation().getAxis();
-    Rad bRotation(worldTrans.getRotation().getAngle());
+    const Vector3 position = Vector3{worldTrans.getOrigin()};
+    const Vector3 axis = Vector3{worldTrans.getRotation().getAxis()};
+    const Float rotation = worldTrans.getRotation().getAngle();
+
+    /* Bullet sometimes reports NaNs for all the parameters and nobody is sure
+       why: https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=12080. This is
+       just sometimes and then it magically reports correct values again. If
+       that happens, just ignore the whole thing. */
+    if(Math::isNan(position).any() || Math::isNan(axis).any() || Math::isNan(rotation)) {
+        Warning{} << "BulletIntegration::MotionState: Bullet reported NaN transform, ignoring";
+        return;
+    }
 
     /** @todo Verify that all objects have common parent */
     _transformation.resetTransformation()
-        .rotate(bRotation, Vector3(bAxis).normalized())
-        .translate(Vector3(bPosition));
+        .rotate(Rad{rotation}, axis.normalized())
+        .translate(position);
 }
 
 }}

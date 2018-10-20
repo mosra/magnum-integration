@@ -47,6 +47,13 @@ namespace Magnum {
 -   There's now a PPA for Ubuntu packages. See @ref building-integration-packages-deb
     for more information.
 
+@subsection changelog-integration-2018-02-bugfixes Bug fixes
+
+-   Sometimes Bullet reports object transformation full of NaNs, but the next
+    frame all is good again. This seems to be a Bullet bug, so the
+    @ref BulletIntegration::MotionState class is ignoring this case with a
+    warning.
+
 @subsection changelog-integration-latest-deprecated Deprecated APIs
 
 -   `BulletIntegration::DebugDraw::DebugMode`, `DebugModes`, `mode()` and
