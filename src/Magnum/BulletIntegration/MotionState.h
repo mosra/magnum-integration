@@ -86,6 +86,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBa
         void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
 
         SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& _transformation;
+        bool _broken{false};
 };
 
 }}

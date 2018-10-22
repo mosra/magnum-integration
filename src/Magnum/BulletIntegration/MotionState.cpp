@@ -54,11 +54,13 @@ void MotionState::setWorldTransform(const btTransform& worldTrans) {
     const Float rotation = worldTrans.getRotation().getAngle();
 
     /* Bullet sometimes reports NaNs for all the parameters and nobody is sure
-       why: https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=12080. This is
-       just sometimes and then it magically reports correct values again. If
-       that happens, just ignore the whole thing. */
+       why: https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=12080. The body
+       gets stuck in that state, so print the warning just once. */
     if(Math::isNan(position).any() || Math::isNan(axis).any() || Math::isNan(rotation)) {
-        Warning{} << "BulletIntegration::MotionState: Bullet reported NaN transform, ignoring";
+        if(!_broken) {
+            Warning{} << "BulletIntegration::MotionState: Bullet reported NaN transform for" << this << Debug::nospace << ", ignoring";
+            _broken = true;
+        }
         return;
     }
 
