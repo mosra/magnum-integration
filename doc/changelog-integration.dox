@@ -30,31 +30,41 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@section changelog-integration-latest Changes since 2018.04
+@anchor changelog-integration-latest
 
-@subsection changelog-integration-latest-new New features
+@section changelog-integration-2018-10 2018.10
+
+Released 2018-10-23, tagged as
+[v2018.10](https://github.com/mosra/magnum-integration/releases/tag/v2018.10).
+
+@subsection changelog-integration-2018-10-new New features
 
 -   New @ref GlmIntegration library that provides conversion and debug output
     for [GLM](https://glm.g-truc.net/) math types.
 
-@subsection changelog-integration-latest-changes Changes and improvements
+@subsection changelog-integration-2018-10-changes Changes and improvements
 
+-   Updated the @ref OvrIntegration library to work with OVR SDK 1.17 and newer
+    and adapted it to work with latest changes in the @ref GL library
+    (see [mosra/magnum-integration#26](https://github.com/mosra/magnum-integration/pull/26)
+    and [mosra/magnum-integration#32](https://github.com/mosra/magnum-integration/pull/32))
 -   It's now possible to construct @ref BulletIntegration::DebugDraw without an
     active GL context using the @ref NoCreate tag
 
-@subsection changelog-integration-latest-buildsystem Build system
+@subsection changelog-integration-2018-10-buildsystem Build system
 
 -   There's now a PPA for Ubuntu packages. See @ref building-integration-packages-deb
-    for more information.
+    for more information. See also
+    [mosra/magnum-integration#31](https://github.com/mosra/magnum-integration/pull/31).
 
-@subsection changelog-integration-latest-bugfixes Bug fixes
+@subsection changelog-integration-2018-10-bugfixes Bug fixes
 
 -   Sometimes Bullet reports object transformation full of NaNs. Unsure what
     the real cause is but NaNs trigger an axis normalization assert in
     @ref Math::Matrix4::rotation(), so the @ref BulletIntegration::MotionState
     class is ignoring this case with a warning.
 
-@subsection changelog-integration-latest-deprecated Deprecated APIs
+@subsection changelog-integration-2018-10-deprecated Deprecated APIs
 
 -   `BulletIntegration::DebugDraw::DebugMode`, `DebugModes`, `mode()` and
     `setDebugMode()` are deprecated, use @ref BulletIntegration::DebugDraw::Mode,
