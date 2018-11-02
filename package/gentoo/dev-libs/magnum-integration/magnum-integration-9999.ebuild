@@ -14,6 +14,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/magnum
+	media-libs/glm
 	sci-physics/bullet
 "
 DEPEND="${RDEPEND}"
@@ -25,6 +26,7 @@ src_configure() {
 		-DCMAKE_BUILD_TYPE=Release
 		-DWITH_BULLET=ON
 		-DWITH_DART=OFF
+		-DWITH_GLM=ON
 	)
 	cmake-utils_src_configure
 }
