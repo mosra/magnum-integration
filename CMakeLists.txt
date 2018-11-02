@@ -43,6 +43,7 @@ find_package(Magnum REQUIRED)
 option(WITH_BULLET "Build BulletIntegration library" OFF)
 option(WITH_DART "Build DartIntegration library" OFF)
 option(WITH_GLM "Build GlmIntegration library" OFF)
+option(WITH_IMGUI "Build ImGuiIntegration library" OFF)
 option(WITH_OVR "Build OvrIntegration library" OFF)
 
 include(CMakeDependentOption)

@@ -35,6 +35,10 @@ if(WITH_GLM)
     add_subdirectory(GlmIntegration)
 endif()
 
+if(WITH_IMGUI)
+    add_subdirectory(ImGuiIntegration)
+endif()
+
 if(WITH_OVR)
     add_subdirectory(OvrIntegration)
 endif()
