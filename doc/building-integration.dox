@@ -3,6 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
               Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -258,6 +259,8 @@ manually:
     Depends on [DART](http://dartsim.github.io/).
 -   `WITH_GLM` -- Build the @ref GlmIntegration "GlmIntegration" library.
     Depends on [GLM](https://glm.g-truc.net/).
+-   `WITH_IMGUI` -- Build the @ref ImGuiIntegration "ImGuiIntegration" library.
+    Depends on [imgui](https://github.com/ocornut/imgui).
 -   `WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration" library.
     Depends on the [Oculus SDK](http://developer.oculus.com/).
 

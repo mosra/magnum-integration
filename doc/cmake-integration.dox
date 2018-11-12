@@ -3,6 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
               Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -59,6 +60,7 @@ This command alone is useless without specifying the components:
 -   `Bullet` --- @ref BulletIntegration library
 -   `Dart`  --- @ref DartIntegration library
 -   `Glm` --- @ref GlmIntegration library
+-   `ImGui` --- @ref ImGuiIntegration library
 -   `Ovr` --- @ref OvrIntegration library
 
 Note that [each *Integration namespace](namespaces.html) contains more detailed
@@ -91,6 +93,8 @@ The `modules/` directory contains more useful CMake modules:
     your module directory if you want to use the @ref GlmIntegration library.
 -   `FindOVR.cmake` --- CMake module for finding the OVR SDK. Copy this to your
     module directory if you want to use the @ref OvrIntegration library.
+-   `FindImGui.cmake` --- CMake module for finding Dear ImGui. Copy this to your
+    module directory if you want to use the @ref ImGuiIntegration library.
 
 See also @ref cmake-modules "relevant section for the main Magnum project".
 */

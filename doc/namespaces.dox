@@ -3,6 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
               Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -147,6 +148,37 @@ target_link_libraries(your-app MagnumIntegration::Glm)
 
 See also @ref building-integration and @ref cmake-integration. See the
 @ref Magnum::GlmIntegration namespace for license information.
+*/
+
+/** @dir Magnum/ImGuiIntegration
+ * @brief Namespace @ref Magnum::ImGuiIntegration
+ */
+/** @namespace Magnum::ImGuiIntegration
+@brief Integration with Dear ImGui
+
+Conversion of math classes and rendering of ImGui UI using Magnum.
+
+This library depends on [ImGui](https://github.com/ocornut/imgui) and is
+built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
+library with CMake, you need to request the `ImGui` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::ImGui` target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED ImGui)
+
+# ...
+target_link_libraries(your-app MagnumIntegration::ImGui)
+@endcode
+
+See @ref building-integration and @ref cmake-integration for more information.
+
+@m_class{m-block m-success}
+
+@thirdparty This library makes use of [Dear ImGui](https://github.com/ocornut/imgui),
+    licensed under @m_class{m-label m-success} **MIT**
+    ([license text](https://github.com/ocornut/imgui/blob/master/LICENSE.txt),
+    [choosealicense.com](https://choosealicense.com/licenses/mit/)).
+    Attribution is required for public use.
 */
 
 /** @dir Magnum/OvrIntegration

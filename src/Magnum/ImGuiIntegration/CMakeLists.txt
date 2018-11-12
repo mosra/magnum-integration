@@ -3,6 +3,8 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2018 ShaddyAQN <ShaddyAQN@gmail.com>
+#   Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
 #   Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,21 +26,30 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED)
-find_package(ImGui REQUIRED)
+find_package(Magnum REQUIRED GL)
+find_package(ImGui REQUIRED Sources)
 
 if(BUILD_STATIC)
-    set(MAGNUM_GLMINTEGRATION_BUILD_STATIC 1)
+    set(MAGNUM_IMGUIINTEGRATION_BUILD_STATIC 1)
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
 
+corrade_add_resource(MagnumImGuiIntegrationShaders_RCS resources.conf)
+set_target_properties(MagnumImGuiIntegrationShaders_RCS-dependencies PROPERTIES
+    FOLDER "Magnum/ImGuiIntegration")
+
 set(MagnumImGuiIntegration_SRCS
-    ImGuiIntegration.cpp)
+    Integration.cpp
+
+    ${MagnumImGuiIntegrationShaders_RCS})
 
 set(MagnumImGuiIntegration_HEADERS
-    ImGuiIntegration.h
+    Conversion.h
+    Integration.h
+    Integration.hpp
+    Widgets.h
 
     visibility.h)
 
@@ -57,7 +68,32 @@ if(NOT BUILD_STATIC)
 elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumImGuiIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
-target_link_libraries(MagnumImGuiIntegration PUBLIC Magnum::Magnum)
+target_link_libraries(MagnumImGuiIntegration
+    PUBLIC Magnum::GL ImGui::ImGui
+    PRIVATE ImGui::Sources)
+
+if(BUILD_TESTS)
+    add_library(MagnumImGuiIntegrationTestLib ${SHARED_OR_STATIC}
+        ${MagnumImGuiIntegration_SRCS}
+        ${MagnumImGuiIntegration_HEADERS})
+    target_include_directories(MagnumImGuiIntegrationTestLib PUBLIC
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_BINARY_DIR}/src)
+    set_target_properties(MagnumImGuiIntegrationTestLib PROPERTIES
+        DEBUG_POSTFIX "-d"
+        FOLDER "Magnum/ImGuiIntegration")
+    if(BUILD_STATIC_PIC)
+        set_target_properties(MagnumImGuiIntegrationTestLib
+            PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    endif()
+    target_link_libraries(MagnumImGuiIntegrationTestLib
+        PUBLIC Magnum::GL ImGui::ImGui
+        PRIVATE ImGui::Sources)
+    target_compile_definitions(MagnumImGuiIntegrationTestLib
+        PRIVATE "CORRADE_GRACEFUL_ASSERT")
+
+    add_subdirectory(Test)
+endif()
 
 install(TARGETS MagnumImGuiIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}
@@ -65,10 +101,6 @@ install(TARGETS MagnumImGuiIntegration
     ARCHIVE DESTINATION ${MAGNUM_LIBRARY_INSTALL_DIR})
 install(FILES ${MagnumImGuiIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/ImGuiIntegration)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/ImGuiIntegration)
-
-if(BUILD_TESTS)
-    add_subdirectory(Test)
-endif()
 
 # Magnum Dear ImGui integration target alias for superprojects
 add_library(MagnumIntegration::ImGui ALIAS MagnumImGuiIntegration)

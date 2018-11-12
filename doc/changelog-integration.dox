@@ -48,6 +48,11 @@ namespace Magnum {
     CMake variables, which were deprecated in favor of `MagnumIntegration::*`
     imported targets in February 2016.
 
+@subsection changelog-integration-latest-new New features
+
+-   New @ref ImGuiIntegration library to render
+    [Dear ImGui](https://github.com/ocornut/imgui) user interfaces.
+
 @section changelog-integration-2018-10 2018.10
 
 Released 2018-10-23, tagged as

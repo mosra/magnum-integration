@@ -33,6 +33,7 @@ namespace Magnum {
     @ref BulletIntegration library
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
     @ref OvrIntegration library, improvements to Bullet integration
+    and the migration of magnum-imgui to @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
 -   **Nathan Ollerenshaw** ([\@matjam](https://github.com/matjam)) --- Ubuntu
@@ -41,6 +42,17 @@ namespace Magnum {
     Gentoo ebuild
 -   **[\@sigman78](https://github.com/sigman78)** --- initial implementation of
     the @ref GlmIntegration library
+-   **[\@ShaddyDC](https://github.com/ShaddyDC)** --- base of the
+    @ref ImGuiIntegration library
+-   **Tomáš Skřivan** [\@lecopivo](https://github.com/lecopivo) --- base of the
+    @ref ImGuiIntegration library
+-   **Natesh Narain** [\@nnarain](https://github.com/nnarain) --- base
+    of the @ref ImGuiIntegration library
+-   **Guillaume Jacquemin** [\@williamjcm](https://github.com/williamjcm) ---
+    base of the @ref ImGuiIntegration library
+-   **[\@denesik](https://github.com/denesik)** --- base of the
+    @ref ImGuiIntegration library
+
 */
 
 }

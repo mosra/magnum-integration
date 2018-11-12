@@ -3,6 +3,7 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018
 #             Vladimír Vondruš <mosra@centrum.cz>
+#   Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -23,30 +24,18 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-set_directory_properties(PROPERTIES
-    CORRADE_CXX_STANDARD 11
-    CORRADE_USE_PEDANTIC_FLAGS ON)
+corrade_add_test(ImGuiIntegrationTest IntegrationTest.cpp
+    LIBRARIES MagnumImGuiIntegrationTestLib)
 
-if(WITH_BULLET)
-    add_library(snippets-BulletIntegration STATIC BulletIntegration.cpp)
-    target_link_libraries(snippets-BulletIntegration PRIVATE MagnumBulletIntegration)
-    set_target_properties(snippets-BulletIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
-endif()
+set_target_properties(
+    ImGuiIntegrationTest
+    PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 
-if(WITH_DART)
-    add_library(snippets-DartIntegration STATIC DartIntegration.cpp)
-    target_link_libraries(snippets-DartIntegration PRIVATE MagnumDartIntegration)
-    set_target_properties(snippets-DartIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
-endif()
+if(BUILD_GL_TESTS)
+    corrade_add_test(ImGuiIntegrationGLTest IntegrationGLTest.cpp
+        LIBRARIES MagnumImGuiIntegrationTestLib Magnum::OpenGLTester)
 
-if(WITH_GLM)
-    add_library(snippets-GlmIntegration STATIC GlmIntegration.cpp)
-    target_link_libraries(snippets-GlmIntegration PRIVATE MagnumGlmIntegration)
-    set_target_properties(snippets-GlmIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
-endif()
-
-if(WITH_IMGUI)
-    add_library(snippets-ImGuiIntegration STATIC ImGuiIntegration.cpp)
-    target_link_libraries(snippets-ImGuiIntegration PRIVATE MagnumImGuiIntegration)
-    set_target_properties(snippets-ImGuiIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
+    set_target_properties(
+        ImGuiIntegrationGLTest
+        PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 endif()
