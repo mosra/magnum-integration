@@ -48,6 +48,14 @@ target_link_libraries(your-app MagnumIntegration::Bullet)
 @endcode
 
 See @ref building-integration and @ref cmake-integration for more information.
+
+@m_class{m-block m-success}
+
+@thirdparty This library makes use of [Bullet Physics](http://bulletphysics.org/),
+    released under the @m_class{m-label m-success} **zlib license**
+    ([license text](http://zlib.net/zlib_license.html),
+    [choosealicense.com](https://choosealicense.com/licenses/zlib/)).
+    Attribution is appreciated but not required.
 */
 
 /** @dir Magnum/DartIntegration
@@ -73,6 +81,14 @@ target_link_libraries(your-app MagnumIntegration::Dart)
 See @ref building-integration and @ref cmake-integration for more information.
 
 @experimental
+
+@m_class{m-block m-success}
+
+@thirdparty This library makes use of [DART Dynamic Animation and Robotics Toolkit](http://dartsim.github.io/),
+    licensed under @m_class{m-label m-success} **BSD 3-clause**
+    ([license text](https://github.com/dartsim/dart/blob/master/LICENSE),
+    [choosealicense.com](https://choosealicense.com/licenses/bsd-2-clause/)).
+    Attribution is required for public use.
 */
 
 /** @dir Magnum/GlmIntegration
@@ -100,6 +116,17 @@ The integration routines are provided in @ref Magnum/GlmIntegration/Integration.
 @ref Magnum/GlmIntegration/GtxIntegration.h headers, see their documentation
 for more information. See also @ref building-integration and
 @ref cmake-integration.
+
+@m_class{m-block m-success}
+
+@thirdparty This library makes use of the
+    [OpenGL Mathematics library](http://glm.g-truc.net/),
+    released under @m_class{m-label m-success} **The Happy Bunny License**
+    (Modified MIT License) ([license text](https://github.com/g-truc/glm/blob/master/manual.md#the-happy-bunny-license-modified-mit-license))
+    or under @m_class{m-label m-success} **MIT**
+    ([license text]((https://github.com/g-truc/glm/blob/master/manual.md#the-mit-license),
+    [choosealicense.com](https://choosealicense.com/licenses/mit/)).
+    Attribution is required for public use.
 */
 /** @namespace glm
 @brief GLM namespace.
@@ -118,7 +145,8 @@ find_package(MagnumIntegration REQUIRED Glm)
 target_link_libraries(your-app MagnumIntegration::Glm)
 @endcode
 
-See also @ref building-integration and @ref cmake-integration.
+See also @ref building-integration and @ref cmake-integration. See the
+@ref Magnum::GlmIntegration namespace for license information.
 */
 
 /** @dir Magnum/OvrIntegration
@@ -142,4 +170,10 @@ target_link_libraries(your-app MagnumIntegration::Ovr)
 @endcode
 
 See @ref building-integration and @ref cmake-integration for more information.
+
+@m_class{m-block m-warning}
+
+@thirdparty This library makes use of [Oculus SDK](http://developer.oculus.com/),
+    released under the @m_class{m-label m-warning} **Oculus SDK license**
+    ([license text](https://developer.oculus.com/licenses/sdk-3.5/)).
 */
