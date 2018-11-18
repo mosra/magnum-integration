@@ -6,7 +6,7 @@ itself.
 [![Build Status](https://travis-ci.org/mosra/magnum-integration.svg?branch=master)](https://travis-ci.org/mosra/magnum-integration)
 [![Build Status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
 [![Coverage Status](https://codecov.io/gh/mosra/magnum-integration/branch/master/graph/badge.svg)](https://codecov.io/gh/mosra/magnum-integration)
-[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 -   Project homepage — https://magnum.graphics/
 -   Documentation — https://doc.magnum.graphics/
