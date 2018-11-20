@@ -68,6 +68,7 @@ cmake .. ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/bullet ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
+    -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
     -DBULLET_COLLISION_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletCollision_Debug.lib ^
     -DBULLET_DYNAMICS_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletDynamics_Debug.lib ^
     -DBULLET_MATH_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/LinearMath_Debug.lib ^
@@ -75,6 +76,7 @@ cmake .. ^
     -DWITH_BULLET=ON ^
     -DWITH_DART=OFF ^
     -DWITH_GLM=ON ^
+    -DWITH_IMGUI=ON ^
     -DWITH_OVR=ON ^
     -DBUILD_TESTS=ON ^
     -DBUILD_GL_TESTS=ON ^

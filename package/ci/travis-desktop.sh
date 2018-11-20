@@ -66,10 +66,12 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_PREFIX_PATH=$HOME/deps-dart \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
+    -DIMGUI_DIR=$HOME/imgui \
     -DCMAKE_BUILD_TYPE=Debug \
     -DWITH_BULLET=ON \
     -DWITH_DART=$WITH_DART \
     -DWITH_GLM=ON \
+    -DWITH_IMGUI=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON \

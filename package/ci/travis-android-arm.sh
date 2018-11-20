@@ -79,9 +79,11 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DGLM_INCLUDE_DIR=$HOME/glm \
+    -DIMGUI_DIR=$HOME/imgui \
     -DWITH_BULLET=OFF \
     -DWITH_DART=OFF \
     -DWITH_GLM=ON \
+    -DWITH_IMGUI=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON \
