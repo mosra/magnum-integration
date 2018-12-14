@@ -81,13 +81,6 @@ library is found. If both debug and release libraries are found, proper version
 is chosen based on actual build configuration of the project (i.e. `Debug`
 build is linked to debug libraries, `Release` build to release libraries).
 
-Workflows without imported targets are deprecated and the following variables
-are included just for backwards compatibility and only if
-@ref MAGNUM_BUILD_DEPRECATED is enabled:
-
--   `MAGNUM_*INTEGRATION_LIBRARIES` --- Expands to `MagnumIntegration::*`
-    target. Use `MagnumIntegration::*` target directly instead.
-
 See also @ref cmake "Magnum usage with CMake" for more information.
 
 @section cmake-integration-modules Other CMake modules

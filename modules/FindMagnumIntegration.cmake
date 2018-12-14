@@ -41,14 +41,6 @@
 #  MAGNUMINTEGRATION_*_LIBRARY_RELEASE - Release version of given library, if
 #   found
 #
-# Workflows without imported targets are deprecated and the following variables
-# are included just for backwards compatibility and only if
-# :variable:`MAGNUM_BUILD_DEPRECATED` is enabled:
-#
-#  MAGNUM_*INTEGRATION_LIBRARIES - Expands to ``MagnumIntegration::*` target.
-#   Use ``MagnumIntegration::*` target directly instead.
-#
-#
 
 #
 #   This file is part of Magnum.
@@ -253,11 +245,6 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         else()
             set(MagnumIntegration_${_component}_FOUND FALSE)
         endif()
-    endif()
-
-    # Deprecated variables
-    if(MAGNUM_BUILD_DEPRECATED AND _component MATCHES ${_MAGNUMINTEGRATION_LIBRARY_COMPONENTS})
-        set(MAGNUM_${_COMPONENT}INTEGRATION_LIBRARIES MagnumIntegration::${_component})
     endif()
 endforeach()
 
