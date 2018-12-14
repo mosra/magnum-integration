@@ -59,14 +59,7 @@ if(NOT BUILD_STATIC)
 elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
-target_link_libraries(MagnumGlmIntegration PUBLIC Magnum::Magnum)
-# GLM::GLM is an INTERFACE target, not supported on 2.8.12
-if(NOT CMAKE_VERSION VERSION_LESS 3.0)
-    target_link_libraries(MagnumGlmIntegration PUBLIC GLM::GLM)
-else()
-    # Suppress warnings from GLM includes
-    target_include_directories(MagnumGlmIntegration SYSTEM PUBLIC ${GLM_INCLUDE_DIR})
-endif()
+target_link_libraries(MagnumGlmIntegration PUBLIC Magnum::Magnum GLM::GLM)
 
 install(TARGETS MagnumGlmIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}

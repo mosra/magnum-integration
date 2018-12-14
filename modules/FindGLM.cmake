@@ -5,8 +5,7 @@
 # Finds the GLM library. This module defines:
 #
 #  GLM_FOUND                - True if GLM library is found
-#  GLM::GLM                 - GLM imported target (only on CMake >= 3.0,
-#   because interface targets are not supported on 2.8.12)
+#  GLM::GLM                 - GLM imported target
 #
 # Additionally these variables are defined for internal usage:
 #
@@ -48,7 +47,7 @@ find_package_handle_standard_args(GLM DEFAULT_MSG
 
 mark_as_advanced(FORCE GLM_INCLUDE_DIR)
 
-if(NOT CMAKE_VERSION VERSION_LESS 3.0 AND NOT TARGET GLM::GLM)
+if(NOT TARGET GLM::GLM)
     add_library(GLM::GLM INTERFACE IMPORTED)
     set_target_properties(GLM::GLM PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${GLM_INCLUDE_DIR})

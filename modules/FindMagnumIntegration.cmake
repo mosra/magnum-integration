@@ -193,15 +193,8 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         # GLM integration library
         elseif(_component STREQUAL Glm)
             find_package(GLM)
-            # GLM::GLM is an INTERFACE target, not supported on 2.8.12
-            if(NOT CMAKE_VERSION VERSION_LESS 3.0)
-                set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
-                    INTERFACE_LINK_LIBRARIES GLM::GLM)
-            else()
-                # Suppress warnings from GLM includes
-                set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
-                    INTERFACE_INCLUDE_DIRECTORIES ${GLM_INCLUDE_DIR})
-            endif()
+            set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES GLM::GLM)
 
             set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES Integration.h)
 
