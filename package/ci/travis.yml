@@ -4,7 +4,7 @@ addons:
   apt:
     packages:
     - libgl1-mesa-dev
-    - g++-4.8 # DART does not work with 4.7
+    - g++-4.8
     - ninja-build
     - lcov
     - libbullet-dev

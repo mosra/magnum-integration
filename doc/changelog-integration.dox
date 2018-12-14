@@ -30,7 +30,13 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@anchor changelog-integration-latest
+@section changelog-integration-latest Changes since 2018.10
+
+@subsection changelog-integration-latest-dependencies Dependency changes
+
+-   Minimal supported GCC version is now 4.8.1, GCC 4.7 is not supported
+    anymore. Minimal Clang version is now 3.3, since that's the first version
+    with a complete C++11 support.
 
 @section changelog-integration-2018-10 2018.10
 
