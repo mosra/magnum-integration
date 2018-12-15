@@ -60,6 +60,8 @@ install:
 - cinst ninja
 - set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" pip install codecov
+- IF "%TARGET_GLES2%" == "ON" set TARGET_GLES3=OFF
+- IF "%TARGET_GLES2%" == "OFF" set TARGET_GLES3=ON
 
 # GLM
 - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\0.9.9.0.zip appveyor DownloadFile https://github.com/g-truc/glm/archive/0.9.9.0.zip

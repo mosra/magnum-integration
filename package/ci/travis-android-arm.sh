@@ -83,7 +83,7 @@ cmake .. \
     -DWITH_BULLET=OFF \
     -DWITH_DART=OFF \
     -DWITH_GLM=ON \
-    -DWITH_IMGUI=ON \
+    -DWITH_IMGUI=$TARGET_GLES3 \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON \

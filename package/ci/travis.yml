@@ -175,6 +175,8 @@ cache:
   - $HOME/imgui
 
 install:
+- if [ "$TARGET_GLES2" == "ON" ]; then export TARGET_GLES3=OFF; fi
+- if [ "$TARGET_GLES2" == "OFF" ]; then export TARGET_GLES3=ON; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export WITH_DART=OFF; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export WITH_DART=ON; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ ! "$TARGET" == "desktop-sanitizers" ] && [ ! "$TARGET" == "android" ]; then export CXX=g++-4.8; fi
