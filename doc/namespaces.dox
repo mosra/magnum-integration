@@ -67,7 +67,7 @@ See @ref building-integration and @ref cmake-integration for more information.
 
 Conversion of nodes and shapes for visualizing physics simulation.
 
-This library depends on the [DART](http://dartsim.github.io/) library
+This library depends on the [DART](https://dartsim.github.io/) library
 and is built if `WITH_DART` is enabled when building Magnum Integration. To
 use this library with CMake, you need to request the `Dart` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Dart` target:
@@ -85,7 +85,7 @@ See @ref building-integration and @ref cmake-integration for more information.
 
 @m_class{m-block m-success}
 
-@thirdparty This library makes use of [DART Dynamic Animation and Robotics Toolkit](http://dartsim.github.io/),
+@thirdparty This library makes use of [DART Dynamic Animation and Robotics Toolkit](https://dartsim.github.io/),
     licensed under @m_class{m-label m-success} **BSD 3-clause**
     ([license text](https://github.com/dartsim/dart/blob/master/LICENSE),
     [choosealicense.com](https://choosealicense.com/licenses/bsd-2-clause/)).
@@ -121,7 +121,7 @@ for more information. See also @ref building-integration and
 @m_class{m-block m-success}
 
 @thirdparty This library makes use of the
-    [OpenGL Mathematics library](http://glm.g-truc.net/),
+    [OpenGL Mathematics library](https://glm.g-truc.net/),
     released under @m_class{m-label m-success} **The Happy Bunny License**
     (Modified MIT License) ([license text](https://github.com/g-truc/glm/blob/master/manual.md#the-happy-bunny-license-modified-mit-license))
     or under @m_class{m-label m-success} **MIT**
@@ -158,7 +158,7 @@ See also @ref building-integration and @ref cmake-integration. See the
 
 Conversion of math classes and rendering of ImGui UI using Magnum.
 
-This library depends on [ImGui](https://github.com/ocornut/imgui) and is
+This library depends on [Dear ImGui](https://github.com/ocornut/imgui) and is
 built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
 library with CMake, you need to request the `ImGui` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::ImGui` target:
@@ -189,7 +189,7 @@ See @ref building-integration and @ref cmake-integration for more information.
 
 Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 
-This library depends on the [Oculus SDK](http://developer.oculus.com/) and is
+This library depends on the [Oculus SDK](https://developer.oculus.com/) and is
 built if `WITH_OVR` is enabled when building Magnum Integration. To use this
 library with CMake, you need to request the `Ovr` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Ovr` target:
@@ -205,7 +205,7 @@ See @ref building-integration and @ref cmake-integration for more information.
 
 @m_class{m-block m-warning}
 
-@thirdparty This library makes use of [Oculus SDK](http://developer.oculus.com/),
+@thirdparty This library makes use of [Oculus SDK](https://developer.oculus.com/),
     released under the @m_class{m-label m-warning} **Oculus SDK license**
     ([license text](https://developer.oculus.com/licenses/sdk-3.5/)).
 */
