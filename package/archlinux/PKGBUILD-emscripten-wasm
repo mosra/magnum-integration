@@ -6,7 +6,7 @@ pkgdesc="Integration libraries for the Magnum C++11/C++14 graphics engine (Emscr
 arch=('any')
 url="https://magnum.graphics"
 license=('MIT')
-depends=('emscripten-magnum=dev.wasm' 'emscripten-bullet')
+depends=('emscripten-magnum=dev.wasm' 'emscripten-bullet' 'imgui-src')
 makedepends=('cmake' 'emscripten' 'corrade' 'ninja')
 options=('!strip' '!buildflags')
 
@@ -28,9 +28,11 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr/lib/emscripten/system \
         -DMAGNUM_DEPLOY_PREFIX=/srv/http/emscripten \
+        -DIMGUI_DIR=/opt/imgui \
         -DWITH_BULLET=ON \
         -DWITH_DART=OFF \
         -DWITH_GLM=OFF \
+        -DWITH_IMGUI=OFF \
         -DBUILD_TESTS=OFF
     ninja
 }
