@@ -41,14 +41,14 @@ ImGuiIntegration::Context::get().newFrame({640, 480}, {640, 480});
 /* [Context-usage] */
 
 /* [Context-usage-per-frame] */
-GL::Renderer::enable(GL::Renderer::Feature::Blending);
 GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
     GL::Renderer::BlendEquation::Add);
 GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
     GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
-GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+GL::Renderer::enable(GL::Renderer::Feature::Blending);
 GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
 GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 
 ImGuiIntegration::Context::get().drawFrame();
@@ -59,7 +59,4 @@ GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
 GL::Renderer::disable(GL::Renderer::Feature::Blending);
 /* [Context-usage-per-frame] */
 }
-#if defined(__GNUC__) || defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
 }

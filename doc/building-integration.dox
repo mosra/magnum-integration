@@ -260,7 +260,9 @@ manually:
 -   `WITH_GLM` -- Build the @ref GlmIntegration "GlmIntegration" library.
     Depends on [GLM](https://glm.g-truc.net/).
 -   `WITH_IMGUI` -- Build the @ref ImGuiIntegration "ImGuiIntegration" library.
-    Depends on [imgui](https://github.com/ocornut/imgui).
+    Depends on [Dear ImGui](https://github.com/ocornut/imgui) --- if you are on
+    Vcpkg, it will "just work", otherwise you need to download the sources and
+    point `IMGUI_DIR` to their directory so CMake can find them.
 -   `WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration" library.
     Depends on the [Oculus SDK](http://developer.oculus.com/).
 

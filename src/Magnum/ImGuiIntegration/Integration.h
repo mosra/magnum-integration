@@ -29,17 +29,17 @@
 */
 
 /** @file
- * @brief Class @ef Magnum::ImGuiIntegration::Context
+ * @brief Class @ref Magnum::ImGuiIntegration::Context
  */
 
+#include <Magnum/Timeline.h>
 #include <Magnum/GL/AbstractShaderProgram.h>
-#include <Magnum/Math/Matrix4.h>
-#include <Magnum/Math/Color.h>
+#include <Magnum/GL/Attribute.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
-#include <Magnum/Timeline.h>
-#include <Magnum/GL/Attribute.h>
+#include <Magnum/Math/Matrix4.h>
+#include <Magnum/Math/Color.h>
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 
@@ -47,7 +47,7 @@ namespace Magnum { namespace ImGuiIntegration {
 
 namespace Implementation {
 
-class ImGuiShader : public GL::AbstractShaderProgram {
+class ImGuiShader: public GL::AbstractShaderProgram {
     public:
         typedef GL::Attribute<0, Vector2> Position;
         typedef GL::Attribute<1, Vector2> TextureCoordinates;
@@ -75,7 +75,7 @@ class ImGuiShader : public GL::AbstractShaderProgram {
 
 }
 
-/*
+/**
 @brief ImGui context
 
 Handles initialization and destruction of ImGui context.
@@ -96,16 +96,28 @@ Example:
 
 ImGui requires @ref GL::Renderer::Feature::ScissorTest "scissor test"
 to be enabled and @ref GL::Renderer::Feature::DepthTest "depth test"
-to be disabled.
-
-@ref GL::Renderer::Feature::DepthTest "Blending" should be enabled with
-and set up as in the following snippet:
+to be disabled. @ref GL::Renderer::Feature::Blending "Blending" should be
+enabled and set up as in the following snippet:
 
 @snippet ImGuiIntegration.cpp Context-usage-per-frame
+
+@section ImGuiIntegration-Context-events Event handling
+
+The templated @ref handleMousePressEvent(), @ref handleMouseReleaseEvent() etc.
+functions are meant to be used inside event handlers of application classes
+such as @ref Platform::Sdl2Application, directly passing the @p event parameter
+to them. The returned value is then @cpp true @ce if ImGui used the event (and
+thus it shouldn't be propagated further) and @cpp false @ce otherwise.
 */
 class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
     public:
-
+        /**
+         * @brief Constructor
+         *
+         * Expects that no instance is created yet. This function creates the
+         * ImGui context using @cpp ImGui::CreateContext() @ce and then queries
+         * the font glyph cache from ImGui, uploading it to the GPU.
+         */
         explicit Context();
 
         /** @brief Copying is not allowed */
@@ -114,6 +126,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /** @brief Moving is not allowed */
         Context(Context&&) = delete;
 
+        /**
+         * @brief Destructor
+         *
+         * Calls @cpp ImGui::DeleteContext() @ce.
+         */
         ~Context();
 
         /** @brief Copying is not allowed */
@@ -131,18 +148,20 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Start a new frame
-         * @param winSize       Window size
-         * @param viewportSize  Viewport size
+         * @param windowSize        Window size
+         * @param framebufferSize   Viewport size
          *
-         * Initializes a new ImGui frame and updates window and viewport sizes.
+         * Initializes a new ImGui frame using @cpp ImGui::NewFrame() @ce and
+         * updates window and framebuffer sizes.
          */
-        void newFrame(const Vector2i& winSize, const Vector2i& viewportSize);
+        void newFrame(const Vector2i& windowSize, const Vector2i& framebufferSize);
 
         /**
          * @brief Draw a frame
          *
-         * Draw the frame created by ImGui calls since last call to @ref newFrame()
-         * to currently bound framebuffer.
+         * Calls @cpp ImGui::Render() @ce and then draws the frame created by
+         * ImGui calls since last call to @ref newFrame() to currently bound
+         * framebuffer.
          *
          * See @ref ImGuiIntegration-Context-rendering for more information on
          * which rendering states to set before and after calling this method.
@@ -151,43 +170,64 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Handle mouse press event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class MouseEvent> bool handleMousePressEvent(MouseEvent& event);
 
         /**
          * @brief Handle mouse release event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class MouseEvent> bool handleMouseReleaseEvent(MouseEvent& event);
 
         /**
          * @brief Handle mouse scroll event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class MouseScrollEvent> bool handleMouseScrollEvent(MouseScrollEvent& event);
 
         /**
          * @brief Handle mouse move event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class MouseMoveEvent> bool handleMouseMoveEvent(MouseMoveEvent& event);
 
         /**
          * @brief Handle key press event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the keyboard (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class KeyEvent> bool handleKeyPressEvent(KeyEvent& event);
 
         /**
          * @brief Handle key release event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the keyboard (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class KeyEvent> bool handleKeyReleaseEvent(KeyEvent& event);
 
         /**
          * @brief Handle text input event
-         * @param event The event to handle
+         *
+         * Returns @cpp true @ce if ImGui wants to capture the input (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class TextInputEvent> bool handleTextInputEvent(TextInputEvent& event);
 

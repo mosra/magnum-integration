@@ -27,14 +27,14 @@
 */
 
 /** @file
- * @brief Template method implementations for input handling methods in @ef Magnum::ImGuiIntegration::Context
+ * @brief Template method implementations for input handling methods in @ref Magnum::ImGuiIntegration::Context
  */
 
-#include "Magnum/ImGuiIntegration/Integration.h"
-#include "Magnum/ImGuiIntegration/Conversion.h"
-
-#include <Corrade/Utility/Resource.h>
 #include <imgui.h>
+#include <Corrade/Utility/Resource.h>
+
+#include "Magnum/ImGuiIntegration/Conversion.h"
+#include "Magnum/ImGuiIntegration/Integration.h"
 
 namespace Magnum { namespace ImGuiIntegration {
 

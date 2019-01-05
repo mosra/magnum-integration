@@ -29,9 +29,10 @@
 */
 
 /** @file
- * @brief Function @ref Magnum::ImGuiIntegration::MgImGui::Image()
+ * @brief Function @ref Magnum::ImGuiIntegration::image()
  */
 
+#include <imgui.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Math/Vector4.h>
 #include <Magnum/Math/Color.h>
@@ -40,12 +41,11 @@
 #include "Magnum/ImGuiIntegration/visibility.h"
 #include "Magnum/ImGuiIntegration/Conversion.h"
 
-#include <imgui.h>
-
 namespace Magnum { namespace ImGuiIntegration {
 
 /**
 @brief Image widget displaying a @ref GL::Texture2D
+@param texture      Texture to display
 @param size         Widget size
 @param uv0          Min of source range on the texture
 @param uv1          Max of source range on the texture

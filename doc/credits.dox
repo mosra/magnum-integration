@@ -29,6 +29,10 @@ namespace Magnum {
 
 @section credits-contributors-integration Magnum Integration
 
+-   **[\@denesik](https://github.com/denesik)** --- base of the
+    @ref ImGuiIntegration library
+-   **Guillaume Jacquemin** [\@williamjcm](https://github.com/williamjcm) ---
+    base of the @ref ImGuiIntegration library
 -   **Jan Dupal** ([\@JanDupal](https://github.com/JanDupal) --- the
     @ref BulletIntegration library
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
@@ -36,21 +40,17 @@ namespace Magnum {
     and the migration of magnum-imgui to @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
+-   **Natesh Narain** [\@nnarain](https://github.com/nnarain) --- base
+    of the @ref ImGuiIntegration library
 -   **Nathan Ollerenshaw** ([\@matjam](https://github.com/matjam)) --- Ubuntu
     package updates, a PPA repository for stable versions
 -   **Olga Turanksaya** ([\@olga-python](https://github.com/olga-python)) ---
     Gentoo ebuild
--   **[\@sigman78](https://github.com/sigman78)** --- initial implementation of
-    the @ref GlmIntegration library
 -   **[\@ShaddyDC](https://github.com/ShaddyDC)** --- base of the
     @ref ImGuiIntegration library
+-   **[\@sigman78](https://github.com/sigman78)** --- initial implementation of
+    the @ref GlmIntegration library
 -   **Tomáš Skřivan** [\@lecopivo](https://github.com/lecopivo) --- base of the
-    @ref ImGuiIntegration library
--   **Natesh Narain** [\@nnarain](https://github.com/nnarain) --- base
-    of the @ref ImGuiIntegration library
--   **Guillaume Jacquemin** [\@williamjcm](https://github.com/williamjcm) ---
-    base of the @ref ImGuiIntegration library
--   **[\@denesik](https://github.com/denesik)** --- base of the
     @ref ImGuiIntegration library
 
 */

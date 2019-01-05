@@ -93,8 +93,8 @@ The `modules/` directory contains more useful CMake modules:
     your module directory if you want to use the @ref GlmIntegration library.
 -   `FindOVR.cmake` --- CMake module for finding the OVR SDK. Copy this to your
     module directory if you want to use the @ref OvrIntegration library.
--   `FindImGui.cmake` --- CMake module for finding Dear ImGui. Copy this to your
-    module directory if you want to use the @ref ImGuiIntegration library.
+-   `FindImGui.cmake` --- CMake module for finding Dear ImGui. Copy this to
+    your module directory if you want to use the @ref ImGuiIntegration library.
 
 See also @ref cmake-modules "relevant section for the main Magnum project".
 */

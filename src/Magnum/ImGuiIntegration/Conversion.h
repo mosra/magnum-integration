@@ -30,11 +30,10 @@
  * @brief Conversion of ImGui math types
  */
 
+#include <imgui.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Vector.h>
 #include <Magnum/Math/Color.h>
-
-#include <imgui.h>
 
 namespace Magnum { namespace Math { namespace Implementation {
 

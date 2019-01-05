@@ -28,8 +28,8 @@
 
 #include "Integration.h"
 
+#include <imgui.h>
 #include <Corrade/Utility/Resource.h>
-
 #include <Magnum/GL/Context.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Extensions.h>
@@ -43,8 +43,6 @@
 
 #include "Magnum/ImGuiIntegration/Conversion.h"
 
-#include <imgui.h>
-
 #ifdef MAGNUM_IMGUIINTEGRATION_BUILD_STATIC
 static void importShaderResources() {
     CORRADE_RESOURCE_INITIALIZE(MagnumImGuiIntegrationShaders_RCS)
@@ -57,14 +55,13 @@ Context* Context::_instance = nullptr;
 
 Context& Context::get() {
     CORRADE_ASSERT(_instance != nullptr,
-                   "ImGuiIntegration::Context::get(): No instance of Context exists.",
-                   *_instance);
+        "ImGuiIntegration::Context::get(): no instance exists", *_instance);
     return *_instance;
 }
 
 Context::Context() {
     CORRADE_ASSERT(_instance == nullptr,
-            "ImGuiIntegration::Context::Context(): Context already created.", );
+        "ImGuiIntegration::Context: context already created", );
     ImGui::CreateContext();
 
     ImGuiIO &io = ImGui::GetIO();
@@ -88,19 +85,17 @@ Context::Context() {
     io.KeyMap[ImGuiKey_Y]          = ImGuiKey_Y;
     io.KeyMap[ImGuiKey_Z]          = ImGuiKey_Z;
 
-    /* TODO: Set clipboard text once Platform supports it */
+    /** @todo Set clipboard text once Platform supports it */
 
     unsigned char *pixels;
     int width, height;
     int pixelSize;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &pixelSize);
 
-    CORRADE_ASSERT(width > 0,
-            "ImGuiIntegration::Context::Context(): Expected width to be larger than 0", );
-    CORRADE_ASSERT(height > 0,
-            "ImGuiIntegration::Context::Context(): Expected height to be larger than 0", );
+    CORRADE_ASSERT(width > 0 && height > 0,
+        "ImGuiIntegration::Context: width and height is expected to be larger than 0", );
     CORRADE_ASSERT(pixelSize > 0,
-            "ImGuiIntegration::Context::Context(): Expected pixel size to be larger than 0", );
+        "ImGuiIntegration::Context: pixel size is expected to be larger than 0", );
 
     ImageView2D image{GL::PixelFormat::RGBA,
         GL::PixelType::UnsignedByte, {width, height},
@@ -135,16 +130,16 @@ Context::~Context() {
     _instance = nullptr;
 }
 
-void Context::newFrame(const Vector2i &winSize, const Vector2i &viewportSize) {
+void Context::newFrame(const Vector2i& windowSize, const Vector2i& framebufferSize) {
     _timeline.nextFrame();
 
     ImGuiIO& io = ImGui::GetIO();
 
     /* Setup display size (every frame to accommodate for window resizing) */
-    io.DisplaySize = ImVec2(Vector2(winSize));
-    io.DisplayFramebufferScale =
-        ImVec2(winSize.x() > 0 ? float(viewportSize.x())/winSize.x() : 0.0f,
-               winSize.y() > 0 ? float(viewportSize.y())/winSize.y() : 0.0f);
+    io.DisplaySize = ImVec2(Vector2(windowSize));
+    io.DisplayFramebufferScale = ImVec2(
+        windowSize.x() > 0 ? Float(framebufferSize.x())/windowSize.x() : 0.0f,
+        windowSize.y() > 0 ? Float(framebufferSize.y())/windowSize.y() : 0.0f);
 
     io.DeltaTime = _timeline.previousFrameDuration();
 
@@ -155,8 +150,8 @@ void Context::drawFrame() {
     ImGui::Render();
 
     ImGuiIO& io = ImGui::GetIO();
-    const int fbWidth = int(io.DisplaySize.x*io.DisplayFramebufferScale.x);
-    const int fbHeight = int(io.DisplaySize.y*io.DisplayFramebufferScale.y);
+    const Int fbWidth(io.DisplaySize.x*io.DisplayFramebufferScale.x);
+    const Int fbHeight(io.DisplaySize.y*io.DisplayFramebufferScale.y);
     if(fbWidth == 0 || fbHeight == 0)
         return;
 
@@ -172,7 +167,7 @@ void Context::drawFrame() {
         *Matrix4::scaling({1.0f, -1.0f, -1.0f});
     _shader.setProjectionMatrix(projection);
 
-    for(int n = 0; n < drawData->CmdListsCount; ++n) {
+    for(std::int_fast32_t n = 0; n < drawData->CmdListsCount; ++n) {
         const ImDrawList* cmdList = drawData->CmdLists[n];
         ImDrawIdx indexBufferOffset = 0;
 
@@ -183,15 +178,15 @@ void Context::drawFrame() {
             {cmdList->IdxBuffer.Data, std::size_t(cmdList->IdxBuffer.Size)},
             GL::BufferUsage::StreamDraw);
 
-        for(int c = 0; c < cmdList->CmdBuffer.Size; ++c) {
+        for(std::int_fast32_t c = 0; c < cmdList->CmdBuffer.Size; ++c) {
             const ImDrawCmd* pcmd = &cmdList->CmdBuffer[c];
 
             auto userTexture = static_cast<GL::Texture2D*>(pcmd->TextureId);
             _shader.bindTexture(userTexture ? *userTexture : _texture);
 
             GL::Renderer::setScissor({
-                {int(pcmd->ClipRect.x), fbHeight - int(pcmd->ClipRect.w)},
-                {int(pcmd->ClipRect.z), fbHeight - int(pcmd->ClipRect.y)}});
+                {Int(pcmd->ClipRect.x), fbHeight - Int(pcmd->ClipRect.w)},
+                {Int(pcmd->ClipRect.z), fbHeight - Int(pcmd->ClipRect.y)}});
 
             _mesh.setCount(pcmd->ElemCount);
             _mesh.setIndexBuffer(_indexBuffer, indexBufferOffset*sizeof(ImDrawIdx),

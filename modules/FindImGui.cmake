@@ -4,12 +4,28 @@
 #
 # Finds the ImGui library. This module defines:
 #
-#  ImGui_FOUND                - True if ImGui library is found
-#  ImGui::ImGui               - ImGui imported target
+#  ImGui_FOUND                - True if ImGui is found
+#  ImGui::ImGui               - ImGui interface target
+#  ImGui::Sources             - ImGui source target
 #
 # Additionally these variables are defined for internal usage:
 #
 #  ImGui_INCLUDE_DIR          - Include dir
+#
+# The find module first tries to find ``imgui`` via a CMake config file (which
+# is distributed this way via Vcpkg, for example). If that's found, the
+# ``ImGui::ImGui`` target is an alias to it and the ``ImGui::Sources`` target
+# is empty except for having ``ImGui::ImGui`` as a dependency.
+#
+# If ``imgui`` is not found, as a fallback it tries to find the C++ sources.
+# You can supply their location via an ``IMGUI_DIR`` variable. Once found, the
+# ``ImGui::ImGui`` target contains just the header file, while
+# ``ImGui::Sources`` contains the source files in ``INTERFACE_SOURCES``.
+#
+# The desired usage that covers both cases is to link ``ImGui::Sources``
+# ``PRIVATE``\ ly to a *single* target, which will then contain either the
+# sources or be linked to the imgui library from Vcpkg; and linking
+# ``ImGui::ImGui`` to this target ``PUBLIC``\ ly.
 #
 
 #
@@ -38,6 +54,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# Vcpkg distributes imgui as a library with a config file, so try that forst
 find_package(imgui CONFIG QUIET)
 if(imgui_FOUND)
     if(NOT TARGET ImGui::ImGui)
@@ -53,17 +70,20 @@ if(imgui_FOUND)
         set_property(TARGET ImGui::Sources APPEND PROPERTY
             INTERFACE_LINK_LIBRARIES ImGui::ImGui)
     endif()
+
+# Otherwise find the source files and compile them as part of the library they
+# get linked to
 else()
     # Disable the find root path here, it overrides the
     # CMAKE_FIND_ROOT_PATH_MODE_INCLUDE setting potentially set in
     # toolchains.
-    find_path(ImGui_INCLUDE_DIR NAMES imgui.h HINTS "${IMGUI_DIR}"
+    find_path(ImGui_INCLUDE_DIR NAMES imgui.h HINTS ${IMGUI_DIR}
         NO_CMAKE_FIND_ROOT_PATH)
 
     if(NOT TARGET ImGui::ImGui)
         add_library(ImGui::ImGui INTERFACE IMPORTED)
         set_property(TARGET ImGui::ImGui APPEND PROPERTY
-            INTERFACE_INCLUDE_DIRECTORIES "${ImGui_INCLUDE_DIR}")
+            INTERFACE_INCLUDE_DIRECTORIES ${ImGui_INCLUDE_DIR})
 
         # Handle export and import of imgui symbols via IMGUI_API definition
         # in visibility.h of Magnum ImGuiIntegration.
@@ -74,7 +94,6 @@ endif()
 
 # Find components
 foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
-
     if(_component STREQUAL "Sources")
         set(ImGui_Sources_FOUND TRUE)
         set(ImGui_SOURCES )
@@ -84,7 +103,7 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
             # CMAKE_FIND_ROOT_PATH_MODE_INCLUDE setting potentially set in
             # toolchains.
             find_file(ImGui_${_file}_SOURCE NAMES ${_file}.cpp
-                HINTS "${IMGUI_DIR}" NO_CMAKE_FIND_ROOT_PATH)
+                HINTS ${IMGUI_DIR} NO_CMAKE_FIND_ROOT_PATH)
             list(APPEND ImGui_SOURCES ${ImGui_${_file}_SOURCE})
 
             if(NOT ImGui_${_file}_SOURCE)
@@ -128,7 +147,6 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
         endif()
     endif()
 endforeach()
-
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ImGui

@@ -25,17 +25,15 @@
 */
 
 #include <sstream>
+#include <Corrade/TestSuite/Compare/Container.h>
+#include <Magnum/Math/Vector3.h>
+#include <Magnum/Magnum.h>
+#include <Magnum/GL/TextureFormat.h>
+#include <Magnum/GL/OpenGLTester.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 #include "Magnum/ImGuiIntegration/Integration.hpp"
 #include "Magnum/ImGuiIntegration/Widgets.h"
-
-#include <Magnum/Math/Vector3.h>
-#include <Magnum/Magnum.h>
-#include <Magnum/GL/TextureFormat.h>
-#include <Corrade/TestSuite/Compare/Container.h>
-
-#include <Magnum/GL/OpenGLTester.h>
 
 namespace Magnum { namespace ImGuiIntegration { namespace Test {
 
@@ -44,7 +42,7 @@ enum class Modifier: Int {
 };
 typedef Containers::EnumSet<Modifier> Modifiers;
 
-enum class Button: int {
+enum class Button: Int {
     Left, Middle, Right
 };
 
@@ -134,6 +132,14 @@ IntegrationGLTest::IntegrationGLTest() {
               &IntegrationGLTest::textInput,
 
               &IntegrationGLTest::widgets});
+
+    GL::Renderer::enable(GL::Renderer::Feature::Blending);
+    GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
+    GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha, GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+
+    GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+    GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+    GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 }
 
 void IntegrationGLTest::construction() {
@@ -171,16 +177,6 @@ void IntegrationGLTest::frame() {
 
     ImGui::Button("test");
 
-    GL::Renderer::enable(GL::Renderer::Feature::Blending);
-    GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
-            GL::Renderer::BlendEquation::Add);
-    GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
-            GL::Renderer::BlendFunction::OneMinusSourceAlpha);
-
-    GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-    GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-    GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
-
     c.drawFrame();
 
     MAGNUM_VERIFY_NO_GL_ERROR();
@@ -190,9 +186,9 @@ void IntegrationGLTest::mouseInput() {
     Context c;
 
     /* Mouse Button */
-    CORRADE_VERIFY(!ImGui::IsMouseDown(0 /* left */));
-    CORRADE_VERIFY(!ImGui::IsMouseDown(1 /* right */));
-    CORRADE_VERIFY(!ImGui::IsMouseDown(2 /* middle */));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(0)); /* left */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(1)); /* right */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(2)); /* middle */
 
     MouseEvent left{Button::Left, {1, 2}, {}};
     MouseEvent right{Button::Right, {1, 2}, {}};
@@ -219,13 +215,13 @@ void IntegrationGLTest::mouseInput() {
     CORRADE_COMPARE(Vector2(mousePos.x, mousePos.y), Vector2(1.0f, 2.0f));
 
     /* Scrolling/Mouse Wheel */
-    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 0.0f, float);
-    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, float);
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 0.0f, Float);
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, Float);
 
     MouseScrollEvent scroll{{1.2f, -1.2f}, {}, Modifiers{}};
     c.handleMouseScrollEvent(scroll);
-    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, float);
-    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, -1.2f, float);
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, -1.2f, Float);
 }
 
 void IntegrationGLTest::keyInput() {
@@ -253,7 +249,8 @@ void IntegrationGLTest::textInput() {
 
     ImWchar expected[4]{'a', 'b', 'c', '\0'};
     CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputCharacters, 4),
-            Containers::arrayView(expected), TestSuite::Compare::Container);
+        Containers::arrayView(expected),
+        TestSuite::Compare::Container);
 }
 
 void IntegrationGLTest::widgets() {
@@ -265,16 +262,6 @@ void IntegrationGLTest::widgets() {
 
     c.newFrame({200, 200}, {200, 200});
     image(texture, {100, 100});
-
-    GL::Renderer::enable(GL::Renderer::Feature::Blending);
-    GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
-            GL::Renderer::BlendEquation::Add);
-    GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
-            GL::Renderer::BlendFunction::OneMinusSourceAlpha);
-
-    GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-    GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-    GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 
     c.drawFrame();
 
