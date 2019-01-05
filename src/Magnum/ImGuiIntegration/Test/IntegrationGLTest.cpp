@@ -143,30 +143,31 @@ IntegrationGLTest::IntegrationGLTest() {
 }
 
 void IntegrationGLTest::construction() {
-    Context c;
+    {
+        Context c;
+        MAGNUM_VERIFY_NO_GL_ERROR();
+    }
+
     MAGNUM_VERIFY_NO_GL_ERROR();
 
-    std::ostringstream out;
-    Error redirectError{&out};
-    Context c2;
-
-    CORRADE_COMPARE(out.str(),
-            "ImGuiIntegration::Context::Context(): Context already created.\n");
+    /* Can't test the single-instance assertions because the internal assert
+       fires every time */
 }
 
 void IntegrationGLTest::get() {
-    std::ostringstream out;
-    Error redirectError{&out};
+    {
+        std::ostringstream out;
+        Error redirectError{&out};
 
-    CORRADE_COMPARE(&Context::get(), nullptr);
-    CORRADE_COMPARE(out.str(),
-            "ImGuiIntegration::Context::get(): No instance of Context exists.\n");
+        Context::get();
+        CORRADE_COMPARE(out.str(),
+            "ImGuiIntegration::Context::get(): no instance exists\n");
+    }
 
     {
         Context c;
-        CORRADE_VERIFY(&Context::get());
+        CORRADE_COMPARE(&Context::get(), &c);
     }
-    CORRADE_COMPARE(&Context::get(), nullptr);
 }
 
 void IntegrationGLTest::frame() {
