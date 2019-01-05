@@ -27,6 +27,7 @@ src_configure() {
 		-DWITH_BULLET=ON
 		-DWITH_DART=OFF
 		-DWITH_GLM=ON
+		-DWITH_IMGUI=OFF
 	)
 	cmake-utils_src_configure
 }

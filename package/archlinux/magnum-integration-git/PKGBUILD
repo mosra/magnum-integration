@@ -27,7 +27,8 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DWITH_BULLET=ON \
         -DWITH_GLM=ON \
-        -DWITH_DART=OFF
+        -DWITH_DART=OFF \
+        -DWITH_IMGUI=OFF
     make
 }
 
