@@ -399,7 +399,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag v
 
 @see @ref Session::status()
 */
-typedef Corrade::Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
+typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
 
