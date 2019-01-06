@@ -113,6 +113,7 @@ struct IntegrationGLTest: GL::OpenGLTester {
     void get();
 
     void frame();
+    void frameZeroSize();
 
     void mouseInput();
     void keyInput();
@@ -126,6 +127,7 @@ IntegrationGLTest::IntegrationGLTest() {
               &IntegrationGLTest::get,
 
               &IntegrationGLTest::frame,
+              &IntegrationGLTest::frameZeroSize,
 
               &IntegrationGLTest::mouseInput,
               &IntegrationGLTest::keyInput,
@@ -174,6 +176,19 @@ void IntegrationGLTest::frame() {
     Context c;
 
     c.newFrame({200, 200}, {200, 200});
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    ImGui::Button("test");
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void IntegrationGLTest::frameZeroSize() {
+    Context c;
+
+    c.newFrame({0, 200}, {200, 0});
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     ImGui::Button("test");
