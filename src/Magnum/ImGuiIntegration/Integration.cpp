@@ -155,10 +155,8 @@ void Context::drawFrame() {
     if(fbWidth == 0 || fbHeight == 0)
         return;
 
-    auto drawData = ImGui::GetDrawData();
-    if(!drawData)
-        return;
-
+    ImDrawData* drawData = ImGui::GetDrawData();
+    CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
     drawData->ScaleClipRects(io.DisplayFramebufferScale);
 
     const Matrix4 projection =
