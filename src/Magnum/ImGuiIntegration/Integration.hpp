@@ -42,6 +42,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     ImGuiIO &io = ImGui::GetIO();
 
     switch(event.key()) {
+        /* LCOV_EXCL_START */
         case KeyEvent::Key::LeftShift:
         case KeyEvent::Key::RightShift:
             io.KeyShift = value;
@@ -111,8 +112,10 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         case KeyEvent::Key::Z:
             io.KeysDown[ImGuiKey_Z] = value;
             break;
-        default:
-            break;
+        /* LCOV_EXCL_STOP */
+
+        /* Unknown key, do nothing */
+        default: return false;
     }
 
     return io.WantCaptureKeyboard;
@@ -129,9 +132,11 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
         case MouseEvent::Button::Middle:
             ImGui::GetIO().MouseDown[2] = value;
             break;
-        default:
-            break;
+
+        /* Unknown button, do nothing */
+        default: return false;
     }
+
     return ImGui::GetIO().WantCaptureMouse;
 }
 

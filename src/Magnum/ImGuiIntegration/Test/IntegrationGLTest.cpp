@@ -223,6 +223,11 @@ void IntegrationGLTest::mouseInput() {
     c.handleMouseScrollEvent(scroll);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, -1.2f, Float);
+
+    /* Unknown keys shouldn't be propagated to imgui */
+    MouseEvent unknownButton{Button(666), {1, 2}, {}};
+    CORRADE_VERIFY(!c.handleMousePressEvent(unknownButton));
+    CORRADE_VERIFY(!c.handleMouseReleaseEvent(unknownButton));
 }
 
 void IntegrationGLTest::keyInput() {
@@ -240,6 +245,11 @@ void IntegrationGLTest::keyInput() {
     KeyEvent keyAlt{KeyEvent::Key::LeftAlt};
     c.handleKeyPressEvent(keyAlt);
     CORRADE_VERIFY(ImGui::GetIO().KeyAlt);
+
+    /* Unknown keys shouldn't be propagated to imgui */
+    KeyEvent unknownKey{KeyEvent::Key(666)};
+    CORRADE_VERIFY(!c.handleKeyPressEvent(unknownKey));
+    CORRADE_VERIFY(!c.handleKeyReleaseEvent(unknownKey));
 }
 
 void IntegrationGLTest::textInput() {
