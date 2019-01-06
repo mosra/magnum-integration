@@ -175,11 +175,18 @@ void IntegrationGLTest::get() {
 void IntegrationGLTest::frame() {
     Context c;
 
+    /* ImGui doesn't draw anything the first frame so just do a dummy frame
+       first in order to have stuff rendered the second and have the loop
+       actually covered. It's know that ImGui has one frame lag but this seems
+       different, since the button is rendered in the second frame only. */
     c.newFrame({200, 200}, {200, 200});
+    c.drawFrame();
+
     MAGNUM_VERIFY_NO_GL_ERROR();
 
+    /* This should render stuff now */
+    c.newFrame({200, 200}, {200, 200});
     ImGui::Button("test");
-
     c.drawFrame();
 
     MAGNUM_VERIFY_NO_GL_ERROR();
@@ -188,8 +195,13 @@ void IntegrationGLTest::frame() {
 void IntegrationGLTest::frameZeroSize() {
     Context c;
 
-    c.newFrame({0, 200}, {200, 0});
+    /* Again a dummy frame first */
+    c.newFrame({200, 200}, {200, 200});
+    c.drawFrame();
+
     MAGNUM_VERIFY_NO_GL_ERROR();
+
+    c.newFrame({0, 200}, {200, 0});
 
     ImGui::Button("test");
 
@@ -282,6 +294,10 @@ void IntegrationGLTest::textInput() {
 void IntegrationGLTest::widgets() {
     /* Checks compilation and no GL errors only */
     Context c;
+
+    /* Again a dummy frame first */
+    c.newFrame({200, 200}, {200, 200});
+    c.drawFrame();
 
     GL::Texture2D texture;
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
