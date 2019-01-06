@@ -33,8 +33,7 @@
  */
 
 #include <imgui.h>
-#include <Magnum/Math/Vector2.h>
-#include <Magnum/Math/Vector4.h>
+#include <Magnum/Math/Range.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/GL/Texture.h>
 
@@ -47,18 +46,16 @@ namespace Magnum { namespace ImGuiIntegration {
 @brief Image widget displaying a @ref GL::Texture2D
 @param texture      Texture to display
 @param size         Widget size
-@param uv0          Min of source range on the texture
-@param uv1          Max of source range on the texture
+@param uvRange      UV range on the texture (covers the whole texture by default)
 @param tintColor    Tint color, default @cpp 0xffffffff_rgbaf @ce
 @param borderColor  Border color, default @cpp 0x00000000_rgbaf @ce
 */
 inline void image(GL::Texture2D& texture, const Vector2& size,
-    const Vector2& uv0 = {}, const Vector2& uv1 = Vector2{1.0f},
+    const Range2D& uvRange = {{}, Vector2{1.0f}},
     const Color4& tintColor = Color4{1.0f},
     const Color4& borderColor = {})
 {
-    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uv0),
-            ImVec2(uv1), ImColor(tintColor), ImColor(borderColor));
+    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), ImColor(tintColor), ImColor(borderColor));
 }
 
 }}
