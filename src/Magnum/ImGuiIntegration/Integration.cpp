@@ -59,10 +59,12 @@ Context& Context::get() {
     return *_instance;
 }
 
-Context::Context() {
+/* Yes, this is godawful ugly, don't kill me for that plz */
+Context::Context(): Context{(ImGui::CreateContext(), *ImGui::GetCurrentContext())} {}
+
+Context::Context(ImGuiContext&) {
     CORRADE_ASSERT(_instance == nullptr,
         "ImGuiIntegration::Context: context already created", );
-    ImGui::CreateContext();
 
     ImGuiIO &io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab]        = ImGuiKey_Tab;

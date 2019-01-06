@@ -43,6 +43,10 @@
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
+struct ImGuiContext;
+#endif
+
 namespace Magnum { namespace ImGuiIntegration {
 
 namespace Implementation {
@@ -116,9 +120,24 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          *
          * Expects that no instance is created yet. This function creates the
          * ImGui context using @cpp ImGui::CreateContext() @ce and then queries
-         * the font glyph cache from ImGui, uploading it to the GPU.
+         * the font glyph cache from ImGui, uploading it to the GPU. If you
+         * need to do some extra work on the context and before the font
+         * texture gets uploaded, use @ref Context(ImGuiContext&) instead.
          */
         explicit Context();
+
+        /**
+         * @brief Construct from an existing context
+         *
+         * Expects that no instance is created yet; takes ownership of the
+         * passed context, deleting it on destruction. In comparison to
+         * @ref Context() this constructor is useful if you need to do some
+         * work before the font glyph cache gets uploaded to the GPU, for
+         * example adding custom fonts:
+         *
+         * @snippet ImGuiIntegration.cpp Context-custom-fonts
+         */
+        explicit Context(ImGuiContext& context);
 
         /** @brief Copying is not allowed */
         Context(const Context&) = delete;

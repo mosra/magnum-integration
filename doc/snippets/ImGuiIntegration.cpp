@@ -27,6 +27,7 @@
 #include "Magnum/ImGuiIntegration/Integration.h"
 
 #include <Magnum/GL/Renderer.h>
+#include <imgui.h>
 
 using namespace Magnum;
 
@@ -58,5 +59,17 @@ GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
 GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
 GL::Renderer::disable(GL::Renderer::Feature::Blending);
 /* [Context-usage-per-frame] */
+}
+
+{
+/* [Context-custom-fonts] */
+ImGui::CreateContext();
+
+ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf", 16.0f);
+
+ImGuiIntegration::Context context(*ImGui::GetCurrentContext());
+
+// ...
+/* [Context-custom-fonts] */
 }
 }
