@@ -90,9 +90,7 @@ Use @ref newFrame() to initialize a ImGui frame and finally draw it with
 @section ImGuiIntegration-Context-usage Usage
 
 There should always only be one instance of @ref Context. As soon as this
-one instance is created, you can access it via @ref Context::get().
-
-Example:
+one instance is created, you can access it via @ref Context::get(). Example:
 
 @snippet ImGuiIntegration.cpp Context-usage
 
