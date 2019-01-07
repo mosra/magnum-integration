@@ -38,7 +38,7 @@
 #include <Magnum/GL/Texture.h>
 
 #include "Magnum/ImGuiIntegration/visibility.h"
-#include "Magnum/ImGuiIntegration/Conversion.h"
+#include "Magnum/ImGuiIntegration/Integration.h"
 
 namespace Magnum { namespace ImGuiIntegration {
 

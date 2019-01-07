@@ -33,7 +33,7 @@
 #include <imgui.h>
 #include <Corrade/Utility/Resource.h>
 
-#include "Magnum/ImGuiIntegration/Conversion.h"
+#include "Magnum/ImGuiIntegration/Integration.h"
 #include "Magnum/ImGuiIntegration/Context.h"
 
 namespace Magnum { namespace ImGuiIntegration {

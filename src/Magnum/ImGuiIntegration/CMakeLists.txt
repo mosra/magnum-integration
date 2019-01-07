@@ -46,9 +46,9 @@ set(MagnumImGuiIntegration_SRCS
     ${MagnumImGuiIntegrationShaders_RCS})
 
 set(MagnumImGuiIntegration_HEADERS
-    Conversion.h
     Context.h
     Context.hpp
+    Integration.h
     Widgets.h
 
     visibility.h)

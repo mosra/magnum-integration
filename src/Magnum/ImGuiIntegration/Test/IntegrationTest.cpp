@@ -26,7 +26,7 @@
 
 #include <Corrade/TestSuite/Tester.h>
 
-#include "Magnum/ImGuiIntegration/Conversion.h"
+#include "Magnum/ImGuiIntegration/Integration.h"
 
 namespace Magnum { namespace ImGuiIntegration { namespace Test {
 

@@ -41,7 +41,7 @@
 #include <Magnum/GL/Version.h>
 #include <Magnum/ImageView.h>
 
-#include "Magnum/ImGuiIntegration/Conversion.h"
+#include "Magnum/ImGuiIntegration/Integration.h"
 
 #ifdef MAGNUM_IMGUIINTEGRATION_BUILD_STATIC
 static void importShaderResources() {
