@@ -110,6 +110,8 @@ functions are meant to be used inside event handlers of application classes
 such as @ref Platform::Sdl2Application, directly passing the @p event parameter
 to them. The returned value is then @cpp true @ce if ImGui used the event (and
 thus it shouldn't be propagated further) and @cpp false @ce otherwise.
+
+@experimental
 */
 class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
     public:
