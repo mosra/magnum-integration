@@ -24,14 +24,28 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/ImGuiIntegration/Context.h"
-
-#include <Magnum/GL/Renderer.h>
 #include <imgui.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/GL/Renderer.h>
+
+#include "Magnum/ImGuiIntegration/Integration.h"
+#include "Magnum/ImGuiIntegration/Context.h"
 
 using namespace Magnum;
 
 int main() {
+{
+/* [Integration] */
+ImVec2 a{20.0f, 50.0f};
+Vector2 b(a);
+
+using namespace Math::Literals;
+ImColor c = ImColor(0xff9391_rgbf);
+/* [Integration] */
+static_cast<void>(b);
+static_cast<void>(c);
+}
+
 {
 /* [Context-usage] */
 ImGuiIntegration::Context context;

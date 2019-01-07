@@ -38,12 +38,14 @@ struct IntegrationTest: TestSuite::Tester {
     void vector2();
     void vector4();
     void color();
+    void colorLiterals();
 };
 
 IntegrationTest::IntegrationTest() {
     addTests({&IntegrationTest::vector2,
               &IntegrationTest::vector4,
-              &IntegrationTest::color});
+              &IntegrationTest::color,
+              &IntegrationTest::colorLiterals});
 }
 
 void IntegrationTest::vector2() {
@@ -81,6 +83,16 @@ void IntegrationTest::color() {
     CORRADE_COMPARE(c.Value.y, color.y());
     CORRADE_COMPARE(c.Value.z, color.z());
     CORRADE_COMPARE(c.Value.w, color.w());
+}
+
+void IntegrationTest::colorLiterals() {
+    using namespace Math::Literals;
+
+    ImColor color3 = ImColor(0xff3366_rgbf);
+    ImColor color4 = ImColor(0xff336688_rgbaf);
+
+    CORRADE_COMPARE(Color4(color3), 0xff3366ff_rgbaf);
+    CORRADE_COMPARE(Color4(color4), 0xff336688_rgbaf);
 }
 
 }}}

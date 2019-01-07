@@ -27,8 +27,31 @@
 */
 
 /** @file
- * @brief Conversion of ImGui math types
- */
+@brief Conversion of ImGui math types
+
+Provides conversion for the following types:
+
+| Magnum vector type                | Equivalent ImGui type     |
+| --------------------------------- | ------------------------- |
+| @ref Magnum::Vector2 "Vector2"    | @cpp ImVec2 @ce <b></b>   |
+| @ref Magnum::Vector4 "Vector4", @ref Magnum::Color4 "Color4" | @cpp ImVec4 @ce, @cpp ImColor @ce |
+| @ref Magnum::Vector3 "Vector3", @ref Magnum::Color3 "Color3" | @cpp ImColor @ce <b></b> |
+
+Note that conversion of @cpp ImColor @ce to @ref Magnum::Color3 "Color3" loses
+the alpha channel, while in the other direction alpha will be set to @cpp 1.0f @ce.
+
+@attention Note that @cpp ImColor @ce is *implicitly* convertible to
+    @cpp int @ce, encoding its value as a 8-bit-per-channel RGBA. This means
+    operations such as @cb{.cpp} Vector2{ImColor{...}} @ce will compile, but
+    produce a wrong result, having the encoded value copied to all channels.
+    Enable `-Wconversion` or equivalent warning on other compilers to catch the
+    unwanted int-to-float conversion.
+
+Example usage:
+
+@snippet ImGuiIntegration.cpp Integration
+
+*/
 
 #include <imgui.h>
 #include <Magnum/Types.h>
@@ -65,8 +88,22 @@ template<> struct VectorConverter<4, Float, ImColor> {
     }
 
     static ImColor to(const Vector<4, Float>& other) {
-        /* Construct from ImVec4 */
-        return ImVec4(other);
+        return ImVec4(other); /* Construct from ImVec4 */
+    }
+};
+
+/* ImColor would be explicitly convertible to Color3 because it has an implicit
+   conversion to an int and then Color3 has an explicit single-argument
+   constructor, taking a Float. That would do the wrong thing, so we provide
+   an explicit conversion even though in one direction it will result in a loss
+   of alpha. OTOH this also allows us to do things like ImColor(0xff3366_rgbf) */
+template<> struct VectorConverter<3, Float, ImColor> {
+    static Vector<3, Float> from(const ImColor& other) {
+        return Vector<3, Float>(other.Value.x, other.Value.y, other.Value.z);
+    }
+
+    static ImColor to(const Vector<3, Float>& other) {
+        return ImVec4(Vector<4, Float>{other[0], other[1], other[2], 1.0f});
     }
 };
 
