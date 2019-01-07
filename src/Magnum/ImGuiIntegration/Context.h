@@ -34,12 +34,9 @@
 
 #include <Magnum/Timeline.h>
 #include <Magnum/GL/AbstractShaderProgram.h>
-#include <Magnum/GL/Attribute.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
-#include <Magnum/Math/Matrix4.h>
-#include <Magnum/Math/Color.h>
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 
@@ -59,15 +56,8 @@ class ImGuiShader: public GL::AbstractShaderProgram {
 
         explicit ImGuiShader();
 
-        ImGuiShader& setProjectionMatrix(const Matrix4& matrix) {
-            setUniform(_projMatrixUniform, matrix);
-            return *this;
-        }
-
-        ImGuiShader& bindTexture(GL::Texture2D& texture) {
-            texture.bind(TextureLayer);
-            return *this;
-        }
+        ImGuiShader& setProjectionMatrix(const Matrix4& matrix);
+        ImGuiShader& bindTexture(GL::Texture2D& texture);
 
     private:
         enum: Int {

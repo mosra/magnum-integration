@@ -31,6 +31,7 @@
 #include <cstring>
 #include <imgui.h>
 #include <Corrade/Utility/Resource.h>
+#include <Magnum/ImageView.h>
 #include <Magnum/GL/Context.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Extensions.h>
@@ -40,7 +41,7 @@
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/TextureFormat.h>
 #include <Magnum/GL/Version.h>
-#include <Magnum/ImageView.h>
+#include <Magnum/Math/Matrix4.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
@@ -51,6 +52,18 @@ static void importShaderResources() {
 #endif
 
 namespace Magnum { namespace ImGuiIntegration {
+
+namespace Implementation {
+    ImGuiShader& ImGuiShader::setProjectionMatrix(const Matrix4& matrix) {
+        setUniform(_projMatrixUniform, matrix);
+        return *this;
+    }
+
+    ImGuiShader& ImGuiShader::bindTexture(GL::Texture2D& texture) {
+        texture.bind(TextureLayer);
+        return *this;
+    }
+}
 
 Context* Context::_instance = nullptr;
 
