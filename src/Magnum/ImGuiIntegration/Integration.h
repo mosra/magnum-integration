@@ -31,9 +31,8 @@
  */
 
 #include <imgui.h>
-#include <Magnum/Magnum.h>
+#include <Magnum/Types.h>
 #include <Magnum/Math/Vector.h>
-#include <Magnum/Math/Color.h>
 
 namespace Magnum { namespace Math { namespace Implementation {
 

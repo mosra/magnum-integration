@@ -25,6 +25,8 @@
 */
 
 #include <Corrade/TestSuite/Tester.h>
+#include <Magnum/Magnum.h>
+#include <Magnum/Math/Color.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
