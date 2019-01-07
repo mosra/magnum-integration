@@ -54,16 +54,16 @@ WidgetsGLTest::WidgetsGLTest() {
 
 void WidgetsGLTest::image() {
     /* Checks compilation and no GL errors only */
-    Context c;
+    Context c{{200, 200}};
 
     /* Again a dummy frame first as ImGui doesn't draw anything the first frame */
-    c.newFrame({200, 200}, {200, 200});
+    c.newFrame();
     c.drawFrame();
 
     GL::Texture2D texture;
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
 
-    c.newFrame({200, 200}, {200, 200});
+    c.newFrame();
 
     ImGuiIntegration::image(texture, {100, 100});
 

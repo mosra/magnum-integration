@@ -49,4 +49,13 @@ if(WITH_IMGUI)
     add_library(snippets-ImGuiIntegration STATIC ImGuiIntegration.cpp)
     target_link_libraries(snippets-ImGuiIntegration PRIVATE MagnumImGuiIntegration)
     set_target_properties(snippets-ImGuiIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
+
+    find_package(Magnum COMPONENTS Sdl2Application)
+    if(Magnum_Sdl2Application_FOUND)
+        add_library(snippets-ImGuiIntegration-sdl2 STATIC ImGuiIntegration-sdl2.cpp)
+        target_link_libraries(snippets-ImGuiIntegration-sdl2 PRIVATE
+            MagnumImGuiIntegration
+            Magnum::Sdl2Application)
+        set_target_properties(snippets-ImGuiIntegration-sdl2 PROPERTIES FOLDER "Magnum/doc/snippets")
+    endif()
 endif()

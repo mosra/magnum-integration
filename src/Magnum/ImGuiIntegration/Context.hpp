@@ -155,7 +155,7 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
 }
 
 template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent& event) {
-    ImGui::GetIO().MousePos = ImVec2(Vector2(event.position()));
+    ImGui::GetIO().MousePos = ImVec2(Vector2(event.position())*_eventScaling);
     return ImGui::GetIO().WantCaptureMouse;
 }
 

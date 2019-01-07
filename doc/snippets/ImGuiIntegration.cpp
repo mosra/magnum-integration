@@ -48,11 +48,11 @@ static_cast<void>(c);
 
 {
 /* [Context-usage] */
-ImGuiIntegration::Context context;
+ImGuiIntegration::Context context{{640, 480}};
 
 // ...
 
-ImGuiIntegration::Context::get().newFrame({640, 480}, {640, 480});
+ImGuiIntegration::Context::get().newFrame();
 /* [Context-usage] */
 
 /* [Context-usage-per-frame] */
@@ -81,7 +81,7 @@ ImGui::CreateContext();
 
 ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf", 16.0f);
 
-ImGuiIntegration::Context context(*ImGui::GetCurrentContext());
+ImGuiIntegration::Context context(*ImGui::GetCurrentContext(), {640, 480});
 
 // ...
 /* [Context-custom-fonts] */

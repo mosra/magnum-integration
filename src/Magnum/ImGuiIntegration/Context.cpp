@@ -28,6 +28,7 @@
 
 #include "Context.h"
 
+#include <cstring>
 #include <imgui.h>
 #include <Corrade/Utility/Resource.h>
 #include <Magnum/GL/Context.h>
@@ -60,9 +61,11 @@ Context& Context::get() {
 }
 
 /* Yes, this is godawful ugly, don't kill me for that plz */
-Context::Context(): Context{(ImGui::CreateContext(), *ImGui::GetCurrentContext())} {}
+Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{(ImGui::CreateContext(), *ImGui::GetCurrentContext()), size, windowSize, framebufferSize} {}
 
-Context::Context(ImGuiContext&) {
+Context::Context(const Vector2i& size): Context{Vector2{size}, size, size} {}
+
+Context::Context(ImGuiContext&, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize) {
     CORRADE_ASSERT(_instance == nullptr,
         "ImGuiIntegration::Context: context already created", );
 
@@ -89,24 +92,9 @@ Context::Context(ImGuiContext&) {
 
     /** @todo Set clipboard text once Platform supports it */
 
-    unsigned char *pixels;
-    int width, height;
-    int pixelSize;
-    io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &pixelSize);
-
-    CORRADE_ASSERT(width > 0 && height > 0,
-        "ImGuiIntegration::Context: width and height is expected to be larger than 0", );
-    CORRADE_ASSERT(pixelSize > 0,
-        "ImGuiIntegration::Context: pixel size is expected to be larger than 0", );
-
-    ImageView2D image{GL::PixelFormat::RGBA,
-        GL::PixelType::UnsignedByte, {width, height},
-        {pixels, std::size_t(pixelSize*width*height)}};
-
-    _texture.setMagnificationFilter(GL::SamplerFilter::Linear)
-        .setMinificationFilter(GL::SamplerFilter::Linear)
-        .setStorage(1, GL::TextureFormat::RGBA8, image.size())
-        .setSubImage(0, {}, image);
+    /* Set up framebuffer sizes, font supersampling etc. and upload the glyph
+       cache */
+    relayout(size, windowSize, framebufferSize);
 
     _mesh.setPrimitive(GL::MeshPrimitive::Triangles);
     _mesh.addVertexBuffer(
@@ -121,6 +109,81 @@ Context::Context(ImGuiContext&) {
     _instance = this;
 }
 
+Context::Context(ImGuiContext& context, const Vector2i& size): Context{context, Vector2{size}, size, size} {}
+
+void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize) {
+    /* If size of the UI is 1024x576 with a 16px font but it's rendered to a
+       3840x2160 framebuffer, we need to supersample the font 3,75x to get
+       crisp enough look. This is the same as in Magnum::Ui::UserInterface. */
+    const Vector2 supersamplingRatio = Vector2(framebufferSize)/size;
+
+    /* ImGui unfortunately expects that event coordinates == positioning
+       coordinates, which means we have to scale the events like they would be
+       related to `size` and not `windowSize`. */
+    _eventScaling = size/Vector2{windowSize};
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    /* If the supersampling ratio changed, we need to regenerate the font */
+    if(_supersamplingRatio != supersamplingRatio) {
+        /* Need to use > 0.0f instead of just != 0 so we catch NaNs too */
+        const Float nonZeroSupersamplingRatio = (supersamplingRatio.x() > 0.0f ? supersamplingRatio.x() : 1.0f);
+
+        /* If there's no fonts yet (first run) or only one font and it's the
+           one we set earier (has the [SCALED] suffix), wipe it and replace
+           with a differently scaled version. Otherwise assume the fonts are
+           user-supplied, do not touch them and just rebuild the cache. */
+        if(io.Fonts->Fonts.empty() || (io.Fonts->Fonts.size() == 1 && std::strcmp(io.Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]") == 0)) {
+            /* Clear all fonts. Can't just replace the default font,
+               unfortunately */
+            io.Fonts->Clear();
+
+            /* Because ImGui doesn't have native HiDPI support yet, we upscale
+               the font for glyph prerendering and then downscale it back for
+               the UI */
+            ImFontConfig cfg;
+            std::strcpy(cfg.Name, "ProggyClean.ttf, 13px [SCALED]");
+            cfg.SizePixels = 13.0f*nonZeroSupersamplingRatio;
+            io.Fonts->AddFontDefault(&cfg);
+        }
+
+        _supersamplingRatio = supersamplingRatio;
+
+        /* Downscale back the upscaled font to achieve supersampling */
+        io.FontGlobalScale = 1.0f/nonZeroSupersamplingRatio;
+
+        unsigned char *pixels;
+        int width, height;
+        int pixelSize;
+        io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &pixelSize);
+        CORRADE_INTERNAL_ASSERT(width > 0 && height > 0 && pixelSize == 4);
+
+        ImageView2D image{GL::PixelFormat::RGBA,
+            GL::PixelType::UnsignedByte, {width, height},
+            {pixels, std::size_t(pixelSize*width*height)}};
+
+        _texture = GL::Texture2D{};
+        _texture.setMagnificationFilter(GL::SamplerFilter::Linear)
+            .setMinificationFilter(GL::SamplerFilter::Linear)
+            .setStorage(1, GL::TextureFormat::RGBA8, image.size())
+            .setSubImage(0, {}, image);
+
+        /* Clear texture to save RAM, we have it on the GPU now */
+        io.Fonts->ClearTexData();
+    }
+
+    /* Display size is the window size. Scaling of this to the actual window
+       and framebuffer size is done on the magnum side when rendering. */
+    io.DisplaySize = ImVec2(Vector2(size));
+    /* io.DisplayFramebufferScale is currently not used by imgui (1.66b), so
+       why bother */
+    /** @todo revisit when there's progress on https://github.com/ocornut/imgui/issues/1676 */
+}
+
+void Context::relayout(const Vector2i& size) {
+    relayout(Vector2{size}, size, size);
+}
+
 Context::~Context() {
     CORRADE_INTERNAL_ASSERT(_instance == this);
 
@@ -132,18 +195,10 @@ Context::~Context() {
     _instance = nullptr;
 }
 
-void Context::newFrame(const Vector2i& windowSize, const Vector2i& framebufferSize) {
+void Context::newFrame() {
     _timeline.nextFrame();
 
-    ImGuiIO& io = ImGui::GetIO();
-
-    /* Setup display size (every frame to accommodate for window resizing) */
-    io.DisplaySize = ImVec2(Vector2(windowSize));
-    io.DisplayFramebufferScale = ImVec2(
-        windowSize.x() > 0 ? Float(framebufferSize.x())/windowSize.x() : 0.0f,
-        windowSize.y() > 0 ? Float(framebufferSize.y())/windowSize.y() : 0.0f);
-
-    io.DeltaTime = _timeline.previousFrameDuration();
+    ImGui::GetIO().DeltaTime = _timeline.previousFrameDuration();
 
     ImGui::NewFrame();
 }
@@ -152,10 +207,8 @@ void Context::drawFrame() {
     ImGui::Render();
 
     ImGuiIO& io = ImGui::GetIO();
-    const Int fbWidth(io.DisplaySize.x*io.DisplayFramebufferScale.x);
-    const Int fbHeight(io.DisplaySize.y*io.DisplayFramebufferScale.y);
-    if(fbWidth == 0 || fbHeight == 0)
-        return;
+    const Vector2 fbSize = Vector2{io.DisplaySize}*Vector2{io.DisplayFramebufferScale};
+    if(!fbSize.product()) return;
 
     ImDrawData* drawData = ImGui::GetDrawData();
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
@@ -184,9 +237,10 @@ void Context::drawFrame() {
             auto userTexture = static_cast<GL::Texture2D*>(pcmd->TextureId);
             _shader.bindTexture(userTexture ? *userTexture : _texture);
 
-            GL::Renderer::setScissor({
-                {Int(pcmd->ClipRect.x), fbHeight - Int(pcmd->ClipRect.w)},
-                {Int(pcmd->ClipRect.z), fbHeight - Int(pcmd->ClipRect.y)}});
+            GL::Renderer::setScissor(Range2Di{Range2D{
+                {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},
+                {pcmd->ClipRect.z, fbSize.y() - pcmd->ClipRect.y}}
+                    .scaled(_supersamplingRatio)});
 
             _mesh.setCount(pcmd->ElemCount);
             _mesh.setIndexBuffer(_indexBuffer, indexBufferOffset*sizeof(ImDrawIdx),

@@ -106,11 +106,18 @@ struct TextInputEvent {
 struct ContextGLTest: GL::OpenGLTester {
     explicit ContextGLTest();
 
-    void construction();
+    void construct();
+    void constructExistingContext();
+    void constructExistingContextAddFont();
     void get();
 
     void frame();
     void frameZeroSize();
+
+    void relayout();
+    void relayoutDpiChange();
+    void relayoutDpiChangeCustomFont();
+    void relayoutZeroSize();
 
     void mouseInput();
     void keyInput();
@@ -118,11 +125,18 @@ struct ContextGLTest: GL::OpenGLTester {
 };
 
 ContextGLTest::ContextGLTest() {
-    addTests({&ContextGLTest::construction,
+    addTests({&ContextGLTest::construct,
+              &ContextGLTest::constructExistingContext,
+              &ContextGLTest::constructExistingContextAddFont,
               &ContextGLTest::get,
 
               &ContextGLTest::frame,
               &ContextGLTest::frameZeroSize,
+
+              &ContextGLTest::relayout,
+              &ContextGLTest::relayoutDpiChange,
+              &ContextGLTest::relayoutDpiChangeCustomFont,
+              &ContextGLTest::relayoutZeroSize,
 
               &ContextGLTest::mouseInput,
               &ContextGLTest::keyInput,
@@ -137,9 +151,14 @@ ContextGLTest::ContextGLTest() {
     GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 }
 
-void ContextGLTest::construction() {
+void ContextGLTest::construct() {
     {
-        Context c;
+        Context c{{}};
+
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+
         MAGNUM_VERIFY_NO_GL_ERROR();
     }
 
@@ -147,6 +166,50 @@ void ContextGLTest::construction() {
 
     /* Can't test the single-instance assertions because the internal assert
        fires every time */
+}
+
+void ContextGLTest::constructExistingContext() {
+    {
+        ImGui::CreateContext();
+
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 0);
+
+        Context c{*ImGui::GetCurrentContext(), {}};
+
+        MAGNUM_VERIFY_NO_GL_ERROR();
+
+        /* No user-supplied font even though we used a custom context, add
+           the default one  */
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    }
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::constructExistingContextAddFont() {
+    {
+        ImGui::CreateContext();
+
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 0);
+
+        ImGui::GetIO().Fonts->AddFontDefault();
+
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+
+        Context c{*ImGui::GetCurrentContext(), {}};
+
+        MAGNUM_VERIFY_NO_GL_ERROR();
+
+        /* The user-supplied font should not get overriden, even though it's
+           the same */
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    }
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
 void ContextGLTest::get() {
@@ -160,25 +223,25 @@ void ContextGLTest::get() {
     }
 
     {
-        Context c;
+        Context c{{}};
         CORRADE_COMPARE(&Context::get(), &c);
     }
 }
 
 void ContextGLTest::frame() {
-    Context c;
+    Context c{{200, 200}, {70, 70}, {350, 350}};
 
     /* ImGui doesn't draw anything the first frame so just do a dummy frame
        first in order to have stuff rendered the second and have the loop
        actually covered. It's know that ImGui has one frame lag but this seems
        different, since the button is rendered in the second frame only. */
-    c.newFrame({200, 200}, {200, 200});
+    c.newFrame();
     c.drawFrame();
 
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     /* This should render stuff now */
-    c.newFrame({200, 200}, {200, 200});
+    c.newFrame();
     ImGui::Button("test");
     c.drawFrame();
 
@@ -186,15 +249,15 @@ void ContextGLTest::frame() {
 }
 
 void ContextGLTest::frameZeroSize() {
-    Context c;
+    Context c{{0, 200}};
 
     /* Again a dummy frame first */
-    c.newFrame({200, 200}, {200, 200});
+    c.newFrame();
     c.drawFrame();
 
     MAGNUM_VERIFY_NO_GL_ERROR();
 
-    c.newFrame({0, 200}, {200, 0});
+    c.newFrame();
 
     ImGui::Button("test");
 
@@ -203,8 +266,124 @@ void ContextGLTest::frameZeroSize() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
+void ContextGLTest::relayout() {
+    Context c{{400, 400}};
+
+    /* ImGui doesn't draw anything the first frame so just do a dummy frame
+       first in order to have stuff rendered the second and have the loop
+       actually covered. It's know that ImGui has one frame lag but this seems
+       different, since the button is rendered in the second frame only. */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+
+    c.relayout({200, 200});
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+
+    /* This should render stuff now */
+    c.newFrame();
+    ImGui::Button("test");
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::relayoutDpiChange() {
+    Context c{{400, 400}};
+
+    /* ImGui doesn't draw anything the first frame so just do a dummy frame
+       first in order to have stuff rendered the second and have the loop
+       actually covered. It's know that ImGui has one frame lag but this seems
+       different, since the button is rendered in the second frame only. */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+
+    c.relayout({200, 200}, {70, 70}, {400, 400});
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f); /* 2x */
+
+    /* This should render stuff now */
+    c.newFrame();
+    ImGui::Button("test");
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::relayoutDpiChangeCustomFont() {
+    ImGui::CreateContext();
+
+    ImGui::GetIO().Fonts->AddFontDefault();
+
+    Context c{*ImGui::GetCurrentContext(), {400, 400}};
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+
+    /* ImGui doesn't draw anything the first frame so just do a dummy frame
+       first in order to have stuff rendered the second and have the loop
+       actually covered. It's know that ImGui has one frame lag but this seems
+       different, since the button is rendered in the second frame only. */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f); /*same */
+
+    c.relayout({200, 200}, {70, 70}, {400, 400});
+
+    /* This should render stuff now */
+    c.newFrame();
+    ImGui::Button("test");
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::relayoutZeroSize() {
+    Context c{{200, 200}};
+
+    /* ImGui doesn't draw anything the first frame so just do a dummy frame
+       first in order to have stuff rendered the second and have the loop
+       actually covered. It's know that ImGui has one frame lag but this seems
+       different, since the button is rendered in the second frame only. */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    c.relayout({100, 0});
+
+    /* This should render stuff now */
+    c.newFrame();
+    ImGui::Button("test");
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
 void ContextGLTest::mouseInput() {
-    Context c;
+    Context c{{200, 200}};
 
     /* Mouse Button */
     CORRADE_VERIFY(!ImGui::IsMouseDown(0)); /* left */
@@ -251,7 +430,7 @@ void ContextGLTest::mouseInput() {
 }
 
 void ContextGLTest::keyInput() {
-    Context c;
+    Context c{{}};
 
     CORRADE_VERIFY(!ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
 
@@ -273,7 +452,7 @@ void ContextGLTest::keyInput() {
 }
 
 void ContextGLTest::textInput() {
-    Context c;
+    Context c{{}};
 
     TextInputEvent textEvent{{"abc"}};
     c.handleTextInputEvent(textEvent);
