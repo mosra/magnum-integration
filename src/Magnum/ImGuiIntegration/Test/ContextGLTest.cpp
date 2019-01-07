@@ -26,14 +26,11 @@
 
 #include <sstream>
 #include <Corrade/TestSuite/Compare/Container.h>
-#include <Magnum/Math/Vector3.h>
 #include <Magnum/Magnum.h>
-#include <Magnum/GL/TextureFormat.h>
+#include <Magnum/Math/Vector3.h>
 #include <Magnum/GL/OpenGLTester.h>
 
-#include "Magnum/ImGuiIntegration/Integration.h"
-#include "Magnum/ImGuiIntegration/Integration.hpp"
-#include "Magnum/ImGuiIntegration/Widgets.h"
+#include "Magnum/ImGuiIntegration/Context.hpp"
 
 namespace Magnum { namespace ImGuiIntegration { namespace Test {
 
@@ -106,8 +103,8 @@ struct TextInputEvent {
     Containers::ArrayView<const char> _text;
 };
 
-struct IntegrationGLTest: GL::OpenGLTester {
-    explicit IntegrationGLTest();
+struct ContextGLTest: GL::OpenGLTester {
+    explicit ContextGLTest();
 
     void construction();
     void get();
@@ -118,22 +115,18 @@ struct IntegrationGLTest: GL::OpenGLTester {
     void mouseInput();
     void keyInput();
     void textInput();
-
-    void widgets();
 };
 
-IntegrationGLTest::IntegrationGLTest() {
-    addTests({&IntegrationGLTest::construction,
-              &IntegrationGLTest::get,
+ContextGLTest::ContextGLTest() {
+    addTests({&ContextGLTest::construction,
+              &ContextGLTest::get,
 
-              &IntegrationGLTest::frame,
-              &IntegrationGLTest::frameZeroSize,
+              &ContextGLTest::frame,
+              &ContextGLTest::frameZeroSize,
 
-              &IntegrationGLTest::mouseInput,
-              &IntegrationGLTest::keyInput,
-              &IntegrationGLTest::textInput,
-
-              &IntegrationGLTest::widgets});
+              &ContextGLTest::mouseInput,
+              &ContextGLTest::keyInput,
+              &ContextGLTest::textInput});
 
     GL::Renderer::enable(GL::Renderer::Feature::Blending);
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
@@ -144,7 +137,7 @@ IntegrationGLTest::IntegrationGLTest() {
     GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 }
 
-void IntegrationGLTest::construction() {
+void ContextGLTest::construction() {
     {
         Context c;
         MAGNUM_VERIFY_NO_GL_ERROR();
@@ -156,7 +149,7 @@ void IntegrationGLTest::construction() {
        fires every time */
 }
 
-void IntegrationGLTest::get() {
+void ContextGLTest::get() {
     {
         std::ostringstream out;
         Error redirectError{&out};
@@ -172,7 +165,7 @@ void IntegrationGLTest::get() {
     }
 }
 
-void IntegrationGLTest::frame() {
+void ContextGLTest::frame() {
     Context c;
 
     /* ImGui doesn't draw anything the first frame so just do a dummy frame
@@ -192,7 +185,7 @@ void IntegrationGLTest::frame() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
-void IntegrationGLTest::frameZeroSize() {
+void ContextGLTest::frameZeroSize() {
     Context c;
 
     /* Again a dummy frame first */
@@ -210,7 +203,7 @@ void IntegrationGLTest::frameZeroSize() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
-void IntegrationGLTest::mouseInput() {
+void ContextGLTest::mouseInput() {
     Context c;
 
     /* Mouse Button */
@@ -257,7 +250,7 @@ void IntegrationGLTest::mouseInput() {
     CORRADE_VERIFY(!c.handleMouseReleaseEvent(unknownButton));
 }
 
-void IntegrationGLTest::keyInput() {
+void ContextGLTest::keyInput() {
     Context c;
 
     CORRADE_VERIFY(!ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
@@ -279,7 +272,7 @@ void IntegrationGLTest::keyInput() {
     CORRADE_VERIFY(!c.handleKeyReleaseEvent(unknownKey));
 }
 
-void IntegrationGLTest::textInput() {
+void ContextGLTest::textInput() {
     Context c;
 
     TextInputEvent textEvent{{"abc"}};
@@ -291,25 +284,6 @@ void IntegrationGLTest::textInput() {
         TestSuite::Compare::Container);
 }
 
-void IntegrationGLTest::widgets() {
-    /* Checks compilation and no GL errors only */
-    Context c;
-
-    /* Again a dummy frame first */
-    c.newFrame({200, 200}, {200, 200});
-    c.drawFrame();
-
-    GL::Texture2D texture;
-    texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
-
-    c.newFrame({200, 200}, {200, 200});
-    image(texture, {100, 100});
-
-    c.drawFrame();
-
-    MAGNUM_VERIFY_NO_GL_ERROR();
-}
-
 }}}
 
-CORRADE_TEST_MAIN(Magnum::ImGuiIntegration::Test::IntegrationGLTest)
+CORRADE_TEST_MAIN(Magnum::ImGuiIntegration::Test::ContextGLTest)

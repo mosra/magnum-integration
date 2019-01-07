@@ -24,7 +24,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/ImGuiIntegration/Integration.h"
+#include "Magnum/ImGuiIntegration/Context.h"
 
 #include <Magnum/GL/Renderer.h>
 #include <imgui.h>

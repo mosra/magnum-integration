@@ -32,10 +32,13 @@ set_target_properties(
     PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 
 if(BUILD_GL_TESTS)
-    corrade_add_test(ImGuiIntegrationGLTest IntegrationGLTest.cpp
+    corrade_add_test(ImGuiContextGLTest ContextGLTest.cpp
+        LIBRARIES MagnumImGuiIntegrationTestLib Magnum::OpenGLTester)
+    corrade_add_test(ImGuiWidgetsGLTest WidgetsGLTest.cpp
         LIBRARIES MagnumImGuiIntegrationTestLib Magnum::OpenGLTester)
 
     set_target_properties(
-        ImGuiIntegrationGLTest
+        ImGuiContextGLTest
+        ImGuiWidgetsGLTest
         PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 endif()

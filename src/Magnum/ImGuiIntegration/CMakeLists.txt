@@ -41,14 +41,14 @@ set_target_properties(MagnumImGuiIntegrationShaders_RCS-dependencies PROPERTIES
     FOLDER "Magnum/ImGuiIntegration")
 
 set(MagnumImGuiIntegration_SRCS
-    Integration.cpp
+    Context.cpp
 
     ${MagnumImGuiIntegrationShaders_RCS})
 
 set(MagnumImGuiIntegration_HEADERS
     Conversion.h
-    Integration.h
-    Integration.hpp
+    Context.h
+    Context.hpp
     Widgets.h
 
     visibility.h)
