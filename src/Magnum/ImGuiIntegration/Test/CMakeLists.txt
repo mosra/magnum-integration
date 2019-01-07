@@ -24,8 +24,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+corrade_add_test(ImGuiContextTest ContextTest.cpp
+    LIBRARIES MagnumImGuiIntegration)
 corrade_add_test(ImGuiIntegrationTest IntegrationTest.cpp
-    LIBRARIES MagnumImGuiIntegrationTestLib)
+    LIBRARIES MagnumImGuiIntegration)
 
 set_target_properties(
     ImGuiIntegrationTest
@@ -33,9 +35,9 @@ set_target_properties(
 
 if(BUILD_GL_TESTS)
     corrade_add_test(ImGuiContextGLTest ContextGLTest.cpp
-        LIBRARIES MagnumImGuiIntegrationTestLib Magnum::OpenGLTester)
+        LIBRARIES MagnumImGuiIntegration Magnum::OpenGLTester)
     corrade_add_test(ImGuiWidgetsGLTest WidgetsGLTest.cpp
-        LIBRARIES MagnumImGuiIntegrationTestLib Magnum::OpenGLTester)
+        LIBRARIES MagnumImGuiIntegration Magnum::OpenGLTester)
 
     set_target_properties(
         ImGuiContextGLTest

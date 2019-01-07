@@ -55,6 +55,7 @@ class ImGuiShader: public GL::AbstractShaderProgram {
         typedef GL::Attribute<2, Vector4> Color;
 
         explicit ImGuiShader();
+        explicit ImGuiShader(NoCreateT);
 
         ImGuiShader& setProjectionMatrix(const Matrix4& matrix);
         ImGuiShader& bindTexture(GL::Texture2D& texture);
@@ -75,17 +76,17 @@ class ImGuiShader: public GL::AbstractShaderProgram {
 Handles initialization and destruction of ImGui context and implements a
 Magnum-based rendering backend.
 
-Use @ref newFrame() to initialize a ImGui frame and finally draw it with
-@ref drawFrame() to the currently bound framebuffer.
-
 @section ImGuiIntegration-Context-usage Usage
 
-There should always only be one instance of @ref Context. As soon as this
-one instance is created, you can access it via @ref Context::get(). Example:
+Creating the @ref Context instance will create the ImGui context and make it
+current. From that point you can use ImGui calls.
 
 @snippet ImGuiIntegration.cpp Context-usage
 
-@section ImGuiIntegration-Context-rendering Rendering
+@subsection ImGuiIntegration-Context-usage-rendering Rendering
+
+Use @ref newFrame() to initialize a ImGui frame and finally draw it with
+@ref drawFrame() to the currently bound framebuffer.
 
 ImGui requires @ref GL::Renderer::Feature::ScissorTest "scissor test"
 to be enabled and @ref GL::Renderer::Feature::DepthTest "depth test"
@@ -94,7 +95,7 @@ enabled and set up as in the following snippet:
 
 @snippet ImGuiIntegration.cpp Context-usage-per-frame
 
-@section ImGuiIntegration-Context-events Event handling
+@subsection ImGuiIntegration-Context-usage-events Event handling
 
 The templated @ref handleMousePressEvent(), @ref handleMouseReleaseEvent() etc.
 functions are meant to be used inside event handlers of application classes
@@ -155,6 +156,22 @@ will result in the font caches being rebuilt.
     is a bitmap one, becoming rather blurry in larger sizes. It's recommended
     to switch to a different font for a crisper experience on HiDPI screens.
 
+@section ImGuiIntegration-Context-multiple-contexts Multiple contexts
+
+Each instance of @ref Context creates a new ImGui context. You can also pass an
+existing context to the @ref Context(ImGuiContext&, const Vector2i&)
+constructor, which will then take ownership (and thus delete it on
+destruction). Switching between various @cpp ImGui @ce contexts wrapped in
+@ref Context instances is done automatically when calling any of the
+@ref relayout(), @ref newFrame(), @ref drawFrame() APIs or the event handling
+functions. You can also query the instance-specific context with @ref context()
+and call @cpp ImGui::SetContextCurent() @ce manually on that.
+
+It's also possible to create a context-less instance using the
+@ref Context(NoCreateT) constructor and release context ownership using
+@ref release(). Such instances, together with moved-out instances are empty and
+calling any API that interacts with ImGui is not allowed on these.
+
 @experimental
 */
 class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
@@ -169,11 +186,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          *      some platforms with HiDPI screens may be different from window
          *      size.
          *
-         * Expects that no instance is created yet. This function creates the
-         * ImGui context using @cpp ImGui::CreateContext() @ce and then queries
-         * the font glyph cache from ImGui, uploading it to the GPU. If you
-         * need to do some extra work on the context and before the font
-         * texture gets uploaded, use @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
+         * This function creates the ImGui context using
+         * @cpp ImGui::CreateContext() @ce and then queries the font glyph
+         * cache from ImGui, uploading it to the GPU. If you need to do some
+         * extra work on the context and before the font texture gets uploaded,
+         * use @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
          * instead.
          *
          * The sizes are allowed to be zero in any dimension, but note that
@@ -239,36 +256,61 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          */
         explicit Context(ImGuiContext& context, const Vector2i& size);
 
+        /**
+         * @brief Construct without creating the underlying ImGui context
+         *
+         * This constructor also doesn't create any internal OpenGL objects,
+         * meaning it can be used without an active OpenGL context. Calling any
+         * APIs that interact with ImGui on such instance is not allowed. Move
+         * a non-empty instance over to make it useful.
+         * @see @ref context(), @ref release()
+         */
+        explicit Context(NoCreateT) noexcept;
+
         /** @brief Copying is not allowed */
         Context(const Context&) = delete;
 
-        /** @brief Moving is not allowed */
-        Context(Context&&) = delete;
+        /** @brief Move constructor */
+        Context(Context&& other) noexcept;
 
         /**
          * @brief Destructor
          *
-         * Calls @cpp ImGui::DeleteContext() @ce.
+         * If @ref context() is not @cpp nullptr @ce, makes it current using
+         * @cpp ImGui::SetContextCurent() @ce and then calls
+         * @cpp ImGui::DeleteContext() @ce.
          */
         ~Context();
 
         /** @brief Copying is not allowed */
         Context& operator=(const Context&) = delete;
 
-        /** @brief Moving is not allowed */
-        Context& operator=(Context&&) = delete;
+        /** @brief Move assignment */
+        Context& operator=(Context&& other) noexcept;
 
         /**
-         * @brief Global context instance
+         * @brief Underlying ImGui context
          *
-         * Expects that an instance has been created.
+         * Returns @cpp nullptr @ce if this is a @ref NoCreate "NoCreate"d,
+         * moved-out or @ref release() "release()"d instance.
          */
-        static Context& get();
+        ImGuiContext* context() { return _context; }
+
+        /**
+         * @brief Release the underlying ImGui context
+         *
+         * Returns the underlying ImGui context and sets the internal context
+         * pointer to @cpp nullptr @ce, making the instance equivalent to a
+         * moved-out state. Calling APIs that interact with ImGui is not
+         * allowed on the instance anymore.
+         */
+        ImGuiContext* release();
 
         /**
          * @brief Relayout the context
          *
-         * Adapts the internal state for a new window size or pixel density. In
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() and
+         * adapts the internal state for a new window size or pixel density. In
          * case the pixel density gets changed, font glyph caches are rebuilt
          * to match the new pixel density.
          *
@@ -300,88 +342,104 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Start a new frame
          *
-         * Initializes a new ImGui frame using @cpp ImGui::NewFrame() @ce.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() and
+         * initializes a new ImGui frame using @cpp ImGui::NewFrame() @ce.
          */
         void newFrame();
 
         /**
          * @brief Draw a frame
          *
-         * Calls @cpp ImGui::Render() @ce and then draws the frame created by
-         * ImGui calls since last call to @ref newFrame() to currently bound
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context(),
+         * @cpp ImGui::Render() @ce and then draws the frame created by ImGui
+         * calls since last call to @ref newFrame() to currently bound
          * framebuffer.
          *
-         * See @ref ImGuiIntegration-Context-rendering for more information on
-         * which rendering states to set before and after calling this method.
+         * See @ref ImGuiIntegration-Context-usage-rendering for more
+         * information on which rendering states to set before and after
+         * calling this method.
          */
         void drawFrame();
 
         /**
          * @brief Handle mouse press event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the mouse (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class MouseEvent> bool handleMousePressEvent(MouseEvent& event);
 
         /**
          * @brief Handle mouse release event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the mouse (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class MouseEvent> bool handleMouseReleaseEvent(MouseEvent& event);
 
         /**
          * @brief Handle mouse scroll event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the mouse (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class MouseScrollEvent> bool handleMouseScrollEvent(MouseScrollEvent& event);
 
         /**
          * @brief Handle mouse move event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the mouse (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class MouseMoveEvent> bool handleMouseMoveEvent(MouseMoveEvent& event);
 
         /**
          * @brief Handle key press event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the keyboard (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the keyboard (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class KeyEvent> bool handleKeyPressEvent(KeyEvent& event);
 
         /**
          * @brief Handle key release event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the keyboard (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the keyboard (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class KeyEvent> bool handleKeyReleaseEvent(KeyEvent& event);
 
         /**
          * @brief Handle text input event
          *
-         * Returns @cpp true @ce if ImGui wants to capture the input (so the
-         * event shouldn't be further propagated to the rest of the
-         * application), @cpp false @ce otherwise.
+         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
+         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
+         * wants to capture the keyboard (so the event shouldn't be further
+         * propagated to the rest of the application), @cpp false @ce
+         * otherwise.
          */
         template<class TextInputEvent> bool handleTextInputEvent(TextInputEvent& event);
 
     private:
-        static Context* _instance;
-
+        ImGuiContext* _context;
         Implementation::ImGuiShader _shader;
         GL::Texture2D _texture{NoCreate};
         GL::Buffer _vertexBuffer{GL::Buffer::TargetHint::Array};

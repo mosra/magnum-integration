@@ -109,7 +109,9 @@ struct ContextGLTest: GL::OpenGLTester {
     void construct();
     void constructExistingContext();
     void constructExistingContextAddFont();
-    void get();
+    void constructMove();
+
+    void release();
 
     void frame();
     void frameZeroSize();
@@ -122,13 +124,17 @@ struct ContextGLTest: GL::OpenGLTester {
     void mouseInput();
     void keyInput();
     void textInput();
+
+    void multipleContexts();
 };
 
 ContextGLTest::ContextGLTest() {
     addTests({&ContextGLTest::construct,
               &ContextGLTest::constructExistingContext,
               &ContextGLTest::constructExistingContextAddFont,
-              &ContextGLTest::get,
+              &ContextGLTest::constructMove,
+
+              &ContextGLTest::release,
 
               &ContextGLTest::frame,
               &ContextGLTest::frameZeroSize,
@@ -140,7 +146,9 @@ ContextGLTest::ContextGLTest() {
 
               &ContextGLTest::mouseInput,
               &ContextGLTest::keyInput,
-              &ContextGLTest::textInput});
+              &ContextGLTest::textInput,
+
+              &ContextGLTest::multipleContexts});
 
     GL::Renderer::enable(GL::Renderer::Feature::Blending);
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
@@ -155,6 +163,8 @@ void ContextGLTest::construct() {
     {
         Context c{{}};
 
+        CORRADE_VERIFY(c.context());
+        CORRADE_COMPARE(c.context(), ImGui::GetCurrentContext());
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
@@ -170,7 +180,7 @@ void ContextGLTest::construct() {
 
 void ContextGLTest::constructExistingContext() {
     {
-        ImGui::CreateContext();
+        ImGuiContext* context = ImGui::CreateContext();
 
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 0);
 
@@ -178,6 +188,8 @@ void ContextGLTest::constructExistingContext() {
 
         MAGNUM_VERIFY_NO_GL_ERROR();
 
+        CORRADE_VERIFY(c.context());
+        CORRADE_COMPARE(c.context(), context);
         /* No user-supplied font even though we used a custom context, add
            the default one  */
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
@@ -212,20 +224,58 @@ void ContextGLTest::constructExistingContextAddFont() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
-void ContextGLTest::get() {
-    {
-        std::ostringstream out;
-        Error redirectError{&out};
+void ContextGLTest::constructMove() {
+    Context a{{200, 200}};
+    ImGuiContext* context = a.context();
 
-        Context::get();
-        CORRADE_COMPARE(out.str(),
-            "ImGuiIntegration::Context::get(): no instance exists\n");
-    }
+    MAGNUM_VERIFY_NO_GL_ERROR();
+    CORRADE_VERIFY(context);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
+
+    Context b{std::move(a)};
+    CORRADE_COMPARE(a.context(), nullptr);
+    CORRADE_COMPARE(b.context(), context);
+
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
+
+    Context c{{}};
+    ImGuiContext* cContext = c.context();
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), cContext);
+
+    c = std::move(b);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), cContext);
+
+    /* This should not blow up */
+    c.newFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
+
+    c.drawFrame();
+
+    /* ImGui doesn't draw anything the first frame so do it twice. */
+    c.newFrame();
+    ImGui::Button("test");
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::release() {
+    ImGuiContext* context;
 
     {
         Context c{{}};
-        CORRADE_COMPARE(&Context::get(), &c);
+
+        CORRADE_VERIFY(c.context());
+        CORRADE_COMPARE(ImGui::GetCurrentContext(), c.context());
+        context = c.release();
+        CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
+        CORRADE_COMPARE(c.context(), nullptr);
     }
+
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
+    ImGui::DestroyContext(context);
 }
 
 void ContextGLTest::frame() {
@@ -461,6 +511,65 @@ void ContextGLTest::textInput() {
     CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputCharacters, 4),
         Containers::arrayView(expected),
         TestSuite::Compare::Container);
+}
+
+void ContextGLTest::multipleContexts() {
+    Context a{{200, 200}};
+    Context b{{400, 300}};
+    CORRADE_VERIFY(a.context() != b.context());
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    a.newFrame();
+    a.drawFrame();
+    MAGNUM_VERIFY_NO_GL_ERROR();
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    b.newFrame();
+    b.drawFrame();
+    MAGNUM_VERIFY_NO_GL_ERROR();
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    /* This should render stuff now */
+    a.newFrame();
+    ImGui::Button("test");
+    a.drawFrame();
+    MAGNUM_VERIFY_NO_GL_ERROR();
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    /* This should render stuff now */
+    b.newFrame();
+    ImGui::Button("test");
+    b.drawFrame();
+    MAGNUM_VERIFY_NO_GL_ERROR();
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    /* Verify that event handlers also switch to proper context */
+
+    MouseEvent left{Button::Left, {1, 2}, {}};
+    a.handleMousePressEvent(left);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    b.handleMouseReleaseEvent(left);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, Modifiers{}};
+    a.handleMouseScrollEvent(scroll);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    MouseEvent move{Button{}, {1, 2}, {}};
+    b.handleMouseMoveEvent(move);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    KeyEvent tab{KeyEvent::Key::Tab};
+    a.handleKeyPressEvent(tab);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    b.handleKeyReleaseEvent(tab);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    TextInputEvent text{{"abc"}};
+    a.handleTextInputEvent(text);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 }
 
 }}}

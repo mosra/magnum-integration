@@ -54,6 +54,8 @@ static void importShaderResources() {
 namespace Magnum { namespace ImGuiIntegration {
 
 namespace Implementation {
+    ImGuiShader::ImGuiShader(NoCreateT): GL::AbstractShaderProgram{NoCreate} {}
+
     ImGuiShader& ImGuiShader::setProjectionMatrix(const Matrix4& matrix) {
         setUniform(_projMatrixUniform, matrix);
         return *this;
@@ -65,22 +67,13 @@ namespace Implementation {
     }
 }
 
-Context* Context::_instance = nullptr;
-
-Context& Context::get() {
-    CORRADE_ASSERT(_instance != nullptr,
-        "ImGuiIntegration::Context::get(): no instance exists", *_instance);
-    return *_instance;
-}
-
-/* Yes, this is godawful ugly, don't kill me for that plz */
-Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{(ImGui::CreateContext(), *ImGui::GetCurrentContext()), size, windowSize, framebufferSize} {}
+Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{*ImGui::CreateContext(), size, windowSize, framebufferSize} {}
 
 Context::Context(const Vector2i& size): Context{Vector2{size}, size, size} {}
 
-Context::Context(ImGuiContext&, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize) {
-    CORRADE_ASSERT(_instance == nullptr,
-        "ImGuiIntegration::Context: context already created", );
+Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): _context{&context} {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(&context);
 
     ImGuiIO &io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab]        = ImGuiKey_Tab;
@@ -118,13 +111,47 @@ Context::Context(ImGuiContext&, const Vector2& size, const Vector2i& windowSize,
             Implementation::ImGuiShader::Color::DataOption::Normalized));
 
     _timeline.start();
-
-    _instance = this;
 }
 
 Context::Context(ImGuiContext& context, const Vector2i& size): Context{context, Vector2{size}, size, size} {}
 
+Context::Context(NoCreateT) noexcept: _context{nullptr}, _shader{NoCreate}, _texture{NoCreate}, _vertexBuffer{NoCreate}, _indexBuffer{NoCreate}, _mesh{NoCreate} {}
+
+Context::Context(Context&& other) noexcept: _context{other._context}, _shader{std::move(other._shader)}, _texture{std::move(other._texture)}, _vertexBuffer{std::move(other._vertexBuffer)}, _indexBuffer{std::move(other._indexBuffer)}, _timeline{std::move(other._timeline)}, _mesh{std::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling} {
+    other._context = nullptr;
+}
+
+Context::~Context() {
+    if(_context) {
+        /* Ensure we destroy the context we're linked to */
+        ImGui::SetCurrentContext(_context);
+        ImGui::DestroyContext();
+    }
+}
+
+Context& Context::operator=(Context&& other) noexcept {
+    std::swap(_context, other._context);
+    std::swap(_shader, other._shader);
+    std::swap(_texture, other._texture);
+    std::swap(_vertexBuffer, other._vertexBuffer);
+    std::swap(_indexBuffer, other._indexBuffer);
+    std::swap(_timeline, other._timeline);
+    std::swap(_mesh, other._mesh);
+    std::swap(_supersamplingRatio, other._supersamplingRatio);
+    std::swap(_eventScaling, other._eventScaling);
+    return *this;
+}
+
+ImGuiContext* Context::release() {
+    ImGuiContext* context = _context;
+    _context = nullptr;
+    return context;
+}
+
 void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     /* If size of the UI is 1024x576 with a 16px font but it's rendered to a
        3840x2160 framebuffer, we need to supersample the font 3,75x to get
        crisp enough look. This is the same as in Magnum::Ui::UserInterface. */
@@ -197,18 +224,10 @@ void Context::relayout(const Vector2i& size) {
     relayout(Vector2{size}, size, size);
 }
 
-Context::~Context() {
-    CORRADE_INTERNAL_ASSERT(_instance == this);
-
-    /* Not initialized/initialization failed */
-    if(!_instance) return;
-
-    ImGui::DestroyContext();
-
-    _instance = nullptr;
-}
-
 void Context::newFrame() {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     _timeline.nextFrame();
 
     ImGui::GetIO().DeltaTime = _timeline.previousFrameDuration();
@@ -217,6 +236,9 @@ void Context::newFrame() {
 }
 
 void Context::drawFrame() {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     ImGui::Render();
 
     ImGuiIO& io = ImGui::GetIO();

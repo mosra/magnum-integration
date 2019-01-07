@@ -51,11 +51,13 @@ static_cast<void>(c);
 ImGuiIntegration::Context context{{640, 480}};
 
 // ...
-
-ImGuiIntegration::Context::get().newFrame();
 /* [Context-usage] */
 
 /* [Context-usage-per-frame] */
+context.newFrame();
+
+// ...
+
 GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
     GL::Renderer::BlendEquation::Add);
 GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
@@ -66,7 +68,7 @@ GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
 GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 
-ImGuiIntegration::Context::get().drawFrame();
+context.drawFrame();
 
 GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
 GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);

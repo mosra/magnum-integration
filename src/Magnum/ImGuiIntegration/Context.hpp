@@ -39,6 +39,9 @@
 namespace Magnum { namespace ImGuiIntegration {
 
 template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool value) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     ImGuiIO &io = ImGui::GetIO();
 
     switch(event.key()) {
@@ -122,6 +125,9 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
 }
 
 template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, bool value) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     ImGuiIO& io = ImGui::GetIO();
 
     switch(event.button()) {
@@ -151,6 +157,9 @@ template<class MouseEvent> bool Context::handleMouseReleaseEvent(MouseEvent& eve
 }
 
 template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrollEvent& event) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheel += event.offset().y();
     io.MouseWheelH += event.offset().x();
@@ -158,6 +167,9 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
 }
 
 template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent& event) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     ImGuiIO& io = ImGui::GetIO();
     io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
     return io.WantCaptureMouse;
@@ -172,6 +184,9 @@ template<class KeyEvent> bool Context::handleKeyReleaseEvent(KeyEvent& event) {
 }
 
 template<class TextInputEvent> bool Context::handleTextInputEvent(TextInputEvent& event) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
     ImGui::GetIO().AddInputCharactersUTF8(event.text().data());
     return false;
 }

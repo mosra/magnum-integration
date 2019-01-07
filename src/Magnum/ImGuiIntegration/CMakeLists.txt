@@ -73,25 +73,6 @@ target_link_libraries(MagnumImGuiIntegration
     PRIVATE ImGui::Sources)
 
 if(BUILD_TESTS)
-    add_library(MagnumImGuiIntegrationTestLib ${SHARED_OR_STATIC}
-        ${MagnumImGuiIntegration_SRCS}
-        ${MagnumImGuiIntegration_HEADERS})
-    target_include_directories(MagnumImGuiIntegrationTestLib PUBLIC
-        ${PROJECT_SOURCE_DIR}/src
-        ${PROJECT_BINARY_DIR}/src)
-    set_target_properties(MagnumImGuiIntegrationTestLib PROPERTIES
-        DEBUG_POSTFIX "-d"
-        FOLDER "Magnum/ImGuiIntegration")
-    if(BUILD_STATIC_PIC)
-        set_target_properties(MagnumImGuiIntegrationTestLib
-            PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    endif()
-    target_link_libraries(MagnumImGuiIntegrationTestLib
-        PUBLIC Magnum::GL ImGui::ImGui
-        PRIVATE ImGui::Sources)
-    target_compile_definitions(MagnumImGuiIntegrationTestLib
-        PRIVATE "CORRADE_GRACEFUL_ASSERT")
-
     add_subdirectory(Test)
 endif()
 
