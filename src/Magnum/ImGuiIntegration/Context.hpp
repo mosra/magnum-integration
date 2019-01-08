@@ -122,22 +122,24 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
 }
 
 template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, bool value) {
+    ImGuiIO& io = ImGui::GetIO();
+
     switch(event.button()) {
         case MouseEvent::Button::Left:
-            ImGui::GetIO().MouseDown[0] = value;
+            io.MouseDown[0] = value;
             break;
         case MouseEvent::Button::Right:
-            ImGui::GetIO().MouseDown[1] = value;
+            io.MouseDown[1] = value;
             break;
         case MouseEvent::Button::Middle:
-            ImGui::GetIO().MouseDown[2] = value;
+            io.MouseDown[2] = value;
             break;
 
         /* Unknown button, do nothing */
         default: return false;
     }
 
-    return ImGui::GetIO().WantCaptureMouse;
+    return io.WantCaptureMouse;
 }
 
 template<class MouseEvent> bool Context::handleMousePressEvent(MouseEvent& event) {
@@ -149,14 +151,16 @@ template<class MouseEvent> bool Context::handleMouseReleaseEvent(MouseEvent& eve
 }
 
 template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrollEvent& event) {
-    ImGui::GetIO().MouseWheel += event.offset().y();
-    ImGui::GetIO().MouseWheelH += event.offset().x();
-    return ImGui::GetIO().WantCaptureMouse;
+    ImGuiIO& io = ImGui::GetIO();
+    io.MouseWheel += event.offset().y();
+    io.MouseWheelH += event.offset().x();
+    return io.WantCaptureMouse;
 }
 
 template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent& event) {
-    ImGui::GetIO().MousePos = ImVec2(Vector2(event.position())*_eventScaling);
-    return ImGui::GetIO().WantCaptureMouse;
+    ImGuiIO& io = ImGui::GetIO();
+    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
+    return io.WantCaptureMouse;
 }
 
 template<class KeyEvent> bool Context::handleKeyPressEvent(KeyEvent& event) {
@@ -168,8 +172,7 @@ template<class KeyEvent> bool Context::handleKeyReleaseEvent(KeyEvent& event) {
 }
 
 template<class TextInputEvent> bool Context::handleTextInputEvent(TextInputEvent& event) {
-    ImGuiIO &io = ImGui::GetIO();
-    io.AddInputCharactersUTF8(event.text().data());
+    ImGui::GetIO().AddInputCharactersUTF8(event.text().data());
     return false;
 }
 
