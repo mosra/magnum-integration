@@ -43,12 +43,14 @@ MotionState::MotionState(SceneGraph::AbstractBasicObject3D<btScalar>& object, Sc
 MotionState::~MotionState() = default;
 
 void MotionState::getWorldTransform(btTransform& worldTrans) const {
+    Debug{} << "getWorldTransform";
     const Matrix4 transformation = object().transformationMatrix();
     worldTrans.setOrigin(btVector3(transformation.translation()));
     worldTrans.setBasis(btMatrix3x3(transformation.rotationScaling()));
 }
 
 void MotionState::setWorldTransform(const btTransform& worldTrans) {
+    Debug{} << "setWorldTransform()";
     const Vector3 position = Vector3{worldTrans.getOrigin()};
     const Vector3 axis = Vector3{worldTrans.getRotation().getAxis()};
     const Float rotation = worldTrans.getRotation().getAngle();

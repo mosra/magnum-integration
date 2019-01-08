@@ -63,12 +63,15 @@ void IntegrationTest::vector() {
 }
 
 void IntegrationTest::matrix3() {
+    /* Magnum is column-major */
     constexpr Matrix3 a{Vector3{3.0f,  5.0f, 8.0f},
                         Vector3{4.5f,  4.0f, 7.0f},
                         Vector3{7.9f, -1.0f, 8.0f}};
-    const btMatrix3x3 b{3.0f,  5.0f, 8.0f,
-                        4.5f,  4.0f, 7.0f,
-                        7.9f, -1.0f, 8.0f};
+
+    /* Bullet is row-major */
+    const btMatrix3x3 b{3.0f,  4.5f,  7.9f,
+                        5.0f,  4.0f, -1.0f,
+                        8.0f,  7.0f,  8.0f};
 
     CORRADE_COMPARE(Matrix3{b}, a);
 
