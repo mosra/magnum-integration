@@ -31,16 +31,16 @@ namespace Magnum {
 
 -   **[\@denesik](https://github.com/denesik)** --- base of the
     @ref ImGuiIntegration library
--   **Guillaume Jacquemin** [\@williamjcm](https://github.com/williamjcm) ---
+-   **Guillaume Jacquemin** ([\@williamjcm](https://github.com/williamjcm)) ---
     base of the @ref ImGuiIntegration library
--   **Jan Dupal** ([\@JanDupal](https://github.com/JanDupal) --- the
+-   **Jan Dupal** ([\@JanDupal](https://github.com/JanDupal)) --- the
     @ref BulletIntegration library
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
     @ref OvrIntegration library, improvements to Bullet integration
     and the migration of magnum-imgui to @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
--   **Natesh Narain** [\@nnarain](https://github.com/nnarain) --- base
+-   **Natesh Narain** ([\@nnarain](https://github.com/nnarain)) --- base
     of the @ref ImGuiIntegration library
 -   **Nathan Ollerenshaw** ([\@matjam](https://github.com/matjam)) --- Ubuntu
     package updates, a PPA repository for stable versions
@@ -50,8 +50,8 @@ namespace Magnum {
     @ref ImGuiIntegration library
 -   **[\@sigman78](https://github.com/sigman78)** --- initial implementation of
     the @ref GlmIntegration library
--   **Tomáš Skřivan** [\@lecopivo](https://github.com/lecopivo) --- base of the
-    @ref ImGuiIntegration library
+-   **Tomáš Skřivan** ([\@lecopivo](https://github.com/lecopivo)) --- base of
+    the @ref ImGuiIntegration library
 
 */
 

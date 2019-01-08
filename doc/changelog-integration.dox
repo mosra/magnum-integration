@@ -45,7 +45,8 @@ namespace Magnum {
 @subsection changelog-integration-latest-new New features
 
 -   New @ref ImGuiIntegration library to render
-    [Dear ImGui](https://github.com/ocornut/imgui) user interfaces
+    [Dear ImGui](https://github.com/ocornut/imgui) user interfaces (see
+    [mosra/magnum#33](https://github.com/mosra/magnum-integration/pull/33))
 
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
