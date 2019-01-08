@@ -52,15 +52,15 @@ template<> struct VectorConverter<3, btScalar, btVector3> {
 
 template<> struct RectangularMatrixConverter<3, 3, btScalar, btMatrix3x3> {
     static RectangularMatrix<3, 3, Float> from(const btMatrix3x3& other) {
-        return {Vector<3, Float>(other[0]),
-                Vector<3, Float>(other[1]),
-                Vector<3, Float>(other[2])};
+        return {Vector<3, Float>(other.getColumn(0)),
+                Vector<3, Float>(other.getColumn(1)),
+                Vector<3, Float>(other.getColumn(2))};
     }
 
     static btMatrix3x3 to(const RectangularMatrix<3, 3, Float>& other) {
-        return {other[0][0], other[0][1], other[0][2],
-                other[1][0], other[1][1], other[1][2],
-                other[2][0], other[2][1], other[2][2]};
+        return {other[0][0], other[1][0], other[2][0],
+                other[0][1], other[1][1], other[2][1],
+                other[0][2], other[1][2], other[2][2]};
     }
 };
 
