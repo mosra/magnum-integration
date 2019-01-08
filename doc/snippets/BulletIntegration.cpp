@@ -78,6 +78,12 @@ auto rigidBody = new btRigidBody{20.0f, &motionState->btMotionState(), collision
 btWorld->addRigidBody(rigidBody);
 /* [MotionState-usage] */
 
+/* [MotionState-update] */
+btTransform transform;
+rigidBody->getMotionState()->getWorldTransform(transform);
+rigidBody->setWorldTransform(transform);
+/* [MotionState-update] */
+
 /* [MotionState-usage-after] */
 rigidBody->setMotionState(&motionState->btMotionState());
 /* [MotionState-usage-after] */

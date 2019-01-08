@@ -51,10 +51,14 @@ a @ref SceneGraph::Object by passing the motion state in its constructor:
 
 @snippet BulletIntegration.cpp MotionState-usage
 
-This way, the @p rigidBody will be affected when transformation of the object
-is changed from the scenegraph and also the other way around --- the @p object
-gets its position updated when the Bullet world changes. It's also possible to
-attach the motion state afterwards:
+This way, the scenegraph will be affected automatically by the Bullet
+simulation. Note that the other direction only has effect during creation of
+the @p btRigidBody --- if you need to update the Bullet state with new
+transforms from the scenegraph you have to do it manually:
+
+@snippet BulletIntegration.cpp MotionState-update
+
+It's also possible to attach the motion state afterwards:
 
 @snippet BulletIntegration.cpp MotionState-usage-after
 
