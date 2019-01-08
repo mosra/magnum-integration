@@ -441,39 +441,49 @@ void ContextGLTest::mouseInput() {
     CORRADE_VERIFY(!ImGui::IsMouseDown(2)); /* middle */
 
     MouseEvent left{Button::Left, {1, 2}, {}};
-    MouseEvent right{Button::Right, {1, 2}, {}};
-    MouseEvent middle{Button::Middle, {1, 2}, {}};
+    MouseEvent right{Button::Right, {3, 4}, {}};
+    MouseEvent middle{Button::Middle, {5, 6}, {}};
 
     c.handleMousePressEvent(left);
     CORRADE_VERIFY(ImGui::IsMouseDown(0)); /* left */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+
     c.handleMousePressEvent(right);
     CORRADE_VERIFY(ImGui::IsMouseDown(1)); /* right */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
+
     c.handleMousePressEvent(middle);
     CORRADE_VERIFY(ImGui::IsMouseDown(2)); /* middle */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
 
     c.handleMouseReleaseEvent(right);
     CORRADE_VERIFY(!ImGui::IsMouseDown(1)); /* right */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
+
     c.handleMouseReleaseEvent(left);
     CORRADE_VERIFY(!ImGui::IsMouseDown(0)); /* left */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+
     c.handleMouseReleaseEvent(middle);
     CORRADE_VERIFY(!ImGui::IsMouseDown(2)); /* middle */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
 
     /* Mouse Movement */
     MouseEvent move{Button{}, {1, 2}, {}};
     c.handleMouseMoveEvent(move);
-    const auto& mousePos = ImGui::GetMousePos();
-    CORRADE_COMPARE(Vector2(mousePos.x, mousePos.y), Vector2(1.0f, 2.0f));
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
 
     /* Scrolling/Mouse Wheel */
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 0.0f, Float);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, Float);
 
-    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, Modifiers{}};
+    MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, Modifiers{}};
     c.handleMouseScrollEvent(scroll);
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{17.0f, 23.0f}));
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, -1.2f, Float);
 
-    /* Unknown keys shouldn't be propagated to imgui */
+    /* Unknown buttons shouldn't be propagated to imgui */
     MouseEvent unknownButton{Button(666), {1, 2}, {}};
     CORRADE_VERIFY(!c.handleMousePressEvent(unknownButton));
     CORRADE_VERIFY(!c.handleMouseReleaseEvent(unknownButton));

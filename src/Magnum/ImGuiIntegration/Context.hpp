@@ -129,6 +129,7 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
+    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
 
     switch(event.button()) {
         case MouseEvent::Button::Left:
@@ -161,6 +162,7 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
+    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
     io.MouseWheel += event.offset().y();
     io.MouseWheelH += event.offset().x();
     return io.WantCaptureMouse;
