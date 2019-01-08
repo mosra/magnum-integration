@@ -67,6 +67,7 @@ void mousePressEvent(MouseEvent& event) override;
 void mouseReleaseEvent(MouseEvent& event) override;
 
 ImGuiIntegration::Context _context{Vector2i{}};
+Float _supersamplingRatio{};
 };
 
 /* [Context-events] */
@@ -95,9 +96,15 @@ void MyApp::viewportEvent(ViewportEvent& event) {
 
     const Vector2 size = Vector2{event.windowSize()}/event.dpiScaling();
 
-    ImGui::GetIO().Fonts->Clear(); // important
-    ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf",
-        16.0f*size.x()/event.framebufferSize().x());
+    /* Reload fonts if pixel density changed */
+    const Float supersamplingRatio = size.x()/event.framebufferSize().x();
+    if(supersamplingRatio != _supersamplingRatio) {
+        _supersamplingRatio = supersamplingRatio;
+
+        ImGui::GetIO().Fonts->Clear(); // important
+        ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf",
+            16.0f*supersamplingRatio);
+    }
 
     _context.relayout(size, event.windowSize(), event.framebufferSize());
 }

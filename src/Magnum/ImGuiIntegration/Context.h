@@ -86,12 +86,13 @@ current. From that point you can use ImGui calls.
 @subsection ImGuiIntegration-Context-usage-rendering Rendering
 
 Use @ref newFrame() to initialize a ImGui frame and finally draw it with
-@ref drawFrame() to the currently bound framebuffer.
-
-ImGui requires @ref GL::Renderer::Feature::ScissorTest "scissor test"
-to be enabled and @ref GL::Renderer::Feature::DepthTest "depth test"
-to be disabled. @ref GL::Renderer::Feature::Blending "Blending" should be
-enabled and set up as in the following snippet:
+@ref drawFrame() to the currently bound framebuffer. ImGui requires
+@ref GL::Renderer::Feature::ScissorTest "scissor test" to be enabled and
+@ref GL::Renderer::Feature::DepthTest "depth test" to be disabled.
+@ref GL::Renderer::Feature::Blending "Blending" should be enabled and set up as
+below. The following snippet sets up all required renderer state and then
+resets it back to default values. Adapt the state changes based on what else
+you are rendering.
 
 @snippet ImGuiIntegration.cpp Context-usage-per-frame
 
@@ -145,16 +146,20 @@ with window size. When window size, framebuffer size or DPI scaling changes
 call @ref relayout() with the new values. If the pixel density is changed, this
 will result in the font caches being rebuilt.
 
-@m_class{m-block m-success}
+@subsection ImGuiIntegration-Context-dpi-fonts HiDPI fonts
 
-@par HiDPI fonts
-    Note that there are further important steps for DPI awareness if you are
-    supplying custom fonts. See the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
-    constructor for more infomation.
-@par
+@note
     The default font used by ImGui, [Proggy Clean](https://www.dafont.com/proggy-clean.font),
-    is a bitmap one, becoming rather blurry in larger sizes. It's recommended
-    to switch to a different font for a crisper experience on HiDPI screens.
+    is a bitmap one, becoming rather blurry and blocky in larger sizes. It's
+    recommended to switch to a different font for a crisper experience on HiDPI
+    screens.
+
+There are further important steps for DPI awareness if you are supplying custom
+fonts. Use the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&) constructor and pre-scale their size by the ratio
+of @p size and @p framebufferSize. If you don't do that, the fonts will appear
+tiny on HiDPI screens. Example:
+
+@snippet ImGuiIntegration-sdl2.cpp Context-custom-fonts-dpi
 
 @section ImGuiIntegration-Context-multiple-contexts Multiple contexts
 
@@ -196,9 +201,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * The sizes are allowed to be zero in any dimension, but note that
          * specifying a concrete value later in @ref relayout() may trigger an
          * unnecessary rebuild of the font glyph cache due to different
-         * calculated pixel density.
-         * @see @ref Context(const Vector2i&),
-         *      @ref relayout(const Vector2&, const Vector2i&, const Vector2i&)
+         * calculated pixel density. On the other hand, if you don't need DPI
+         * awareness, you can use the simpler @ref Context(const Vector2i&)
+         * constructor instead.
+         * @see @ref relayout(const Vector2&, const Vector2i&, const Vector2i&)
          */
         explicit Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize);
 
@@ -229,15 +235,13 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * glyph cache gets uploaded to the GPU, for example adding custom
          * fonts.
          *
-         * Note that, in order to have the custom fonts crisp, you have to
-         * pre-scale their size by the ratio of @p size and @p framebufferSize.
-         * If you don't do that, the fonts will appear tiny on HiDPI screens.
-         * Example:
-         *
-         * @snippet ImGuiIntegration-sdl2.cpp Context-custom-fonts-dpi
-         *
-         * @see @ref Context(ImGuiContext&, const Vector2i&),
-         *      @ref relayout(const Vector2&, const Vector2i&, const Vector2i&)
+         * Note that, in order to have the custom fonts crisp also on HiDPI
+         * screens, you have to pre-scale their size by the ratio of @p size
+         * and @p framebufferSize. See @ref ImGuiIntegration-Context-dpi-fonts
+         * for more information. If you don't need DPI awareness, you can use
+         * the simpler @ref Context(ImGuiContext&, const Vector2i&) constructor
+         * instead.
+         * @see @ref relayout(const Vector2&, const Vector2i&, const Vector2i&)
          */
         explicit Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize);
 

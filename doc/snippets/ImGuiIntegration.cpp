@@ -54,14 +54,14 @@ ImGuiIntegration::Context context{{640, 480}};
 /* [Context-usage] */
 
 /* [Context-usage-per-frame] */
-context.newFrame();
-
-// ...
-
 GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
     GL::Renderer::BlendEquation::Add);
 GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
     GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+
+context.newFrame();
+
+// ImGui widget calls here ...
 
 GL::Renderer::enable(GL::Renderer::Feature::Blending);
 GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
