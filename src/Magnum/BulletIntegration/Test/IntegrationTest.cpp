@@ -64,14 +64,14 @@ void IntegrationTest::vector() {
 
 void IntegrationTest::matrix3() {
     /* Magnum is column-major */
-    constexpr Matrix3 a{Vector3{3.0f,  5.0f, 8.0f},
-                        Vector3{4.5f,  4.0f, 7.0f},
-                        Vector3{7.9f, -1.0f, 8.0f}};
+    const Matrix3 a{Vector3{ 0.133333f, 0.933333f, -0.333333f},
+                    Vector3{-0.666667f, 0.333333f,  0.666667f},
+                    Vector3{ 0.733333f, 0.133333f,  0.666667f}};
 
     /* Bullet is row-major */
-    const btMatrix3x3 b{3.0f,  4.5f,  7.9f,
-                        5.0f,  4.0f, -1.0f,
-                        8.0f,  7.0f,  8.0f};
+    const btMatrix3x3 b{ 0.133333f, -0.666667f, 0.733333f,
+                         0.933333f,  0.333333f, 0.133333f,
+                        -0.333333f,  0.666667f, 0.666667f};
 
     CORRADE_COMPARE(Matrix3{b}, a);
 
@@ -82,6 +82,12 @@ void IntegrationTest::matrix3() {
     const btScalar* pb = &b[0][0];
     for(std::size_t i = 0; i < 9; ++i, ++pb, ++pa)
         CORRADE_COMPARE(*pa, *pb);
+
+    /* To be extra sure, verify that conversion to quaternion gives the same
+       result */
+    btQuaternion q;
+    b.getRotation(q);
+    CORRADE_COMPARE(Quaternion::fromMatrix(a), Quaternion(q));
 }
 
 void IntegrationTest::matrix4() {
