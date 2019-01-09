@@ -109,6 +109,19 @@ of use to avoid linker errors. Example:
 
 @snippet ImGuiIntegration-sdl2.cpp Context-events
 
+@subsection ImGuiIntegration-Context-usage-text-input Text input
+
+Some platforms require explicit action in order to start a text input (for
+example, to open an on-screen keyboard on touch devices or
+[IME](https://en.wikipedia.org/wiki/Input_method) for complex alphabets). ImGui
+exposes its desire to capture text input during a call to @ref newFrame().
+Based on that, you can toggle the text input in the application, for example
+using @ref Platform::Sdl2Application::startTextInput() "startTextInput()" /
+@ref Platform::Sdl2Application::stopTextInput() "stopTextInput()" in
+@ref Platform::Sdl2Application or @link Platform::GlfwApplication @endlink:
+
+@snippet ImGuiIntegration-sdl2.cpp Context-text-input
+
 @section ImGuiIntegration-Context-dpi DPI awareness
 
 There are three separate concepts for DPI-aware UI rendering:
@@ -347,7 +360,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Start a new frame
          *
          * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() and
-         * initializes a new ImGui frame using @cpp ImGui::NewFrame() @ce.
+         * initializes a new ImGui frame using @cpp ImGui::NewFrame() @ce. This
+         * function also decides if a text input needs to be enabled, see
+         * @ref ImGuiIntegration-Context-usage-text-input for more information.
          */
         void newFrame();
 

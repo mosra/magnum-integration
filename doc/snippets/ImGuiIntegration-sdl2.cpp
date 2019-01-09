@@ -60,6 +60,16 @@ ImGuiIntegration::Context imgui(*ImGui::GetCurrentContext(),
 // ...
 /* [Context-custom-fonts-dpi] */
 }
+
+{
+/* [Context-text-input] */
+_imgui.drawFrame();
+if(ImGui::GetIO().WantTextInput && !isTextInputActive())
+    startTextInput();
+else if(!ImGui::GetIO().WantTextInput && isTextInputActive())
+    stopTextInput();
+/* [Context-text-input] */
+}
 }
 
 void viewportEvent(ViewportEvent& event) override;
