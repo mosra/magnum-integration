@@ -7,6 +7,7 @@
               Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
     Copyright © 2016 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2019 Max Schwarz <max.schwarz@ais.uni-bonn.de>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),

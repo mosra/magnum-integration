@@ -48,6 +48,13 @@ namespace Magnum {
     [Dear ImGui](https://github.com/ocornut/imgui) user interfaces (see
     [mosra/magnum#33](https://github.com/mosra/magnum-integration/pull/33))
 
+@subsection changelog-integration-latest-bugfixes Bug fixes
+
+-   Conversion of 3x3 matrices in the @ref BulletIntegration was transposing
+    them by mistake. This was only discoverable if the transformation of
+    objects attached to @ref BulletIntegration::MotionState included rotation.
+    See also [mosra/magnum-integration#34](https://github.com/mosra/magnum-integration/pull/34).
+
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
 -   Removed `MAGNUM_*INTEGRATION_LIBRARIES` and `MAGNUM_*INTEGRATION_INCLUDE_DIRS`

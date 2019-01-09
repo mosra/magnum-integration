@@ -40,6 +40,8 @@ namespace Magnum {
     and the migration of magnum-imgui to @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
+-   **Max Schwarz** ([\@xqms](https://github.com/xqms)) --- fixes and
+    clarifications in the @ref BulletIntegration library
 -   **Natesh Narain** ([\@nnarain](https://github.com/nnarain)) --- base
     of the @ref ImGuiIntegration library
 -   **Nathan Ollerenshaw** ([\@matjam](https://github.com/matjam)) --- Ubuntu
