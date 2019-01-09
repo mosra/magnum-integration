@@ -52,7 +52,7 @@ ImGui::CreateContext();
 const Vector2 size = Vector2{windowSize()}/dpiScaling();
 
 ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf",
-    16.0f*size.x()/framebufferSize().x());
+    16.0f*framebufferSize().x()/size.x());
 
 ImGuiIntegration::Context context(*ImGui::GetCurrentContext(),
     size, windowSize(), framebufferSize());
@@ -97,7 +97,7 @@ void MyApp::viewportEvent(ViewportEvent& event) {
     const Vector2 size = Vector2{event.windowSize()}/event.dpiScaling();
 
     /* Reload fonts if pixel density changed */
-    const Float supersamplingRatio = size.x()/event.framebufferSize().x();
+    const Float supersamplingRatio = event.framebufferSize().x()/size.x();
     if(supersamplingRatio != _supersamplingRatio) {
         _supersamplingRatio = supersamplingRatio;
 
