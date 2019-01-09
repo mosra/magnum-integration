@@ -61,6 +61,13 @@ namespace Magnum {
     CMake variables, which were deprecated in favor of `MagnumIntegration::*`
     imported targets in February 2016.
 
+@subsection changelog-integration-latest-documentation Documentation
+
+-   The @ref BulletIntegration::MotionState docs gave a false impression that
+    the transformation update is two-way, while it is only from bullet to
+    @ref SceneGraph. The docs are now clarified and suggest possible solutions.
+    See also [mosra/magnum-integration#35](https://github.com/mosra/magnum-integration/pull/35).
+
 @section changelog-integration-2018-10 2018.10
 
 Released 2018-10-23, tagged as

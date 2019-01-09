@@ -7,6 +7,7 @@
               Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
     Copyright © 2016 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2019 Max Schwarz <max.schwarz@online.de>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -51,23 +52,30 @@ a @ref SceneGraph::Object by passing the motion state in its constructor:
 
 @snippet BulletIntegration.cpp MotionState-usage
 
-This way, the scenegraph will be affected automatically by the Bullet
-simulation. Note that the other direction only has effect during creation of
-the @p btRigidBody --- if you need to update the Bullet state with new
-transforms from the scenegraph you have to do it manually:
-
-@snippet BulletIntegration.cpp MotionState-update
-
-It's also possible to attach the motion state afterwards:
+This way, the scene graph will be affected automatically by the Bullet
+simulation. It's also possible to attach the motion state afterwards:
 
 @snippet BulletIntegration.cpp MotionState-usage-after
 
-Note that changes to a rigidBody using `btRigidBody::setWorldTransform()` may
-only update the motion state of non-static objects and while
-`btDynamicsWorld::stepSimulation()` is called.
+Note that in the other direction, the transform is propagated from the scene
+graph to the rigid body only during the initial creation of the
+@cpp btRigidBody @ce or when you explicitly set the body as kinematic (which
+however makes it mostly a passive collision object):
 
-@attention All objects with a MotionState attached that are part of the same
-    Bullet world need to have a single common parent object, otherwise the
+@snippet BulletIntegration.cpp MotionState-kinematic
+
+In order to update the transformation of a non-kinematic body, set the
+transform directly on the @cpp btRigidBody @ce:
+
+@snippet BulletIntegration.cpp MotionState-update
+
+Keep in mind that hanges to a rigid body using
+@cpp btRigidBody::setWorldTransform() @ce may only update the motion state of
+non-static objects and while @cpp btDynamicsWorld::stepSimulation() @ce is
+called.
+
+@attention All objects with a @ref MotionState attached that are part of the
+    same Bullet world need to have a single common parent object, otherwise the
     transformations will not propagate correctly.
 */
 class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBasicFeature3D<btScalar>, private btMotionState {

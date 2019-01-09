@@ -78,10 +78,13 @@ auto rigidBody = new btRigidBody{20.0f, &motionState->btMotionState(), collision
 btWorld->addRigidBody(rigidBody);
 /* [MotionState-usage] */
 
+/* [MotionState-kinematic] */
+rigidBody->setCollisionFlags(rigidBody->getCollisionFlags()|
+    btCollisionObject::CF_KINEMATIC_OBJECT);
+/* [MotionState-kinematic] */
+
 /* [MotionState-update] */
-btTransform transform;
-rigidBody->getMotionState()->getWorldTransform(transform);
-rigidBody->setWorldTransform(transform);
+rigidBody->setWorldTransform(btTransform(object.transformationMatrix()));
 /* [MotionState-update] */
 
 /* [MotionState-usage-after] */
