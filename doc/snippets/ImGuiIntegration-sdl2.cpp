@@ -35,12 +35,12 @@ struct MyApp: Platform::Sdl2Application {
 void foo() {
 {
 /* [Context-dpi-unaware] */
-ImGuiIntegration::Context context{windowSize()};
+ImGuiIntegration::Context imgui{windowSize()};
 /* [Context-dpi-unaware] */
 }
 {
 /* [Context-dpi-aware] */
-ImGuiIntegration::Context context{
+ImGuiIntegration::Context imgui{
     Vector2{windowSize()}/dpiScaling(), windowSize(), framebufferSize()};
 /* [Context-dpi-aware] */
 }
@@ -54,7 +54,7 @@ const Vector2 size = Vector2{windowSize()}/dpiScaling();
 ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf",
     16.0f*framebufferSize().x()/size.x());
 
-ImGuiIntegration::Context context(*ImGui::GetCurrentContext(),
+ImGuiIntegration::Context imgui(*ImGui::GetCurrentContext(),
     size, windowSize(), framebufferSize());
 
 // ...
@@ -66,7 +66,7 @@ void viewportEvent(ViewportEvent& event) override;
 void mousePressEvent(MouseEvent& event) override;
 void mouseReleaseEvent(MouseEvent& event) override;
 
-ImGuiIntegration::Context _context{Vector2i{}};
+ImGuiIntegration::Context _imgui{Vector2i{}};
 Float _supersamplingRatio{};
 };
 
@@ -76,13 +76,13 @@ Float _supersamplingRatio{};
 // ...
 
 void MyApp::mousePressEvent(MouseEvent& event) {
-    if(_context.handleMousePressEvent(event)) return;
+    if(_imgui.handleMousePressEvent(event)) return;
 
     // event not handled by ImGui, handle it for the app itself
 }
 
 void MyApp::mouseReleaseEvent(MouseEvent& event) {
-    if(_context.handleMouseReleaseEvent(event)) return;
+    if(_imgui.handleMouseReleaseEvent(event)) return;
 
     // ...
 }
@@ -106,6 +106,6 @@ void MyApp::viewportEvent(ViewportEvent& event) {
             16.0f*supersamplingRatio);
     }
 
-    _context.relayout(size, event.windowSize(), event.framebufferSize());
+    _imgui.relayout(size, event.windowSize(), event.framebufferSize());
 }
 /* [Context-relayout-fonts-dpi] */

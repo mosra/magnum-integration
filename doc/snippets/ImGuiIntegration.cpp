@@ -48,7 +48,7 @@ static_cast<void>(c);
 
 {
 /* [Context-usage] */
-ImGuiIntegration::Context context{{640, 480}};
+ImGuiIntegration::Context imgui{{640, 480}};
 
 // ...
 /* [Context-usage] */
@@ -59,7 +59,7 @@ GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
 GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
     GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
-context.newFrame();
+imgui.newFrame();
 
 // ImGui widget calls here ...
 
@@ -68,7 +68,7 @@ GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
 GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 
-context.drawFrame();
+imgui.drawFrame();
 
 GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
 GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
@@ -83,7 +83,7 @@ ImGui::CreateContext();
 
 ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf", 16.0f);
 
-ImGuiIntegration::Context context(*ImGui::GetCurrentContext(), {640, 480});
+ImGuiIntegration::Context imgui(*ImGui::GetCurrentContext(), {640, 480});
 
 // ...
 /* [Context-custom-fonts] */
