@@ -32,7 +32,7 @@
 #include "Magnum/ImGuiIntegration/Context.hpp"
 #include "Magnum/ImGuiIntegration/Widgets.h"
 
-namespace Magnum { namespace ImGuiIntegration { namespace Test {
+namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
 struct WidgetsGLTest: GL::OpenGLTester {
     explicit WidgetsGLTest();
@@ -72,6 +72,6 @@ void WidgetsGLTest::image() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::ImGuiIntegration::Test::WidgetsGLTest)

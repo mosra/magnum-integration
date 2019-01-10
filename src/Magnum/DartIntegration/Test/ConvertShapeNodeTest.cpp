@@ -69,7 +69,7 @@
     #endif
 #endif
 
-namespace Magnum { namespace DartIntegration { namespace Test {
+namespace Magnum { namespace DartIntegration { namespace Test { namespace {
 
 struct ConvertShapeNodeTest: TestSuite::Tester {
     explicit ConvertShapeNodeTest();
@@ -547,6 +547,6 @@ void ConvertShapeNodeTest::texture() {
 }
 #endif
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::DartIntegration::Test::ConvertShapeNodeTest)

@@ -34,7 +34,7 @@
 #include "Magnum/OvrIntegration/Enums.h"
 #include "Magnum/OvrIntegration/Context.h"
 
-namespace Magnum { namespace OvrIntegration { namespace Test {
+namespace Magnum { namespace OvrIntegration { namespace Test { namespace {
 
 struct EnumTest: TestSuite::Tester {
     explicit EnumTest();
@@ -221,6 +221,6 @@ void EnumTest::sessionStatusFlag() {
     CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::(invalid)\n");
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::OvrIntegration::Test::EnumTest)

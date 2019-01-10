@@ -63,14 +63,10 @@
     #endif
 #endif
 
-namespace Magnum { namespace DartIntegration { namespace Test {
-
-namespace {
+namespace Magnum { namespace DartIntegration { namespace Test { namespace {
 
 typedef SceneGraph::Object<SceneGraph::MatrixTransformation3D> Object3D;
 typedef SceneGraph::Scene<SceneGraph::MatrixTransformation3D> Scene3D;
-
-}
 
 struct DartIntegrationTest: GL::OpenGLTester {
     explicit DartIntegrationTest();
@@ -365,6 +361,6 @@ void DartIntegrationTest::softSimulation() {
     }
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::DartIntegration::Test::DartIntegrationTest)

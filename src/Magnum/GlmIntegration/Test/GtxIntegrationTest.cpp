@@ -37,7 +37,7 @@
 #endif
 #include "Magnum/GlmIntegration/GtxIntegration.h"
 
-namespace Magnum { namespace GlmIntegration { namespace Test {
+namespace Magnum { namespace GlmIntegration { namespace Test { namespace {
 
 struct GtxIntegrationTest: TestSuite::Tester {
     explicit GtxIntegrationTest();
@@ -125,6 +125,6 @@ void GtxIntegrationTest::debugDualQuat() {
     #endif
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::GlmIntegration::Test::GtxIntegrationTest)

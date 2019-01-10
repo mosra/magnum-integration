@@ -27,7 +27,7 @@
 
 #include "Magnum/ImGuiIntegration/Context.h"
 
-namespace Magnum { namespace ImGuiIntegration { namespace Test {
+namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
 struct ContextTest: TestSuite::Tester {
     explicit ContextTest();
@@ -55,6 +55,6 @@ void ContextTest::constructCopy() {
     CORRADE_VERIFY(!(std::is_assignable<Context, const Context&>{}));
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::ImGuiIntegration::Test::ContextTest)

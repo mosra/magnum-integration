@@ -35,7 +35,7 @@
 #endif
 #include "Magnum/GlmIntegration/GtcIntegration.h"
 
-namespace Magnum { namespace GlmIntegration { namespace Test {
+namespace Magnum { namespace GlmIntegration { namespace Test { namespace {
 
 struct GtcIntegrationTest: TestSuite::Tester {
     explicit GtcIntegrationTest();
@@ -119,6 +119,6 @@ void GtcIntegrationTest::debugQuat() {
     #endif
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::GlmIntegration::Test::GtcIntegrationTest)

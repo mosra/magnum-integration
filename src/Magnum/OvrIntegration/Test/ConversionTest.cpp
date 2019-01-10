@@ -31,7 +31,7 @@
 
 #include "Magnum/OvrIntegration/Conversion.h"
 
-namespace Magnum { namespace OvrIntegration { namespace Test {
+namespace Magnum { namespace OvrIntegration { namespace Test { namespace {
 
 struct ConversionTest: TestSuite::Tester {
     explicit ConversionTest();
@@ -166,6 +166,6 @@ void ConversionTest::posef() {
     CORRADE_COMPARE(c.Position.z, b.Position.z);
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::OvrIntegration::Test::ConversionTest)

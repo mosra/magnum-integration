@@ -33,7 +33,7 @@
 
 #include "Magnum/BulletIntegration/Integration.h"
 
-namespace Magnum { namespace BulletIntegration { namespace Test {
+namespace Magnum { namespace BulletIntegration { namespace Test { namespace {
 
 typedef Math::Vector<3, btScalar> Vector3;
 typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
@@ -113,6 +113,6 @@ void IntegrationTest::quaternion() {
     CORRADE_VERIFY(btQuaternion{a} == b);
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::BulletIntegration::Test::IntegrationTest)

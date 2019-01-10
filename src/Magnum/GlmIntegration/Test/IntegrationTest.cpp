@@ -32,7 +32,7 @@
 #include "Magnum/Math/Matrix4.h"
 #include "Magnum/GlmIntegration/Integration.h"
 
-namespace Magnum { namespace GlmIntegration { namespace Test {
+namespace Magnum { namespace GlmIntegration { namespace Test { namespace {
 
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
@@ -478,6 +478,6 @@ void IntegrationTest::debugMat() {
     CORRADE_COMPARE(out.str(), "dmat2x4((3.000000, 5.000000, 8.000000, 10.000000), (4.500000, 4.000000, 7.000000, 11.000000))\n");
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::GlmIntegration::Test::IntegrationTest)

@@ -34,7 +34,7 @@
 #include "Magnum/BulletIntegration/ConvertShape.h"
 #include "Magnum/BulletIntegration/MotionState.h"
 
-namespace Magnum { namespace BulletIntegration { namespace Test {
+namespace Magnum { namespace BulletIntegration { namespace Test { namespace {
 
 typedef SceneGraph::Object<SceneGraph::BasicMatrixTransformation3D<btScalar>> Object3D;
 
@@ -67,6 +67,6 @@ void ConvertShapeTest::sphere() {
 }
 CORRADE_IGNORE_DEPRECATED_POP
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::BulletIntegration::Test::ConvertShapeTest)

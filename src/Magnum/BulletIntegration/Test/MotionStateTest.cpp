@@ -33,16 +33,12 @@
 #include "Magnum/BulletIntegration/Integration.h"
 #include "Magnum/BulletIntegration/MotionState.h"
 
-namespace Magnum { namespace BulletIntegration { namespace Test {
-
-namespace {
+namespace Magnum { namespace BulletIntegration { namespace Test { namespace {
 
 using namespace Math::Literals;
 
 typedef SceneGraph::Object<SceneGraph::MatrixTransformation3D> Object3D;
 typedef SceneGraph::Scene<SceneGraph::MatrixTransformation3D> Scene3D;
-
-}
 
 struct MotionStateTest: TestSuite::Tester {
     explicit MotionStateTest();
@@ -86,6 +82,6 @@ void MotionStateTest::test() {
     CORRADE_COMPARE(object.transformationMatrix(), transformation);
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::BulletIntegration::Test::MotionStateTest)

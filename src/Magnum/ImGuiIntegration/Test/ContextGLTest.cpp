@@ -32,7 +32,7 @@
 
 #include "Magnum/ImGuiIntegration/Context.hpp"
 
-namespace Magnum { namespace ImGuiIntegration { namespace Test {
+namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
 enum class Modifier: Int {
     Shift, Ctrl, Alt, Super
@@ -582,6 +582,6 @@ void ContextGLTest::multipleContexts() {
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::ImGuiIntegration::Test::ContextGLTest)

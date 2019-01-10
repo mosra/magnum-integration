@@ -30,7 +30,7 @@
 
 #include "Magnum/BulletIntegration/DebugDraw.h"
 
-namespace Magnum { namespace BulletIntegration { namespace Test {
+namespace Magnum { namespace BulletIntegration { namespace Test { namespace {
 
 struct DebugDrawTest: TestSuite::Tester {
     explicit DebugDrawTest();
@@ -67,6 +67,6 @@ void DebugDrawTest::debugMode() {
     CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::BulletIntegration::Test::DebugDrawTest)

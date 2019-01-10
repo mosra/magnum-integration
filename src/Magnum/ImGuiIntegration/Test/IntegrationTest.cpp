@@ -30,7 +30,7 @@
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
-namespace Magnum { namespace ImGuiIntegration { namespace Test {
+namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
@@ -95,6 +95,6 @@ void IntegrationTest::colorLiterals() {
     CORRADE_COMPARE(Color4(color4), 0xff336688_rgbaf);
 }
 
-}}}
+}}}}
 
 CORRADE_TEST_MAIN(Magnum::ImGuiIntegration::Test::IntegrationTest)
