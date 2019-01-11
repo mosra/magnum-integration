@@ -75,6 +75,14 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
+    /* The KeyMap is meant to be for mapping from engine-native zero-based
+       enums to ImGui enums in order to avoid complex switch-case and allow
+       users to use native enums with ImGui input APIs. However Magnum only
+       wraps the native enums from SDL, GLFW, Android etc. and these are
+       generally not zero-based, so we need a switch-case in Context.hpp and
+       the below mapping looks kinda suspicious. Should get revisited once
+       there are changes in ImGui event handling code. Related discussion:
+       https://github.com/ocornut/imgui/pull/2269#issuecomment-453485633 */
     ImGuiIO &io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab]        = ImGuiKey_Tab;
     io.KeyMap[ImGuiKey_LeftArrow]  = ImGuiKey_LeftArrow;
