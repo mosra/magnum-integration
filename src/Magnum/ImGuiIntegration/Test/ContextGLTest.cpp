@@ -517,8 +517,11 @@ void ContextGLTest::textInput() {
     TextInputEvent textEvent{{"abc"}};
     c.handleTextInputEvent(textEvent);
 
-    ImWchar expected[4]{'a', 'b', 'c', '\0'};
-    CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputCharacters, 4),
+    ImWchar expected[3]{'a', 'b', 'c'};
+    /* This changed from InputCharacters to InputQueueCharacters in 1.67. Yes,
+       it's a private API, but there's no other way to test if the event works
+       correctly. It's used only in a test so I think that's acceptable. */
+    CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputQueueCharacters.begin(), ImGui::GetIO().InputQueueCharacters.size()),
         Containers::arrayView(expected),
         TestSuite::Compare::Container);
 }
