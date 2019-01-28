@@ -45,6 +45,7 @@
 #include <dart/dynamics/SphereShape.hpp>
 #include <dart/dynamics/Skeleton.hpp>
 #include <dart/dynamics/WeldJoint.hpp>
+#include <Corrade/Containers/Optional.h>
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/TestSuite/Tester.h>
 #include <Corrade/Utility/Directory.h>
@@ -175,7 +176,7 @@ void ConvertShapeNodeTest::assimpImporter() {
     } {
         /* load AssimpImporter */
         PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
-        std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
+        Containers::Pointer<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
         CORRADE_VERIFY(importer);
         /* MeshShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("MeshShape");
@@ -198,7 +199,7 @@ void ConvertShapeNodeTest::assimpImporter() {
     #endif
     {
         PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
-        std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
+        Containers::Pointer<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
         CORRADE_VERIFY(importer);
 
         const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
@@ -216,7 +217,7 @@ void ConvertShapeNodeTest::assimpImporter() {
         CORRADE_VERIFY(!shapeDataAll);
     } {
         PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
-        std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
+        Containers::Pointer<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
         CORRADE_VERIFY(importer);
 
         const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
@@ -395,7 +396,7 @@ void ConvertShapeNodeTest::urdf() {
     #endif
 
     PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
-    std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
+    Containers::Pointer<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
     CORRADE_VERIFY(importer);
 
     const UnsignedInt assimpVersion = aiGetVersionMajor()*100 + aiGetVersionMinor();
@@ -455,7 +456,7 @@ void ConvertShapeNodeTest::multiMesh() {
     #endif
 
     PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
-    std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
+    Containers::Pointer<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
     CORRADE_VERIFY(importer);
 
     const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_multi_mesh.urdf");
@@ -507,7 +508,7 @@ void ConvertShapeNodeTest::texture() {
     #endif
 
     PluginManager::Manager<Trade::AbstractImporter> manager{MAGNUM_PLUGINS_IMPORTER_DIR};
-    std::unique_ptr<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
+    Containers::Pointer<Trade::AbstractImporter> importer = manager.loadAndInstantiate("AssimpImporter");
     CORRADE_VERIFY(importer);
 
     const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_texture.urdf");

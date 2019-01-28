@@ -30,6 +30,7 @@
 
 #include <cstring>
 #include <imgui.h>
+#include <Corrade/Containers/Reference.h>
 #include <Corrade/Utility/Resource.h>
 #include <Magnum/ImageView.h>
 #include <Magnum/GL/Context.h>

@@ -179,7 +179,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
 
         SceneGraph::AbstractBasicObject3D<Float>& _object;
         PluginManager::Manager<Trade::AbstractImporter> _manager;
-        std::unique_ptr<Trade::AbstractImporter> _importer;
+        Containers::Pointer<Trade::AbstractImporter> _importer;
         dart::simulation::World& _dartWorld;
         std::unordered_map<dart::dynamics::Frame*, std::unique_ptr<Object>> _dartToMagnum;
         std::vector<std::unique_ptr<Object>> _toRemove;
