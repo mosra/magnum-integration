@@ -95,46 +95,46 @@ endif()
 # Find components
 foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
     if(_component STREQUAL "Sources")
-        set(ImGui_Sources_FOUND TRUE)
-        set(ImGui_SOURCES )
-
-        foreach(_file imgui imgui_widgets imgui_draw imgui_demo)
-            # Disable the find root path here, it overrides the
-            # CMAKE_FIND_ROOT_PATH_MODE_INCLUDE setting potentially set in
-            # toolchains.
-            find_file(ImGui_${_file}_SOURCE NAMES ${_file}.cpp
-                HINTS ${IMGUI_DIR} NO_CMAKE_FIND_ROOT_PATH)
-            list(APPEND ImGui_SOURCES ${ImGui_${_file}_SOURCE})
-
-            if(NOT ImGui_${_file}_SOURCE)
-                set(ImGui_Sources_FOUND FALSE)
-                break()
-            endif()
-
-            # Hide warnings from imgui source files
-
-            # Handle export and import of imgui symbols via IMGUI_API definition
-            # in visibility.h of Magnum ImGuiIntegration.
-            set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND PROPERTY COMPILE_DEFINITIONS
-                "IMGUI_USER_CONFIG=\"Magnum/ImGuiIntegration/visibility.h\"")
-
-            # GCC- and Clang-specific flags
-            if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?Clang"
-                AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
-                set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
-                    " -Wno-old-style-cast -Wno-zero-as-null-pointer-constant")
-                set_property(SOURCE ${ImGui_${_file}_SOURCE} PROPERTY CORRADE_USE_PEDANTIC_FLAGS OFF)
-                set_property(SOURCE ${ImGui_${_file}_SOURCE} PROPERTY CORRADE_USE_PEDANTIC_DEFINITIONS OFF)
-            endif()
-
-            # GCC-specific flags
-            if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-                 set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
-                     " -Wno-double-promotion")
-            endif()
-        endforeach()
-
         if(NOT TARGET ImGui::Sources)
+            set(ImGui_Sources_FOUND TRUE)
+            set(ImGui_SOURCES )
+
+            foreach(_file imgui imgui_widgets imgui_draw imgui_demo)
+                # Disable the find root path here, it overrides the
+                # CMAKE_FIND_ROOT_PATH_MODE_INCLUDE setting potentially set in
+                # toolchains.
+                find_file(ImGui_${_file}_SOURCE NAMES ${_file}.cpp
+                    HINTS ${IMGUI_DIR} NO_CMAKE_FIND_ROOT_PATH)
+                list(APPEND ImGui_SOURCES ${ImGui_${_file}_SOURCE})
+
+                if(NOT ImGui_${_file}_SOURCE)
+                    set(ImGui_Sources_FOUND FALSE)
+                    break()
+                endif()
+
+                # Hide warnings from imgui source files
+
+                # Handle export and import of imgui symbols via IMGUI_API
+                # definition in visibility.h of Magnum ImGuiIntegration.
+                set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND PROPERTY COMPILE_DEFINITIONS
+                    "IMGUI_USER_CONFIG=\"Magnum/ImGuiIntegration/visibility.h\"")
+
+                # GCC- and Clang-specific flags
+                if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?Clang"
+                    AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
+                    set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
+                        " -Wno-old-style-cast -Wno-zero-as-null-pointer-constant")
+                    set_property(SOURCE ${ImGui_${_file}_SOURCE} PROPERTY CORRADE_USE_PEDANTIC_FLAGS OFF)
+                    set_property(SOURCE ${ImGui_${_file}_SOURCE} PROPERTY CORRADE_USE_PEDANTIC_DEFINITIONS OFF)
+                endif()
+
+                # GCC-specific flags
+                if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+                    set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
+                        " -Wno-double-promotion")
+                endif()
+            endforeach()
+
             add_library(ImGui::Sources INTERFACE IMPORTED)
             set_property(TARGET ImGui::Sources APPEND PROPERTY
                 INTERFACE_SOURCES "${ImGui_SOURCES}")
