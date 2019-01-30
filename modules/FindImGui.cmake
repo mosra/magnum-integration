@@ -140,8 +140,6 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
                 INTERFACE_SOURCES "${ImGui_SOURCES}")
             set_property(TARGET ImGui::Sources APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES ImGui::ImGui)
-
-            set(ImGui_Sources_FOUND ${ImGui_SOURCES})
         else()
             set(ImGui_Sources_FOUND TRUE)
         endif()
