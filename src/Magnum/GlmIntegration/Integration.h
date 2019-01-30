@@ -60,12 +60,15 @@ for all types is provided as well. Example usage:
 See @ref Magnum/GlmIntegration/GtcIntegration.h
 and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of more complex
 types.
+
+@see @ref types-thirdparty-integration
 */
 
 #include <glm/matrix.hpp>
 
 #include "Magnum/Math/RectangularMatrix.h"
 
+/* Don't list (useless) Magnum and Math namespaces without anything else */
 #ifndef DOXYGEN_GENERATING_OUTPUT
 #if GLM_VERSION < 96 /* Was just two decimals in the old days, now it's 3 */
 namespace glm {
@@ -87,7 +90,6 @@ namespace glm {
     template<class T, glm::precision q> using tmat4x3 = detail::tmat4x3<T, q>;
     template<class T, glm::precision q> using tmat4x4 = detail::tmat4x4<T, q>;
 }
-#endif
 #endif
 
 namespace Magnum { namespace Math { namespace Implementation {
@@ -375,6 +377,7 @@ q> struct RectangularMatrixConverter<4, 4, T, glm::tmat4x4<T, q>> {
 };
 
 }}}
+#endif
 
 namespace glm {
 #if !defined(DOXYGEN_GENERATING_OUTPUT) && GLM_VERSION < 96

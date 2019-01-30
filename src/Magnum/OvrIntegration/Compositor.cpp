@@ -26,7 +26,7 @@
 
 #include "Compositor.h"
 
-#include "Magnum/OvrIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Integration.h"
 #include "Magnum/OvrIntegration/Session.h"
 
 #include <OVR_CAPI_GL.h>

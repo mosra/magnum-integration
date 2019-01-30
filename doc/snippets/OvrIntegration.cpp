@@ -1,11 +1,8 @@
-#ifndef Magnum_OvrIntegration_Conversion_h
-#define Magnum_OvrIntegration_Conversion_h
 /*
     This file is part of Magnum.
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
               Vladimír Vondruš <mosra@centrum.cz>
-    Copyright © 2015, 2016 Jonathan Hale <squareys@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -26,18 +23,23 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-/** @file
- * @deprecated Use @ref Magnum/OvrIntegration/Integration.h instead.
- */
+#include <Magnum/Magnum.h>
+#include <Magnum/Math/DualQuaternion.h>
 
-#include "Magnum/configure.h"
-
-#ifdef MAGNUM_BUILD_DEPRECATED
 #include "Magnum/OvrIntegration/Integration.h"
-#include "Corrade/Utility/Macros.h"
-CORRADE_DEPRECATED_FILE("use Magnum/OvrIntegration/Integration.h instead")
-#else
-#error use Magnum/OvrIntegration/Integration.h instead
-#endif
 
-#endif
+using namespace Magnum;
+
+int main() {
+{
+/* [Integration] */
+ovrVector3f a{20.0f, 50.0f, -1.0f};
+Vector3 b(a);
+
+using namespace Math::Literals;
+auto c = ovrPosef(DualQuaternion::rotation(15.0_degf, Vector3::xAxis()));
+/* [Integration] */
+static_cast<void>(b);
+static_cast<void>(c);
+}
+}

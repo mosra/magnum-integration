@@ -61,6 +61,18 @@ btWorld->debugDrawWorld();
 #endif
 
 {
+/* [Integration] */
+btVector3 a{20.0f, 50.0f, -1.0f};
+Vector3 b(a);
+
+using namespace Math::Literals;
+auto c = btQuaternion(Quaternion::rotation(15.0_degf, Vector3::xAxis()));
+/* [Integration] */
+static_cast<void>(b);
+static_cast<void>(c);
+}
+
+{
 #ifdef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"

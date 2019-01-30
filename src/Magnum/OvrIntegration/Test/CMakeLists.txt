@@ -24,10 +24,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-corrade_add_test(OvrConversionTest ConversionTest.cpp LIBRARIES MagnumOvrIntegration)
+corrade_add_test(OvrIntegrationTest IntegrationTest.cpp LIBRARIES MagnumOvrIntegration)
 corrade_add_test(OvrEnumsTest EnumsTest.cpp LIBRARIES MagnumOvrIntegration)
 
 set_target_properties(
-    OvrConversionTest
     OvrEnumsTest
+    OvrIntegrationTest
     PROPERTIES FOLDER "Magnum/OvrIntegration/Test")

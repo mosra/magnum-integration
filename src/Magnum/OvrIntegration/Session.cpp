@@ -31,7 +31,6 @@
 #undef far
 
 #include "Magnum/OvrIntegration/Enums.h"
-#include "Magnum/OvrIntegration/Conversion.h"
 #include "Magnum/OvrIntegration/Context.h"
 
 namespace Magnum { namespace OvrIntegration {

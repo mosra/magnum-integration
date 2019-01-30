@@ -29,12 +29,12 @@
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/DualQuaternion.h>
 
-#include "Magnum/OvrIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Integration.h"
 
 namespace Magnum { namespace OvrIntegration { namespace Test { namespace {
 
-struct ConversionTest: TestSuite::Tester {
-    explicit ConversionTest();
+struct IntegrationTest: TestSuite::Tester {
+    explicit IntegrationTest();
 
     void sizei();
     void vector2i();
@@ -46,18 +46,18 @@ struct ConversionTest: TestSuite::Tester {
     void posef();
 };
 
-ConversionTest::ConversionTest() {
-    addTests({&ConversionTest::sizei,
-              &ConversionTest::vector2i,
-              &ConversionTest::vector2f,
-              &ConversionTest::vector3f,
-              &ConversionTest::recti,
-              &ConversionTest::matrix4f,
-              &ConversionTest::quatf,
-              &ConversionTest::posef});
+IntegrationTest::IntegrationTest() {
+    addTests({&IntegrationTest::sizei,
+              &IntegrationTest::vector2i,
+              &IntegrationTest::vector2f,
+              &IntegrationTest::vector3f,
+              &IntegrationTest::recti,
+              &IntegrationTest::matrix4f,
+              &IntegrationTest::quatf,
+              &IntegrationTest::posef});
 }
 
-void ConversionTest::sizei() {
+void IntegrationTest::sizei() {
     Vector2i a{1, 2};
     ovrSizei b{1, 2};
 
@@ -68,7 +68,7 @@ void ConversionTest::sizei() {
     CORRADE_COMPARE(c.h, b.h);
 }
 
-void ConversionTest::vector2i() {
+void IntegrationTest::vector2i() {
     Vector2i a{1, 2};
     ovrVector2i b{1, 2};
 
@@ -79,7 +79,7 @@ void ConversionTest::vector2i() {
     CORRADE_COMPARE(c.y, b.y);
 }
 
-void ConversionTest::vector2f() {
+void IntegrationTest::vector2f() {
     Vector2 a{1.0f, 2.0f};
     ovrVector2f b{1.0f, 2.0f};
 
@@ -90,7 +90,7 @@ void ConversionTest::vector2f() {
     CORRADE_COMPARE(c.y, b.y);
 }
 
-void ConversionTest::vector3f() {
+void IntegrationTest::vector3f() {
     Vector3 a{1.0f, 2.0f, 3.0f};
     ovrVector3f b{1.0f, 2.0f, 3.0f};
 
@@ -102,7 +102,7 @@ void ConversionTest::vector3f() {
     CORRADE_COMPARE(c.z, b.z);
 }
 
-void ConversionTest::recti() {
+void IntegrationTest::recti() {
     Range2Di a{{2, 2}, {42, 42}};
     ovrRecti b{{2, 2}, {40, 40}};
 
@@ -115,7 +115,7 @@ void ConversionTest::recti() {
     CORRADE_COMPARE(c.Size.h, b.Size.h);
 }
 
-void ConversionTest::matrix4f() {
+void IntegrationTest::matrix4f() {
     Matrix4 a{{1.1f, 1.2f, 1.3f, 1.4f},
               {2.1f, 2.2f, 2.3f, 2.4f},
               {3.1f, 3.2f, 3.3f, 3.4f},
@@ -135,7 +135,7 @@ void ConversionTest::matrix4f() {
         CORRADE_COMPARE(*pc, *pb);
 }
 
-void ConversionTest::quatf() {
+void IntegrationTest::quatf() {
     Quaternion a{{0.1f, 0.2f, 0.3f}, 1.0f};
     ovrQuatf b{0.1f, 0.2f, 0.3f, 1.0f};
 
@@ -148,7 +148,7 @@ void ConversionTest::quatf() {
     CORRADE_COMPARE(c.w, b.w);
 }
 
-void ConversionTest::posef() {
+void IntegrationTest::posef() {
     Quaternion q = Quaternion{{0.1f, 0.2f, 0.3f}, 1.0}.normalized();
     DualQuaternion a = DualQuaternion::translation({1.0f, 2.0f, 3.0f})*DualQuaternion{q};
     ovrPosef b{ovrQuatf(q), {1.0f, 2.0f, 3.0f}};
@@ -168,4 +168,4 @@ void ConversionTest::posef() {
 
 }}}}
 
-CORRADE_TEST_MAIN(Magnum::OvrIntegration::Test::ConversionTest)
+CORRADE_TEST_MAIN(Magnum::OvrIntegration::Test::IntegrationTest)

@@ -43,12 +43,15 @@ for all types is provided as well on GLM >= 0.9.7. Example usage:
 
 See @ref Magnum/GlmIntegration/Integration.h
 and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
+
+@see @ref types-thirdparty-integration
 */
 
 #include <glm/gtc/quaternion.hpp>
 
 #include "Magnum/Math/Quaternion.h"
 
+/* Don't list (useless) Magnum and Math namespaces without anything else */
 #ifndef DOXYGEN_GENERATING_OUTPUT
 #if GLM_VERSION < 96 /* Was just two decimals in the old days, now it's 3 */
 namespace glm {

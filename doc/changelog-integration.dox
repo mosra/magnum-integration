@@ -55,6 +55,12 @@ namespace Magnum {
     objects attached to @ref BulletIntegration::MotionState included rotation.
     See also [mosra/magnum-integration#34](https://github.com/mosra/magnum-integration/pull/34).
 
+@subsection changelog-integration-latest-deprecated Deprecated APIs
+
+-   The `Magnum/OvrIntegration/Conversion.h` header name was not consistent
+    with other libraries and thus is deprecated, use
+    @ref Magnum/OvrIntegration/Integration.h instead
+
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
 -   Removed `MAGNUM_*INTEGRATION_LIBRARIES` and `MAGNUM_*INTEGRATION_INCLUDE_DIRS`

@@ -51,12 +51,15 @@ Example usage:
 
 @snippet ImGuiIntegration.cpp Integration
 
+@see @ref types-thirdparty-integration
 */
 
 #include <imgui.h>
 #include <Magnum/Types.h>
 #include <Magnum/Math/Vector.h>
 
+/* Don't list (useless) Magnum and Math namespaces without anything else */
+#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* ImVec2 */
@@ -108,5 +111,6 @@ template<> struct VectorConverter<3, Float, ImColor> {
 };
 
 }}}
+#endif
 
 #endif

@@ -43,12 +43,16 @@ set(MagnumOvrIntegration_SRCS
 set(MagnumOvrIntegration_HEADERS
     Compositor.h
     Context.h
-    Conversion.h
     Enums.h
     OvrIntegration.h
+    Integration.h
     Session.h
 
     visibility.h)
+
+if(MAGNUM_BUILD_DEPRECATED)
+    list(APPEND MagnumOvrIntegration_HEADERS Conversion.h)
+endif()
 
 # OvrIntegration library
 add_library(MagnumOvrIntegration ${SHARED_OR_STATIC}
