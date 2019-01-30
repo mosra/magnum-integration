@@ -124,8 +124,6 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
                     AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
                     set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
                         " -Wno-old-style-cast -Wno-zero-as-null-pointer-constant")
-                    set_property(SOURCE ${ImGui_${_file}_SOURCE} PROPERTY CORRADE_USE_PEDANTIC_FLAGS OFF)
-                    set_property(SOURCE ${ImGui_${_file}_SOURCE} PROPERTY CORRADE_USE_PEDANTIC_DEFINITIONS OFF)
                 endif()
 
                 # GCC-specific flags
