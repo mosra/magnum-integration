@@ -6,7 +6,8 @@
 #
 #  ImGui_FOUND                - True if ImGui is found
 #  ImGui::ImGui               - ImGui interface target
-#  ImGui::Sources             - ImGui source target
+#  ImGui::Sources             - ImGui source target for core functionality
+#  ImGui::SourcesMiscCpp      - ImGui source target for misc/cpp
 #
 # Additionally these variables are defined for internal usage:
 #
@@ -21,6 +22,9 @@
 # You can supply their location via an ``IMGUI_DIR`` variable. Once found, the
 # ``ImGui::ImGui`` target contains just the header file, while
 # ``ImGui::Sources`` contains the source files in ``INTERFACE_SOURCES``.
+#
+# The ``ImGui::SourcesMiscCpp`` component, if requested, is always searched for
+# in the form of C++ sources. Vcpkg doesn't distribute these.
 #
 # The desired usage that covers both cases is to link ``ImGui::Sources``
 # ``PRIVATE``\ ly to a *single* target, which will then contain either the
@@ -144,6 +148,33 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
                 INTERFACE_LINK_LIBRARIES ImGui::ImGui)
         else()
             set(ImGui_Sources_FOUND TRUE)
+        endif()
+    elseif(_component STREQUAL "SourcesMiscCpp")
+        set(ImGui_SourcesMiscCpp_FOUND TRUE)
+        set(ImGui_SOURCES )
+
+        foreach(_file imgui_stdlib)
+            # Disable the find root path here, it overrides the
+            # CMAKE_FIND_ROOT_PATH_MODE_INCLUDE setting potentially set in
+            # toolchains.
+            find_file(ImGui_${_file}_MISC_CPP_SOURCE NAMES ${_file}.cpp
+                HINTS ${IMGUI_DIR}/misc/cpp NO_CMAKE_FIND_ROOT_PATH)
+            list(APPEND ImGui_MISC_CPP_SOURCES ${ImGui_${_file}_MISC_CPP_SOURCE})
+
+            if(NOT ImGui_${_file}_MISC_CPP_SOURCE)
+                set(ImGui_SourcesMiscCpp_FOUND FALSE)
+                break()
+            endif()
+
+            _imgui_setup_source_file(${ImGui_${_file}_MISC_CPP_SOURCE})
+        endforeach()
+
+        if(NOT TARGET ImGui::SourcesMiscCpp)
+            add_library(ImGui::SourcesMiscCpp INTERFACE IMPORTED)
+            set_property(TARGET ImGui::SourcesMiscCpp APPEND PROPERTY
+                INTERFACE_SOURCES "${ImGui_MISC_CPP_SOURCES}")
+            set_property(TARGET ImGui::SourcesMiscCpp APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES ImGui::ImGui)
         endif()
     endif()
 endforeach()
