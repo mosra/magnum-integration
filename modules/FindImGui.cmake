@@ -92,6 +92,28 @@ else()
     endif()
 endif()
 
+macro(_imgui_setup_source_file source)
+    # Handle export and import of imgui symbols via IMGUI_API
+    # definition in visibility.h of Magnum ImGuiIntegration.
+    set_property(SOURCE ${source} APPEND PROPERTY COMPILE_DEFINITIONS
+        "IMGUI_USER_CONFIG=\"Magnum/ImGuiIntegration/visibility.h\"")
+
+    # Hide warnings from imgui source files
+
+    # GCC- and Clang-specific flags
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?Clang"
+        AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
+        set_property(SOURCE ${source} APPEND_STRING PROPERTY COMPILE_FLAGS
+            " -Wno-old-style-cast -Wno-zero-as-null-pointer-constant")
+    endif()
+
+    # GCC-specific flags
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set_property(SOURCE ${source} APPEND_STRING PROPERTY COMPILE_FLAGS
+            " -Wno-double-promotion")
+    endif()
+endmacro()
+
 # Find components
 foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
     if(_component STREQUAL "Sources")
@@ -112,25 +134,7 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
                     break()
                 endif()
 
-                # Hide warnings from imgui source files
-
-                # Handle export and import of imgui symbols via IMGUI_API
-                # definition in visibility.h of Magnum ImGuiIntegration.
-                set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND PROPERTY COMPILE_DEFINITIONS
-                    "IMGUI_USER_CONFIG=\"Magnum/ImGuiIntegration/visibility.h\"")
-
-                # GCC- and Clang-specific flags
-                if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?Clang"
-                    AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
-                    set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
-                        " -Wno-old-style-cast -Wno-zero-as-null-pointer-constant")
-                endif()
-
-                # GCC-specific flags
-                if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-                    set_property(SOURCE ${ImGui_${_file}_SOURCE} APPEND_STRING PROPERTY COMPILE_FLAGS
-                        " -Wno-double-promotion")
-                endif()
+                _imgui_setup_source_file(${ImGui_${_file}_SOURCE})
             endforeach()
 
             add_library(ImGui::Sources INTERFACE IMPORTED)
