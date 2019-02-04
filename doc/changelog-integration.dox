@@ -30,9 +30,14 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@section changelog-integration-latest Changes since 2018.10
+@anchor changelog-integration-latest
 
-@subsection changelog-integration-latest-dependencies Dependency changes
+@section changelog-integration-2019-01 2019.01
+
+Released 2019-02-04, tagged as
+[v2019.01](https://github.com/mosra/magnum-integration/releases/tag/v2019.01).
+
+@subsection changelog-integration-2019-01-dependencies Dependency changes
 
 -   Minimal supported GCC version is now 4.8.1, GCC 4.7 is not supported
     anymore. Minimal Clang version is now 3.3, since that's the first version
@@ -44,33 +49,33 @@ namespace Magnum {
     systems (such as Ubuntu 14.04 or Debian 8). See also
     [mosra/magnum#274](https://github.com/mosra/magnum/issues/274).
 
-@subsection changelog-integration-latest-new New features
+@subsection changelog-integration-2019-01-new New features
 
 -   New @ref ImGuiIntegration library to render
     [Dear ImGui](https://github.com/ocornut/imgui) user interfaces (see
     [mosra/magnum-integration#33](https://github.com/mosra/magnum-integration/pull/33)
     and [mosra/magnum#36](https://github.com/mosra/magnum-integration/issues/36))
 
-@subsection changelog-integration-latest-bugfixes Bug fixes
+@subsection changelog-integration-2019-01-bugfixes Bug fixes
 
 -   Conversion of 3x3 matrices in the @ref BulletIntegration was transposing
     them by mistake. This was only discoverable if the transformation of
     objects attached to @ref BulletIntegration::MotionState included rotation.
     See also [mosra/magnum-integration#34](https://github.com/mosra/magnum-integration/pull/34).
 
-@subsection changelog-integration-latest-deprecated Deprecated APIs
+@subsection changelog-integration-2019-01-deprecated Deprecated APIs
 
 -   The `Magnum/OvrIntegration/Conversion.h` header name was not consistent
     with other libraries and thus is deprecated, use
     @ref Magnum/OvrIntegration/Integration.h instead
 
-@subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
+@subsection changelog-integration-2019-01-compatibility Potential compatibility breakages, removed APIs
 
 -   Removed `MAGNUM_*INTEGRATION_LIBRARIES` and `MAGNUM_*INTEGRATION_INCLUDE_DIRS`
     CMake variables, which were deprecated in favor of `MagnumIntegration::*`
     imported targets in February 2016.
 
-@subsection changelog-integration-latest-documentation Documentation
+@subsection changelog-integration-2019-01-documentation Documentation
 
 -   The @ref BulletIntegration::MotionState docs gave a false impression that
     the transformation update is two-way, while it is only from bullet to
