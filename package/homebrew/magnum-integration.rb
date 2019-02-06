@@ -1,5 +1,3 @@
-# kate: indent-width 2;
-
 class MagnumIntegration < Formula
   desc "Integration libraries for the Magnum C++11/C++14 graphics engine"
   homepage "https://magnum.graphics"
