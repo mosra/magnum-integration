@@ -185,5 +185,3 @@ endforeach()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ImGui
     REQUIRED_VARS ImGui_INCLUDE_DIR HANDLE_COMPONENTS)
-
-unset(_FIND_SOURCES)
