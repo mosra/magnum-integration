@@ -26,7 +26,7 @@ matrix:
   include:
   - language: cpp
     os: linux
-    dist: trusty
+    dist: xenial
     compiler: gcc
     env:
     - JOBID=linux-gl
@@ -35,7 +35,7 @@ matrix:
     - LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
   - language: cpp
     os: linux
-    dist: trusty
+    dist: xenial
     compiler: gcc
     env:
     - JOBID=linux-nondeprecated
@@ -43,7 +43,7 @@ matrix:
     - BUILD_DEPRECATED=OFF
   - language: cpp
     os: linux
-    dist: trusty
+    dist: xenial
     compiler: clang
     env:
     - JOBID=linux-sanitizers
@@ -52,7 +52,7 @@ matrix:
     addons:
       apt:
         sources:
-        - llvm-toolchain-trusty
+        - llvm-toolchain-xenial
         packages:
         - libgl1-mesa-dev
         - clang-3.8
@@ -75,7 +75,7 @@ matrix:
         - libtinyxml2-dev
   - language: cpp
     os: linux
-    dist: trusty
+    dist: xenial
     compiler: gcc
     env:
     - JOBID=linux-gles2
@@ -85,7 +85,7 @@ matrix:
     - LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
   - language: cpp
     os: linux
-    dist: trusty
+    dist: xenial
     compiler: gcc
     env:
     - JOBID=linux-gles3
@@ -130,6 +130,8 @@ matrix:
     - TARGET_GLES2=OFF
   - language: android
     os: linux
+    # Setting xenial here will cause it to use 12.04, with GCC 4.6 and other
+    # prehistoric nightmares. So staying with 14.04 for the time being.
     dist: trusty
     env:
     - JOBID=android-gles2
@@ -146,6 +148,8 @@ matrix:
       - sys-img-armeabi-v7a-android-22
   - language: android
     os: linux
+    # Setting xenial here will cause it to use 12.04, with GCC 4.6 and other
+    # prehistoric nightmares. So staying with 14.04 for the time being.
     dist: trusty
     env:
     - JOBID=android-gles3
