@@ -68,7 +68,11 @@ cmake .. ^
 cmake --build . --config Release --target install -- /m /v:m || exit /b
 cd .. && cd ..
 
-rem Crosscompile
+rem Unlike ALL OTHER VARIABLES, CMAKE_MODULE_PATH chokes on backwards slashes.
+rem What the hell. This insane snippet converts them.
+set "APPVEYOR_BUILD_FOLDER_FWD=%APPVEYOR_BUILD_FOLDER:\=/%"
+
+rem Crosscompile. For a detailed Eigen rant, see appveyor-desktop.bat.
 mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Release ^
@@ -79,8 +83,11 @@ cmake .. ^
     -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
+    -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
+    -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DWITH_BULLET=OFF ^
     -DWITH_DART=OFF ^
+    -DWITH_EIGEN=ON ^
     -DWITH_GLM=ON ^
     -DWITH_IMGUI=%TARGET_GLES3% ^
     -DWITH_OVR=OFF ^

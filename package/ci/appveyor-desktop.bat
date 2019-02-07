@@ -60,13 +60,26 @@ cmake --build . || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
 
+rem Unlike ALL OTHER VARIABLES, CMAKE_MODULE_PATH chokes on backwards slashes.
+rem What the hell. This insane snippet converts them.
+set "APPVEYOR_BUILD_FOLDER_FWD=%APPVEYOR_BUILD_FOLDER:\=/%"
+
 rem Build. CMake is not able to find Debug Bullet libraries on their own so I
-rem have to force them in.
+rem have to force them in. Eigen3 is header-only but the archive is so stupid
+rem that it's not possible to just use Eigen3Config.cmake, as it's generated
+rem using CMake from Eigen3Config.cmake.in. There's FindEigen3.cmake next to
+rem it, but that doesn't help with ANYTHING AT ALL (like, what about looking
+rem one directory up, eh?! too hard?!) and also defines just EIGEN3_INCLUDE_DIR,
+rem not the Eigen3::Eigen target nor EIGEN3_INCLUDE_DIRS. Now I get why people
+rem hate CMake. It's because project rem maintainers are absolutely clueless on
+rem how to write usable find scripts with it.
 mkdir build && cd build || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/bullet ^
+    -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
+    -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
     -DBULLET_COLLISION_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletCollision_Debug.lib ^
@@ -75,6 +88,7 @@ cmake .. ^
     -DBULLET_SOFTBODY_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletSoftBody_Debug.lib ^
     -DWITH_BULLET=ON ^
     -DWITH_DART=OFF ^
+    -DWITH_EIGEN=ON ^
     -DWITH_GLM=ON ^
     -DWITH_IMGUI=ON ^
     -DWITH_OVR=ON ^

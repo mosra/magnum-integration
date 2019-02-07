@@ -13,6 +13,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
+	dev-cpp/eigen
 	dev-libs/magnum
 	media-libs/glm
 	sci-physics/bullet
@@ -26,6 +27,7 @@ src_configure() {
 		-DCMAKE_BUILD_TYPE=Release
 		-DWITH_BULLET=ON
 		-DWITH_DART=OFF
+		-DWITH_EIGEN=ON
 		-DWITH_GLM=ON
 		-DWITH_IMGUI=OFF
 	)

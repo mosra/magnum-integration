@@ -63,6 +63,10 @@ cmake --build . || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
 
+rem Unlike ALL OTHER VARIABLES, CMAKE_MODULE_PATH chokes on backwards slashes.
+rem What the hell. This insane snippet converts them.
+set "APPVEYOR_BUILD_FOLDER_FWD=%APPVEYOR_BUILD_FOLDER:\=/%"
+
 rem Build. CMake is not able to find Debug Bullet libraries on their own so I
 rem have to force them in.
 mkdir build && cd build || exit /b
@@ -76,8 +80,11 @@ cmake .. ^
     -DBULLET_DYNAMICS_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletDynamics_Debug.lib ^
     -DBULLET_MATH_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/LinearMath_Debug.lib ^
     -DBULLET_SOFTBODY_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletSoftBody_Debug.lib ^
+    -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
+    -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DWITH_BULLET=ON ^
     -DWITH_DART=OFF ^
+    -DWITH_EIGEN=ON ^
     -DWITH_GLM=ON ^
     -DWITH_IMGUI=%TARGET_GLES3% ^
     -DWITH_OVR=OFF ^

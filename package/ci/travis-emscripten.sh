@@ -90,7 +90,15 @@ cmake .. \
 ninja install
 cd ../..
 
-# Crosscompile
+# Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
+# archive is so stupid that it's not possible to just use Eigen3Config.cmake,
+# as it's generated using CMake from Eigen3Config.cmake.in. There's
+# FindEigen3.cmake next to it, but that doesn't help with ANYTHING AT ALL
+# (like, what about looking one directory up, eh?! too hard?!) and also defines
+# just EIGEN3_INCLUDE_DIR, not the Eigen3::Eigen target nor
+# EIGEN3_INCLUDE_DIRS. Now I get why people hate CMake. It's because project
+# maintainers are absolutely clueless on how to write usable find scripts with
+# it.
 mkdir build-emscripten && cd build-emscripten
 cmake .. \
     -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
@@ -99,12 +107,15 @@ cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
     -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
+    -DCMAKE_MODULE_PATH=$HOME/eigen/cmake/ \
+    -DEIGEN3_INCLUDE_DIR=$HOME/eigen/ \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DGLM_INCLUDE_DIR=$HOME/glm \
     -DIMGUI_DIR=$HOME/imgui \
     -DWITH_BULLET=ON \
     -DWITH_DART=OFF \
+    -DWITH_EIGEN=ON \
     -DWITH_GLM=ON \
     -DWITH_IMGUI=$TARGET_GLES3 \
     -DWITH_OVR=OFF \

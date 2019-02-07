@@ -64,11 +64,16 @@ cmake --build . || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
 
+rem Unlike ALL OTHER VARIABLES, CMAKE_MODULE_PATH chokes on backwards slashes.
+rem What the hell. This insane snippet converts them.
+set "APPVEYOR_BUILD_FOLDER_FWD=%APPVEYOR_BUILD_FOLDER:\=/%"
+
 rem Build
 rem For MinGW it's not possible to use the OVR SDK directly, the Oculus Runtime
 rem is needed to be installed, but that's apparently not possible from a
 rem command-line so I'm just disabling it.
 rem https://forums.oculus.com/community/discussion/18303/silent-installation-of-oculus-runtime-windows
+rem For a detailed Eigen rant, see appveyor-desktop.bat
 mkdir build && cd build || exit /b
 cmake .. ^
     -DCMAKE_CXX_FLAGS="--coverage" ^
@@ -76,8 +81,11 @@ cmake .. ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
+    -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
+    -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DWITH_BULLET=ON ^
     -DWITH_DART=OFF ^
+    -DWITH_EIGEN=ON ^
     -DWITH_GLM=ON ^
     -DWITH_IMGUI=ON ^
     -DWITH_OVR=OFF ^

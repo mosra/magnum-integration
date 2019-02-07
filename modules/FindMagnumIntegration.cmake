@@ -194,8 +194,17 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         # Eigen integration library
         elseif(_component STREQUAL Eigen)
             find_package(Eigen3)
+            # We could drop this once we can use at least 3.3.1 (Ubuntu 16.04
+            # has only 3.3 beta, which doesn't have this target yet), however
+            # for Travis and AppVeyor we're using FindEigen3.cmake from the
+            # downloaded sources (because the Eigen3Config.cmake, which
+            # produces the actual targets, is not there -- only
+            # Eigen3Config.cmake.in). See the YML files for an extended rant.
+            # Also, FindEigen3 only defines EIGEN3_INCLUDE_DIR, not even
+            # EIGEN3_INCLUDE_DIRS, so be extra careful.
+            # http://eigen.tuxfamily.org/index.php?title=ChangeLog#Eigen_3.3.1
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
-                INTERFACE_LINK_LIBRARIES Eigen3::Eigen)
+                INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})
 
             set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES Integration.h)
 

@@ -62,18 +62,29 @@ cmake .. \
 set -o pipefail && cmake --build . --config Release --target install | xcpretty
 cd ../..
 
-# Crosscompile
+# Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
+# archive is so stupid that it's not possible to just use Eigen3Config.cmake,
+# as it's generated using CMake from Eigen3Config.cmake.in. There's
+# FindEigen3.cmake next to it, but that doesn't help with ANYTHING AT ALL
+# (like, what about looking one directory up, eh?! too hard?!) and also defines
+# just EIGEN3_INCLUDE_DIR, not the Eigen3::Eigen target nor
+# EIGEN3_INCLUDE_DIRS. Now I get why people hate CMake. It's because project
+# maintainers are absolutely clueless on how to write usable find scripts with
+# it.
 mkdir build-ios && cd build-ios
 cmake .. \
     -DCMAKE_TOOLCHAIN_FILE=../toolchains/generic/iOS.cmake \
     -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
     -DCMAKE_OSX_ARCHITECTURES="x86_64" \
+    -DCMAKE_MODULE_PATH=$HOME/eigen/cmake/ \
+    -DEIGEN3_INCLUDE_DIR=$HOME/eigen/ \
     -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DGLM_INCLUDE_DIR=$HOME/glm \
     -DIMGUI_DIR=$HOME/imgui \
     -DWITH_BULLET=OFF \
     -DWITH_DART=OFF \
+    -DWITH_EIGEN=ON \
     -DWITH_GLM=ON \
     -DWITH_IMGUI=$TARGET_GLES3 \
     -DWITH_OVR=OFF \
