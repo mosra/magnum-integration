@@ -58,6 +58,7 @@ This command tries to find Magnum integration library and then defines:
 This command alone is useless without specifying the components:
 
 -   `Bullet` --- @ref BulletIntegration library
+-   `Eigen` --- @ref EigenIntegration library
 -   `Dart`  --- @ref DartIntegration library
 -   `Glm` --- @ref GlmIntegration library
 -   `ImGui` --- @ref ImGuiIntegration library

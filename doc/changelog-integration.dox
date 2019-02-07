@@ -34,6 +34,9 @@ namespace Magnum {
 
 @subsection changelog-integration-latest-new New features
 
+-   New @ref EigenIntegration library, providing conversion of math types from
+    and to [Eigen](http://eigen.tuxfamily.org/) APIs (see
+    [mosra/magnum-integration#40](https://github.com/mosra/magnum-integration/pull/40))
 -   New @ref ImGuiIntegration::imageButton() widget for drawing an image button
     out of @ref GL::Texture2D (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 

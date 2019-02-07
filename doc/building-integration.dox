@@ -290,6 +290,8 @@ manually:
     library. Depends on [Bullet Physics](http://bulletphysics.org/).
 -   `WITH_DART` --- Build the @ref DartIntegration "DartIntegration" library.
     Depends on [DART](http://dartsim.github.io/).
+-   `WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"
+    library. Depends on [Eigen](http://eigen.tuxfamily.org/).
 -   `WITH_GLM` --- Build the @ref GlmIntegration "GlmIntegration" library.
     Depends on [GLM](https://glm.g-truc.net/).
 -   `WITH_IMGUI` --- Build the @ref ImGuiIntegration "ImGuiIntegration" library.

@@ -3,7 +3,6 @@
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
 #             Vladimír Vondruš <mosra@centrum.cz>
-#   Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
@@ -24,26 +23,27 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-if(WITH_BULLET)
-    add_subdirectory(BulletIntegration)
+find_package(Eigen3 REQUIRED)
+
+set(MagnumEigenIntegration_HEADERS
+    GeometryIntegration.h
+    Integration.h)
+
+# EigenIntegration library
+add_library(MagnumEigenIntegration INTERFACE)
+set_target_properties(MagnumEigenIntegration PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/src
+    INTERFACE_LINK_LIBRARIES "Magnum::Magnum;Eigen3::Eigen")
+
+# Force IDEs to display all header files in project view
+add_custom_target(MagnumEigenIntegration-headers SOURCES ${MagnumEigenIntegration_HEADERS})
+set_target_properties(MagnumEigenIntegration-headers PROPERTIES FOLDER "Magnum/EigenIntegration")
+
+install(FILES ${MagnumEigenIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/EigenIntegration)
+
+if(BUILD_TESTS)
+    add_subdirectory(Test)
 endif()
 
-if(WITH_DART)
-    add_subdirectory(DartIntegration)
-endif()
-
-if(WITH_EIGEN)
-    add_subdirectory(EigenIntegration)
-endif()
-
-if(WITH_GLM)
-    add_subdirectory(GlmIntegration)
-endif()
-
-if(WITH_IMGUI)
-    add_subdirectory(ImGuiIntegration)
-endif()
-
-if(WITH_OVR)
-    add_subdirectory(OvrIntegration)
-endif()
+# Magnum Eigen integration target alias for superprojects
+add_library(MagnumIntegration::Eigen ALIAS MagnumEigenIntegration)

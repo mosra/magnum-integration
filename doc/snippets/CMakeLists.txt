@@ -44,6 +44,12 @@ if(WITH_DART)
     set_target_properties(snippets-DartIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()
 
+if(WITH_EIGEN)
+    add_library(snippets-EigenIntegration STATIC EigenIntegration.cpp)
+    target_link_libraries(snippets-EigenIntegration PRIVATE MagnumEigenIntegration)
+    set_target_properties(snippets-EigenIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
+endif()
+
 if(WITH_GLM)
     add_library(snippets-GlmIntegration STATIC GlmIntegration.cpp)
     target_link_libraries(snippets-GlmIntegration PRIVATE MagnumGlmIntegration)

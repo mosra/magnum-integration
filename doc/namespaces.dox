@@ -93,6 +93,49 @@ See @ref building-integration and @ref cmake-integration for more information.
     Attribution is required for public use.
 */
 
+/** @dir Magnum/EigenIntegration
+ * @brief Namespace @ref Magnum::EigenIntegration
+ */
+/** @namespace Magnum::EigenIntegration
+@brief Integration with Eigen
+
+Conversion of math types from and to the Eigen library.
+
+This library depends on the [Eigen](http://eigen.tuxfamily.org/) library and is
+built if `WITH_EIGEN` is enabled when building Magnum Integration. To use this
+library with CMake, you need to request the `Eigen` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Eigen` target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Eigen)
+
+# ...
+target_link_libraries(your-app MagnumIntegration::Eigen)
+@endcode
+
+The integration routines are provided in the
+@ref Magnum/EigenIntegration/Integration.h header, see its documentation
+for more information. See also @ref building-integration and
+@ref cmake-integration.
+
+@m_class{m-block m-warning}
+
+@thirdparty This library makes use of the
+    [Eigen](http://eigen.tuxfamily.org/),
+    released under @m_class{m-label m-warning} **MPL 2.0**
+    ([license text](http://www.mozilla.org/MPL/2.0),
+    [choosealicense.com](https://choosealicense.com/licenses/mpl-2.0/)).
+    Attribution is required for public use, source code of licensed files and
+    modifications of these files have to be made available under the same
+    license. Additionally, some parts rely on third-party code licensed under
+    @m_class{m-label m-warning} **LGPLv3**
+    ([license text](http://eigen.tuxfamily.org/index.php?title=Main_Page#License),
+    [choosealicense.com](https://choosealicense.com/licenses/lgpl-3.0/)),
+    requiring either dynamic linking or full source disclosure for public use.
+    See the [license notes](http://eigen.tuxfamily.org/index.php?title=Main_Page#License)
+    for details.
+
+*/
 /** @dir Magnum/GlmIntegration
  * @brief Namespace @ref Magnum::GlmIntegration
  */
