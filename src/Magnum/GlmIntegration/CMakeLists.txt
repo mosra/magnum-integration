@@ -24,7 +24,6 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED)
 find_package(GLM REQUIRED)
 
 if(BUILD_STATIC)
