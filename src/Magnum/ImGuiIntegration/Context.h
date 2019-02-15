@@ -71,22 +71,22 @@ class ImGuiShader: public GL::AbstractShaderProgram {
 }
 
 /**
-@brief ImGui context
+@brief Dear ImGui context
 
-Handles initialization and destruction of ImGui context and implements a
+Handles initialization and destruction of Dear ImGui context and implements a
 Magnum-based rendering backend.
 
 @section ImGuiIntegration-Context-usage Usage
 
-Creating the @ref Context instance will create the ImGui context and make it
-current. From that point you can use ImGui calls.
+Creating the @ref Context instance will create the Dear ImGui context and make
+it current. From that point you can use ImGui calls.
 
 @snippet ImGuiIntegration.cpp Context-usage
 
 @subsection ImGuiIntegration-Context-usage-rendering Rendering
 
 Use @ref newFrame() to initialize a ImGui frame and finally draw it with
-@ref drawFrame() to the currently bound framebuffer. ImGui requires
+@ref drawFrame() to the currently bound framebuffer. Dear ImGui requires
 @ref GL::Renderer::Feature::ScissorTest "scissor test" to be enabled and
 @ref GL::Renderer::Feature::DepthTest "depth test" to be disabled.
 @ref GL::Renderer::Feature::Blending "Blending" should be enabled and set up as
@@ -168,9 +168,10 @@ will result in the font caches being rebuilt.
     screens.
 
 There are further important steps for DPI awareness if you are supplying custom
-fonts. Use the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&) constructor and pre-scale their size by the ratio
-of @p size and @p framebufferSize. If you don't do that, the fonts will appear
-tiny on HiDPI screens. Example:
+fonts. Use the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
+constructor and pre-scale their size by the ratio of @p size and
+@p framebufferSize. If you don't do that, the fonts will appear tiny on HiDPI
+screens. Example:
 
 @snippet ImGuiIntegration-sdl2.cpp Context-custom-fonts-dpi
 

@@ -27,7 +27,7 @@
 */
 
 /** @file
-@brief Conversion of ImGui math types
+@brief Conversion of Dear ImGui math types
 
 Provides conversion for the following types:
 

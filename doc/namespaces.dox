@@ -157,7 +157,7 @@ See also @ref building-integration and @ref cmake-integration. See the
 /** @namespace Magnum::ImGuiIntegration
 @brief Integration with Dear ImGui
 
-Conversion of math classes and rendering of ImGui UI using Magnum.
+Conversion of math classes and rendering of Dear ImGui using Magnum.
 
 This library depends on [Dear ImGui](https://github.com/ocornut/imgui) and is
 built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
@@ -172,8 +172,8 @@ target_link_libraries(your-app MagnumIntegration::ImGui)
 @endcode
 
 Routines for math type conversion are provided in @ref Magnum/ImGuiIntegration/Integration.h,
-Magnum-based rendering backend for ImGui is in the @ref Context class. See also
-the @ref examples-imgui example, @ref building-integration and
+Magnum-based rendering backend for Dear ImGui is in the @ref Context class. See
+also the @ref examples-imgui example, @ref building-integration and
 @ref cmake-integration.
 
 @m_class{m-block m-success}
