@@ -35,7 +35,7 @@
 #include <imgui.h>
 #include <Magnum/Math/Range.h>
 #include <Magnum/Math/Color.h>
-#include <Magnum/GL/Texture.h>
+#include <Magnum/GL/GL.h>
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 #include "Magnum/ImGuiIntegration/Integration.h"
