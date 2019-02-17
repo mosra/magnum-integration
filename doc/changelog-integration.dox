@@ -30,7 +30,17 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@anchor changelog-integration-latest
+@section changelog-integration-latest Changes since 2019.01
+
+@subsection changelog-integration-latest-new New features
+
+-   New @ref ImGuiIntegration::imageButton() widget for drawing an image button
+    out of @ref GL::Texture2D (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
+
+@subsection changelog-integration-latest-bugfixes Bug fixes
+
+-   The @ref ImGuiIntegration::image() widget was flipping the texture
+    vertically (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 
 @section changelog-integration-2019-01 2019.01
 

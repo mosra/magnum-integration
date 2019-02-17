@@ -32,7 +32,7 @@ namespace Magnum {
 -   **[\@denesik](https://github.com/denesik)** --- base of the
     @ref ImGuiIntegration library
 -   **Guillaume Jacquemin** ([\@williamjcm](https://github.com/williamjcm)) ---
-    base of the @ref ImGuiIntegration library
+    improvements of the @ref ImGuiIntegration library
 -   **Jan Dupal** ([\@JanDupal](https://github.com/JanDupal)) --- the
     @ref BulletIntegration library
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
