@@ -46,7 +46,8 @@ namespace Magnum { namespace ImGuiIntegration {
 @brief Image widget displaying a @ref GL::Texture2D
 @param texture      Texture to display
 @param size         Widget size
-@param uvRange      UV range on the texture (covers the whole texture by default)
+@param uvRange      UV range on the texture (covers the whole texture by
+    default)
 @param tintColor    Tint color, default @cpp 0xffffffff_rgbaf @ce
 @param borderColor  Border color, default @cpp 0x00000000_rgbaf @ce
 */
@@ -55,7 +56,7 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
     const Color4& tintColor = Color4{1.0f},
     const Color4& borderColor = {})
 {
-    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), ImColor(tintColor), ImColor(borderColor));
+    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(tintColor), ImColor(borderColor));
 }
 
 }}
