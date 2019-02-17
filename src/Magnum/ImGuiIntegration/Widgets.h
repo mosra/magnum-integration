@@ -55,7 +55,7 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
     const Color4& tintColor = Color4{1.0f},
     const Color4& borderColor = {})
 {
-    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), ImColor(tintColor), ImColor(borderColor));
+    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(tintColor), ImColor(borderColor));
 }
 
 /**
@@ -70,10 +70,10 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
 inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
     const Range2D& uvRange = {{}, Vector2{1.0f}},
     const int& framePadding = -1,
-    const Color4& backgroundColor = Color4{0.0f},
+    const Color4& backgroundColor = Color4{0.0f, 0.0f},
     const Color4& tintColor = Color4{1.0f})
 {
-    return ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
+    return ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
 }
 
 }}
