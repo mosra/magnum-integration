@@ -39,10 +39,12 @@ struct WidgetsGLTest: GL::OpenGLTester {
     explicit WidgetsGLTest();
 
     void image();
+    void imageButton();
 };
 
 WidgetsGLTest::WidgetsGLTest() {
-    addTests({&WidgetsGLTest::image});
+    addTests({&WidgetsGLTest::image,
+              &WidgetsGLTest::imageButton});
 
     GL::Renderer::enable(GL::Renderer::Feature::Blending);
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
@@ -69,6 +71,28 @@ void WidgetsGLTest::image() {
     c.newFrame();
 
     ImGuiIntegration::image(texture, {100, 100});
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void WidgetsGLTest::imageButton() {
+    /* Checks compilation and no GL errors only */
+    Context c{{200, 200}};
+
+    /* Again a dummy frame first as ImGui doesn't draw anything the first frame */
+    c.newFrame();
+    c.drawFrame();
+
+    GL::Texture2D texture;
+    texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
+
+    Corrade::Utility::System::sleep(1);
+
+    c.newFrame();
+
+    ImGuiIntegration::imageButton(texture, {100, 100});
 
     c.drawFrame();
 
