@@ -29,7 +29,7 @@
 */
 
 /** @file
- * @brief Function @ref Magnum::ImGuiIntegration::image()
+ * @brief Functions @ref Magnum::ImGuiIntegration::image(), @ref Magnum::ImGuiIntegration::imageButton()
  */
 
 #include <imgui.h>
@@ -56,6 +56,24 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
     const Color4& borderColor = {})
 {
     ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), ImColor(tintColor), ImColor(borderColor));
+}
+
+/**
+@brief ImageButton widget displaying a @ref GL::Texture2D
+@param texture          Texture to display
+@param size             Widget size
+@param uvRange          UV range on the texture (covers the whole texture by default)
+@param framePadding     Frame padding, negative values use the default frame padding.
+@param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
+@param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
+*/
+inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
+                        const Range2D& uvRange = {{}, Vector2{1.0f}},
+                        const int& framePadding = -1,
+                        const Color4& backgroundColor = Color4{0.0f},
+                        const Color4& tintColor = Color4{1.0f})
+{
+    return ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
 }
 
 }}
