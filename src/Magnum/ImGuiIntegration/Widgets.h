@@ -29,7 +29,7 @@
 */
 
 /** @file
- * @brief Functions @ref Magnum::ImGuiIntegration::image(), @ref Magnum::ImGuiIntegration::imageButton()
+ * @brief Function @ref Magnum::ImGuiIntegration::image(), @ref Magnum::ImGuiIntegration::imageButton()
  */
 
 #include <imgui.h>
@@ -68,10 +68,10 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
 @param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
 */
 inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
-                        const Range2D& uvRange = {{}, Vector2{1.0f}},
-                        const int& framePadding = -1,
-                        const Color4& backgroundColor = Color4{0.0f},
-                        const Color4& tintColor = Color4{1.0f})
+    const Range2D& uvRange = {{}, Vector2{1.0f}},
+    const int& framePadding = -1,
+    const Color4& backgroundColor = Color4{0.0f},
+    const Color4& tintColor = Color4{1.0f})
 {
     return ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.min()), ImVec2(uvRange.max()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
 }
