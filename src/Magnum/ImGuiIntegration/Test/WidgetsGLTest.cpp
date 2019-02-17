@@ -25,6 +25,7 @@
 */
 
 #include <sstream>
+#include <Corrade/Utility/System.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/GL/TextureFormat.h>
 #include <Magnum/GL/OpenGLTester.h>
@@ -62,6 +63,8 @@ void WidgetsGLTest::image() {
 
     GL::Texture2D texture;
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
+
+    Corrade::Utility::System::sleep(1);
 
     c.newFrame();
 
