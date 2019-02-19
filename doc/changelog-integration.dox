@@ -37,6 +37,13 @@ namespace Magnum {
 -   New @ref ImGuiIntegration::imageButton() widget for drawing an image button
     out of @ref GL::Texture2D (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 
+@subsection changelog-integration-latest-buildsystem Build system
+
+-   The `package/msys` directory now contains `PKGBUILD`s for
+    [MSYS2](https://www.msys2.org/). See @ref building-integration-packages-msys
+    for more information. See also [mosra/magnum-integration#39](https://github.com/mosra/magnum-integration/pull/39)
+    and [mosra/magnum#317](https://github.com/mosra/magnum/pull/317).
+
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
 -   The @ref ImGuiIntegration::image() widget was flipping the texture
