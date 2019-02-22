@@ -460,22 +460,66 @@ void IntegrationTest::dmat4x3() {
 
 void IntegrationTest::debugBVec() {
     std::ostringstream out;
-    Debug{&out} << glm::bvec3{false, true, true};
-    CORRADE_COMPARE(out.str(), "bvec3(false, true, true)\n");
+    Debug{&out} << glm::bvec2{false, true};
+    CORRADE_COMPARE(out.str(), "bvec2(false, true)\n");
 }
 
 void IntegrationTest::debugVec() {
     std::ostringstream out;
     Debug{&out} << glm::lowp_ivec3{1, 42, -3};
-    CORRADE_COMPARE(out.str(), "ivec3(1, 42, -3)\n");
+    Debug{&out} << glm::highp_vec4{0.7f, -1.5f, 3.4f, 0.1f};
+    /* What the hell, how is this verbosity ever useful?! */
+    #if GLM_VERSION < 96 /* ugh!! */
+    CORRADE_COMPARE(out.str(),
+        "ivec3(1, 42, -3)\n"
+        "fvec4(0.700000, -1.500000, 3.400000, 0.100000)\n");
+    #else
+    CORRADE_COMPARE(out.str(),
+        "ivec3(1, 42, -3)\n"
+        "vec4(0.700000, -1.500000, 3.400000, 0.100000)\n");
+    #endif
 }
 
 void IntegrationTest::debugMat() {
     std::ostringstream out;
+    Debug{&out} << glm::mat2{3.2f, 1.0f,
+                             0.3f, 1.1f};
+    Debug{&out} << glm::highp_mat2x3{3.0f,  5.0f, 8.0f,
+                                     4.5f,  4.0f, 7.0f};
     Debug{&out} << glm::dmat2x4{3.0,  5.0, 8.0, 10.0,
                                 4.5,  4.0, 7.0, 11.0};
+    Debug{&out} << glm::lowp_mat3x2{ 3.0f,  5.0f,
+                                    10.0f,  4.5f,
+                                     7.0f, 11.0f};
+    Debug{&out} << glm::dmat3{ 3.0,  5.0, 8.0,
+                              10.0,  4.5, 4.0,
+                               7.0, 11.0, 0.3};
+    Debug{&out} << glm::mediump_mat3x4{ 3.0f,  5.0f, 8.0f, 0.3f,
+                                       10.0f,  4.5f, 4.0f, 1.1f,
+                                        7.0f, 11.0f, 0.3f, 0.2f};
+    Debug{&out} << glm::mat4x2{ 3.0f, 0.3f,
+                               10.0f, 1.1f,
+                               24.0f, 0.0f,
+                                7.0f, 0.2f};
+    Debug{&out} << glm::dmat4x3{ 3.0, 0.3, 8.0,
+                                10.0, 1.1, 4.0,
+                                24.0, 0.0, 1.5,
+                                 7.0, 0.2, 0.3};
+    Debug{&out} << glm::mat4x4{ 3.0f,  5.0f, 8.0f, 0.3f,
+                               10.0f,  4.5f, 4.0f, 1.1f,
+                               24.0f, -1.1f, 1.5f, 0.0f,
+                                7.0f, 11.0f, 0.3f, 0.2f};
     /* What the hell, how is this verbosity ever useful?! */
-    CORRADE_COMPARE(out.str(), "dmat2x4((3.000000, 5.000000, 8.000000, 10.000000), (4.500000, 4.000000, 7.000000, 11.000000))\n");
+    CORRADE_COMPARE(out.str(),
+        "mat2x2((3.200000, 1.000000), (0.300000, 1.100000))\n"
+        "mat2x3((3.000000, 5.000000, 8.000000), (4.500000, 4.000000, 7.000000))\n"
+        "dmat2x4((3.000000, 5.000000, 8.000000, 10.000000), (4.500000, 4.000000, 7.000000, 11.000000))\n"
+        "mat3x2((3.000000, 5.000000), (10.000000, 4.500000), (7.000000, 11.000000))\n"
+        "dmat3x3((3.000000, 5.000000, 8.000000), (10.000000, 4.500000, 4.000000), (7.000000, 11.000000, 0.300000))\n"
+        "mat3x4((3.000000, 5.000000, 8.000000, 0.300000), (10.000000, 4.500000, 4.000000, 1.100000), (7.000000, 11.000000, 0.300000, 0.200000))\n"
+        "mat4x2((3.000000, 0.300000), (10.000000, 1.100000), (24.000000, 0.000000), (7.000000, 0.200000))\n"
+        "dmat4x3((3.000000, 0.300000, 8.000000), (10.000000, 1.100000, 4.000000), (24.000000, 0.000000, 1.500000), (7.000000, 0.200000, 0.300000))\n"
+        "mat4x4((3.000000, 5.000000, 8.000000, 0.300000), (10.000000, 4.500000, 4.000000, 1.100000), (24.000000, -1.100000, 1.500000, 0.000000), (7.000000, 11.000000, 0.300000, 0.200000))\n");
 }
 
 }}}}
