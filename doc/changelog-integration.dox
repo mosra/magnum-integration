@@ -49,6 +49,12 @@ namespace Magnum {
 -   The @ref ImGuiIntegration::image() widget was flipping the texture
     vertically (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 
+@subsection changelog-integration-latest-documentation Documentation
+
+-   @ref ImGuiIntegration::Context now mentions possible pitfalls when
+    supplying in-memory fonts to ImGui (see
+    [mosra/magnum-integration#42](https://github.com/mosra/magnum-integration/issues/42))
+
 @section changelog-integration-2019-01 2019.01
 
 Released 2019-02-04, tagged as

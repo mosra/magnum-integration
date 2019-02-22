@@ -175,6 +175,19 @@ screens. Example:
 
 @snippet ImGuiIntegration-sdl2.cpp Context-custom-fonts-dpi
 
+<b></b>
+
+@m_class{m-block m-warning}
+
+@par Loading fonts from memory
+    Note that, when using @cpp AddFontFromMemoryTTF() @ce (for example
+    to load a font from @ref Corrade::Utility::Resource), ImGui by default
+    takes over the memory ownership. In order to avoid memory corruption on
+    exit, you need to explicitly tell it to *not* do that by setting
+    @cpp ImFontConfig::FontDataOwnedByAtlas @ce to @cpp false @ce:
+@par
+    @snippet ImGuiIntegration.cpp Context-custom-fonts-resource
+
 @section ImGuiIntegration-Context-multiple-contexts Multiple contexts
 
 Each instance of @ref Context creates a new ImGui context. You can also pass an

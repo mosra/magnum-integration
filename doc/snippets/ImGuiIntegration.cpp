@@ -25,6 +25,7 @@
 */
 
 #include <imgui.h>
+#include <Corrade/Utility/Resource.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/GL/Renderer.h>
 
@@ -87,5 +88,19 @@ ImGuiIntegration::Context imgui(*ImGui::GetCurrentContext(), {640, 480});
 
 // ...
 /* [Context-custom-fonts] */
+}
+
+{
+/* [Context-custom-fonts-resource] */
+Utility::Resource rs{"fonts"};
+Containers::ArrayView<const char> font = rs.getRaw("SourceSansPro-Regular.ttf");
+
+ImFontConfig fontConfig;
+fontConfig.FontDataOwnedByAtlas = false;
+ImGui::GetIO().Fonts->AddFontFromMemoryTTF(
+    const_cast<char*>(font.data()), font.size(), 16.0f, &fontConfig);
+
+// ...
+/* [Context-custom-fonts-resource] */
 }
 }
