@@ -43,6 +43,8 @@ namespace Magnum {
     [MSYS2](https://www.msys2.org/). See @ref building-integration-packages-msys
     for more information. See also [mosra/magnum-integration#39](https://github.com/mosra/magnum-integration/pull/39)
     and [mosra/magnum#317](https://github.com/mosra/magnum/pull/317).
+-   If both a CMake-based ImGui installation is found and `IMGUI_DIR` is set
+    when building, `FindImGui.cmake` prefers the location given by `IMGUI_DIR`
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
