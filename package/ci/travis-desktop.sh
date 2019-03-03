@@ -44,7 +44,7 @@ ninja install
 cd ../..
 
 # DartIntegration needs plugins
-if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     # Magnum Plugins
     git clone --depth 1 git://github.com/mosra/magnum-plugins.git
     cd magnum-plugins
@@ -54,8 +54,8 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         -DCMAKE_INSTALL_PREFIX=$HOME/deps \
         -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
         -DCMAKE_BUILD_TYPE=Debug \
-        -DWITH_ASSIMPIMPORTER=ON \
-        -DWITH_STBIMAGEIMPORTER=ON \
+        -DWITH_ASSIMPIMPORTER=$WITH_DART \
+        -DWITH_STBIMAGEIMPORTER=$WITH_DART \
         -G Ninja
     ninja install
     cd ../..
