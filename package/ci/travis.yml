@@ -5,6 +5,8 @@ addons:
     - g++-4.8
     - ninja-build
     - lcov
+    # Needed for some snippets
+    - libsdl2-dev
     - libbullet-dev
     - libglm-dev
     - libjpeg-dev
@@ -55,6 +57,8 @@ matrix:
         - libgl1-mesa-dev
         - clang-3.8
         - ninja-build
+        # Needed for some snippets
+        - libsdl2-dev
         - libbullet-dev
         - libglm-dev
         - libjpeg-dev
