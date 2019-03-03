@@ -46,6 +46,11 @@ namespace Magnum {
 -   If both a CMake-based ImGui installation is found and `IMGUI_DIR` is set
     when building, `FindImGui.cmake` prefers the location given by `IMGUI_DIR`
 
+@subsection changelog-integration-latest-buildsystem Build system
+
+-   ES 2.0 and ES 3.0 subset of tests requiring GL context is now run on Travis
+    CI using SwiftShader for better code coverage
+
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
 -   The @ref ImGuiIntegration::image() widget was flipping the texture

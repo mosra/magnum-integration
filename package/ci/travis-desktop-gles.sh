@@ -24,9 +24,12 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=Debug \
+    -DEGL_LIBRARY=$HOME/swiftshader/libEGL.so \
+    -DOPENGLES2_LIBRARY=$HOME/swiftshader/libGLESv2.so \
+    -DOPENGLES3_LIBRARY=$HOME/swiftshader/libGLESv2.so \
+    -DCMAKE_INSTALL_RPATH=$HOME/swiftshader \
     -DTARGET_GLES=ON \
     -DTARGET_GLES2=$TARGET_GLES2 \
-    -DTARGET_DESKTOP_GLES=ON \
     -DWITH_AUDIO=OFF \
     -DWITH_DEBUGTOOLS=OFF \
     -DWITH_MESHTOOLS=OFF \
@@ -52,6 +55,10 @@ cmake .. \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DIMGUI_DIR=$HOME/imgui \
     -DCMAKE_BUILD_TYPE=Debug \
+    -DEGL_LIBRARY=$HOME/swiftshader/libEGL.so \
+    -DOPENGLES2_LIBRARY=$HOME/swiftshader/libGLESv2.so \
+    -DOPENGLES3_LIBRARY=$HOME/swiftshader/libGLESv2.so \
+    -DCMAKE_INSTALL_RPATH=$HOME/swiftshader \
     -DWITH_BULLET=ON \
     -DWITH_DART=OFF \
     -DWITH_GLM=ON \
@@ -62,4 +69,5 @@ cmake .. \
     -G Ninja
 # Otherwise the job gets killed (probably because using too much memory)
 ninja -j4
-CORRADE_TEST_COLOR=ON ctest -V -E GLTest
+CORRADE_TEST_COLOR=ON ctest -V
+if [ "$TARGET_GLES2" == "ON" ]; then CORRADE_TEST_COLOR=ON MAGNUM_DISABLE_EXTENSIONS="OES_vertex_array_object" ctest -V -R GLTest; fi
