@@ -429,11 +429,15 @@ void ConvertShapeNodeTest::urdf() {
             CORRADE_COMPARE(shapeDataAll->materials.size(), 1);
             CORRADE_COMPARE(shapeDataAll->materials.size(), shapeDataMaterial->materials.size());
             CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), shapeDataMaterial->materials[0].diffuseColor());
-            {
-                CORRADE_EXPECT_FAIL_IF(assimpVersion < 302 || assimpVersion >= 400,
-                    "Assimp < 3.2 and Assimp >= 4.0 do not load the material correctly.");
+            /* ASS IMP WHAT?! WHY 3.2 is different from 3.0 and 4.0?! (Also,
+               see the AssimpImporterTest::materialStlWhiteAmbientPatch() test
+               in magnum-plugins.) */
+            if(assimpVersion == 302) {
                 CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
                 CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
+            } else {
+                CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), 0xffffff_srgbf);
+                CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), 0xffffff_srgbf);
             }
 
             CORRADE_COMPARE(shapeDataAll->scaling, shapeDataPrimitive->scaling);
