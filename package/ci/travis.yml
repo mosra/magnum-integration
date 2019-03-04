@@ -153,7 +153,7 @@ cache:
   directories:
   - $HOME/cmake
   - $HOME/glm
-  - $HOME/deps-dart
+  - $HOME/swiftshader
   - $HOME/imgui
 
 install:
