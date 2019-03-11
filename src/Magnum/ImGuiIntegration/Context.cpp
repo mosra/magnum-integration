@@ -96,6 +96,7 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     io.KeyMap[ImGuiKey_End]        = ImGuiKey_End;
     io.KeyMap[ImGuiKey_Delete]     = ImGuiKey_Delete;
     io.KeyMap[ImGuiKey_Backspace]  = ImGuiKey_Backspace;
+    io.KeyMap[ImGuiKey_Space]      = ImGuiKey_Space;
     io.KeyMap[ImGuiKey_Enter]      = ImGuiKey_Enter;
     io.KeyMap[ImGuiKey_Escape]     = ImGuiKey_Escape;
     io.KeyMap[ImGuiKey_A]          = ImGuiKey_A;

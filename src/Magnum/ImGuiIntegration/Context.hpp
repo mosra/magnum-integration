@@ -91,6 +91,9 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         case KeyEvent::Key::Esc:
             io.KeysDown[ImGuiKey_Escape] = value;
             break;
+        case KeyEvent::Key::Space:
+            io.KeysDown[ImGuiKey_Space] = value;
+            break;
         case KeyEvent::Key::Backspace:
             io.KeysDown[ImGuiKey_Backspace] = value;
             break;
