@@ -79,7 +79,12 @@ namespace Magnum {
 
 namespace Math { namespace Implementation {
 
-template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, int(size), 1>> {
+template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    /* Otherwise neither MSVC 2015 nor 2017 is able to match the signature */
+    , 0, int(size), 1
+    #endif
+>> {
     static BoolVector<size> from(const Eigen::Array<bool, size, 1>& other) {
         BoolVector<size> out{NoInit};
         for(std::size_t i = 0; i != size; ++i)
@@ -96,7 +101,11 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, i
     }
 };
 
-template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array<T, int(size), 1>> {
+template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>> {
     static Vector<size, T> from(const Eigen::Array<T, size, 1>& other) {
         Vector<size, T> out{NoInit};
         for(std::size_t i = 0; i != size; ++i)
@@ -113,7 +122,11 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array
     }
 };
 
-template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matrix<T, int(size), 1>> {
+template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matrix<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>> {
     static Vector<size, T> from(const Eigen::Matrix<T, size, 1>& other) {
         Vector<size, T> out{NoInit};
         for(std::size_t i = 0; i != size; ++i)
@@ -130,7 +143,11 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matri
     }
 };
 
-template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Array<T, int(rows), int(cols)>> {
+template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Array<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Array<T, rows, cols>& other) {
         RectangularMatrix<cols, rows, T> out{NoInit};
         for(std::size_t col = 0; col != cols; ++col)
@@ -149,7 +166,11 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     }
 };
 
-template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Matrix<T, int(rows), int(cols)>> {
+template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Matrix<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Matrix<T, rows, cols>& other) {
         RectangularMatrix<cols, rows, T> out{NoInit};
         for(std::size_t col = 0; col != cols; ++col)
