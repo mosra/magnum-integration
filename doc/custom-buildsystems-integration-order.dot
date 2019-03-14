@@ -34,7 +34,6 @@ digraph "Magnum Integration dependency order" {
     MagnumPrimitives [style=solid label="Magnum\nPrimitives" class="m-info"]
     MagnumSceneGraph [style=solid label="Magnum\nSceneGraph" class="m-info"]
     MagnumShaders [style=solid label="Magnum\nShaders" class="m-info"]
-    MagnumShapes [style=solid label="Magnum\nShapes" class="m-dim"]
     MagnumTrade [style=solid style=solid label="Magnum\nTrade" class="m-info"]
 
     MagnumBulletIntegration [label="Magnum\nBulletIntegration" class="m-info"]
@@ -49,13 +48,11 @@ digraph "Magnum Integration dependency order" {
     MagnumPrimitives -> MagnumTrade [class="m-info"]
     MagnumSceneGraph -> Magnum [class="m-info"]
     MagnumShaders -> MagnumGL [class="m-info"]
-    MagnumShapes -> MagnumSceneGraph [class="m-dim"]
     MagnumTrade -> Magnum [class="m-info"]
 
     MagnumBulletIntegration -> MagnumGL
     MagnumBulletIntegration -> MagnumSceneGraph
     MagnumBulletIntegration -> MagnumShaders
-    MagnumBulletIntegration -> MagnumShapes [style=dotted class="m-dim"]
 
     MagnumDartIntegration -> MagnumGL
     MagnumDartIntegration -> MagnumPrimitives

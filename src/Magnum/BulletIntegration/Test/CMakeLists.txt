@@ -33,8 +33,3 @@ set_target_properties(
     BulletIntegrationDebugDrawTest
     BulletIntegrationMotionStateTest
     PROPERTIES FOLDER "Magnum/BulletIntegration/Test")
-
-if(Magnum_Shapes_FOUND)
-    corrade_add_test(BulletIntegrationConvertShapeTest ConvertShapeTest.cpp LIBRARIES MagnumBulletIntegration)
-    set_target_properties(BulletIntegrationConvertShapeTest PROPERTIES FOLDER "Magnum/BulletIntegration/Test")
-endif()

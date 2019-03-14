@@ -62,6 +62,11 @@ namespace Magnum {
 -   The @ref ImGuiIntegration::image() widget was flipping the texture
     vertically (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 
+@subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
+
+-   Removed `BulletIntegration::convertShape()` as it was depending on the
+    now-removed `Shapes` library, deprecated since 2018.10
+
 @subsection changelog-integration-latest-documentation Documentation
 
 -   @ref ImGuiIntegration::Context now mentions possible pitfalls when

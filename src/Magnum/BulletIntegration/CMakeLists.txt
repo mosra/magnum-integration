@@ -25,9 +25,6 @@
 #
 
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
-if(MAGNUM_BUILD_DEPRECATED)
-    find_package(Magnum OPTIONAL_COMPONENTS Shapes)
-endif()
 
 find_package(Bullet REQUIRED)
 
@@ -48,11 +45,6 @@ set(MagnumBulletIntegration_HEADERS
     MotionState.h
 
     visibility.h)
-
-if(Magnum_Shapes_FOUND)
-    list(APPEND MagnumBulletIntegration_SRCS ConvertShape.cpp)
-    list(APPEND MagnumBulletIntegration_HEADERS ConvertShape.h)
-endif()
 
 # BulletIntegration library
 add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
@@ -77,9 +69,6 @@ target_link_libraries(MagnumBulletIntegration PUBLIC
     Magnum::SceneGraph
     Magnum::Shaders
     ${BULLET_LIBRARIES})
-if(Magnum_Shapes_FOUND)
-    target_link_libraries(MagnumBulletIntegration PUBLIC Magnum::Shapes)
-endif()
 
 install(TARGETS MagnumBulletIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}
