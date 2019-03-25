@@ -84,7 +84,7 @@ q> struct DualQuaternionConverter<T, glm::tdualquat<T, q>> {
 }}}
 #endif
 
-#if defined(DOXYGEN_GENERATING_OUTPUT) || GLM_VERSION >= 97
+#if !defined(CORRADE_NO_DEBUG) && (defined(DOXYGEN_GENERATING_OUTPUT) || GLM_VERSION >= 97)
 namespace glm {
     /**
      * @brief Debug output operator for GLM dual quaternion types

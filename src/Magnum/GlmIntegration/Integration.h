@@ -379,6 +379,7 @@ q> struct RectangularMatrixConverter<4, 4, T, glm::tmat4x4<T, q>> {
 }}}
 #endif
 
+#ifndef CORRADE_NO_DEBUG
 namespace glm {
 #if !defined(DOXYGEN_GENERATING_OUTPUT) && GLM_VERSION < 96
 /* All types were in glm::detail in 0.9.5, wrap the following as well in order
@@ -505,5 +506,6 @@ namespace detail {
 } /* Close the detail namespace */
 #endif
 }
+#endif
 
 #endif
