@@ -135,6 +135,16 @@ for more information. See also @ref building-integration and
     See the [license notes](http://eigen.tuxfamily.org/index.php?title=Main_Page#License)
     for details.
 
+@m_class{m-block m-success}
+
+@par Single-header version
+    This library is also available as a part of the single-header,
+    dependency-less [MagnumMath.h](https://github.com/mosra/magnum-singles/tree/master/MagnumMath.h)
+    library in the Magnum Singles repository for easier integration into your
+    projects. Opt-in by specifying @cpp #define MAGNUM_MATH_EIGEN_INTEGRATION @ce
+    before including the file. See @ref singles and @ref Math for more
+    information.
+
 */
 /** @dir Magnum/GlmIntegration
  * @brief Namespace @ref Magnum::GlmIntegration
@@ -172,6 +182,16 @@ for more information. See also @ref building-integration and
     ([license text](https://github.com/g-truc/glm/blob/master/manual.md#the-mit-license),
     [choosealicense.com](https://choosealicense.com/licenses/mit/)).
     Attribution is required for public use.
+
+@m_class{m-block m-success}
+
+@par Single-header version
+    This library is also available as a part of the single-header,
+    dependency-less [MagnumMath.h](https://github.com/mosra/magnum-singles/tree/master/MagnumMath.h)
+    library in the Magnum Singles repository for easier integration into your
+    projects. Opt-in by specifying @cpp #define MAGNUM_MATH_GLM_INTEGRATION @ce
+    before including the file. See @ref singles and @ref Math for more
+    information.
 */
 /** @namespace glm
 @brief GLM namespace.
