@@ -35,12 +35,12 @@ Provides conversion for the following types:
 
 | Magnum type                           | Equivalent Bullet type        |
 | ------------------------------------- | ----------------------------- |
-| @ref Magnum::Vector3 "Vector3"        | @m_class{m-dox-external} [btVector3](https://pybullet.org/Bullet/BulletFull/classbtVector3.html) |
-| @ref Magnum::Matrix3x3 "Matrix3x3"    | @m_class{m-dox-external} [btMatrix3x3](https://pybullet.org/Bullet/BulletFull/classbtMatrix3x3.html) |
-| @ref Magnum::Matrix4 "Matrix4"        | @m_class{m-dox-external} [btTransform](https://pybullet.org/Bullet/BulletFull/classbtTransform.html) |
-| @ref Magnum::Quaternion "Quaternion"  | @m_class{m-dox-external} [btQuaternion](https://pybullet.org/Bullet/BulletFull/classbtQuaternion.html) |
+| @ref Magnum::Vector3 "Vector3"        | @m_class{m-doc-external} [btVector3](https://pybullet.org/Bullet/BulletFull/classbtVector3.html) |
+| @ref Magnum::Matrix3x3 "Matrix3x3"    | @m_class{m-doc-external} [btMatrix3x3](https://pybullet.org/Bullet/BulletFull/classbtMatrix3x3.html) |
+| @ref Magnum::Matrix4 "Matrix4"        | @m_class{m-doc-external} [btTransform](https://pybullet.org/Bullet/BulletFull/classbtTransform.html) |
+| @ref Magnum::Quaternion "Quaternion"  | @m_class{m-doc-external} [btQuaternion](https://pybullet.org/Bullet/BulletFull/classbtQuaternion.html) |
 
-All type conversion is done with @m_class{m-dox-external} [btScalar](https://pybullet.org/Bullet/BulletFull/btScalar_8h.html#a1e5824cfc8adbf5a77f2622132d16018)
+All type conversion is done with @m_class{m-doc-external} [btScalar](https://pybullet.org/Bullet/BulletFull/btScalar_8h.html#a1e5824cfc8adbf5a77f2622132d16018)
 as the underlying type. It's typically a @cpp float @ce, but Bullet can be
 compiled to use @cpp double @ce instead. In that case, the above types are then
 @ref Magnum::Vector3d "Vector3d", @ref Magnum::Quaterniond "Quaterniond" etc.

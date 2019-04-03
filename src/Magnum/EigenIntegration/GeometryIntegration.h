@@ -32,12 +32,12 @@ Provides conversion for the following types:
 
 | Magnum type                           | Equivalent Eigen type             |
 | ------------------------------------- | --------------------------------- |
-| @ref Magnum::Math::Vector "Math::Vector<size, T>" | @m_class{m-dox-external} [Eigen::Translation<T, size>](https://eigen.tuxfamily.org/dox/classEigen_1_1Translation.html) |
-| @ref Magnum::Math::Quaternion "Math::Quaternion<T>" | @m_class{m-dox-external} [Eigen::Quaternion<T>](https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html) |
-| @ref Magnum::Math::Matrix3x2<T> "Math::Matrix3x2<T>" | @m_class{m-dox-external} [Eigen::Transform<T, 2, AffineCompact>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
-| @ref Magnum::Math::Matrix3<T> "Math::Matrix3<T>" | @m_class{m-dox-external} [Eigen::Transform<T, 2, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-dox-external} [Eigen::Transform<T, 2, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-dox-external} [Eigen::Transform<T, 2, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
-| @ref Magnum::Math::Matrix4x3<T> "Math::Matrix4x3<T>" | @m_class{m-dox-external} [Eigen::Transform<T, 3, AffineCompact>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
-| @ref Magnum::Math::Matrix4<T> "Math::Matrix4<T>" | @m_class{m-dox-external} [Eigen::Transform<T, 3, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-dox-external} [Eigen::Transform<T, 3, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-dox-external} [Eigen::Transform<T, 3, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
+| @ref Magnum::Math::Vector "Math::Vector<size, T>" | @m_class{m-doc-external} [Eigen::Translation<T, size>](https://eigen.tuxfamily.org/dox/classEigen_1_1Translation.html) |
+| @ref Magnum::Math::Quaternion "Math::Quaternion<T>" | @m_class{m-doc-external} [Eigen::Quaternion<T>](https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html) |
+| @ref Magnum::Math::Matrix3x2<T> "Math::Matrix3x2<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 2, AffineCompact>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
+| @ref Magnum::Math::Matrix3<T> "Math::Matrix3<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 2, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 2, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 2, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
+| @ref Magnum::Math::Matrix4x3<T> "Math::Matrix4x3<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 3, AffineCompact>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
+| @ref Magnum::Math::Matrix4<T> "Math::Matrix4<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 3, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 3, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 3, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
 
 See @ref Magnum/EigenIntegration/Integration.h for conversion of basic matrix
 and vector types. Example usage:

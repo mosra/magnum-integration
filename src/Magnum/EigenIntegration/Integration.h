@@ -32,9 +32,9 @@ Provides conversion for the following types:
 
 | Magnum vector type                             | Equivalent Eigen type    |
 | ---------------------------------------------- | ------------------------ |
-| @ref Magnum::Math::BoolVector "Math::BoolVector<size>" | @m_class{m-dox-external} [Eigen::Array<bool, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
-| @ref Magnum::Math::Vector "Math::Vector<size, T>" and derived classes | @m_class{m-dox-external} [Eigen::Array<T, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
-| @ref Magnum::Math::Vector "Math::Vector<size, T>" and derived classes | @m_class{m-dox-external} [Eigen::Matrix<T, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html) |
+| @ref Magnum::Math::BoolVector "Math::BoolVector<size>" | @m_class{m-doc-external} [Eigen::Array<bool, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
+| @ref Magnum::Math::Vector "Math::Vector<size, T>" and derived classes | @m_class{m-doc-external} [Eigen::Array<T, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
+| @ref Magnum::Math::Vector "Math::Vector<size, T>" and derived classes | @m_class{m-doc-external} [Eigen::Matrix<T, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html) |
 
 | Magnum matrix type                             | Equivalent Eigen type    |
 | ---------------------------------------------- | ------------------------ |
@@ -47,8 +47,8 @@ Provides conversion for the following types:
     While creating Magnum types from Eigen types is done via the usual explicit
     conversion, unlike with other libraries such as @ref Magnum::GlmIntegration "GLM"
     the other direction has to be done a different way. Due to both
-    @m_class{m-dox-external} [Eigen::Array](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html)
-    and @m_class{m-dox-external} [Eigen::Matrix](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html)
+    @m_class{m-doc-external} [Eigen::Array](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html)
+    and @m_class{m-doc-external} [Eigen::Matrix](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html)
     having an [implicit all-catching constructor](https://github.com/eigenteam/eigen-git-mirror/blob/28728b910ed1e280aad4a4c9c46ef4ae2dddccc7/Eigen/src/Core/Array.h#L165-L172),
     implementing such a conversion on Magnum side is not possible. To work
     around that, there's a special
@@ -57,8 +57,8 @@ Provides conversion for the following types:
     example.
 @par
     This restriction does not apply to the geometry types such as
-    @m_class{m-dox-external} [Eigen::Quaternion](https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html)
-    or @m_class{m-dox-external} [Eigen::Transform](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html).
+    @m_class{m-doc-external} [Eigen::Quaternion](https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html)
+    or @m_class{m-doc-external} [Eigen::Transform](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html).
 
 @cpp Eigen::Array @ce and @cpp Eigen::Matrix @ce classes provide a
 @ref std::iostream @cpp operator<< @ce overload, which means they're directly
@@ -196,8 +196,8 @@ namespace EigenIntegration {
 /**
 @brief Convert a Magnum type to Eigen type
 
-Due to the design of @m_class{m-dox-external} [Eigen::Array](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html)
-and @m_class{m-dox-external} [Eigen::Matrix](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html)
+Due to the design of @m_class{m-doc-external} [Eigen::Array](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html)
+and @m_class{m-doc-external} [Eigen::Matrix](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html)
 classes, it's not possible to use the usual explicit conversion approach. See
 @ref Magnum/EigenIntegration/Integration.h for more information.
 */
