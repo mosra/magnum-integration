@@ -38,6 +38,7 @@
 #include <dart/dynamics/Skeleton.hpp>
 #include <dart/dynamics/WeldJoint.hpp>
 #include <dart/simulation/World.hpp>
+#include <Corrade/Utility/DebugStl.h>
 #include <Corrade/Utility/Directory.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>

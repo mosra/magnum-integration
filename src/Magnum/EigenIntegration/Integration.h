@@ -62,7 +62,8 @@ Provides conversion for the following types:
 
 @cpp Eigen::Array @ce and @cpp Eigen::Matrix @ce classes provide a
 @ref std::iostream @cpp operator<< @ce overload, which means they're directly
-usable with @ref Corrade::Utility::Debug. Example usage:
+usable with @ref Corrade::Utility::Debug if you include
+@ref Corrade/Utility/DebugStl.h as well. Example usage:
 
 @snippet EigenIntegration.cpp Integration
 

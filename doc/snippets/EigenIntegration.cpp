@@ -23,6 +23,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <Corrade/Utility/DebugStl.h>
+
 #include "Magnum/Magnum.h"
 #include "Magnum/EigenIntegration/GeometryIntegration.h"
 #include "Magnum/Math/Matrix3.h"

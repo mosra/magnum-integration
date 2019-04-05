@@ -25,6 +25,8 @@
 
 #include "Integration.h"
 
+#include <Corrade/Utility/DebugStl.h>
+
 #include <glm/fwd.hpp>
 #if GLM_VERSION < 96
 #define GLM_FORCE_RADIANS /* Otherwise 0.9.5 spits a lot of loud messages :/ */

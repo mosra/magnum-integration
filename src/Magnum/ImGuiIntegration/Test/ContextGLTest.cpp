@@ -26,6 +26,7 @@
 
 #include <sstream>
 #include <Corrade/TestSuite/Compare/Container.h>
+#include <Corrade/Utility/DebugStl.h>
 #include <Corrade/Utility/System.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Vector3.h>

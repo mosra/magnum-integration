@@ -26,6 +26,7 @@
 
 #include <sstream>
 #include <Corrade/TestSuite/Tester.h>
+#include <Corrade/Utility/DebugStl.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/DualQuaternion.h>
