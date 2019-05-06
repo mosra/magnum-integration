@@ -68,6 +68,10 @@ void GeometryIntegrationTest::translation2D() {
 
     CORRADE_COMPARE(Vector2{b}, a);
     CORRADE_VERIFY(Eigen::Translation2f(a).isApprox(b));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::Translation2f>(a).isApprox(b));
 }
 
 void GeometryIntegrationTest::translation3D() {
@@ -76,6 +80,10 @@ void GeometryIntegrationTest::translation3D() {
 
     CORRADE_COMPARE(Vector3d{b}, a);
     CORRADE_VERIFY(Eigen::Translation3d(a).isApprox(b));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::Translation3d>(a).isApprox(b));
 }
 
 void GeometryIntegrationTest::quaternion() {
@@ -88,6 +96,10 @@ void GeometryIntegrationTest::quaternion() {
     /* Explicitly check the parts to avoid having the conversion done wrong
        twice */
     CORRADE_COMPARE(Vector3{Eigen::Vector3f{b.vec()}}, a.vector());
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::Quaternionf>(a).isApprox(b));
 }
 
 void GeometryIntegrationTest::transform2DAffine() {
@@ -103,6 +115,10 @@ void GeometryIntegrationTest::transform2DAffine() {
 
     CORRADE_COMPARE(Matrix3(b), a);
     CORRADE_VERIFY(Eigen::Affine2f(a).isApprox(b));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::Affine2f>(a).isApprox(b));
 }
 
 void GeometryIntegrationTest::transform2DIsometry() {
@@ -116,6 +132,10 @@ void GeometryIntegrationTest::transform2DIsometry() {
 
     CORRADE_COMPARE(Matrix3d(b), a);
     CORRADE_VERIFY(Eigen::Isometry2d(a).isApprox(b, 1.0e-7));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::Isometry2d>(a).isApprox(b, 1.0e-7));
 }
 
 void GeometryIntegrationTest::transform2DAffineCompact() {
@@ -132,6 +152,10 @@ void GeometryIntegrationTest::transform2DAffineCompact() {
 
     CORRADE_COMPARE(Matrix3x2(b), a32);
     CORRADE_VERIFY(Eigen::AffineCompact2f(a32).isApprox(b));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::AffineCompact2f>(a32).isApprox(b));
 }
 
 void GeometryIntegrationTest::transform3DProjective() {
@@ -147,6 +171,10 @@ void GeometryIntegrationTest::transform3DProjective() {
 
     CORRADE_COMPARE(Matrix4(b), a);
     CORRADE_VERIFY(Eigen::Projective3f(a).isApprox(b));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::Projective3f>(a).isApprox(b));
 }
 
 void GeometryIntegrationTest::transform3DAffineCompact() {
@@ -163,6 +191,10 @@ void GeometryIntegrationTest::transform3DAffineCompact() {
 
     CORRADE_COMPARE(Matrix4x3d(b), a43);
     CORRADE_VERIFY(Eigen::AffineCompact3d(a43).isApprox(b));
+
+    /* Verify also the cast function, people don't need to use it but should
+       be allowed to for consistency */
+    CORRADE_VERIFY(cast<Eigen::AffineCompact3d>(a43).isApprox(b));
 }
 
 }}}}
