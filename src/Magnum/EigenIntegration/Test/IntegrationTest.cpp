@@ -96,7 +96,7 @@ void IntegrationTest::boolVector() {
     b << false, true, false, true;
 
     CORRADE_COMPARE(Math::BoolVector<4>{b}, a);
-    CORRADE_COMPARE_AS((eigenCast<Eigen::Array<bool, 4, 1>>(a)), b, EigenType);
+    CORRADE_COMPARE_AS((cast<Eigen::Array<bool, 4, 1>>(a)), b, EigenType);
 }
 
 void IntegrationTest::vectorArray() {
@@ -105,7 +105,7 @@ void IntegrationTest::vectorArray() {
     b << 1.5f, 0.3f, -1.1f, 0.6f;
 
     CORRADE_COMPARE(Vector4{b}, a);
-    CORRADE_COMPARE_AS(eigenCast<Eigen::Array4f>(a), b, EigenType);
+    CORRADE_COMPARE_AS(cast<Eigen::Array4f>(a), b, EigenType);
 }
 
 void IntegrationTest::vectorMatrix() {
@@ -113,7 +113,7 @@ void IntegrationTest::vectorMatrix() {
     Eigen::Vector4i b{1, 0, -3, 4457};
 
     CORRADE_COMPARE(Vector4i{b}, a);
-    CORRADE_COMPARE_AS(eigenCast<Eigen::Vector4i>(a), b, EigenType);
+    CORRADE_COMPARE_AS(cast<Eigen::Vector4i>(a), b, EigenType);
 }
 
 void IntegrationTest::matrixArray() {
@@ -125,7 +125,7 @@ void IntegrationTest::matrixArray() {
          0.3f, 0.6f, 7.8f;
 
     CORRADE_COMPARE(Matrix3x2{b}, a);
-    CORRADE_COMPARE_AS((eigenCast<Eigen::Array<float, 2, 3>>(a)), b, EigenType);
+    CORRADE_COMPARE_AS((cast<Eigen::Array<float, 2, 3>>(a)), b, EigenType);
 }
 
 void IntegrationTest::matrixMatrix() {
@@ -137,7 +137,7 @@ void IntegrationTest::matrixMatrix() {
          0.3, 0.6, 7.8;
 
     CORRADE_COMPARE(Matrix3x2d{b}, a);
-    CORRADE_COMPARE_AS((eigenCast<Eigen::Array<double, 2, 3>>(a)), b, EigenType);
+    CORRADE_COMPARE_AS((cast<Eigen::Array<double, 2, 3>>(a)), b, EigenType);
 }
 
 }}}}

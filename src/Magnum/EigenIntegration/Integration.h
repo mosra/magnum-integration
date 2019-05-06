@@ -52,9 +52,8 @@ Provides conversion for the following types:
     having an [implicit all-catching constructor](https://github.com/eigenteam/eigen-git-mirror/blob/28728b910ed1e280aad4a4c9c46ef4ae2dddccc7/Eigen/src/Core/Array.h#L165-L172),
     implementing such a conversion on Magnum side is not possible. To work
     around that, there's a special
-    @ref Magnum::EigenIntegration::eigenCast() "EigenIntegration::eigenCast()"
-    function that does the job instead. See the snippet below for an usage
-    example.
+    @ref Magnum::EigenIntegration::cast() "EigenIntegration::cast()" function
+    that does the job instead. See the snippet below for an usage example.
 @par
     This restriction does not apply to the geometry types such as
     @m_class{m-doc-external} [Eigen::Quaternion](https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html)
@@ -202,17 +201,17 @@ and @m_class{m-doc-external} [Eigen::Matrix](https://eigen.tuxfamily.org/dox/cla
 classes, it's not possible to use the usual explicit conversion approach. See
 @ref Magnum/EigenIntegration/Integration.h for more information.
 */
-template<class To, std::size_t cols, std::size_t rows, class T> inline To eigenCast(const Math::RectangularMatrix<cols, rows, T>& from) {
+template<class To, std::size_t cols, std::size_t rows, class T> inline To cast(const Math::RectangularMatrix<cols, rows, T>& from) {
     return Math::Implementation::RectangularMatrixConverter<cols, rows, T, To>::to(from);
 }
 
 /** @overload */
-template<class To, std::size_t size> inline To eigenCast(const Math::BoolVector<size>& from) {
+template<class To, std::size_t size> inline To cast(const Math::BoolVector<size>& from) {
     return Math::Implementation::BoolVectorConverter<size, To>::to(from);
 }
 
 /** @overload */
-template<class To, std::size_t size, class T> inline To eigenCast(const Math::Vector<size, T>& from) {
+template<class To, std::size_t size, class T> inline To cast(const Math::Vector<size, T>& from) {
     return Math::Implementation::VectorConverter<size, T, To>::to(from);
 }
 

@@ -42,7 +42,7 @@ Vector3 b(a);
 auto c = Matrix3::rotation(35.0_degf);
 
 // It's not possible to convert using Eigen::Matrix3f(c)
-auto d = EigenIntegration::eigenCast<Eigen::Matrix3f>(c);
+auto d = EigenIntegration::cast<Eigen::Matrix3f>(c);
 
 Debug{} << Eigen::Array3i{1, 42, -3}; // prints   1
                                       //         42
