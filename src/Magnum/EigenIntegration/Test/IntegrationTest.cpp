@@ -132,12 +132,12 @@ void IntegrationTest::matrixMatrix() {
     Matrix3x2d a{Vector2d{1.5, 0.3},
                  Vector2d{-1.1, 0.6},
                  Vector2d{0.5, 7.8}};
-    Eigen::Array<double, 2, 3> b;
+    Eigen::Matrix<double, 2, 3> b;
     b << 1.5, -1.1, 0.5,
          0.3, 0.6, 7.8;
 
     CORRADE_COMPARE(Matrix3x2d{b}, a);
-    CORRADE_COMPARE_AS((cast<Eigen::Array<double, 2, 3>>(a)), b, EigenType);
+    CORRADE_COMPARE_AS((cast<Eigen::Matrix<double, 2, 3>>(a)), b, EigenType);
 }
 
 }}}}
