@@ -94,8 +94,23 @@ void IntegrationTest::boolVector() {
     Math::BoolVector<4> a{0xa};
     Eigen::Array<bool, 4, 1> b;
     b << false, true, false, true;
-
     CORRADE_COMPARE(Math::BoolVector<4>{b}, a);
+
+    #if defined(__GNUC__) && !defined(__clang__)
+    /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+       here. We don't care one bit, so silence that. Clang doesn't have this
+       warning enabled in UseCorrade.cmake. */
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+    #endif
+    Eigen::Ref<Eigen::Array<bool, 4, 1>> bref{b};
+    Eigen::Ref<const Eigen::Array<bool, 4, 1>> cbref{b};
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
+    CORRADE_COMPARE(Math::BoolVector<4>{bref}, a);
+    CORRADE_COMPARE(Math::BoolVector<4>{cbref}, a);
+
     CORRADE_COMPARE_AS((cast<Eigen::Array<bool, 4, 1>>(a)), b, EigenType);
 }
 
@@ -103,16 +118,46 @@ void IntegrationTest::vectorArray() {
     Vector4 a{1.5f, 0.3f, -1.1f, 0.6f};
     Eigen::Array4f b;
     b << 1.5f, 0.3f, -1.1f, 0.6f;
-
     CORRADE_COMPARE(Vector4{b}, a);
+
+    #if defined(__GNUC__) && !defined(__clang__)
+    /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+       here. We don't care one bit, so silence that. Clang doesn't have this
+       warning enabled in UseCorrade.cmake. */
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+    #endif
+    Eigen::Ref<Eigen::Array4f> bref{b};
+    Eigen::Ref<const Eigen::Array4f> cbref{b};
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
+    CORRADE_COMPARE(Vector4{bref}, a);
+    CORRADE_COMPARE(Vector4{cbref}, a);
+
     CORRADE_COMPARE_AS(cast<Eigen::Array4f>(a), b, EigenType);
 }
 
 void IntegrationTest::vectorMatrix() {
     Vector4i a{1, 0, -3, 4457};
     Eigen::Vector4i b{1, 0, -3, 4457};
-
     CORRADE_COMPARE(Vector4i{b}, a);
+
+    #if defined(__GNUC__) && !defined(__clang__)
+    /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+       here. We don't care one bit, so silence that. Clang doesn't have this
+       warning enabled in UseCorrade.cmake. */
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+    #endif
+    Eigen::Ref<Eigen::Vector4i> bref{b};
+    Eigen::Ref<const Eigen::Vector4i> cbref{b};
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
+    CORRADE_COMPARE(Vector4i{bref}, a);
+    CORRADE_COMPARE(Vector4i{cbref}, a);
+
     CORRADE_COMPARE_AS(cast<Eigen::Vector4i>(a), b, EigenType);
 }
 
@@ -123,8 +168,23 @@ void IntegrationTest::matrixArray() {
     Eigen::Array<float, 2, 3> b;
     b << 1.5f, -1.1f, 0.5f,
          0.3f, 0.6f, 7.8f;
-
     CORRADE_COMPARE(Matrix3x2{b}, a);
+
+    #if defined(__GNUC__) && !defined(__clang__)
+    /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+       here. We don't care one bit, so silence that. Clang doesn't have this
+       warning enabled in UseCorrade.cmake. */
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+    #endif
+    Eigen::Ref<Eigen::Array<float, 2, 3>> bref{b};
+    Eigen::Ref<const Eigen::Array<float, 2, 3>> cbref{b};
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
+    CORRADE_COMPARE(Matrix3x2{bref}, a);
+    CORRADE_COMPARE(Matrix3x2{cbref}, a);
+
     CORRADE_COMPARE_AS((cast<Eigen::Array<float, 2, 3>>(a)), b, EigenType);
 }
 
@@ -135,8 +195,23 @@ void IntegrationTest::matrixMatrix() {
     Eigen::Matrix<double, 2, 3> b;
     b << 1.5, -1.1, 0.5,
          0.3, 0.6, 7.8;
-
     CORRADE_COMPARE(Matrix3x2d{b}, a);
+
+    #if defined(__GNUC__) && !defined(__clang__)
+    /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+       here. We don't care one bit, so silence that. Clang doesn't have this
+       warning enabled in UseCorrade.cmake. */
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+    #endif
+    Eigen::Ref<Eigen::Matrix<double, 2, 3>> bref{b};
+    Eigen::Ref<const Eigen::Matrix<double, 2, 3>> cbref{b};
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
+    CORRADE_COMPARE(Matrix3x2d{bref}, a);
+    CORRADE_COMPARE(Matrix3x2d{cbref}, a);
+
     CORRADE_COMPARE_AS((cast<Eigen::Matrix<double, 2, 3>>(a)), b, EigenType);
 }
 

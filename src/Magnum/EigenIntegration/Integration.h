@@ -79,6 +79,34 @@ namespace Magnum {
 
 namespace Math { namespace Implementation {
 
+/* This is extremely awful in order to support T, Eigen::Ref<const T> and
+   Eigen::Ref<T> for all types, further made worse by workarounds for MSVC and
+   GCC. Sorry for your bleeding eyes. Take a shower after. */
+
+template<std::size_t size> struct BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    /* Otherwise neither MSVC 2015 nor 2017 is able to match the signature */
+    , 0, int(size), 1
+    #endif
+>>> {
+    static BoolVector<size> from(const Eigen::Ref<const Eigen::Array<bool, size, 1>>& other) {
+        BoolVector<size> out{NoInit};
+        for(std::size_t i = 0; i != size; ++i)
+            out.set(i, other(i, 0));
+        return out;
+    }
+};
+template<std::size_t size> struct BoolVectorConverter<size, Eigen::Ref<Eigen::Array<bool, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    /* Otherwise neither MSVC 2015 nor 2017 is able to match the signature */
+    , 0, int(size), 1
+    #endif
+>>>: BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    /* Otherwise neither MSVC 2015 nor 2017 is able to match the signature */
+    , 0, int(size), 1
+    #endif
+>>> {};
 template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, int(size), 1
     #ifdef CORRADE_MSVC2017_COMPATIBILITY
     /* Otherwise neither MSVC 2015 nor 2017 is able to match the signature */
@@ -86,10 +114,17 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, i
     #endif
 >> {
     static BoolVector<size> from(const Eigen::Array<bool, size, 1>& other) {
-        BoolVector<size> out{NoInit};
-        for(std::size_t i = 0; i != size; ++i)
-            out.set(i, other(i, 0));
-        return out;
+        #if defined(__GNUC__) && !defined(__clang__)
+        /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+           here. We don't care one bit, so silence that. Clang doesn't have
+           this warning enabled in UseCorrade.cmake. */
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+        #endif
+        return BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1>>>::from(other);
+        #if defined(__GNUC__) && !defined(__clang__)
+        #pragma GCC diagnostic pop
+        #endif
     }
 
     static Eigen::Array<bool, size, 1> to(const BoolVector<size>& other) {
@@ -101,16 +136,44 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, i
     }
 };
 
+template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<const Eigen::Array<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>>> {
+    static Vector<size, T> from(const Eigen::Ref<const Eigen::Array<T, size, 1>>& other) {
+        Vector<size, T> out{NoInit};
+        for(std::size_t i = 0; i != size; ++i)
+            out[i] = other(i, 0);
+        return out;
+    }
+};
+template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<Eigen::Array<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>>>: VectorConverter<size, T, Eigen::Ref<const Eigen::Array<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>>> {};
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array<T, int(size), 1
     #ifdef CORRADE_MSVC2017_COMPATIBILITY
     , 0, int(size), 1 /* See above */
     #endif
 >> {
     static Vector<size, T> from(const Eigen::Array<T, size, 1>& other) {
-        Vector<size, T> out{NoInit};
-        for(std::size_t i = 0; i != size; ++i)
-            out[i] = other(i, 0);
-        return out;
+        #if defined(__GNUC__) && !defined(__clang__)
+        /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+           here. We don't care one bit, so silence that. Clang doesn't have
+           this warning enabled in UseCorrade.cmake. */
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+        #endif
+        return VectorConverter<size, T, Eigen::Ref<const Eigen::Array<T, int(size), 1>>>::from(other);
+        #if defined(__GNUC__) && !defined(__clang__)
+        #pragma GCC diagnostic pop
+        #endif
     }
 
     static Eigen::Array<T, size, 1> to(const Vector<size, T>& other) {
@@ -122,16 +185,44 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array
     }
 };
 
+template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<const Eigen::Matrix<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>>> {
+    static Vector<size, T> from(const Eigen::Ref<const Eigen::Matrix<T, size, 1>>& other) {
+        Vector<size, T> out{NoInit};
+        for(std::size_t i = 0; i != size; ++i)
+            out[i] = other(i, 0);
+        return out;
+    }
+};
+template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<Eigen::Matrix<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>>>: VectorConverter<size, T, Eigen::Ref<const Eigen::Matrix<T, int(size), 1
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(size), 1 /* See above */
+    #endif
+>>> {};
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matrix<T, int(size), 1
     #ifdef CORRADE_MSVC2017_COMPATIBILITY
     , 0, int(size), 1 /* See above */
     #endif
 >> {
     static Vector<size, T> from(const Eigen::Matrix<T, size, 1>& other) {
-        Vector<size, T> out{NoInit};
-        for(std::size_t i = 0; i != size; ++i)
-            out[i] = other(i, 0);
-        return out;
+        #if defined(__GNUC__) && !defined(__clang__)
+        /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+           here. We don't care one bit, so silence that. Clang doesn't have
+           this warning enabled in UseCorrade.cmake. */
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+        #endif
+        return VectorConverter<size, T, Eigen::Ref<const Eigen::Matrix<T, int(size), 1>>>::from(other);
+        #if defined(__GNUC__) && !defined(__clang__)
+        #pragma GCC diagnostic pop
+        #endif
     }
 
     static Eigen::Matrix<T, size, 1> to(const Vector<size, T>& other) {
@@ -143,17 +234,45 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matri
     }
 };
 
+template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Array<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>>> {
+    static RectangularMatrix<cols, rows, T> from(const Eigen::Ref<const Eigen::Array<T, rows, cols>>& other) {
+        RectangularMatrix<cols, rows, T> out{NoInit};
+        for(std::size_t col = 0; col != cols; ++col)
+            for(std::size_t row = 0; row != rows; ++row)
+                out[col][row] = other(row, col);
+        return out;
+    }
+};
+template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<Eigen::Array<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>>>: RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Array<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>>> {};
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Array<T, int(rows), int(cols)
     #ifdef CORRADE_MSVC2017_COMPATIBILITY
     , 0, int(rows), int(cols) /* See above */
     #endif
 >> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Array<T, rows, cols>& other) {
-        RectangularMatrix<cols, rows, T> out{NoInit};
-        for(std::size_t col = 0; col != cols; ++col)
-            for(std::size_t row = 0; row != rows; ++row)
-                out[col][row] = other(row, col);
-        return out;
+        #if defined(__GNUC__) && !defined(__clang__)
+        /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+           here. We don't care one bit, so silence that. Clang doesn't have
+           this warning enabled in UseCorrade.cmake. */
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+        #endif
+        return RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Array<T, int(rows), int(cols)>>>::from(other);
+        #if defined(__GNUC__) && !defined(__clang__)
+        #pragma GCC diagnostic pop
+        #endif
     }
 
     static Eigen::Array<T, rows, cols> to(const RectangularMatrix<cols, rows, T>& other) {
@@ -166,17 +285,45 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     }
 };
 
+template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Matrix<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>>> {
+    static RectangularMatrix<cols, rows, T> from(const Eigen::Ref<const Eigen::Matrix<T, rows, cols>>& other) {
+        RectangularMatrix<cols, rows, T> out{NoInit};
+        for(std::size_t col = 0; col != cols; ++col)
+            for(std::size_t row = 0; row != rows; ++row)
+                out[col][row] = other(row, col);
+        return out;
+    }
+};
+template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<Eigen::Matrix<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>>>: RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Matrix<T, int(rows), int(cols)
+    #ifdef CORRADE_MSVC2017_COMPATIBILITY
+    , 0, int(rows), int(cols) /* See above */
+    #endif
+>>> {};
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Matrix<T, int(rows), int(cols)
     #ifdef CORRADE_MSVC2017_COMPATIBILITY
     , 0, int(rows), int(cols) /* See above */
     #endif
 >> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Matrix<T, rows, cols>& other) {
-        RectangularMatrix<cols, rows, T> out{NoInit};
-        for(std::size_t col = 0; col != cols; ++col)
-            for(std::size_t row = 0; row != rows; ++row)
-                out[col][row] = other(row, col);
-        return out;
+        #if defined(__GNUC__) && !defined(__clang__)
+        /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
+           here. We don't care one bit, so silence that. Clang doesn't have
+           this warning enabled in UseCorrade.cmake. */
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+        #endif
+        return RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Matrix<T, int(rows), int(cols)>>>::from(other);
+        #if defined(__GNUC__) && !defined(__clang__)
+        #pragma GCC diagnostic pop
+        #endif
     }
 
     static Eigen::Matrix<T, rows, cols> to(const RectangularMatrix<cols, rows, T>& other) {
