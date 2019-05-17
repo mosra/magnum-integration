@@ -56,6 +56,8 @@ namespace Magnum {
     when building, `FindImGui.cmake` prefers the location given by `IMGUI_DIR`
 -   ES 2.0 and ES 3.0 subset of tests requiring GL context is now run on Travis
     CI using SwiftShader for better code coverage
+-   Updated Homebrew package to build also the @ref DartIntegration, since
+    the `dartsim` dependency is usable now (see [mosra/magnum-integration#46](https://github.com/mosra/magnum-integration/issues/46))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
