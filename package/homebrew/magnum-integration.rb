@@ -11,11 +11,12 @@ class MagnumIntegration < Formula
   depends_on "glm"
   depends_on "magnum"
   depends_on "bullet"
+  depends_on "dartsim"
 
   def install
     system "mkdir build"
     cd "build" do
-      system "cmake", "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_PREFIX=#{prefix}", "-DWITH_BULLET=ON", "-DWITH_DART=OFF", "-DWITH_EIGEN=ON", "-DWITH_GLM=ON", "-DWITH_IMGUI=OFF", ".."
+      system "cmake", "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_PREFIX=#{prefix}", "-DWITH_BULLET=ON", "-DWITH_DART=ON", "-DWITH_EIGEN=ON", "-DWITH_GLM=ON", "-DWITH_IMGUI=OFF", ".."
       system "cmake", "--build", "."
       system "cmake", "--build", ".", "--target", "install"
     end
