@@ -212,7 +212,7 @@ install Magnum Integration like this:
 @code{.sh}
 git clone git://github.com/mosra/magnum-integration && cd magnum-integration
 cd package/gentoo
-sudo ebuild dev-libs/magnum-integration/magnum-integration-99999.ebuild manifest clean merge
+sudo ebuild dev-libs/magnum-integration/magnum-integration-9999.ebuild manifest clean merge
 @endcode
 
 If you want to pass additional flags to CMake or
