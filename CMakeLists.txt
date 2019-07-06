@@ -50,7 +50,15 @@ option(WITH_OVR "Build OvrIntegration library" OFF)
 
 include(CMakeDependentOption)
 option(BUILD_STATIC "Build static libraries (default are shared)" OFF)
-cmake_dependent_option(BUILD_STATIC_PIC "Build static libraries with position-independent code" ON "BUILD_STATIC" OFF)
+# Disable PIC on Emscripten by default (but still allow it to be enabled
+# explicitly if one so desires). Currently causes linker errors related to
+# __memory_base etc.: https://github.com/emscripten-core/emscripten/issues/8761
+if(CORRADE_TARGET_EMSCRIPTEN)
+    set(ON_EXCEPT_EMSCRIPTEN OFF)
+else()
+    set(ON_EXCEPT_EMSCRIPTEN ON)
+endif()
+cmake_dependent_option(BUILD_STATIC_PIC "Build static libraries with position-independent code" ${ON_EXCEPT_EMSCRIPTEN} "BUILD_STATIC" OFF)
 option(BUILD_TESTS "Build unit tests" OFF)
 cmake_dependent_option(BUILD_GL_TESTS "Build unit tests for OpenGL code" OFF "BUILD_TESTS" OFF)
 

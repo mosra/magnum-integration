@@ -58,6 +58,9 @@ namespace Magnum {
     CI using SwiftShader for better code coverage
 -   Updated Homebrew package to build also the @ref DartIntegration, since
     the `dartsim` dependency is usable now (see [mosra/magnum-integration#46](https://github.com/mosra/magnum-integration/issues/46))
+-   Emscripten builds now have the `-fPIC` option disabled by default as it
+    causes linker errors related to `__memory_base` on 1.38.36 (see also
+    [emscripten-core/emscripten#8761](https://github.com/emscripten-core/emscripten/issues/8761))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
