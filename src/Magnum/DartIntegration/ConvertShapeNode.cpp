@@ -46,6 +46,7 @@
 #include <Magnum/Mesh.h>
 #include <Magnum/MeshTools/CombineIndexedArrays.h>
 #include <Magnum/MeshTools/GenerateFlatNormals.h>
+#include <Magnum/MeshTools/Transform.h>
 #include <Magnum/Primitives/Capsule.h>
 #include <Magnum/Primitives/Cube.h>
 #include <Magnum/Primitives/Cylinder.h>
@@ -58,6 +59,8 @@
 #include <Magnum/Trade/TextureData.h>
 
 namespace Magnum { namespace DartIntegration {
+
+using namespace Math::Literals;
 
 ShapeData::ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling): meshes{std::move(meshes)}, materials{std::move(materials)}, images{std::move(images)}, textures{std::move(textures)}, scaling(scaling) {}
 
@@ -121,6 +124,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::capsule3DSolid(32, 32, 32, halfLength)};
+
+            Matrix4 rot = Matrix4::rotationX(90.0_degf);
+            MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));
+            MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].normals(0));
         }
 
     /* Cylinder */
@@ -138,6 +145,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::cylinderSolid(32, 32, halfLength, Primitives::CylinderFlag::CapEnds)};
+
+            Matrix4 rot = Matrix4::rotationX(90.0_degf);
+            MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));
+            MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].normals(0));
         }
 
     /* Ellipsoid */
