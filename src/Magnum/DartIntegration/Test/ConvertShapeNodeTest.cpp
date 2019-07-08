@@ -125,6 +125,17 @@ void ConvertShapeNodeTest::basicShapes() {
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(shapeDataAll);
     } {
+        /* ConeShape */
+        dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("ConeShape");
+
+        dart::dynamics::BodyNodePtr bn = tmpSkel->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(
+            nullptr, dart::dynamics::WeldJoint::Properties(), dart::dynamics::BodyNode::AspectProperties("ConeShapeBody")).second;
+
+        std::shared_ptr<dart::dynamics::ConeShape> cone(new dart::dynamics::ConeShape(1., 1.));
+        auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(cone);
+        auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
+        CORRADE_VERIFY(shapeDataAll);
+    } {
         /* CylinderShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("CylinderShape");
 
@@ -256,17 +267,6 @@ void ConvertShapeNodeTest::assimpImporter() {
 
 void ConvertShapeNodeTest::unsupportedShapes() {
     {
-        /* ConeShape */
-        dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("ConeShape");
-
-        dart::dynamics::BodyNodePtr bn = tmpSkel->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(
-            nullptr, dart::dynamics::WeldJoint::Properties(), dart::dynamics::BodyNode::AspectProperties("ConeShapeBody")).second;
-
-        std::shared_ptr<dart::dynamics::ConeShape> cone(new dart::dynamics::ConeShape(1., 1.));
-        auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(cone);
-        auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
-        CORRADE_VERIFY(!shapeDataAll);
-    } {
         /* LineSegmentShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("LineSegmentShape");
 
@@ -436,8 +436,18 @@ void ConvertShapeNodeTest::urdf() {
                 CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
                 CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
             } else {
+                #if DART_MAJOR_VERSION > 6 || ((DART_MAJOR_VERSION == 6) && (DART_MINOR_VERSION >=9))
+                if(shapeNode->getName() == "base_link_ShapeNode_0") {
+                    CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), 0x0_srgbf);
+                    CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), 0x0_srgbf);
+                } else {
+                    CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), (Vector3{0.792157f, 0.819608f, 0.933333f}));
+                    CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), (Vector3{0.792157f, 0.819608f, 0.933333f}));
+                }
+                #else
                 CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), 0xffffff_srgbf);
                 CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), 0xffffff_srgbf);
+                #endif
             }
 
             CORRADE_COMPARE(shapeDataAll->scaling, shapeDataPrimitive->scaling);
