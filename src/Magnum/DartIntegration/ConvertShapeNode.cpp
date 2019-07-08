@@ -123,7 +123,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::capsule3DSolid(32, 32, 32, halfLength)};
 
-            Matrix4 rot = Matrix4::rotationX(Math::Rad<Float>(Math::Constants<Float>::piHalf()));
+            Matrix4 rot = Matrix4::rotationX(Rad(Constants::piHalf()));
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].normals(0));
         }
@@ -144,7 +144,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::coneSolid(32, 32, halfLength, Primitives::ConeFlag::CapEnd)};
 
-            Matrix4 rot = Matrix4::rotationX(Math::Rad<Float>(Math::Constants<Float>::piHalf()));
+            Matrix4 rot = Matrix4::rotationX(Rad(Constants::piHalf()));
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].normals(0));
         }
@@ -165,7 +165,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::cylinderSolid(32, 32, halfLength, Primitives::CylinderFlag::CapEnds)};
 
-            Matrix4 rot = Matrix4::rotationX(Math::Rad<Float>(Math::Constants<Float>::piHalf()));
+            Matrix4 rot = Matrix4::rotationX(Rad(Constants::piHalf()));
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].normals(0));
         }
