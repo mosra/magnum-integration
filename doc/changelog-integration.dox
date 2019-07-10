@@ -45,6 +45,13 @@ namespace Magnum {
 -   @ref ImGuiIntegration::Context::handleKeyPressEvent() "ImGuiIntegration::Context::handleKey*Event()"
     now handles the @m_class{m-label m-default} **Space** key as well (see
     [mosra/magnum-integration#44](https://github.com/mosra/magnum-integration/pull/44))
+-   Assorted @ref DartIntegration updates (see
+    [mosra/magnum-integration#47](https://github.com/mosra/magnum-integration/pull/47)):
+    -   @ref DartIntegration::convertShapeNode() can now handle cones as well
+    -   Converted shapes now look less like a plastic, soft bodies having
+        smooth normals and no specular highlights
+    -   @ref DartIntegration::World::step() takes an optional parameter to
+        reset commands
 
 @subsection changelog-integration-latest-buildsystem Build system
 
@@ -66,6 +73,8 @@ namespace Magnum {
 
 -   The @ref ImGuiIntegration::image() widget was flipping the texture
     vertically (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
+-   @ref DartIntegration::convertShapeNode() was orienting cylinders and
+    capsules improperly (see [mosra/magnum-integration#47](https://github.com/mosra/magnum-integration/pull/47))
 
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
