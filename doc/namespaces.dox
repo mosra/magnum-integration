@@ -48,8 +48,10 @@ find_package(MagnumIntegration REQUIRED Bullet)
 target_link_libraries(your-app MagnumIntegration::Bullet)
 @endcode
 
-See the @ref examples-bullet example, @ref building-integration and
-@ref cmake-integration for more information.
+This library provides routines for explicit conversion between Bullet and
+Magnum math types, in the @ref Magnum/BulletIntegration/Integration.h header,
+see its documentation for more information. See also the @ref examples-bullet
+example, @ref building-integration and @ref cmake-integration.
 
 @m_class{m-block m-success}
 
@@ -80,9 +82,14 @@ find_package(MagnumIntegration REQUIRED Dart)
 target_link_libraries(your-app MagnumIntegration::Dart)
 @endcode
 
-See @ref building-integration and @ref cmake-integration for more information.
+DART is using Eigen for mathematics and you might want to use the
+@ref EigenIntegration library for easy conversion between Eigen and Magnum math
+types. See also @ref building-integration and @ref cmake-integration for more
+information.
 
 @experimental
+
+<b></b>
 
 @m_class{m-block m-success}
 
