@@ -125,6 +125,17 @@ void ConvertShapeNodeTest::basicShapes() {
         auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
         CORRADE_VERIFY(shapeDataAll);
     } {
+        /* ConeShape */
+        dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("ConeShape");
+
+        dart::dynamics::BodyNodePtr bn = tmpSkel->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(
+            nullptr, dart::dynamics::WeldJoint::Properties(), dart::dynamics::BodyNode::AspectProperties("ConeShapeBody")).second;
+
+        std::shared_ptr<dart::dynamics::ConeShape> cone(new dart::dynamics::ConeShape(1., 1.));
+        auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(cone);
+        auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
+        CORRADE_VERIFY(shapeDataAll);
+    } {
         /* CylinderShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("CylinderShape");
 
@@ -256,17 +267,6 @@ void ConvertShapeNodeTest::assimpImporter() {
 
 void ConvertShapeNodeTest::unsupportedShapes() {
     {
-        /* ConeShape */
-        dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("ConeShape");
-
-        dart::dynamics::BodyNodePtr bn = tmpSkel->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(
-            nullptr, dart::dynamics::WeldJoint::Properties(), dart::dynamics::BodyNode::AspectProperties("ConeShapeBody")).second;
-
-        std::shared_ptr<dart::dynamics::ConeShape> cone(new dart::dynamics::ConeShape(1., 1.));
-        auto shapeNode = bn->createShapeNodeWith<dart::dynamics::VisualAspect, dart::dynamics::CollisionAspect, dart::dynamics::DynamicsAspect>(cone);
-        auto shapeDataAll = convertShapeNode(*shapeNode, ConvertShapeType::All);
-        CORRADE_VERIFY(!shapeDataAll);
-    } {
         /* LineSegmentShape */
         dart::dynamics::SkeletonPtr tmpSkel = dart::dynamics::Skeleton::create("LineSegmentShape");
 

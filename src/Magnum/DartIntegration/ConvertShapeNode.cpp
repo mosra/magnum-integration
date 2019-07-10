@@ -48,6 +48,7 @@
 #include <Magnum/MeshTools/GenerateFlatNormals.h>
 #include <Magnum/MeshTools/Transform.h>
 #include <Magnum/Primitives/Capsule.h>
+#include <Magnum/Primitives/Cone.h>
 #include <Magnum/Primitives/Cube.h>
 #include <Magnum/Primitives/Cylinder.h>
 #include <Magnum/Primitives/Icosphere.h>
@@ -69,8 +70,7 @@ ShapeData::~ShapeData() = default;
 Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shapeNode, ConvertShapeTypes convertTypes, Trade::AbstractImporter* importer) {
     dart::dynamics::ShapePtr shape = shapeNode.getShape();
 
-    if(shape->getType() == dart::dynamics::ConeShape::getStaticType() ||
-       shape->getType() == dart::dynamics::LineSegmentShape::getStaticType() ||
+    if(shape->getType() == dart::dynamics::LineSegmentShape::getStaticType() ||
        shape->getType() == dart::dynamics::MultiSphereConvexHullShape::getStaticType() ||
        shape->getType() == dart::dynamics::PlaneShape::getStaticType()) {
         Error{} << "DartIntegration::convertShapeNode(): shape type" << shape->getType() << "is not supported";
@@ -124,6 +124,27 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
             shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::capsule3DSolid(32, 32, 32, halfLength)};
+
+            Matrix4 rot = Matrix4::rotationX(90.0_degf);
+            MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));
+            MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].normals(0));
+        }
+
+    /* Cone */
+    } else if(shape->getType() == dart::dynamics::ConeShape::getStaticType()) {
+        auto coneShape = std::static_pointer_cast<dart::dynamics::ConeShape>(shape);
+
+        Float r = Float(coneShape->getRadius());
+
+        if(convertTypes & ConvertShapeType::Primitive)
+            shapeData.scaling = Vector3{r};
+
+        if(convertTypes & ConvertShapeType::Mesh) {
+            Float h(coneShape->getHeight());
+            Float halfLength = 0.5f*h/r;
+
+            shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
+            new(&shapeData.meshes[0]) Trade::MeshData3D{Primitives::coneSolid(32, 32, halfLength, Primitives::ConeFlag::CapEnd)};
 
             Matrix4 rot = Matrix4::rotationX(90.0_degf);
             MeshTools::transformVectorsInPlace(rot, shapeData.meshes[0].positions(0));

@@ -141,6 +141,7 @@ not supported. The following DART shapes are supported:
 
 -   `BoxShape`
 -   `CapsuleShape`
+-   `ConeShape`
 -   `CylinderShape`
 -   `EllipsoidShape`
 -   `MeshShape`
@@ -149,7 +150,6 @@ not supported. The following DART shapes are supported:
 
 The following DART shapes are not yet supported:
 
--   `ConeShape`
 -   `LineSegmentShape`
 -   `MultiSphereConvexHullShape`
 -   `PlaneShape` (this is an infinite plane with normal)
