@@ -436,8 +436,18 @@ void ConvertShapeNodeTest::urdf() {
                 CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
                 CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), (Vector3{0.6f, 0.6f, 0.6f}));
             } else {
+                #if DART_MAJOR_VERSION*100 + DART_MINOR_VERSION >= 609
+                if(shapeNode->getName() == "base_link_ShapeNode_0") {
+                    CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), 0x000000_srgbf);
+                    CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), 0x000000_srgbf);
+                } else {
+                    CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), (Vector3{0.792157f, 0.819608f, 0.933333f}));
+                    CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), (Vector3{0.792157f, 0.819608f, 0.933333f}));
+                }
+                #else
                 CORRADE_COMPARE(shapeDataAll->materials[0].diffuseColor(), 0xffffff_srgbf);
                 CORRADE_COMPARE(shapeDataMaterial->materials[0].diffuseColor(), 0xffffff_srgbf);
+                #endif
             }
 
             CORRADE_COMPARE(shapeDataAll->scaling, shapeDataPrimitive->scaling);
