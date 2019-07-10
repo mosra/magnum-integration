@@ -40,12 +40,12 @@
 #include <dart/dynamics/SoftBodyNode.hpp>
 #include <dart/dynamics/SoftMeshShape.hpp>
 #include <dart/dynamics/SphereShape.hpp>
+#include <Corrade/Containers/ArrayViewStl.h>
 #include <Corrade/Containers/Optional.h>
 #include <Corrade/Utility/DebugStl.h>
 #include <Corrade/Utility/Directory.h>
 #include <Magnum/Mesh.h>
-#include <Magnum/MeshTools/CombineIndexedArrays.h>
-#include <Magnum/MeshTools/GenerateFlatNormals.h>
+#include <Magnum/MeshTools/GenerateNormals.h>
 #include <Magnum/MeshTools/Transform.h>
 #include <Magnum/Primitives/Capsule.h>
 #include <Magnum/Primitives/Cone.h>
@@ -77,7 +77,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
     ShapeData shapeData{{}, {}, {}, {}, Vector3{1.0f}};
 
-    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 80.0f};
+    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
     if(convertTypes & ConvertShapeType::Material) {
         /* Get material information -- we ignore the alpha value. Note that
            this material is not necessarily used for the MeshShapeNodes */
@@ -85,6 +85,10 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
         /* Get diffuse color from Dart ShapeNode */
         nodeMaterial.diffuseColor() = Color4(col(0), col(1), col(2), col(3));
+
+        /* Remove specular color from soft bodies */
+        if(shape->getType() == dart::dynamics::SoftMeshShape::getStaticType())
+            nodeMaterial.specularColor() = Color4{0.f, 0.f, 0.f, 0.f};
 
         if(shape->getType() != dart::dynamics::MeshShape::getStaticType()) {
             shapeData.materials = Containers::Array<Trade::PhongMaterialData>(Containers::NoInit, 1);
@@ -333,31 +337,20 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             const Eigen::Vector3d& pos = bn->getPointMass(i)->getLocalPosition();
             positions[0].push_back(Vector3(pos(0), pos(1), pos(2)));
         }
+        /* Resize normals vector */
+        normals[0].resize(positions[0].size());
 
-        /* Add each face twice; once with the original orientation and once
-           with reversed orientation */
+        /* Create indices */
         for(UnsignedInt i = 0; i < bn->getNumFaces(); ++i) {
             const Eigen::Vector3i& F = bn->getFace(i);
-            indices.insert(indices.end(), {
-                /* Original face */
-                UnsignedInt(F[0]), UnsignedInt(F[1]), UnsignedInt(F[2]),
-                /* Reversed face */
-                UnsignedInt(F[2]), UnsignedInt(F[1]), UnsignedInt(F[0])
-            });
+            indices.insert(indices.end(), {UnsignedInt(F[0]), UnsignedInt(F[1]), UnsignedInt(F[2])});
         }
 
-        /* Generate flat normals */
-        std::vector<UnsignedInt> normalIndices;
-        std::tie(normalIndices, normals[0]) = MeshTools::generateFlatNormals(indices, positions[0]);
-
-        /* Combine normal and vertex indices */
-        std::vector<UnsignedInt> finalIndices = MeshTools::combineIndexedArrays(
-            std::make_pair(std::cref(indices), std::ref(positions[0])),
-            std::make_pair(std::cref(normalIndices), std::ref(normals[0]))
-        );
+        /* Generate smooth normals */
+        MeshTools::generateSmoothNormalsInto<UnsignedInt>(indices, positions[0], normals[0]);
 
         /* Create the mesh data */
-        Trade::MeshData3D meshData{MeshPrimitive::Triangles, finalIndices, positions, normals, std::vector<std::vector<Vector2>>(), std::vector<std::vector<Color4>>()};
+        Trade::MeshData3D meshData{MeshPrimitive::Triangles, indices, positions, normals, std::vector<std::vector<Vector2>>(), std::vector<std::vector<Color4>>()};
 
         shapeData.meshes = Containers::Array<Trade::MeshData3D>(Containers::NoInit, 1);
         new(&shapeData.meshes[0]) Trade::MeshData3D{std::move(meshData)};
