@@ -255,7 +255,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                                in DART */
                             Int colorIndex = (UnsignedInt(meshShape->getColorIndex()) >= meshData->colors(0).size()) ? meshData->colors(0).size() - 1 : meshShape->getColorIndex();
                             Color4 meshColor = meshData->colors(0)[colorIndex];
-                            materials[j] = Trade::PhongMaterialData{{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 80.0f};
+                            materials[j] = Trade::PhongMaterialData{{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
                             materials[j]->diffuseColor() = Color3(meshColor[0], meshColor[1], meshColor[2]);
                             /* default colors for ambient (black) and specular (white) */
                             materials[j]->ambientColor() = Vector3{0.f, 0.f, 0.f};
