@@ -113,7 +113,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         World& refresh();
 
         /** @brief Do a DART world step */
-        World& step();
+        World& step(bool resetCommand = true);
 
         /**
          * @brief Get unused objects

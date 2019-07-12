@@ -68,8 +68,8 @@ World& World::refresh() {
     return *this;
 }
 
-World& World::step() {
-    _dartWorld.step();
+World& World::step(bool resetCommand) {
+    _dartWorld.step(resetCommand);
     return *this;
 }
 
