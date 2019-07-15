@@ -89,19 +89,29 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
          * @brief Constructor
          * @param object    Parent object
          * @param world     DART world instance
+         *
+         * This constructor creates a private instance of
+         * @ref Trade::AbstractImporter plugin manager for importing model
+         * data. If you plan to use importer plugins elsewhere in your
+         * application, it's advised to keep the plugin manager on the app side
+         * and construct the world using @ref World(PluginManager::Manager<Trade::AbstractImporter>&, T&, dart::simulation::World&)
+         * instead.
          */
-        template<class T> explicit World(T& object, dart::simulation::World& world): World(static_cast<SceneGraph::AbstractBasicObject3D<Float>&>(object), world) {
-            objectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent) -> SceneGraph::AbstractBasicObject3D<Float>* {
-                return new T{static_cast<T*>(&parent)};
-            };
-            dartObjectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode* body) {
-                return std::unique_ptr<Object>(new Object{static_cast<T&>(parent), body});
-            };
-            dartShapeObjectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::ShapeNode* node) {
-                return std::unique_ptr<Object>(new Object{static_cast<T&>(parent), node});
-            };
+        template<class T> explicit World(T& object, dart::simulation::World& world): World(nullptr, static_cast<SceneGraph::AbstractBasicObject3D<Float>&>(object), world) {
+            initializeCreators<T>();
+        }
 
-            refresh();
+         /**
+         * @brief Construct with an external importer plugin manager
+         * @param importerManager   Importer plugin manager
+         * @param object            Parent object
+         * @param world             DART world instance
+         *
+         * The @p importerManager is expected to be in scope for the whole
+         * lifetime of the @ref World instance.
+         */
+        template<class T> explicit World(PluginManager::Manager<Trade::AbstractImporter>& importerManager, T& object, dart::simulation::World& world): World(&importerManager, static_cast<SceneGraph::AbstractBasicObject3D<Float>&>(object), world) {
+            initializeCreators<T>();
         }
 
         ~World();
@@ -173,7 +183,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
     private:
         struct State;
 
-        explicit World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world);
+        explicit World(PluginManager::Manager<Trade::AbstractImporter>* importerManager, SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world);
 
         SceneGraph::AbstractBasicObject3D<Float>*(*objectCreator)(SceneGraph::AbstractBasicObject3D<Float>& parent);
         std::unique_ptr<Object>(*dartObjectCreator)(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode* body);
@@ -181,8 +191,24 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
 
         void MAGNUM_DARTINTEGRATION_LOCAL parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn);
 
+        template<class T> void initializeCreators();
+
         Containers::Pointer<State> _state;
 };
+
+template<class T> void World::initializeCreators() {
+    objectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent) -> SceneGraph::AbstractBasicObject3D<Float>* {
+        return new T{static_cast<T*>(&parent)};
+    };
+    dartObjectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode* body) {
+        return std::unique_ptr<Object>(new Object{static_cast<T&>(parent), body});
+    };
+    dartShapeObjectCreator = [](SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::ShapeNode* node) {
+        return std::unique_ptr<Object>(new Object{static_cast<T&>(parent), node});
+    };
+
+    refresh();
+}
 
 }}
 

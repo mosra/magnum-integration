@@ -40,7 +40,8 @@ struct World::State {
     State(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& dartWorld): object(object), dartWorld(dartWorld) {}
 
     SceneGraph::AbstractBasicObject3D<Float>& object;
-    PluginManager::Manager<Trade::AbstractImporter> manager;
+    Containers::Optional<PluginManager::Manager<Trade::AbstractImporter>> managerStorage;
+    PluginManager::Manager<Trade::AbstractImporter>* manager;
     Containers::Pointer<Trade::AbstractImporter> importer;
     dart::simulation::World& dartWorld;
     std::unordered_map<dart::dynamics::Frame*, std::unique_ptr<Object>> dartToMagnum;
@@ -48,9 +49,15 @@ struct World::State {
     std::unordered_set<Object*> updatedShapeObjects;
 };
 
-World::World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world): _state{new State{object, world}} {
+World::World(PluginManager::Manager<Trade::AbstractImporter>* manager, SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world): _state{new State{object, world}} {
+    /* If the manager is not passed from outside, maintain our own instance */
+    if(!manager) {
+        _state->managerStorage.emplace();
+        _state->manager = &*_state->managerStorage;
+    } else _state->manager = manager;
+
     /* Load Assimp importer */
-    _state->importer = _state->manager.loadAndInstantiate("AssimpImporter");
+    _state->importer = _state->manager->loadAndInstantiate("AssimpImporter");
 }
 
 World::~World() = default;

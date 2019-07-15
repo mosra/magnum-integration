@@ -52,6 +52,8 @@ namespace Magnum {
         smooth normals and no specular highlights
     -   @ref DartIntegration::World::step() takes an optional parameter to
         reset commands
+-   @ref DartIntegration::World can now work with an external plugin manager
+    instance
 
 @subsection changelog-integration-latest-buildsystem Build system
 
