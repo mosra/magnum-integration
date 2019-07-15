@@ -30,13 +30,10 @@
  * @brief Class @ref Magnum::DartIntegration::World
  */
 
+#include <functional>
 #include <memory>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-
-#include <Corrade/PluginManager/Manager.h>
-
+#include <Corrade/Containers/Pointer.h>
+#include <Corrade/Utility/StlForwardVector.h>
 #include <Magnum/SceneGraph/AbstractFeature.h>
 #include <Magnum/SceneGraph/AbstractObject.h>
 #include <Magnum/Trade/AbstractImporter.h>
@@ -131,7 +128,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
          * returned list --- move instances out, release them, erase the
          * elements etc.
          */
-        std::vector<std::unique_ptr<Object>>& unusedObjects() { return _toRemove; }
+        std::vector<std::unique_ptr<Object>>& unusedObjects();
 
         /** @brief All objects managed by the world */
         std::vector<std::reference_wrapper<Object>> objects();
@@ -171,9 +168,11 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         Object& objectFromDartFrame(dart::dynamics::Frame* frame);
 
         /** @brief Underlying DART world object */
-        dart::simulation::World& world() { return _dartWorld; }
+        dart::simulation::World& world();
 
     private:
+        struct State;
+
         explicit World(SceneGraph::AbstractBasicObject3D<Float>& object, dart::simulation::World& world);
 
         SceneGraph::AbstractBasicObject3D<Float>*(*objectCreator)(SceneGraph::AbstractBasicObject3D<Float>& parent);
@@ -182,13 +181,7 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
 
         void MAGNUM_DARTINTEGRATION_LOCAL parseBodyNodeRecursive(SceneGraph::AbstractBasicObject3D<Float>& parent, dart::dynamics::BodyNode& bn);
 
-        SceneGraph::AbstractBasicObject3D<Float>& _object;
-        PluginManager::Manager<Trade::AbstractImporter> _manager;
-        Containers::Pointer<Trade::AbstractImporter> _importer;
-        dart::simulation::World& _dartWorld;
-        std::unordered_map<dart::dynamics::Frame*, std::unique_ptr<Object>> _dartToMagnum;
-        std::vector<std::unique_ptr<Object>> _toRemove;
-        std::unordered_set<Object*> _updatedShapeObjects;
+        Containers::Pointer<State> _state;
 };
 
 }}
