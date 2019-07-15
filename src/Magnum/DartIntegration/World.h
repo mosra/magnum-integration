@@ -112,8 +112,13 @@ class MAGNUM_DARTINTEGRATION_EXPORT World {
         /** @brief Refresh/regenerate meshes for all bodies in DART world */
         World& refresh();
 
-        /** @brief Do a DART world step */
-        World& step();
+        /**
+         * @brief Do a DART world step
+         *
+         * The @p resetCommand parameter is passed to
+         * @cpp dart::simulation::World::step() @ce.
+         */
+        World& step(bool resetCommand = true);
 
         /**
          * @brief Get unused objects
