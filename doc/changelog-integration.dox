@@ -70,6 +70,9 @@ namespace Magnum {
 -   Emscripten builds now have the `-fPIC` option disabled by default as it
     causes linker errors related to `__memory_base` on 1.38.36 (see also
     [emscripten-core/emscripten#8761](https://github.com/emscripten-core/emscripten/issues/8761))
+-   Explicitly mention that @ref ImGuiIntegration is not available in
+    @ref building-integration-packages-brew "Homebrew packages" due to a
+    missing dependency (see [mosra/magnum-integration#49](https://github.com/mosra/magnum-integration/issues/49))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 

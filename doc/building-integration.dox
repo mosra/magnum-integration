@@ -251,6 +251,11 @@ to pass additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", edit
 the `*.rb` file.
 
+@attention Note that @ref ImGuiIntegration is not available in the Homebrew
+    package as there is no ImGui package to depend on. If you need it,
+    @ref building-integration-manual "build the integration library from source"
+    or modify the formula to build it using local ImGui sources.
+
 There are also Homebrew packages for
 @ref building-plugins-packages-brew "Magnum Plugins",
 @ref building-extras-packages-brew "Magnum Extras" and
