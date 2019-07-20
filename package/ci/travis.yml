@@ -199,7 +199,7 @@ install:
 #- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ ! "$TARGET" == "android" ]; then ./package/ci/travis-dependencies.sh; fi
 
 # ImGui
-- if [ ! -e "$HOME/imgui/imgui.h" ]; then cd $HOME ; wget -nc --no-check-certificate -O imgui.tar.gz https://github.com/ocornut/imgui/archive/v1.67.tar.gz && mkdir -p imgui && cd imgui && tar --strip-components=1 -xzf ../imgui.tar.gz && cd $TRAVIS_BUILD_DIR; fi
+- if [ ! -e "$HOME/imgui/imgui.h" ]; then cd $HOME ; wget -nc --no-check-certificate -O imgui.tar.gz https://github.com/ocornut/imgui/archive/v1.71.tar.gz && mkdir -p imgui && cd imgui && tar --strip-components=1 -xzf ../imgui.tar.gz && cd $TRAVIS_BUILD_DIR; fi
 
 # SwiftShader on Linux (cached). Taken from Chromium snapshot 587878
 # (swiftshader-bin Arch package).
