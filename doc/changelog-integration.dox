@@ -73,6 +73,9 @@ namespace Magnum {
 -   Explicitly mention that @ref ImGuiIntegration is not available in
     @ref building-integration-packages-brew "Homebrew packages" due to a
     missing dependency (see [mosra/magnum-integration#49](https://github.com/mosra/magnum-integration/issues/49))
+-   Updated `FindImGui.cmake` to explicitly link to the `ApplicationServices`
+    framework on macOS, since that's needed for ImGui 1.71 clipboard handling
+    (see [mosra/magnum-integration#48](https://github.com/mosra/magnum-integration/issues/48))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
