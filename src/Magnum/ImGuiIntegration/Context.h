@@ -1,5 +1,5 @@
-#ifndef Magnum_ImGuiIntegration_Integration_h
-#define Magnum_ImGuiIntegration_Integration_h
+#ifndef Magnum_ImGuiIntegration_Context_h
+#define Magnum_ImGuiIntegration_Context_h
 /*
     This file is part of Magnum.
 

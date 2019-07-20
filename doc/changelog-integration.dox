@@ -80,6 +80,8 @@ namespace Magnum {
     vertically (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 -   @ref DartIntegration::convertShapeNode() was orienting cylinders and
     capsules improperly (see [mosra/magnum-integration#47](https://github.com/mosra/magnum-integration/pull/47))
+-   Headers in the @ref ImGuiIntegration library had messed up include guards
+    (see [mosra/magnum-integration#50](https://github.com/mosra/magnum-integration/issues/50))
 
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 

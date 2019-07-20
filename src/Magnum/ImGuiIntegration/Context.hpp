@@ -1,3 +1,5 @@
+#ifndef Magnum_ImGuiIntegration_Context_hpp
+#define Magnum_ImGuiIntegration_Context_hpp
 /*
     This file is part of Magnum.
 
@@ -197,3 +199,5 @@ template<class TextInputEvent> bool Context::handleTextInputEvent(TextInputEvent
 }
 
 }}
+
+#endif
