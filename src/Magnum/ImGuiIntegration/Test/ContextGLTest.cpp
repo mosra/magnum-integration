@@ -329,10 +329,7 @@ void ContextGLTest::frameZeroSize() {
 void ContextGLTest::relayout() {
     Context c{{400, 400}};
 
-    /* ImGui doesn't draw anything the first frame so just do a dummy frame
-       first in order to have stuff rendered the second and have the loop
-       actually covered. It's know that ImGui has one frame lag but this seems
-       different, since the button is rendered in the second frame only. */
+    /* Again a dummy frame first */
     c.newFrame();
     c.drawFrame();
 
@@ -361,10 +358,7 @@ void ContextGLTest::relayout() {
 void ContextGLTest::relayoutDpiChange() {
     Context c{{400, 400}};
 
-    /* ImGui doesn't draw anything the first frame so just do a dummy frame
-       first in order to have stuff rendered the second and have the loop
-       actually covered. It's know that ImGui has one frame lag but this seems
-       different, since the button is rendered in the second frame only. */
+    /* Again a dummy frame first */
     c.newFrame();
     c.drawFrame();
 
@@ -401,10 +395,7 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
-    /* ImGui doesn't draw anything the first frame so just do a dummy frame
-       first in order to have stuff rendered the second and have the loop
-       actually covered. It's know that ImGui has one frame lag but this seems
-       different, since the button is rendered in the second frame only. */
+    /* Again a dummy frame first */
     c.newFrame();
     c.drawFrame();
 
@@ -429,10 +420,7 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
 void ContextGLTest::relayoutZeroSize() {
     Context c{{200, 200}};
 
-    /* ImGui doesn't draw anything the first frame so just do a dummy frame
-       first in order to have stuff rendered the second and have the loop
-       actually covered. It's know that ImGui has one frame lag but this seems
-       different, since the button is rendered in the second frame only. */
+    /* Again a dummy frame first */
     c.newFrame();
     c.drawFrame();
 
