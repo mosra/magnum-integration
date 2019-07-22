@@ -54,8 +54,6 @@ add_library(MagnumDartIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumDartIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-# Silence pedantic warnings in DART headers
-target_include_directories(MagnumDartIntegration SYSTEM PUBLIC ${DART_INCLUDE_DIRS})
 set_target_properties(MagnumDartIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/DartIntegration")
@@ -70,7 +68,7 @@ target_link_libraries(MagnumDartIntegration
     Magnum::SceneGraph
     Magnum::Primitives
     Magnum::MeshTools
-    ${DART_LIBRARIES})
+    dart)
 
 install(TARGETS MagnumDartIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}

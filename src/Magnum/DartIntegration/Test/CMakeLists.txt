@@ -44,7 +44,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
 
 corrade_add_test(DartIntegrationConvertShapeNodeTest
     ConvertShapeNodeTest.cpp common.h
-    LIBRARIES MagnumDartIntegration ${DART_LIBRARIES})
+    LIBRARIES MagnumDartIntegration)
+if(DART_utils-urdf_FOUND)
+    target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE dart-utils-urdf)
+elseif(DART_io-urdf_FOUND)
+    target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE dart-io-urdf)
+endif()
 
 set_target_properties(
     DartIntegrationConvertShapeNodeTest
@@ -53,7 +58,12 @@ set_target_properties(
 if(BUILD_GL_TESTS)
     corrade_add_test(DartIntegrationWorldGLTest
         WorldGLTest.cpp common.h
-        LIBRARIES Magnum::OpenGLTester MagnumDartIntegration ${DART_LIBRARIES})
+        LIBRARIES Magnum::OpenGLTester MagnumDartIntegration)
+    if(DART_utils-urdf_FOUND)
+        target_link_libraries(DartIntegrationWorldGLTest PRIVATE dart-utils-urdf)
+    elseif(DART_io-urdf_FOUND)
+        target_link_libraries(DartIntegrationWorldGLTest PRIVATE dart-io-urdf)
+    endif()
 
     set_target_properties(
         DartIntegrationWorldGLTest
