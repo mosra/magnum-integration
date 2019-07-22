@@ -46,6 +46,19 @@ ImGuiIntegration::Context imgui{
 }
 
 {
+/* [Context-custom-fonts-after] */
+ImGuiIntegration::Context imgui({640, 480});
+
+// ...
+
+ImGui::GetIO().Fonts->Clear();
+ImGui::GetIO().Fonts->AddFontFromFileTTF("SourceSansPro-Regular.ttf", 16.0f);
+
+imgui.relayout(windowSize());
+/* [Context-custom-fonts-after] */
+}
+
+{
 /* [Context-custom-fonts-dpi] */
 ImGui::CreateContext();
 

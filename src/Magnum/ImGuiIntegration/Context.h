@@ -122,6 +122,42 @@ using @ref Platform::Sdl2Application::startTextInput() "startTextInput()" /
 
 @snippet ImGuiIntegration-sdl2.cpp Context-text-input
 
+@section ImGuiIntegration-Context-fonts Loading custom fonts
+
+The @ref Context class does additional adjustments to ImGui font setup in order
+to make their scaling DPI-aware. If you load custom fonts, it's recommended to
+do that before the @ref Context class is created, in which case it picks up the
+custom font as default. Create the ImGui context first, add the font and then
+construct the integration using the @ref Context(ImGuiContext&, const Vector2i&)
+constructor, passing the already created ImGui context to it:
+
+@snippet ImGuiIntegration.cpp Context-custom-fonts
+
+It's possible to load custom fonts after the @ref Context instance been
+constructed as well, but you first need to clear the default font added during
+@ref Context construction and finally call @ref relayout() to make it pick up
+the updated glyph cache. Alternatively, if you don't call @cpp Clear() @ce, you
+need to explicitly call @cpp PushFont() @ce to switch to a non-default one.
+Compared to loading fonts before the @ref Context is created, this is the less
+efficient option, as the glyph cache is unnecessarily built and discarded one
+more time.
+
+@snippet ImGuiIntegration-sdl2.cpp Context-custom-fonts-after
+
+See the @ref ImGuiIntegration-Context-dpi "DPI awareness" section below for
+more information about configuring the fonts for HiDPI screens.
+
+@m_class{m-block m-warning}
+
+@par Loading fonts from memory
+    Note that, when using @cpp AddFontFromMemoryTTF() @ce (for example
+    to load a font from @ref Corrade::Utility::Resource), ImGui by default
+    takes over the memory ownership. In order to avoid memory corruption on
+    exit, you need to explicitly tell it to *not* do that by setting
+    @cpp ImFontConfig::FontDataOwnedByAtlas @ce to @cpp false @ce:
+@par
+    @snippet ImGuiIntegration.cpp Context-custom-fonts-resource
+
 @section ImGuiIntegration-Context-dpi DPI awareness
 
 There are three separate concepts for DPI-aware UI rendering:
@@ -175,18 +211,15 @@ screens. Example:
 
 @snippet ImGuiIntegration-sdl2.cpp Context-custom-fonts-dpi
 
-<b></b>
+If you supplied custom fonts and pixel density changed, in order to regenerate
+them you have to clear the font atlas and re-add all fonts again with a
+different scaling *before* calling @ref relayout(), for example:
 
-@m_class{m-block m-warning}
+@snippet ImGuiIntegration-sdl2.cpp Context-relayout-fonts-dpi
 
-@par Loading fonts from memory
-    Note that, when using @cpp AddFontFromMemoryTTF() @ce (for example
-    to load a font from @ref Corrade::Utility::Resource), ImGui by default
-    takes over the memory ownership. In order to avoid memory corruption on
-    exit, you need to explicitly tell it to *not* do that by setting
-    @cpp ImFontConfig::FontDataOwnedByAtlas @ce to @cpp false @ce:
-@par
-    @snippet ImGuiIntegration.cpp Context-custom-fonts-resource
+If you don't do that, the fonts stay at the original scale, not matching the
+new UI scaling anymore. If you didn't supply any custom font, the function will
+reconfigure the builtin font automatically.
 
 @section ImGuiIntegration-Context-multiple-contexts Multiple contexts
 
@@ -279,10 +312,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * with @p size passed to the last three parameters. In comparison to
          * @ref Context(const Vector2i&) this constructor is useful if you need
          * to do some work before the font glyph cache gets uploaded to the
-         * GPU, for example adding custom fonts:
-         *
-         * @snippet ImGuiIntegration.cpp Context-custom-fonts
-         *
+         * GPU, for example @ref ImGuiIntegration-Context-fonts "adding custom fonts".
          * @see @ref relayout(const Vector2i&)
          */
         explicit Context(ImGuiContext& context, const Vector2i& size);
@@ -348,17 +378,6 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * The sizes are allowed to be zero in any dimension, but note that it
          * may trigger an unwanted rebuild of the font glyph cache due to
          * different calculated pixel density.
-         *
-         * If you supplied custom fonts via the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
-         * constructor and pixel density changed, in order to regenerate them
-         * you have to clear the font atlas and re-add all fonts again with a
-         * different scaling *before* calling this function, for example:
-         *
-         * @snippet ImGuiIntegration-sdl2.cpp Context-relayout-fonts-dpi
-         *
-         * If you don't do that, the fonts stay at the original scale, not
-         * matching the new UI scaling anymore. If you didn't supply any custom
-         * font, the function will reconfigure the builtin font automatically.
          */
         void relayout(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize);
 
