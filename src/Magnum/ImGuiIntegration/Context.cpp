@@ -174,8 +174,16 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
     ImGuiIO& io = ImGui::GetIO();
 
-    /* If the supersampling ratio changed, we need to regenerate the font */
-    if(_supersamplingRatio != supersamplingRatio) {
+    /* If the supersampling ratio changed, we need to regenerate the font. Do
+       that also if the fonts are not loaded yet -- that means these were
+       supplied by the user after Context was created (or after last call to
+       relayout()). */
+    bool allFontsLoaded = !io.Fonts->Fonts.empty();
+    for(auto& font: io.Fonts->Fonts) if(!font->IsLoaded()) {
+        allFontsLoaded = false;
+        break;
+    }
+    if(_supersamplingRatio != supersamplingRatio || !allFontsLoaded) {
         /* Need to use > 0.0f instead of just != 0 so we catch NaNs too */
         const Float nonZeroSupersamplingRatio = (supersamplingRatio.x() > 0.0f ? supersamplingRatio.x() : 1.0f);
 

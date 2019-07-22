@@ -54,6 +54,9 @@ namespace Magnum {
         reset commands
 -   @ref DartIntegration::World can now work with an external plugin manager
     instance
+-   @ref ImGuiIntegration::Context::relayout() now rebuilds the glyph cache
+    also when fonts change, not just on pixel density change (see
+    [mosra/magnum-integration#51](https://github.com/mosra/magnum-integration/issues/51))
 
 @subsection changelog-integration-latest-buildsystem Build system
 
