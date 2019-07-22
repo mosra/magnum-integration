@@ -122,6 +122,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void relayoutDpiChange();
     void relayoutDpiChangeCustomFont();
     void relayoutZeroSize();
+    void relayoutRefreshFonts();
 
     void mouseInput();
     void keyInput();
@@ -145,6 +146,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::relayoutDpiChange,
               &ContextGLTest::relayoutDpiChangeCustomFont,
               &ContextGLTest::relayoutZeroSize,
+              &ContextGLTest::relayoutRefreshFonts,
 
               &ContextGLTest::mouseInput,
               &ContextGLTest::keyInput,
@@ -437,6 +439,33 @@ void ContextGLTest::relayoutZeroSize() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     c.relayout({100, 0});
+
+    Corrade::Utility::System::sleep(1);
+
+    /* This should render stuff now */
+    c.newFrame();
+    ImGui::Button("test");
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::relayoutRefreshFonts() {
+    Context c{{200, 200}};
+
+    /* Clear the default font and add a new one */
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
+    ImGui::GetIO().Fonts->Clear();
+    ImGui::GetIO().Fonts->AddFontDefault();
+
+    /* Relayout should pick that up */
+    c.relayout({200, 200});
+
+    /* Again a dummy frame first */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
 
     Corrade::Utility::System::sleep(1);
 
