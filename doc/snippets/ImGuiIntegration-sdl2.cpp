@@ -76,7 +76,7 @@ ImGuiIntegration::Context imgui(*ImGui::GetCurrentContext(),
 
 {
 /* [Context-text-input] */
-_imgui.drawFrame();
+_imgui.newFrame();
 if(ImGui::GetIO().WantTextInput && !isTextInputActive())
     startTextInput();
 else if(!ImGui::GetIO().WantTextInput && isTextInputActive())

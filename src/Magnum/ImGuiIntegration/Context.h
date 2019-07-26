@@ -111,16 +111,26 @@ of use to avoid linker errors. Example:
 
 @subsection ImGuiIntegration-Context-usage-text-input Text input
 
-Some platforms require explicit action in order to start a text input (for
-example, to open an on-screen keyboard on touch devices or
-[IME](https://en.wikipedia.org/wiki/Input_method) for complex alphabets). ImGui
-exposes its desire to capture text input during a call to @ref newFrame().
-Based on that, you can toggle the text input in the application, for example
-using @ref Platform::Sdl2Application::startTextInput() "startTextInput()" /
+UTF-8 text input is handled via @ref handleTextInputEvent() but the application
+implementations only call
+@ref Platform::Sdl2Application::textInputEvent() "textInputEvent()" when text
+input is enabled. This is done because some platforms require explicit action
+in order to start a text input (for example, to open an on-screen keyboard on
+touch devices, or [IME](https://en.wikipedia.org/wiki/Input_method) for complex
+alphabets). ImGui exposes its desire to capture text input during a call to
+@ref newFrame(). Based on that, you can toggle the text input in the
+application, for example using
+@ref Platform::Sdl2Application::startTextInput() "startTextInput()" /
 @ref Platform::Sdl2Application::stopTextInput() "stopTextInput()" in
 @ref Platform::Sdl2Application or @link Platform::GlfwApplication @endlink:
 
 @snippet ImGuiIntegration-sdl2.cpp Context-text-input
+
+The above snippet also means that ImGui's @cpp InputQueueCharacters @ce will be
+empty unless an text input box is focused --- so if you want to handle text
+input through ImGui manually, you need to explicitly call
+@ref Platform::Sdl2Application::startTextInput() "startTextInput()" /
+@ref Platform::Sdl2Application::stopTextInput() "stopTextInput()" when desired.
 
 @section ImGuiIntegration-Context-fonts Loading custom fonts
 
