@@ -90,7 +90,7 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Ref<const Eig
     #endif
 >>> {
     static BoolVector<size> from(const Eigen::Ref<const Eigen::Array<bool, size, 1>>& other) {
-        BoolVector<size> out{NoInit};
+        BoolVector<size> out; /* NoInit prints a warning on GCC 9, don't */
         for(std::size_t i = 0; i != size; ++i)
             out.set(i, other(i, 0));
         return out;
