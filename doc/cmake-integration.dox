@@ -31,14 +31,24 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-The logic is in module `FindMagnumIntegration.cmake` distributed in integration
-repository in `modules/` directory, you are encouraged to copy it into your
-project and add path to the files to `CMAKE_MODULE_PATH`. Otherwise, if CMake
-won't be able to find this file in predefined locations, it will error out even
-if Magnum integration libraries might be installed on the system.
+The main logic is in the [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+module distributed in the `modules/` directory of the integration repository,
+you are encouraged to copy it into your project and add path to the files to
+`CMAKE_MODULE_PATH`:
 
-Note that the module file is updated as the library evolves, you are encouraged
-to update your copy from time to time to avoid strange building issues.
+@code{.cmake}
+# Path where FindMagnumIntegration.cmake can be found, adapt as needed
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
+@endcode
+
+Otherwise, if CMake won't be able to find this file in predefined locations, it
+will error out even if Magnum Integration might be installed on the system.
+There are other Find modules that you might need for particular features or
+platforms, see the @ref cmake-integration-modules "list below". Each library
+that needs one of the extra modules also mentions the requirement in its
+documentation. Note that the module files are updated as the library evolves,
+you are encouraged to update your copies from time to time to avoid strange
+building issues.
 
 If you installed the library or its dependencies to non-standard location
 (other than `/usr`, e.g. `/home/xyz/projects`), set `CMAKE_PREFIX_PATH` to that
@@ -88,14 +98,19 @@ See also @ref cmake "Magnum usage with CMake" for more information.
 
 @section cmake-integration-modules Other CMake modules
 
-The `modules/` directory contains more useful CMake modules:
+The `modules/` directory of Magnum Integration sources contains more useful
+CMake modules. If a library requires presence of any of these, it mentions them
+in its usage documentation.
 
--   `FindGLM.cmake` --- CMake module for finding the GLM library. Copy this to
-    your module directory if you want to use the @ref GlmIntegration library.
--   `FindOVR.cmake` --- CMake module for finding the OVR SDK. Copy this to your
-    module directory if you want to use the @ref OvrIntegration library.
--   `FindImGui.cmake` --- CMake module for finding Dear ImGui. Copy this to
-    your module directory if you want to use the @ref ImGuiIntegration library.
+-   [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
+    --- CMake module for finding the GLM library. Copy this to your module
+    directory if you want to use the @ref GlmIntegration library.
+-   [FindOVR.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindOVR.cmake)
+    --- CMake module for finding the OVR SDK. Copy this to your module
+    directory if you want to use the @ref OvrIntegration library.
+-   [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)
+    --- CMake module for finding Dear ImGui. Copy this to your module directory
+    if you want to use the @ref ImGuiIntegration library.
 
 See also @ref cmake-modules "relevant section for the main Magnum project".
 */

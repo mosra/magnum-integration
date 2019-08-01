@@ -162,11 +162,18 @@ for more information. See also @ref building-integration and
 Conversion of math types from and to the GLM library, debug output.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
-if `WITH_GLM` is enabled when building Magnum Integration. To use this library
-with CMake, you need to request the `Glm` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
+if `WITH_GLM` is enabled when building Magnum Integration. To use this
+library with CMake, you need to copy [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
+from the `modules/` directory in Magnum Integration sources to the `modules/`
+dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
+already) so it is able to correctly find the GLM library. Then request the
+`Glm` component of the `MagnumIntegration` package and link to the
+`MagnumIntegration::Glm` target:
 
 @code{.cmake}
+# Path where FindGLM.cmake can be found, adapt as needed
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
+
 find_package(MagnumIntegration REQUIRED Glm)
 
 # ...
@@ -206,11 +213,18 @@ for more information. See also @ref building-integration and
 Extensions to the [GLM](https://glm.g-truc.net/) library.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
-if `WITH_GLM` is enabled when building Magnum Integration. To use this library
-with CMake, you need to request the `Glm` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
+if `WITH_GLM` is enabled when building Magnum Integration. To use this
+library with CMake, you need to copy [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
+from the `modules/` directory in Magnum Integration sources to the `modules/`
+dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
+already) so it is able to correctly find the GLM library. Then request the
+`Glm` component of the `MagnumIntegration` package and link to the
+`MagnumIntegration::Glm` target:
 
 @code{.cmake}
+# Path where FindGLM.cmake can be found, adapt as needed
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
+
 find_package(MagnumIntegration REQUIRED Glm)
 
 # ...
@@ -231,10 +245,17 @@ Conversion of math classes and rendering of Dear ImGui using Magnum.
 
 This library depends on [Dear ImGui](https://github.com/ocornut/imgui) and is
 built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
-library with CMake, you need to request the `ImGui` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::ImGui` target:
+library with CMake, you need to copy [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)
+from the `modules/` directory in Magnum Integration sources to the `modules/`
+dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
+already) so it is able to correctly find the ImGui library on all platforms.
+Then request the `ImGui` component of the `MagnumIntegration` package and link
+to the `MagnumIntegration::ImGui` target:
 
 @code{.cmake}
+# Path where FindImGui.cmake can be found, adapt as needed
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
+
 find_package(MagnumIntegration REQUIRED ImGui)
 
 # ...
@@ -265,10 +286,17 @@ Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 
 This library depends on the [Oculus SDK](https://developer.oculus.com/) and is
 built if `WITH_OVR` is enabled when building Magnum Integration. To use this
-library with CMake, you need to request the `Ovr` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Ovr` target:
+library with CMake, you need to copy [FindOVR.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindOVR.cmake)
+from the `modules/` directory in Magnum Integration sources to the `modules/`
+dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
+already) so it is able to correctly find the OVR SDK. Then request the `Ovr`
+component of the `MagnumIntegration` package and link to the
+`MagnumIntegration::Ovr` target:
 
 @code{.cmake}
+# Path where FindOVR.cmake can be found, adapt as needed
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
+
 find_package(MagnumIntegration REQUIRED Ovr)
 
 # ...

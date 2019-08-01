@@ -99,6 +99,8 @@ namespace Magnum {
 -   @ref ImGuiIntegration::Context now mentions possible pitfalls when
     supplying in-memory fonts to ImGui (see
     [mosra/magnum-integration#42](https://github.com/mosra/magnum-integration/issues/42))
+-   Better documenting the need for extra CMake modules when using
+    @ref ImGuiIntegration (see [mosra/magnum-examples#64](https://github.com/mosra/magnum-examples/issues/64))
 
 @section changelog-integration-2019-01 2019.01
 
