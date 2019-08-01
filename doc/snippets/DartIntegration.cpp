@@ -92,7 +92,8 @@ for(UnsignedInt i = 0; i < simulationSteps; ++i) {
         world.refresh();
 
         /* Get unused/deleted shapes */
-        std::vector<std::unique_ptr<DartIntegration::Object>>& unusedObjects = world.unusedObjects();
+        std::vector<std::unique_ptr<DartIntegration::Object>>& unusedObjects =
+            world.unusedObjects();
 
         /* The user is expected to handle unused objects. One possible handling
            would be to remove them from the parent scene. */
@@ -100,7 +101,8 @@ for(UnsignedInt i = 0; i < simulationSteps; ++i) {
 
         /* Get updated shapes -- ones that either the materials or the meshes
           have changed */
-        std::vector<std::reference_wrapper<DartIntegration::Object>> updatedObjects = world.updatedShapeObjects();
+        std::vector<std::reference_wrapper<DartIntegration::Object>>
+            updatedObjects = world.updatedShapeObjects();
 
         updateMeshesAndMaterials(updatedObjects);
 
