@@ -44,17 +44,17 @@ namespace Corrade { namespace TestSuite {
 
 template<class T> class Comparator<EigenType<T>> {
     public:
-        bool operator()(const T& actual, const T& expected) {
-            if(actual.isApprox(expected)) return true;
+        ComparisonStatusFlags operator()(const T& actual, const T& expected) {
+            if(actual.isApprox(expected)) return {};
 
             actualValue = &actual;
             expectedValue = &expected;
-            return false;
+            return ComparisonStatusFlag::Failed;
         }
 
-        void printErrorMessage(Utility::Error& e, const std::string& actual, const std::string& expected) const {
+        void printMessage(ComparisonStatusFlags, Utility::Debug& out, const std::string& actual, const std::string& expected) const {
             CORRADE_INTERNAL_ASSERT(actualValue && expectedValue);
-            e << "Values" << actual << "and" << expected << "are not the same, actual is\n       "
+            out << "Values" << actual << "and" << expected << "are not the same, actual is\n       "
             << *actualValue << Utility::Debug::newline << "        but expected\n       " << *expectedValue;
         }
 
