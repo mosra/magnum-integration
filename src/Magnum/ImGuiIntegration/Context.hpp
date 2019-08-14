@@ -60,6 +60,10 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         case KeyEvent::Key::RightAlt:
             io.KeyAlt = value;
             break;
+        case KeyEvent::Key::LeftSuper:
+        case KeyEvent::Key::RightSuper:
+            io.KeySuper = value;
+            break;
         case KeyEvent::Key::Tab:
             io.KeysDown[ImGuiKey_Tab] = value;
             break;
