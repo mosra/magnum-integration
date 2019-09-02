@@ -66,7 +66,7 @@ vcpkg install magnum-integration
 
 @par Installing latest master
     The `master` is considered stable for production use and often you may want
-    to prefer it over an potentially outdated tagged release. To do so, use
+    to prefer it over a potentially outdated tagged release. To do so, use
     the `--head` option on `magnum-plugins` as well as its dependencies:
 @par
     @code{.bat}
