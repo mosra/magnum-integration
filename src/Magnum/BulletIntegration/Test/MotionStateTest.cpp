@@ -24,7 +24,13 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <BulletDynamics/btBulletDynamicsCommon.h>
+/* For some reason, Bullet installs the exact same header file in two places
+   -- in root and in BulletDynamics/btBulletDynamicsCommon.h. The one from root
+   is present in the source tree and the other isn't, so prefer it to be able
+   to compile against that as well (that's what the emscripten-ports version
+   is, in fact). */
+#include <btBulletDynamicsCommon.h>
+
 #include <Corrade/TestSuite/Tester.h>
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include <Magnum/SceneGraph/Object.h>

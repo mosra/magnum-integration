@@ -26,7 +26,9 @@
 
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
 
-find_package(Bullet REQUIRED)
+if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
+    find_package(Bullet REQUIRED)
+endif()
 
 if(BUILD_STATIC)
     set(MAGNUM_BULLETINTEGRATION_BUILD_STATIC 1)
@@ -53,8 +55,12 @@ add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-# Silence pedantic warnings in Bullet headers
-target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
+# Silence pedantic warnings in Bullet headers. If we use the Emscripten port,
+# no find_package() was called and the variable is not defined, so no point in
+# calling it.
+if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
+    target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
+endif()
 set_target_properties(MagnumBulletIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/BulletIntegration")
@@ -67,8 +73,15 @@ target_link_libraries(MagnumBulletIntegration PUBLIC
     Magnum::GL
     Magnum::Magnum
     Magnum::SceneGraph
-    Magnum::Shaders
-    ${BULLET_LIBRARIES})
+    Magnum::Shaders)
+
+if(USE_EMSCRIPTEN_PORTS_BULLET)
+    target_compile_options(MagnumBulletIntegration PUBLIC "SHELL:-s USE_BULLET=1")
+    target_link_options(MagnumBulletIntegration PUBLIC "SHELL:-s USE_BULLET=1")
+else()
+    target_link_libraries(MagnumBulletIntegration PUBLIC
+        ${BULLET_LIBRARIES})
+endif()
 
 install(TARGETS MagnumBulletIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}

@@ -298,7 +298,8 @@ By default no integration libraries are built and you need to select them
 manually:
 
 -   `WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
-    library. Depends on [Bullet Physics](http://bulletphysics.org/).
+    library. Depends on [Bullet Physics](http://bulletphysics.org/) (or,
+    in case of Emscripten, @ref building-integration-features-bullet-emscripten-ports "see below")
 -   `WITH_DART` --- Build the @ref DartIntegration "DartIntegration" library.
     Depends on [DART](http://dartsim.github.io/).
 -   `WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"
@@ -316,6 +317,27 @@ Note that each [*Integration namespace](namespaces.html) documentation contains
 more detailed information about its dependencies, availability on particular
 platforms and also a guide how to enable given library for building and hot to
 use it with CMake.
+
+@subsubsection building-integration-features-emscripten-ports Using dependencies from Emscripten Ports
+
+When building for Emscripten, by enabling the following options you can use
+dependencies from [Emscripten Ports](https://github.com/emscripten-ports):
+
+-   `USE_EMSCRIPTEN_PORTS_BULLET` --- Build @ref BulletIntegration using the
+    version from Emscripten Ports. Requires CMake 3.13 and newer and is
+    equivalent to passing `-s USE_BULLET=1` to the compiler. Please note that
+    currently (September 2019), the version there is still the old 2.82 from
+    2013.
+
+If Emscripten doesn't have the ports cached yet, due to parallel compilation it
+might happen that while one job is downloading and building the port, another
+will fail due to headers not being installed yet. Restarting the compilation
+second time usually works, if you want a reliable way instead, you can do it
+via `embuilder.py`, for example:
+
+@code{.sh}
+embuilder.py build bullet
+@endcode
 
 @section building-integration-doc Building documentation
 

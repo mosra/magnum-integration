@@ -48,6 +48,21 @@ option(WITH_GLM "Build GlmIntegration library" OFF)
 option(WITH_IMGUI "Build ImGuiIntegration library" OFF)
 option(WITH_OVR "Build OvrIntegration library" OFF)
 
+# Library-specific options. This one uses the `SHELL:` option from CMake 3.12
+# and target_link_options() from 3.13 in order to pass `-s USE_BULLET=1` to
+# both the compiler and linker without it being split into two parts and passed
+# through an unique filter.
+if(CORRADE_TARGET_EMSCRIPTEN AND NOT CMAKE_VERSION VERSION_LESS 3.13)
+    option(USE_EMSCRIPTEN_PORTS_BULLET "Use Bullet from emscripten-ports instead of looking for it elsewhere (warning: likely an outdated version)" OFF)
+    if(USE_EMSCRIPTEN_PORTS_BULLET)
+        set(MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET 1)
+    endif()
+else()
+    if(USE_EMSCRIPTEN_PORTS_BULLET)
+        message(FATAL_ERROR "The USE_EMSCRIPTEN_PORTS_BULLET option is only for Emscripten builds and CMake 3.13+")
+    endif()
+endif()
+
 include(CMakeDependentOption)
 option(BUILD_STATIC "Build static libraries (default are shared)" OFF)
 # Disable PIC on Emscripten by default (but still allow it to be enabled
