@@ -26,7 +26,9 @@
 
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
 
-find_package(Bullet REQUIRED)
+if(NOT EMSCRIPTEN)
+    find_package(Bullet REQUIRED)
+endif()
 
 if(BUILD_STATIC)
     set(MAGNUM_BULLETINTEGRATION_BUILD_STATIC 1)
@@ -53,8 +55,10 @@ add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-# Silence pedantic warnings in Bullet headers
-target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
+if(NOT EMSCRIPTEN)
+    # Silence pedantic warnings in Bullet headers
+    target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
+endif()
 set_target_properties(MagnumBulletIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/BulletIntegration")
@@ -67,8 +71,14 @@ target_link_libraries(MagnumBulletIntegration PUBLIC
     Magnum::GL
     Magnum::Magnum
     Magnum::SceneGraph
-    Magnum::Shaders
-    ${BULLET_LIBRARIES})
+    Magnum::Shaders)
+
+if(EMSCRIPTEN)
+    target_compile_options(MagnumBulletIntegration PUBLIC -s USE_BULLET=1)
+else()
+    target_link_libraries(MagnumBulletIntegration PUBLIC
+        ${BULLET_LIBRARIES})
+endif()
 
 install(TARGETS MagnumBulletIntegration
     RUNTIME DESTINATION ${MAGNUM_BINARY_INSTALL_DIR}
