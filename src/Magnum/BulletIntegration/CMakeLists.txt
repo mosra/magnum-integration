@@ -26,7 +26,9 @@
 
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
 
-if(NOT EMSCRIPTEN)
+option(USE_EMSCRIPTEN_PORTS_BULLET "Pass '-s USE_BULLET=1' to emcc instead of asking cmake for the lib (possibly an old bullet build)" ON)
+
+if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
     find_package(Bullet REQUIRED)
 endif()
 
@@ -55,7 +57,7 @@ add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-if(NOT EMSCRIPTEN)
+if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
     # Silence pedantic warnings in Bullet headers
     target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
 endif()
@@ -73,7 +75,7 @@ target_link_libraries(MagnumBulletIntegration PUBLIC
     Magnum::SceneGraph
     Magnum::Shaders)
 
-if(EMSCRIPTEN)
+if(USE_EMSCRIPTEN_PORTS_BULLET)
     target_compile_options(MagnumBulletIntegration PUBLIC -s USE_BULLET=1)
 else()
     target_link_libraries(MagnumBulletIntegration PUBLIC
