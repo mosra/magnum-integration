@@ -27,7 +27,10 @@
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
 
 if(CORRADE_TARGET_EMSCRIPTEN)
-    option(USE_EMSCRIPTEN_PORTS_BULLET "Pass '-s USE_BULLET=1' to emcc instead of asking cmake for the lib (possibly an old bullet build)" ON)
+    option(USE_EMSCRIPTEN_PORTS_BULLET "Pass '-s USE_BULLET=1' to emcc instead of asking cmake for the lib (possibly an old bullet build)" OFF)
+    if(USE_EMSCRIPTEN_PORTS_BULLET)
+        message(WARNING "The emscripten-ports bullet3 lib may not be compatable with tests")
+    endif()
 endif()
 
 if(NOT USE_EMSCRIPTEN_PORTS_BULLET OR NOT CORRADE_TARGET_EMSCRIPTEN)
