@@ -89,10 +89,6 @@ cmake .. \
 ninja install
 cd ../..
 
-# Pre-build the emscripten-ports/bullet lib or else the ninja make fails
-# because one job will download and another job tries to compile without it
-$(echo /usr/local/Cellar/emscripten/*/libexec)/embuilder.py build bullet
-
 # Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
 # archive is so stupid that it's not possible to just use Eigen3Config.cmake,
 # as it's generated using CMake from Eigen3Config.cmake.in. There's
