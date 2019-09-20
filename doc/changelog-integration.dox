@@ -57,6 +57,8 @@ namespace Magnum {
 -   @ref ImGuiIntegration::Context::relayout() now rebuilds the glyph cache
     also when fonts change, not just on pixel density change (see
     [mosra/magnum-integration#51](https://github.com/mosra/magnum-integration/issues/51))
+-   Added Super key (Windows/⌘) handling to
+    @ref ImGuiIntegration::Context::handleKeyEvent()
 
 @subsection changelog-integration-latest-buildsystem Build system
 
@@ -79,6 +81,11 @@ namespace Magnum {
 -   Updated `FindImGui.cmake` to explicitly link to the `ApplicationServices`
     framework on macOS, since that's needed for ImGui 1.71 clipboard handling
     (see [mosra/magnum-integration#48](https://github.com/mosra/magnum-integration/issues/48))
+-   @ref BulletIntegration can now use Bullet from Emscripten Ports instead of
+    looking for a prebuilt version elsewhere when the
+    `USE_EMSCRIPTEN_PORTS_BULLET` CMake option is enabled. See
+    @ref building-integration-features-emscripten-ports and
+    [mosra/magnum-integration#53](https://github.com/mosra/magnum-integration/pull/53).
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 

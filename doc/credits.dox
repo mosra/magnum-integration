@@ -29,6 +29,8 @@ namespace Magnum {
 
 @section credits-contributors-integration Magnum Integration
 
+-   **Allie** ([\@bowling-allie](https://github.com/bowling-allie)) ---
+    making @ref BulletIntegration work with Bullet from Emscripten Ports.
 -   **[\@denesik](https://github.com/denesik)** --- base of the
     @ref ImGuiIntegration library
 -   **Guillaume Jacquemin** ([\@williamjcm](https://github.com/williamjcm)) ---
@@ -40,6 +42,8 @@ namespace Magnum {
     and the migration of magnum-imgui to @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
+-   **Marco Melorio** ([\@Melix19](https://github.com/Melix19)) ---
+    improvements to the @ref ImGuiIntegration library
 -   **Max Schwarz** ([\@xqms](https://github.com/xqms)) --- fixes and
     clarifications in the @ref BulletIntegration library
 -   **Natesh Narain** ([\@nnarain](https://github.com/nnarain)) --- base
