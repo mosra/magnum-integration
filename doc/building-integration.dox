@@ -299,7 +299,7 @@ manually:
 
 -   `WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
     library. Depends on [Bullet Physics](http://bulletphysics.org/) (or,
-    in case of Emscripten, @ref building-integration-features-bullet-emscripten-ports "see below")
+    in case of Emscripten, @ref building-integration-features-emscripten-ports "see below")
 -   `WITH_DART` --- Build the @ref DartIntegration "DartIntegration" library.
     Depends on [DART](http://dartsim.github.io/).
 -   `WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"

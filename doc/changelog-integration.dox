@@ -58,7 +58,7 @@ namespace Magnum {
     also when fonts change, not just on pixel density change (see
     [mosra/magnum-integration#51](https://github.com/mosra/magnum-integration/issues/51))
 -   Added Super key (Windows/⌘) handling to
-    @ref ImGuiIntegration::Context::handleKeyEvent()
+    @ref ImGuiIntegration::Context::handleKeyPressEvent() "ImGuiIntegration::Context::handleKey*Event()"
 
 @subsection changelog-integration-latest-buildsystem Build system
 
