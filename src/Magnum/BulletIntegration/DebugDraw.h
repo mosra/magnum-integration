@@ -36,6 +36,7 @@
 #include <LinearMath/btIDebugDraw.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
+#include <Magnum/Math/Matrix4.h>
 #include <Magnum/Shaders/VertexColor.h>
 
 #include "Magnum/BulletIntegration/Integration.h"

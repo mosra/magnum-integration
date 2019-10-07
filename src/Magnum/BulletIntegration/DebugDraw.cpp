@@ -26,6 +26,8 @@
 
 #include "DebugDraw.h"
 
+#include <Magnum/Math/Color.h>
+
 namespace Magnum { namespace BulletIntegration {
 
 Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
