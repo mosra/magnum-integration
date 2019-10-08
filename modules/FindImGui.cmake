@@ -170,7 +170,7 @@ foreach(_component IN LISTS ImGui_FIND_COMPONENTS)
         endif()
     elseif(_component STREQUAL "SourcesMiscCpp")
         set(ImGui_SourcesMiscCpp_FOUND TRUE)
-        set(ImGui_SOURCES )
+        set(ImGui_MISC_CPP_SOURCES )
 
         foreach(_file imgui_stdlib)
             # Disable the find root path here, it overrides the
