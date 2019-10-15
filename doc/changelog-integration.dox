@@ -43,6 +43,12 @@ namespace Magnum {
 
 @subsection changelog-integration-latest-new New features
 
+-   MSVC 2019 compatibility, following other Magnum projects
+-   When using Magnum as a CMake subproject, it now puts all binaries into a
+    common directory to simplify `PATH` handling and dynamic plugin loading.
+    For more information see @ref cmake-integration-subproject,
+    [mosra/magnum#357](https://github.com/mosra/magnum/issues/357) and
+    [mosra/magnum-plugins#63](https://github.com/mosra/magnum-plugins/issues/63).
 -   New @ref EigenIntegration library, providing conversion of math types from
     and to [Eigen](http://eigen.tuxfamily.org/) APIs (see
     [mosra/magnum-integration#40](https://github.com/mosra/magnum-integration/pull/40))

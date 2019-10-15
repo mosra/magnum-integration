@@ -31,6 +31,8 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
+@section cmake-integration-installed Using Magnum Integration that was externally built and installed
+
 The main logic is in the [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 module distributed in the `modules/` directory of the integration repository,
 you are encouraged to copy it into your project and add path to the files to
@@ -54,6 +56,23 @@ If you installed the library or its dependencies to non-standard location
 (other than `/usr`, e.g. `/home/xyz/projects`), set `CMAKE_PREFIX_PATH` to that
 directory to help CMake find it. You can enter more different dirs if you
 separate them with semicolons.
+
+@section cmake-integration-subproject Using Magnum Integration as a CMake subproject
+
+Continuing from @ref cmake-subproject, adding Magnum Integration is very
+similar. Again, the @ref building-integration-features "Integration build-time options"
+have to be specified before the subdirectory gets added:
+
+@code{.cmake}
+...
+
+set(WITH_GLM ON CACHE BOOL "" FORCE) # enable what you need
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
+
+find_package(MagnumIntegration REQUIRED ...) # see below
+@endcode
+
+@section cmake-integration-find-module Finding the package and its components
 
 Basic usage is:
 
