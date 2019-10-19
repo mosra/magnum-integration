@@ -30,7 +30,14 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@anchor changelog-integration-latest
+@section changelog-integration-latest Changes since 2019.10
+
+@subsection changelog-integration-latest-new New features
+
+-   New @ref ImGuiIntegration::Context::updateApplicationCursor() allowing
+    ImGui to update application cursor using the new
+    @ref Platform::Sdl2Application::setCursor() "*Application::setCursor()"
+    APIs (see [mosra/magnum-integration#56](https://github.com/mosra/magnum-integration/pull/56))
 
 @section changelog-integration-2019-10 2019.10
 

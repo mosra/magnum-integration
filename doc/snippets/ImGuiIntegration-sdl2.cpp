@@ -25,6 +25,7 @@
 */
 
 #include <imgui.h>
+#include <Magnum/GL/Renderer.h>
 #include <Magnum/Platform/Sdl2Application.h>
 
 #include "Magnum/ImGuiIntegration/Context.h"
@@ -82,6 +83,33 @@ if(ImGui::GetIO().WantTextInput && !isTextInputActive())
 else if(!ImGui::GetIO().WantTextInput && isTextInputActive())
     stopTextInput();
 /* [Context-text-input] */
+}
+
+{
+/* [Context-usage-per-frame] */
+GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
+    GL::Renderer::BlendEquation::Add);
+GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
+    GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+
+_imgui.newFrame();
+
+// ImGui widget calls here ...
+
+_imgui.updateApplicationCursor(*this);
+
+GL::Renderer::enable(GL::Renderer::Feature::Blending);
+GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+
+_imgui.drawFrame();
+
+GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
+GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+GL::Renderer::disable(GL::Renderer::Feature::Blending);
+/* [Context-usage-per-frame] */
 }
 }
 

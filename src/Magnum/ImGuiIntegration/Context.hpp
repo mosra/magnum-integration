@@ -213,6 +213,63 @@ template<class TextInputEvent> bool Context::handleTextInputEvent(TextInputEvent
     return false;
 }
 
+/* GLFW doesn't have all cursor types, so employing a dirty SFINAE trick that
+   falls back to Arrow if given enum value is not available */
+namespace Implementation {
+
+#ifndef DOXYGEN_GENERATING_OUTPUT
+#define MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(cursor)                     \
+    template<class U> struct Optional##cursor##Cursor {                     \
+        template<class T> constexpr static typename T::Cursor get(T*, decltype(T::Cursor::cursor)* = nullptr) { return T::Cursor::cursor; } \
+        constexpr static typename U::Cursor get(...) { return U::Cursor::Arrow; } \
+        public:                                                             \
+            constexpr static typename U::Cursor Cursor = get(static_cast<U*>(nullptr)); \
+    };
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(ResizeAll)
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(ResizeNESW)
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(ResizeNWSE)
+#undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR
+#endif
+
+}
+
+template<class Application> void Context::updateApplicationCursor(Application& application) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
+    switch(ImGui::GetMouseCursor()) {
+        case ImGuiMouseCursor_TextInput:
+            application.setCursor(Application::Cursor::TextInput);
+            return;
+        case ImGuiMouseCursor_ResizeAll:
+            application.setCursor(Implementation::OptionalResizeAllCursor<Application>::Cursor);
+            return;
+        case ImGuiMouseCursor_ResizeNS:
+            application.setCursor(Application::Cursor::ResizeNS);
+            return;
+        case ImGuiMouseCursor_ResizeEW:
+            application.setCursor(Application::Cursor::ResizeWE);
+            return;
+        case ImGuiMouseCursor_ResizeNESW:
+            application.setCursor(Implementation::OptionalResizeNESWCursor<Application>::Cursor);
+            return;
+        case ImGuiMouseCursor_ResizeNWSE:
+            application.setCursor(Implementation::OptionalResizeNWSECursor<Application>::Cursor);
+            return;
+        case ImGuiMouseCursor_Hand:
+            application.setCursor(Application::Cursor::Hand);
+            return;
+
+        /* For unknown cursors we set Arrow as well */
+        case ImGuiMouseCursor_Arrow:
+        default:
+            application.setCursor(Application::Cursor::Arrow);
+            return;
+    }
+
+    CORRADE_ASSERT_UNREACHABLE(); /* LCOV_EXCL_LINE */
+}
+
 }}
 
 #endif

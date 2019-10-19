@@ -67,6 +67,21 @@ struct MouseScrollEvent {
     Modifiers modifiers() { return _modifiers; }
 };
 
+struct Application {
+    enum class Cursor {
+        Arrow,
+        Hand,
+        TextInput,
+        ResizeAll,
+        ResizeWE,
+        ResizeNS,
+        None = 999
+    };
+
+    void setCursor(Cursor cursor) { currentCursor = cursor; }
+    Cursor currentCursor = Cursor::None;
+};
+
 struct KeyEvent {
     enum class Key: Int {
         Unknown,
@@ -128,6 +143,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void mouseInputTooFast();
     void keyInput();
     void textInput();
+    void updateCursor();
 
     void multipleContexts();
 };
@@ -153,6 +169,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::mouseInputTooFast,
               &ContextGLTest::keyInput,
               &ContextGLTest::textInput,
+              &ContextGLTest::updateCursor,
 
               &ContextGLTest::multipleContexts});
 
@@ -604,6 +621,37 @@ void ContextGLTest::textInput() {
     CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputQueueCharacters.begin(), ImGui::GetIO().InputQueueCharacters.size()),
         Containers::arrayView(expected),
         TestSuite::Compare::Container);
+}
+
+void ContextGLTest::updateCursor() {
+    Context c{{}};
+
+    Application app;
+
+    /* Default (should be an arrow) */
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+
+    /* Change to a cursor that is present in all apps */
+    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Hand);
+
+    /* Change to a cursor that is unknown -> fallback to an arrow */
+    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+
+    /* Change to a cursor that is conditional but present in this app */
+    ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.currentCursor == Application::Cursor::ResizeAll);
+
+    /* Change to a cursor that is conditional and not present -> fallback to
+       an arrow */
+    ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNESW);
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
 }
 
 void ContextGLTest::multipleContexts() {
