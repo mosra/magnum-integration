@@ -140,20 +140,29 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
     ImGuiIO& io = ImGui::GetIO();
     io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
 
+    std::size_t buttonId;
     switch(event.button()) {
         case MouseEvent::Button::Left:
-            io.MouseDown[0] = value;
+            buttonId = 0;
             break;
         case MouseEvent::Button::Right:
-            io.MouseDown[1] = value;
+            buttonId = 1;
             break;
         case MouseEvent::Button::Middle:
-            io.MouseDown[2] = value;
+            buttonId = 2;
             break;
 
         /* Unknown button, do nothing */
         default: return false;
     }
+
+    /* Instead of setting io.MouseDown directly, we delay this until the
+       newFrame() call in order to prevent mouse clicks from being ignored when
+       both a press and a release happens in the same frame. Apart from this
+       happening when the app can't render fast enough, for some reason it also
+       happens with SDL2 on macOS -- press delayed by a significant  */
+    _mousePressed.set(buttonId, value);
+    if(value) _mousePressedInThisFrame.set(buttonId, true);
 
     return io.WantCaptureMouse;
 }

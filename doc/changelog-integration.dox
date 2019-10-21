@@ -60,6 +60,10 @@ namespace Magnum {
 -   @ref ImGuiIntegration::Context::handleKeyPressEvent() "ImGuiIntegration::Context::handleKey*Event()"
     now handles the @m_class{m-label m-default} **Space** key as well (see
     [mosra/magnum-integration#44](https://github.com/mosra/magnum-integration/pull/44))
+-   @ref ImGuiIntegration::Context::handleMousePressEvent() and
+    @ref ImGuiIntegration::Context::handleMouseReleaseEvent() are fixed to
+    avoid ignoring mouse clicks if both press and release happens in the same
+    frame
 -   Assorted @ref DartIntegration updates (see
     [mosra/magnum-integration#47](https://github.com/mosra/magnum-integration/pull/47)):
     -   @ref DartIntegration::convertShapeNode() can now handle cones as well

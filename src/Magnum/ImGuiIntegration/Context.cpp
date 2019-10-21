@@ -248,9 +248,20 @@ void Context::newFrame() {
 
     _timeline.nextFrame();
 
-    ImGui::GetIO().DeltaTime = _timeline.previousFrameDuration();
+    ImGuiIO& io = ImGui::GetIO();
+    io.DeltaTime = _timeline.previousFrameDuration();
+
+    /* Fire delayed mouse events. This sets MouseDown both in case the press
+       happened in this frame but also if both press and release happened at
+       the same frame */
+    for(const Int buttonId: {0, 1, 2})
+        io.MouseDown[buttonId] = _mousePressed[buttonId] || _mousePressedInThisFrame[buttonId];
 
     ImGui::NewFrame();
+
+    /* It's a new frame, clear any indicators for received mouse presses in
+       this frame */
+    _mousePressedInThisFrame = {};
 }
 
 void Context::drawFrame() {

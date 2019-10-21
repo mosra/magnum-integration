@@ -125,6 +125,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void relayoutRefreshFonts();
 
     void mouseInput();
+    void mouseInputTooFast();
     void keyInput();
     void textInput();
 
@@ -149,6 +150,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::relayoutRefreshFonts,
 
               &ContextGLTest::mouseInput,
+              &ContextGLTest::mouseInputTooFast,
               &ContextGLTest::keyInput,
               &ContextGLTest::textInput,
 
@@ -477,29 +479,52 @@ void ContextGLTest::mouseInput() {
     MouseEvent right{Button::Right, {3, 4}, {}};
     MouseEvent middle{Button::Middle, {5, 6}, {}};
 
+    /* In order to avoid imgui ignoring mouse clicks if both press and release
+       happens in the same frame, the events are propagated to it only during
+       newFrame() -- which means we need to check *after* it gets called. See
+       mouseInputTooFast() below for more. */
+
     c.handleMousePressEvent(left);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(0)); /* left */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+    c.drawFrame();
 
     c.handleMousePressEvent(right);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(1)); /* right */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
+    c.drawFrame();
 
     c.handleMousePressEvent(middle);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(2)); /* middle */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
+    c.drawFrame();
 
     c.handleMouseReleaseEvent(right);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(1)); /* right */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
+    c.drawFrame();
 
     c.handleMouseReleaseEvent(left);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(0)); /* left */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+    c.drawFrame();
 
     c.handleMouseReleaseEvent(middle);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(2)); /* middle */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
+    c.drawFrame();
 
     /* Mouse Movement */
     MouseEvent move{Button{}, {1, 2}, {}};
@@ -520,6 +545,28 @@ void ContextGLTest::mouseInput() {
     MouseEvent unknownButton{Button(666), {1, 2}, {}};
     CORRADE_VERIFY(!c.handleMousePressEvent(unknownButton));
     CORRADE_VERIFY(!c.handleMouseReleaseEvent(unknownButton));
+}
+
+void ContextGLTest::mouseInputTooFast() {
+    Context c{{200, 200}};
+
+    CORRADE_VERIFY(!ImGui::IsMouseDown(0));
+
+    /* It's not reported immediately */
+    MouseEvent left{Button::Left, {1, 2}, {}};
+    c.handleMousePressEvent(left);
+    c.handleMouseReleaseEvent(left);
+    CORRADE_VERIFY(!ImGui::IsMouseDown(0));
+
+    /* Only during the newFrame call */
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(0));
+    c.drawFrame();
+
+    /* And mouse up is reported in the next one */
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(0));
+    c.drawFrame();
 }
 
 void ContextGLTest::keyInput() {
