@@ -259,7 +259,7 @@ void ContextGLTest::constructMove() {
 
     c.drawFrame();
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* ImGui doesn't draw anything the first frame so do it twice. */
     c.newFrame();
@@ -298,7 +298,7 @@ void ContextGLTest::frame() {
 
     MAGNUM_VERIFY_NO_GL_ERROR();
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     c.newFrame();
@@ -317,7 +317,7 @@ void ContextGLTest::frameZeroSize() {
 
     MAGNUM_VERIFY_NO_GL_ERROR();
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     c.newFrame();
 
@@ -347,7 +347,7 @@ void ContextGLTest::relayout() {
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     c.newFrame();
@@ -376,7 +376,7 @@ void ContextGLTest::relayoutDpiChange() {
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f); /* 2x */
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     c.newFrame();
@@ -409,7 +409,7 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
 
     c.relayout({200, 200}, {70, 70}, {400, 400});
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     c.newFrame();
@@ -430,7 +430,7 @@ void ContextGLTest::relayoutZeroSize() {
 
     c.relayout({100, 0});
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     c.newFrame();
@@ -457,7 +457,7 @@ void ContextGLTest::relayoutRefreshFonts() {
 
     MAGNUM_VERIFY_NO_GL_ERROR();
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     c.newFrame();
@@ -622,7 +622,7 @@ void ContextGLTest::multipleContexts() {
     MAGNUM_VERIFY_NO_GL_ERROR();
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     /* This should render stuff now */
     a.newFrame();
