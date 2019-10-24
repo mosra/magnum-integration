@@ -32,12 +32,13 @@
  * @brief Function @ref Magnum::ImGuiIntegration::image(), @ref Magnum::ImGuiIntegration::imageButton()
  */
 
+#include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
+
 #include <imgui.h>
 #include <Magnum/Math/Range.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/GL/GL.h>
 
-#include "Magnum/ImGuiIntegration/visibility.h"
 #include "Magnum/ImGuiIntegration/Integration.h"
 
 namespace Magnum { namespace ImGuiIntegration {

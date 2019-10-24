@@ -54,6 +54,8 @@ Example usage:
 @see @ref types-thirdparty-integration
 */
 
+#include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
+
 #include <imgui.h>
 #include <Magnum/Types.h>
 #include <Magnum/Math/Vector.h>

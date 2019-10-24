@@ -32,6 +32,8 @@
  * @brief Template method implementations for input handling methods in @ref Magnum::ImGuiIntegration::Context
  */
 
+#include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
+
 #include <imgui.h>
 #include <Corrade/Utility/Resource.h>
 
