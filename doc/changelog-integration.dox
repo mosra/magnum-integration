@@ -30,9 +30,14 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@section changelog-integration-latest Changes since 2019.01
+@anchor changelog-integration-latest
 
-@subsection changelog-integration-latest-dependencies Dependency changes
+@section changelog-integration-2019-10 2019.10
+
+Released 2019-10-24, tagged as
+[v2019.10](https://github.com/mosra/magnum-integration/releases/tag/v2019.10).
+
+@subsection changelog-integration-2019-10-dependencies Dependency changes
 
 -   Minimal supported CMake version is now 3.4. Older versions are not
     supported anymore and all workarounds for them were removed. Download a
@@ -41,7 +46,7 @@ namespace Magnum {
     that shouldn't affect any additional distribution compared to the CMake 3.1
     requirement in 2019.01.
 
-@subsection changelog-integration-latest-new New features
+@subsection changelog-integration-2019-10-new New features
 
 -   MSVC 2019 compatibility, following other Magnum projects
 -   When using Magnum as a CMake subproject, it now puts all binaries into a
@@ -55,7 +60,7 @@ namespace Magnum {
 -   New @ref ImGuiIntegration::imageButton() widget for drawing an image button
     out of @ref GL::Texture2D (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
 
-@subsection changelog-integration-latest-changes Changes and improvements
+@subsection changelog-integration-2019-10-changes Changes and improvements
 
 -   @ref ImGuiIntegration::Context::handleKeyPressEvent() "ImGuiIntegration::Context::handleKey*Event()"
     now handles the @m_class{m-label m-default} **Space** key as well (see
@@ -79,7 +84,7 @@ namespace Magnum {
 -   Added Super key (Windows/⌘) handling to
     @ref ImGuiIntegration::Context::handleKeyPressEvent() "ImGuiIntegration::Context::handleKey*Event()"
 
-@subsection changelog-integration-latest-buildsystem Build system
+@subsection changelog-integration-2019-10-buildsystem Build system
 
 -   The `package/msys` directory now contains `PKGBUILD`s for
     [MSYS2](https://www.msys2.org/). See @ref building-integration-packages-msys
@@ -88,7 +93,8 @@ namespace Magnum {
 -   If both a CMake-based ImGui installation is found and `IMGUI_DIR` is set
     when building, `FindImGui.cmake` prefers the location given by `IMGUI_DIR`
 -   ES 2.0 and ES 3.0 subset of tests requiring GL context is now run on Travis
-    CI using SwiftShader for better code coverage
+    CI using SwiftShader for better code coverage (see
+    [mosra/magnum#207](https://github.com/mosra/magnum/issues/207))
 -   Updated Homebrew package to build also the @ref DartIntegration, since
     the `dartsim` dependency is usable now (see [mosra/magnum-integration#46](https://github.com/mosra/magnum-integration/issues/46))
 -   Emscripten builds now have the `-fPIC` option disabled by default as it
@@ -106,7 +112,7 @@ namespace Magnum {
     @ref building-integration-features-emscripten-ports and
     [mosra/magnum-integration#53](https://github.com/mosra/magnum-integration/pull/53).
 
-@subsection changelog-integration-latest-bugfixes Bug fixes
+@subsection changelog-integration-2019-10-bugfixes Bug fixes
 
 -   The @ref ImGuiIntegration::image() widget was flipping the texture
     vertically (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
@@ -115,12 +121,12 @@ namespace Magnum {
 -   Headers in the @ref ImGuiIntegration library had messed up include guards
     (see [mosra/magnum-integration#50](https://github.com/mosra/magnum-integration/issues/50))
 
-@subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
+@subsection changelog-integration-2019-10-compatibility Potential compatibility breakages, removed APIs
 
 -   Removed `BulletIntegration::convertShape()` as it was depending on the
     now-removed `Shapes` library, deprecated since 2018.10
 
-@subsection changelog-integration-latest-documentation Documentation
+@subsection changelog-integration-2019-10-documentation Documentation
 
 -   @ref ImGuiIntegration::Context now mentions possible pitfalls when
     supplying in-memory fonts to ImGui (see
