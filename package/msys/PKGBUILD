@@ -13,6 +13,7 @@ url="https://magnum.graphics/"
 license=('MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-magnum>=$pkgver"
          "${MINGW_PACKAGE_PREFIX}-bullet"
+         "${MINGW_PACKAGE_PREFIX}-eigen3"
          "${MINGW_PACKAGE_PREFIX}-glm")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cmake" "${MINGW_PACKAGE_PREFIX}-ninja")
 options=('!strip')
@@ -29,6 +30,7 @@ build() {
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
             -DWITH_BULLET=ON \
+            -DWITH_EIGEN=ON \
             -DWITH_GLM=ON
     ninja
 }
