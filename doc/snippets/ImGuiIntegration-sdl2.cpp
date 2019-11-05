@@ -99,15 +99,15 @@ _imgui.newFrame();
 _imgui.updateApplicationCursor(*this);
 
 GL::Renderer::enable(GL::Renderer::Feature::Blending);
+GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 
 _imgui.drawFrame();
 
-GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
-GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
 GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
+GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
 GL::Renderer::disable(GL::Renderer::Feature::Blending);
 /* [Context-usage-per-frame] */
 }

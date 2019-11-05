@@ -98,6 +98,18 @@ setting cursors.
 
 @snippet ImGuiIntegration-sdl2.cpp Context-usage-per-frame
 
+<b></b>
+
+@m_class{m-block m-info}
+
+@par Reduced renderer state setup
+    The above assumes you're drawing ImGui together with something else (a 3D
+    scene in the background, for example). If you only draw ImGui alone, it's
+    enough (and also faster) to set just the following in the constructor,
+    without doing any renderer state changes each frame:
+@par
+    @snippet ImGuiIntegration.cpp Context-usage-state-imgui-only
+
 @subsection ImGuiIntegration-Context-usage-events Event handling
 
 The templated @ref handleMousePressEvent(), @ref handleMouseReleaseEvent() etc.

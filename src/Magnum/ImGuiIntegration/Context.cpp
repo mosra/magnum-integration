@@ -317,6 +317,12 @@ void Context::drawFrame() {
             _mesh.draw(_shader);
         }
     }
+
+    /* Reset scissor rectangle back to the full framebuffer size. Instead the
+       users would be required to disable the scissor right after as otherwise
+       the framebuffer clear would only happen on whatever the last scissor
+       was. (And I hope the floating-point precision is enough here.) */
+    GL::Renderer::setScissor(Range2Di{Range2D{{}, fbSize}.scaled(_supersamplingRatio)});
 }
 
 namespace Implementation {

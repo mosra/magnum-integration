@@ -39,6 +39,12 @@ namespace Magnum {
     @ref Platform::Sdl2Application::setCursor() "*Application::setCursor()"
     APIs (see [mosra/magnum-integration#56](https://github.com/mosra/magnum-integration/pull/56))
 
+@subsection changelog-integration-latest-changes Changes and improvements
+
+-   @ref ImGuiIntegration::Context::drawFrame() now resets scissor rectangle
+    back to the full framebuffer to avoid nasty surprises when scissor test is
+    not disabled again right after (see [mosra/magnum-examples#68](https://github.com/mosra/magnum-examples/issues/68))
+
 @section changelog-integration-2019-10 2019.10
 
 Released 2019-10-24, tagged as

@@ -26,6 +26,7 @@
 
 #include <imgui.h>
 #include <Corrade/Utility/Resource.h>
+#include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
@@ -54,6 +55,16 @@ ImGuiIntegration::Context imgui{{640, 480}};
 /* [Context-usage] */
 }
 
+{
+/* [Context-usage-state-imgui-only] */
+GL::Renderer::enable(GL::Renderer::Feature::Blending);
+GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
+    GL::Renderer::BlendEquation::Add);
+GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
+    GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+/* [Context-usage-state-imgui-only] */
+}
 {
 /* [Context-custom-fonts] */
 ImGui::CreateContext();
