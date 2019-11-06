@@ -35,12 +35,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 find_package(Magnum REQUIRED)
 
-include(CMakeDependentOption)
-
 # Parts of the library
 option(WITH_BULLET "Build BulletIntegration library" OFF)
 option(WITH_DART "Build DartIntegration library" OFF)
-cmake_dependent_option(WITH_EIGEN "Build EigenIntegration library" ON "WITH_DART" OFF)
+option(WITH_EIGEN "Build EigenIntegration library" OFF)
 option(WITH_GLM "Build GlmIntegration library" OFF)
 option(WITH_IMGUI "Build ImGuiIntegration library" OFF)
 option(WITH_OVR "Build OvrIntegration library" OFF)

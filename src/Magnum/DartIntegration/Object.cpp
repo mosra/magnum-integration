@@ -45,9 +45,9 @@
 #include <Magnum/Trade/MeshData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
 #include <Magnum/Trade/TextureData.h>
-#include <Magnum/EigenIntegration/GeometryIntegration.h>
 
 #include "Magnum/DartIntegration/ConvertShapeNode.h"
+#include "Magnum/EigenIntegration/GeometryIntegration.h"
 
 namespace Magnum { namespace DartIntegration {
 
@@ -71,7 +71,7 @@ Object& Object::update(Trade::AbstractImporter* importer) {
         trans = Matrix4(Matrix4d(_node->getRelativeTransform()));
 
     /* Check if any value is NaN */
-    if(Math::isNan(trans[0]).any() || Math::isNan(trans[1]).any() || Math::isNan(trans[2]).any() || Math::isNan(trans[3]).any()) {
+    if(Math::isNan(trans.toVector()).any()) {
         Warning{} << "DartIntegration::Object::update(): Received NaN values from DART. Ignoring this update.";
         return *this;
     }
