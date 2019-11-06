@@ -41,6 +41,9 @@ namespace Magnum {
 
 @subsection changelog-integration-latest-changes Changes and improvements
 
+-   Simplified @ref DartIntegration internals using @ref EigenIntegration,
+    ignoring NaN values sometimes coming from DART (see
+    [mosra/magnum-integration#58](https://github.com/mosra/magnum-integration/pull/58))
 -   @ref ImGuiIntegration::Context::drawFrame() now resets scissor rectangle
     back to the full framebuffer to avoid nasty surprises when scissor test is
     not disabled again right after (see [mosra/magnum-examples#68](https://github.com/mosra/magnum-examples/issues/68))
