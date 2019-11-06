@@ -71,6 +71,12 @@ Object& Object::update(Trade::AbstractImporter* importer) {
     else
         trans = Matrix4(Matrix4d(_node->getRelativeTransform()));
 
+    /* Check if any value is NaN */
+    if(Math::isNan(trans.toVector()).any()) {
+        Warning{} << "DartIntegration::Object::update(): Received NaN values from DART. Ignoring this update.";
+        return *this;
+    }
+
     Quaternion quat = Quaternion::fromMatrix(trans.rotationScaling());
     Vector3 axis = quat.axis();
     Rad angle = quat.angle();
