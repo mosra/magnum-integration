@@ -29,7 +29,9 @@
 /** @file
 @brief Integration of GLM extension types
 
-Provides conversion for the following types:
+Provides conversion for the following types. See
+@ref Magnum/GlmIntegration/Integration.h and
+@ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
 
 | Magnum type                           | Equivalent GLM type               |
 | ------------------------------------- | --------------------------------- |
@@ -40,9 +42,6 @@ same as types with no qualifier. Debug output using @ref Corrade::Utility::Debug
 for all types is provided as well on GLM >= 0.9.7. Example usage:
 
 @snippet GlmIntegration.cpp GtcIntegration
-
-See @ref Magnum/GlmIntegration/Integration.h
-and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of other types.
 
 @see @ref types-thirdparty-integration
 */

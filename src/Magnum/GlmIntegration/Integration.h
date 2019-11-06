@@ -29,7 +29,10 @@
 /** @file
 @brief Conversion of basic GLM vector and matrix types
 
-Provides conversion for the following types:
+Provides conversion for the following types. See
+@ref Magnum/GlmIntegration/GtcIntegration.h and
+@ref Magnum/GlmIntegration/GtxIntegration.h for conversion of more complex
+types.
 
 | Magnum vector type                             | Equivalent GLM type      |
 | ---------------------------------------------- | ------------------------ |
@@ -56,10 +59,6 @@ same as types with no qualifier. Debug output using @ref Corrade::Utility::Debug
 for all types is provided as well. Example usage:
 
 @snippet GlmIntegration.cpp Integration
-
-See @ref Magnum/GlmIntegration/GtcIntegration.h
-and @ref Magnum/GlmIntegration/GtxIntegration.h for conversion of more complex
-types.
 
 @see @ref types-thirdparty-integration
 */

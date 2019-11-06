@@ -28,7 +28,9 @@
 /** @file
 @brief Conversion of Eigen array and matrix types
 
-Provides conversion for the following types:
+Provides conversion for the following types. See
+@ref Magnum/EigenIntegration/GeometryIntegration.h for conversion of special
+geometry types.
 
 | Magnum vector type                             | Equivalent Eigen type    |
 | ---------------------------------------------- | ------------------------ |
@@ -65,9 +67,6 @@ usable with @ref Corrade::Utility::Debug if you include
 @ref Corrade/Utility/DebugStl.h as well. Example usage:
 
 @snippet EigenIntegration.cpp Integration
-
-See @ref Magnum/EigenIntegration/GeometryIntegration.h for conversion of
-special geometry types.
 
 @see @ref types-thirdparty-integration
 */

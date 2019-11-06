@@ -28,7 +28,9 @@
 /** @file
 @brief Conversion of Eigen geometry types
 
-Provides conversion for the following types:
+Provides conversion for the following types. See
+@ref Magnum/EigenIntegration/Integration.h for conversion of basic matrix and
+vector types.
 
 | Magnum type                           | Equivalent Eigen type             |
 | ------------------------------------- | --------------------------------- |
@@ -39,8 +41,7 @@ Provides conversion for the following types:
 | @ref Magnum::Math::Matrix4x3<T> "Math::Matrix4x3<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 3, AffineCompact>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
 | @ref Magnum::Math::Matrix4<T> "Math::Matrix4<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 3, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 3, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 3, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
 
-See @ref Magnum/EigenIntegration/Integration.h for conversion of basic matrix
-and vector types. Example usage:
+Example usage:
 
 @snippet EigenIntegration.cpp GeometryIntegration
 
