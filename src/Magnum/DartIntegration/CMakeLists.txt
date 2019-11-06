@@ -25,6 +25,7 @@
 #
 
 find_package(Magnum REQUIRED GL SceneGraph MeshTools Primitives)
+find_package(MagnumIntegration REQUIRED Eigen)
 find_package(DART 6.0.0 CONFIG REQUIRED)
 
 if(BUILD_STATIC)
@@ -68,6 +69,7 @@ target_link_libraries(MagnumDartIntegration
     Magnum::SceneGraph
     Magnum::Primitives
     Magnum::MeshTools
+    MagnumIntegration::Eigen
     dart)
 
 install(TARGETS MagnumDartIntegration

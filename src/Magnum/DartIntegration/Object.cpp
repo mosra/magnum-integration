@@ -38,12 +38,14 @@
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/TextureFormat.h>
+#include <Magnum/Math/Matrix4.h>
 #include <Magnum/MeshTools/Compile.h>
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
 #include <Magnum/Trade/TextureData.h>
+#include <Magnum/EigenIntegration/GeometryIntegration.h>
 
 #include "Magnum/DartIntegration/ConvertShapeNode.h"
 
@@ -62,32 +64,24 @@ Object& Object::update(Trade::AbstractImporter* importer) {
         return *this;
 
     /* Get transform from DART */
-    const Eigen::Isometry3d* trans;
+    Matrix4 trans;
     if(!_node)
-        trans = &_body->getRelativeTransform();
+        trans = Matrix4(Matrix4d(_body->getRelativeTransform()));
     else
-        trans = &_node->getRelativeTransform();
+        trans = Matrix4(Matrix4d(_node->getRelativeTransform()));
 
-    Eigen::Quaterniond quat(trans->linear());
-    Eigen::Vector3d axis(quat.x(), quat.y(), quat.z());
-    double angle = 2.*std::acos(quat.w());
-    if(std::abs(angle)>1e-5) {
-        axis = axis.array() / std::sqrt(1-quat.w()*quat.w());
-        axis.normalize();
+    Quaternion quat = Quaternion::fromMatrix(trans.rotationScaling());
+    Vector3 axis = quat.axis();
+    Rad angle = quat.angle();
+    if(Math::abs(Float(angle))<=1e-5f) {
+        axis = {1.f, 0.f, 0.f};
     }
-    else
-        axis(0) = 1.;
-
-    Eigen::Vector3d T = trans->translation();
-
-    /* Convert it to axis-angle representation */
-    Math::Vector3<Float> t(T[0], T[1], T[2]);
-    Math::Vector3<Float> u(axis(0), axis(1), axis(2));
-    Rad theta(angle);
+    axis = axis.normalized();
+    Vector3 t = trans.translation();
 
     /* Pass it to Magnum */
     _transformation.resetTransformation()
-        .rotate(theta, u)
+        .rotate(angle, axis)
         .translate(t);
 
     /* Set update flag */
