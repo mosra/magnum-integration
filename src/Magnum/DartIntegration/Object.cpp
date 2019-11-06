@@ -58,6 +58,7 @@ DrawData::~DrawData() = default;
 Object::Object(SceneGraph::AbstractBasicObject3D<Float>& object, SceneGraph::AbstractBasicTranslationRotation3D<Float>& transformation, dart::dynamics::ShapeNode* node, dart::dynamics::BodyNode* body): SceneGraph::AbstractBasicFeature3D<Float>{object}, _transformation(transformation), _node{node}, _body{body}, _updated(false), _updatedMesh(false) {}
 
 Object& Object::update(Trade::AbstractImporter* importer) {
+    using namespace Math::Literals;
     /* If the object is has a shape and could not extract the DrawData, do not
        update it; i.e., the user can choose to delete it */
     if(_node && !extractDrawData(importer))
@@ -79,7 +80,7 @@ Object& Object::update(Trade::AbstractImporter* importer) {
     Quaternion quat = Quaternion::fromMatrix(trans.rotationScaling());
     Vector3 axis = quat.axis();
     Rad angle = quat.angle();
-    if(Math::abs(Float(angle))<=1e-5f) {
+    if(Math::abs(angle) <= 1e-5_radf) {
         axis = {1.f, 0.f, 0.f};
     }
     axis = axis.normalized();
