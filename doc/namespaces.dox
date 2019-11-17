@@ -102,9 +102,11 @@ types. See also the @ref examples-dart example, @ref building-integration and
 
 /** @dir Magnum/EigenIntegration
  * @brief Namespace @ref Magnum::EigenIntegration
+ * @m_since_{integration,2019,10}
  */
 /** @namespace Magnum::EigenIntegration
 @brief Integration with Eigen
+@m_since_{integration,2019,10}
 
 Conversion of math types from and to the Eigen library.
 

@@ -516,6 +516,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Update application mouse cursor
+         * @m_since_latest_{integration}
          *
          * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
          * then queries @cpp ImGui::GetMouseCursor() @ce, propagating that to

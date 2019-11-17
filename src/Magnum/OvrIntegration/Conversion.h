@@ -27,7 +27,8 @@
 */
 
 /** @file
- * @deprecated Use @ref Magnum/OvrIntegration/Integration.h instead.
+ * @m_deprecated_since{2019,01} Use @ref Magnum/OvrIntegration/Integration.h
+ *      instead.
  */
 
 #include "Magnum/configure.h"

@@ -114,7 +114,8 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
 
             #ifdef MAGNUM_BUILD_DEPRECATED
             /** Draw fast wireframes
-             * @deprecated Use @ref Mode::FastWireframe instead.
+             * @m_deprecated_since{2018,10} Use @ref Mode::FastWireframe
+             *      instead.
              */
             FastWirefram CORRADE_DEPRECATED_ENUM("use FastWireframe instead") = FastWireframe,
             #endif
@@ -134,7 +135,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
 
         #ifdef MAGNUM_BUILD_DEPRECATED
         /** @brief @copybrief Mode
-         * @deprecated Use @ref Mode instead.
+         * @m_deprecated_since{2018,10} Use @ref Mode instead.
          */
         typedef CORRADE_DEPRECATED("use Mode instead") Mode DebugMode;
         #endif
@@ -148,7 +149,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
 
         #ifdef MAGNUM_BUILD_DEPRECATED
         /** @brief @copybrief Modes
-         * @deprecated Use @ref Modes instead.
+         * @m_deprecated_since{2018,10} Use @ref Modes instead.
          */
         typedef CORRADE_DEPRECATED("use Modes instead") Modes DebugModes;
         #endif
@@ -192,7 +193,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
 
         #ifdef MAGNUM_BUILD_DEPRECATED
         /** @brief @copybrief mode()
-         * @deprecated Use @ref mode() instead.
+         * @m_deprecated_since{2018,10} Use @ref mode() instead.
          */
         CORRADE_DEPRECATED("use mode() instead") Modes debugMode() const {
             return mode();
@@ -212,7 +213,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
 
         #ifdef MAGNUM_BUILD_DEPRECATED
         /** @brief @copybrief setMode()
-         * @deprecated Use @ref setMode() instead.
+         * @m_deprecated_since{2018,10} Use @ref setMode() instead.
          */
         CORRADE_DEPRECATED("use setMode() instead") DebugDraw& setDebugMode(Modes mode) {
             return setMode(mode);

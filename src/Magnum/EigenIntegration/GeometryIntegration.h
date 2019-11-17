@@ -27,6 +27,7 @@
 
 /** @file
 @brief Conversion of Eigen geometry types
+@m_since_{integration,2019,10}
 
 Provides conversion for the following types. See
 @ref Magnum/EigenIntegration/Integration.h for conversion of basic matrix and
@@ -128,6 +129,7 @@ namespace EigenIntegration {
 
 /**
 @brief Convert a Magnum type to Eigen type
+@m_since{2019,10}
 
 Provided only for consistency with
 @ref cast(const Math::RectangularMatrix<cols, rows, T>&),

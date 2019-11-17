@@ -70,6 +70,7 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
     padding
 @param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
 @param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
+@m_since_{integration,2019,10}
 */
 inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
     const Range2D& uvRange = {{}, Vector2{1.0f}}, Int framePadding = -1,

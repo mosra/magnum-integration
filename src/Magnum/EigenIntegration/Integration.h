@@ -27,6 +27,7 @@
 
 /** @file
 @brief Conversion of Eigen array and matrix types
+@m_since_{integration,2019,10}
 
 Provides conversion for the following types. See
 @ref Magnum/EigenIntegration/GeometryIntegration.h for conversion of special
@@ -341,6 +342,7 @@ namespace EigenIntegration {
 
 /**
 @brief Convert a Magnum type to Eigen type
+@m_since_{integration,2019,10}
 
 Due to the design of @m_class{m-doc-external} [Eigen::Array](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html)
 and @m_class{m-doc-external} [Eigen::Matrix](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html)
@@ -351,12 +353,18 @@ template<class To, std::size_t cols, std::size_t rows, class T> inline To cast(c
     return Math::Implementation::RectangularMatrixConverter<cols, rows, T, To>::to(from);
 }
 
-/** @overload */
+/**
+@overload
+@m_since_{integration,2019,10}
+*/
 template<class To, std::size_t size> inline To cast(const Math::BoolVector<size>& from) {
     return Math::Implementation::BoolVectorConverter<size, To>::to(from);
 }
 
-/** @overload */
+/**
+@overload
+@m_since_{integration,2019,10}
+*/
 template<class To, std::size_t size, class T> inline To cast(const Math::Vector<size, T>& from) {
     return Math::Implementation::VectorConverter<size, T, To>::to(from);
 }
