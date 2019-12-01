@@ -23,6 +23,7 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+    -DCMAKE_PREFIX_PATH=$HOME/sdl2 \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=Debug \
     -DWITH_AUDIO=OFF \
@@ -37,6 +38,7 @@ cmake .. \
     -DWITH_ANYIMAGEIMPORTER=ON \
     -DWITH_SDL2APPLICATION=ON \
     -DWITH_WINDOWLESS${PLATFORM_GL_API}APPLICATION=ON \
+    -DWITH_SDL2APPLICATION=ON \
     -DBUILD_DEPRECATED=$BUILD_DEPRECATED \
     -G Ninja
 ninja install
@@ -64,7 +66,7 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DCMAKE_PREFIX_PATH=$HOME/deps-dart \
+    -DCMAKE_PREFIX_PATH="$HOME/deps-dart;$HOME/sdl2" \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DIMGUI_DIR=$HOME/imgui \
     -DCMAKE_BUILD_TYPE=Debug \

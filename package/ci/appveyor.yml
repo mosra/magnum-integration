@@ -19,18 +19,22 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-gl-mingw
   - TARGET: desktop-gles
+    COMPILER: msvc
     TARGET_GLES2: ON
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-gles2-msvc2017
   - TARGET: desktop-gles
+    COMPILER: msvc
     TARGET_GLES2: ON
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-gles2-msvc2019
   - TARGET: desktop-gles
+    COMPILER: msvc
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-gles3-msvc2017
   - TARGET: desktop-gles
+    COMPILER: msvc
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-gles3-msvc2019
@@ -64,6 +68,12 @@ install:
 # GLM
 - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\0.9.9.0.zip appveyor DownloadFile https://github.com/g-truc/glm/archive/0.9.9.0.zip
 - 7z x 0.9.9.0.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\glm-0.9.9.0 glm
+
+# SDL2
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-VC.zip appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.9-VC.zip
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "msvc" 7z x SDL2-devel-2.0.9-VC.zip && ren SDL2-2.0.9 SDL
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" 7z x SDL2-devel-2.0.9-mingw.tar.gz & 7z x SDL2-devel-2.0.9-mingw.tar & ren SDL2-2.0.9 SDL
 
 # ImGui
 - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\imgui-1.72.zip appveyor DownloadFile https://github.com/ocornut/imgui/archive/v1.72.zip -FileName imgui-1.72.zip

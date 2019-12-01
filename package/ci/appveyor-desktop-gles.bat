@@ -44,6 +44,7 @@ mkdir build && cd build || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
+    -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/SDL ^
     -DTARGET_GLES=ON ^
     -DTARGET_GLES2=%TARGET_GLES2% ^
     -DTARGET_DESKTOP_GLES=ON ^
@@ -57,6 +58,7 @@ cmake .. ^
     -DWITH_TEXTURETOOLS=OFF ^
     -DWITH_OPENGLTESTER=ON ^
     -DWITH_WINDOWLESSWGLAPPLICATION=ON ^
+    -DWITH_SDL2APPLICATION=%TARGET_GLES3% ^
     -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -72,7 +74,7 @@ mkdir build && cd build || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
-    -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/bullet ^
+    -DCMAKE_PREFIX_PATH="%APPVEYOR_BUILD_FOLDER%/bullet;%APPVEYOR_BUILD_FOLDER%/SDL" ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
     -DBULLET_COLLISION_LIBRARY=%APPVEYOR_BUILD_FOLDER%/bullet/lib/BulletCollision_Debug.lib ^

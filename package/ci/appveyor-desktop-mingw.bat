@@ -48,6 +48,7 @@ cmake .. ^
     -DCMAKE_CXX_FLAGS="--coverage" ^
     -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
+    -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/SDL ^
     -DWITH_AUDIO=OFF ^
     -DWITH_DEBUGTOOLS=OFF ^
     -DWITH_MESHTOOLS=OFF ^
@@ -58,6 +59,7 @@ cmake .. ^
     -DWITH_TEXTURETOOLS=OFF ^
     -DWITH_OPENGLTESTER=ON ^
     -DWITH_WINDOWLESSWGLAPPLICATION=OFF ^
+    -DWITH_SDL2APPLICATION=ON ^
     -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -78,6 +80,7 @@ cmake .. ^
     -DCMAKE_CXX_FLAGS="--coverage" ^
     -DCMAKE_BUILD_TYPE=Debug ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
+    -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/SDL ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
     -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^

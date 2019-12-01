@@ -51,6 +51,7 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DWITH_AUDIO=OFF \
+    -DWITH_ANDROIDAPPLICATION=$TARGET_GLES3 \
     -DWITH_DEBUGTOOLS=OFF \
     -DWITH_MESHTOOLS=OFF \
     -DWITH_PRIMITIVES=OFF \
@@ -64,6 +65,9 @@ cmake .. \
 ninja install
 cd ../..
 
+# Generate debug keystore for APK signing
+keytool -genkeypair -keystore $HOME/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -validity 10000 -dname CN=,OU=,O=,L=,S=,C=
+
 # Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
 # archive is so stupid that it's not possible to just use Eigen3Config.cmake,
 # as it's generated using CMake from Eigen3Config.cmake.in. There's
@@ -75,6 +79,7 @@ cd ../..
 # it.
 mkdir build-android-arm && cd build-android-arm
 cmake .. \
+    -DANDROID_SDK=/usr/local/android-sdk \
     -DCMAKE_ANDROID_NDK=$TRAVIS_BUILD_DIR/android-ndk-r16b \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=22 \
