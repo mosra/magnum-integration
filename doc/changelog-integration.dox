@@ -47,6 +47,9 @@ namespace Magnum {
 -   @ref ImGuiIntegration::Context::drawFrame() now resets scissor rectangle
     back to the full framebuffer to avoid nasty surprises when scissor test is
     not disabled again right after (see [mosra/magnum-examples#68](https://github.com/mosra/magnum-examples/issues/68))
+-   @ref ImGuiIntegration::Context::handleKeyPressEvent() now treats
+    @ref Platform::Sdl2Application::KeyEvent::Key::NumEnter "Platform::*Application::KeyEvent::Key::NumEnter"
+    the same way as @ref Platform::Sdl2Application::KeyEvent::Key::Enter "Key::Enter"
 
 @section changelog-integration-2019-10 2019.10
 
