@@ -37,7 +37,7 @@
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_Keys.h>
 
-#include "Magnum/OvrIntegration/Conversion.h"
+#include "Magnum/OvrIntegration/Integration.h"
 #include "Magnum/OvrIntegration/OvrIntegration.h"
 #include "Magnum/OvrIntegration/visibility.h"
 
