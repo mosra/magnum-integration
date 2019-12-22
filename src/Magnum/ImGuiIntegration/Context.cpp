@@ -228,6 +228,9 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
         /* Clear texture to save RAM, we have it on the GPU now */
         io.Fonts->ClearTexData();
+
+        /* Make the texture available through the ImFontAtlas */
+        io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
     }
 
     /* Display size is the window size. Scaling of this to the actual window
@@ -299,7 +302,7 @@ void Context::drawFrame() {
             const ImDrawCmd* pcmd = &cmdList->CmdBuffer[c];
 
             auto userTexture = static_cast<GL::Texture2D*>(pcmd->TextureId);
-            _shader.bindTexture(userTexture ? *userTexture : _texture);
+            _shader.bindTexture(*userTexture);
 
             GL::Renderer::setScissor(Range2Di{Range2D{
                 {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},

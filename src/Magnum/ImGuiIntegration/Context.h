@@ -392,6 +392,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         ImGuiContext* release();
 
         /**
+         * @brief Font texture used in `ImFontAtlas`
+         */
+        GL::Texture2D& atlasTexture() { return _texture; }
+
+        /**
          * @brief Relayout the context
          *
          * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() and
