@@ -424,6 +424,13 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         void drawFrame();
 
         /**
+         * @brief Get the ImFontAtlas texture
+         *
+         * @return Reference to the @cpp GL::Texture2D @ce in @cpp ImFontAtlas @ce
+         */
+        GL::Texture2D& getAtlasTexture();
+
+        /**
          * @brief Handle mouse press event
          *
          * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and

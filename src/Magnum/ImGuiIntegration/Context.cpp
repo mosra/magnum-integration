@@ -228,6 +228,9 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
         /* Clear texture to save RAM, we have it on the GPU now */
         io.Fonts->ClearTexData();
+
+        /* Make the texture available through the ImFontAtlas */
+        io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
     }
 
     /* Display size is the window size. Scaling of this to the actual window
@@ -306,6 +309,10 @@ void Context::drawFrame() {
             _mesh.draw(_shader);
         }
     }
+}
+
+GL::Texture2D& Context::getAtlasTexture() {
+  return _texture;
 }
 
 namespace Implementation {
