@@ -428,7 +428,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          *
          * @return Reference to the @cpp GL::Texture2D @ce in @cpp ImFontAtlas @ce
          */
-        GL::Texture2D& getAtlasTexture();
+        GL::Texture2D& atlasTexture();
 
         /**
          * @brief Handle mouse press event

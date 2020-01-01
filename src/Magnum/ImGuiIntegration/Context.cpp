@@ -291,7 +291,7 @@ void Context::drawFrame() {
             const ImDrawCmd* pcmd = &cmdList->CmdBuffer[c];
 
             auto userTexture = static_cast<GL::Texture2D*>(pcmd->TextureId);
-            _shader.bindTexture(userTexture ? *userTexture : _texture);
+            _shader.bindTexture(*userTexture);
 
             GL::Renderer::setScissor(Range2Di{Range2D{
                 {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},
@@ -311,7 +311,7 @@ void Context::drawFrame() {
     }
 }
 
-GL::Texture2D& Context::getAtlasTexture() {
+GL::Texture2D& Context::atlasTexture() {
   return _texture;
 }
 
