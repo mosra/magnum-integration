@@ -72,6 +72,9 @@ add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 find_package(MagnumIntegration REQUIRED ...) # see below
 @endcode
 
+Each `*Integration` namespace provides further information about additional
+steps needed for a CMake subproject setup.
+
 @section cmake-integration-find-module Finding the package and its components
 
 Basic usage is:

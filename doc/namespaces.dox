@@ -38,7 +38,8 @@ Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
 This library depends on the [Bullet Physics](http://bulletphysics.org/) library
 and is built if `WITH_BULLET` is enabled when building Magnum Integration. To
-use this library with CMake, you need to request the `Bullet` component of the
+use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+into your `modules/` directory, request the `Bullet` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Bullet` target:
 
 @code{.cmake}
@@ -46,6 +47,18 @@ find_package(MagnumIntegration REQUIRED Bullet)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::Bullet)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration repository](https://github.com/mosra/magnum-integration)
+and do the following *before* calling @cmake find_package() @ce. Using Bullet
+itself as a CMake subproject isn't tested at the moment, so you need to provide
+it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
+if necessary.
+
+@code{.cmake}
+set(WITH_BULLET ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 This library provides routines for explicit conversion between Bullet and
@@ -72,7 +85,8 @@ Conversion of nodes and shapes for visualizing physics simulation.
 
 This library depends on the [DART](https://dartsim.github.io/) library
 and is built if `WITH_DART` is enabled when building Magnum Integration. To
-use this library with CMake, you need to request the `Dart` component of the
+use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+into your `modules/` directory, request the `Dart` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Dart` target:
 
 @code{.cmake}
@@ -80,6 +94,18 @@ find_package(MagnumIntegration REQUIRED Dart)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::Dart)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration repository](https://github.com/mosra/magnum-integration)
+and do the following *before* calling @cmake find_package() @ce. Using DART
+itself as a CMake subproject isn't tested at the moment, so you need to provide
+it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
+if necessary.
+
+@code{.cmake}
+set(WITH_DART ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 DART is using Eigen for mathematics and you might want to use the
@@ -112,7 +138,8 @@ Conversion of math types from and to the Eigen library.
 
 This library depends on the [Eigen](http://eigen.tuxfamily.org/) library and is
 built if `WITH_EIGEN` is enabled when building Magnum Integration. To use this
-library with CMake, you need to request the `Eigen` component of the
+library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+into your `modules/` directory, request the `Eigen` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Eigen` target:
 
 @code{.cmake}
@@ -120,6 +147,21 @@ find_package(MagnumIntegration REQUIRED Eigen)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::Eigen)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration](https://github.com/mosra/magnum-integration) and
+[eigen](https://gitlab.com/libeigen/eigen) repositories and do the following
+* *before* calling @cmake find_package() @ce. If you want to use
+system-installed Eigen, omit the first part and point `CMAKE_PREFIX_PATH` to
+its installation dir if necessary.
+
+@code{.cmake}
+set(EIGEN3_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/eigen)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/eigen/cmake)
+
+set(WITH_EIGEN ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 The integration routines are provided in the
@@ -166,21 +208,28 @@ Conversion of math types from and to the GLM library, debug output.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
 if `WITH_GLM` is enabled when building Magnum Integration. To use this
-library with CMake, you need to copy [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
-from the `modules/` directory in Magnum Integration sources to the `modules/`
-dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
-already) so it is able to correctly find the GLM library. Then request the
-`Glm` component of the `MagnumIntegration` package and link to the
-`MagnumIntegration::Glm` target:
+library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+and [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
+into your `modules/` directory, request the `Glm` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
 
 @code{.cmake}
-# Path where FindGLM.cmake can be found, adapt as needed
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
-
 find_package(MagnumIntegration REQUIRED Glm)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::Glm)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration repository](https://github.com/mosra/magnum-integration)
+and do the following *before* calling @cmake find_package() @ce. Using GLM
+itself as a CMake subproject isn't tested at the moment, so you need to provide
+it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
+if necessary.
+
+@code{.cmake}
+set(WITH_GLM ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 The integration routines are provided in @ref Magnum/GlmIntegration/Integration.h,
@@ -217,21 +266,28 @@ Extensions to the [GLM](https://glm.g-truc.net/) library.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
 if `WITH_GLM` is enabled when building Magnum Integration. To use this
-library with CMake, you need to copy [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
-from the `modules/` directory in Magnum Integration sources to the `modules/`
-dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
-already) so it is able to correctly find the GLM library. Then request the
-`Glm` component of the `MagnumIntegration` package and link to the
-`MagnumIntegration::Glm` target:
+library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+and [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
+into your `modules/` directory, request the `Glm` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
 
 @code{.cmake}
-# Path where FindGLM.cmake can be found, adapt as needed
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
-
 find_package(MagnumIntegration REQUIRED Glm)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::Glm)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration repository](https://github.com/mosra/magnum-integration)
+and do the following *before* calling @cmake find_package() @ce. Using GLM
+itself as a CMake subproject isn't tested at the moment, so you need to provide
+it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
+if necessary.
+
+@code{.cmake}
+set(WITH_GLM ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 See also @ref building-integration and @ref cmake-integration. See the
@@ -248,21 +304,27 @@ Conversion of math classes and rendering of Dear ImGui using Magnum.
 
 This library depends on [Dear ImGui](https://github.com/ocornut/imgui) and is
 built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
-library with CMake, you need to copy [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)
-from the `modules/` directory in Magnum Integration sources to the `modules/`
-dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
-already) so it is able to correctly find the ImGui library on all platforms.
-Then request the `ImGui` component of the `MagnumIntegration` package and link
-to the `MagnumIntegration::ImGui` target:
+library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+and [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)
+into your `modules/` directory, request the `ImGui` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::ImGui` target:
 
 @code{.cmake}
-# Path where FindImGui.cmake can be found, adapt as needed
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
-
 find_package(MagnumIntegration REQUIRED ImGui)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::ImGui)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration](https://github.com/mosra/magnum-integration) and
+[imgui](https://github.com/ocornut/imgui) repositories and do the following
+* *before* calling @cmake find_package() @ce:
+
+@code{.cmake}
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
+set(WITH_IMGUI ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 Routines for math type conversion are provided in @ref Magnum/ImGuiIntegration/Integration.h,
@@ -289,21 +351,28 @@ Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 
 This library depends on the [Oculus SDK](https://developer.oculus.com/) and is
 built if `WITH_OVR` is enabled when building Magnum Integration. To use this
-library with CMake, you need to copy [FindOVR.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindOVR.cmake)
-from the `modules/` directory in Magnum Integration sources to the `modules/`
-dir in your project and pointing `CMAKE_MODULE_PATH` to it (if not done
-already) so it is able to correctly find the OVR SDK. Then request the `Ovr`
-component of the `MagnumIntegration` package and link to the
-`MagnumIntegration::Ovr` target:
+library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+and [FindOVR.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindOVR.cmake)
+into your `modules/` directory, request the `Ovr` component of the
+`MagnumIntegration` package and link to the `MagnumIntegration::Ovr` target:
 
 @code{.cmake}
-# Path where FindOVR.cmake can be found, adapt as needed
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
-
 find_package(MagnumIntegration REQUIRED Ovr)
 
 # ...
 target_link_libraries(your-app PRIVATE MagnumIntegration::Ovr)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration repository](https://github.com/mosra/magnum-integration)
+and do the following *before* calling @cmake find_package() @ce. Using LibOVR
+itself as a CMake subproject isn't possible, so you need to provide it as
+a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir if
+necessary.
+
+@code{.cmake}
+set(WITH_OVR ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
 See the @ref examples-ovr example, @ref building-integration and
