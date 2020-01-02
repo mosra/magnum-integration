@@ -539,7 +539,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          *
          * The headset cannot be facing vertically upward or downward but
          * rather must be roughly level otherwise this function will fail with
-         * @ref OvrIntegration::Error::InvalidHeadsetOrientation.
+         * @ref ErrorType::InvalidHeadsetOrientation.
          *
          * For more info, see the notes on each @ref TrackingOrigin enumeration
          * to understand how recenter will vary slightly in its behavior based
