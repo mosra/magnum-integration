@@ -45,7 +45,7 @@ use this library with CMake, you need to request the `Bullet` component of the
 find_package(MagnumIntegration REQUIRED Bullet)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::Bullet)
+target_link_libraries(your-app PRIVATE MagnumIntegration::Bullet)
 @endcode
 
 This library provides routines for explicit conversion between Bullet and
@@ -79,7 +79,7 @@ use this library with CMake, you need to request the `Dart` component of the
 find_package(MagnumIntegration REQUIRED Dart)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::Dart)
+target_link_libraries(your-app PRIVATE MagnumIntegration::Dart)
 @endcode
 
 DART is using Eigen for mathematics and you might want to use the
@@ -119,7 +119,7 @@ library with CMake, you need to request the `Eigen` component of the
 find_package(MagnumIntegration REQUIRED Eigen)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::Eigen)
+target_link_libraries(your-app PRIVATE MagnumIntegration::Eigen)
 @endcode
 
 The integration routines are provided in the
@@ -180,7 +180,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 find_package(MagnumIntegration REQUIRED Glm)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::Glm)
+target_link_libraries(your-app PRIVATE MagnumIntegration::Glm)
 @endcode
 
 The integration routines are provided in @ref Magnum/GlmIntegration/Integration.h,
@@ -231,7 +231,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 find_package(MagnumIntegration REQUIRED Glm)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::Glm)
+target_link_libraries(your-app PRIVATE MagnumIntegration::Glm)
 @endcode
 
 See also @ref building-integration and @ref cmake-integration. See the
@@ -262,7 +262,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 find_package(MagnumIntegration REQUIRED ImGui)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::ImGui)
+target_link_libraries(your-app PRIVATE MagnumIntegration::ImGui)
 @endcode
 
 Routines for math type conversion are provided in @ref Magnum/ImGuiIntegration/Integration.h,
@@ -303,7 +303,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 find_package(MagnumIntegration REQUIRED Ovr)
 
 # ...
-target_link_libraries(your-app MagnumIntegration::Ovr)
+target_link_libraries(your-app PRIVATE MagnumIntegration::Ovr)
 @endcode
 
 See the @ref examples-ovr example, @ref building-integration and
