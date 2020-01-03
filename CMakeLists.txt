@@ -5,6 +5,7 @@
 #             Vladimír Vondruš <mosra@centrum.cz>
 #   Copyright © 2018 Konstantinos Chatzilygeroudis <costashatz@gmail.com>
 #   Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
+#   Copyright © 2019 bowling-allie <allie.smith.epic@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),

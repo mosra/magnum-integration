@@ -50,6 +50,9 @@ namespace Magnum {
 -   @ref ImGuiIntegration::Context::handleKeyPressEvent() now treats
     @ref Platform::Sdl2Application::KeyEvent::Key::NumEnter "Platform::*Application::KeyEvent::Key::NumEnter"
     the same way as @ref Platform::Sdl2Application::KeyEvent::Key::Enter "Key::Enter"
+-   Exposing font atlas texture via @ref ImGuiIntegration::Context::atlasTexture()
+    (see [mosra/magnum-integration#60](https://github.com/mosra/magnum-integration/issues/60)
+    and [mosra/magnum-integration#61](https://github.com/mosra/magnum-integration/pull/61))
 
 @section changelog-integration-2019-10 2019.10
 

@@ -4,6 +4,7 @@
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
 #             Vladimír Vondruš <mosra@centrum.cz>
 #   Copyright © 2013 Jan Dupal <dupal.j@gmail.com>
+#   Copyright © 2019 bowling-allie <allie.smith.epic@gmail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the "Software"),
