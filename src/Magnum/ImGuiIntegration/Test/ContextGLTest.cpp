@@ -127,6 +127,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void constructExistingContext();
     void constructExistingContextAddFont();
     void constructMove();
+    void moveAssignEmpty();
 
     void release();
 
@@ -153,6 +154,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::constructExistingContext,
               &ContextGLTest::constructExistingContextAddFont,
               &ContextGLTest::constructMove,
+              &ContextGLTest::moveAssignEmpty,
 
               &ContextGLTest::release,
 
@@ -289,6 +291,25 @@ void ContextGLTest::constructMove() {
     c.drawFrame();
 
     MAGNUM_VERIFY_NO_GL_ERROR();
+}
+
+void ContextGLTest::moveAssignEmpty() {
+    Context a{NoCreate};
+    Context b{{}};
+
+    /* Move from empty */
+    b = std::move(a);
+    CORRADE_COMPARE(b.context(), nullptr);
+
+    /* Move into empty */
+    b = std::move(a);
+    CORRADE_COMPARE(a.context(), nullptr);
+
+    /* Move empty into empty */
+    Context c{NoCreate};
+    c = std::move(a);
+    CORRADE_COMPARE(a.context(), nullptr);
+    CORRADE_COMPARE(c.context(), nullptr);
 }
 
 void ContextGLTest::release() {

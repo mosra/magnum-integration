@@ -158,10 +158,14 @@ Context& Context::operator=(Context&& other) noexcept {
 
     /* Update the pointers to _texture */
     ImGuiContext* current = ImGui::GetCurrentContext();
-    ImGui::SetCurrentContext(_context);
-    ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
-    ImGui::SetCurrentContext(other._context);
-    ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&other._texture));
+    if(_context) {
+        ImGui::SetCurrentContext(_context);
+        ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
+    }
+    if(other._context) {
+        ImGui::SetCurrentContext(other._context);
+        ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&other._texture));
+    }
     ImGui::SetCurrentContext(current);
 
     return *this;
