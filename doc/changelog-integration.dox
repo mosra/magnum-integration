@@ -52,8 +52,9 @@ namespace Magnum {
     the same way as @ref Platform::Sdl2Application::KeyEvent::Key::Enter "Key::Enter"
 -   Exposing font atlas texture via @ref ImGuiIntegration::Context::atlasTexture()
     (see [mosra/magnum-integration#60](https://github.com/mosra/magnum-integration/issues/60),
-    [mosra/magnum-integration#61](https://github.com/mosra/magnum-integration/pull/61)
-    and [mosra/magnum-integration#62](https://github.com/mosra/magnum-integration/pull/62))
+    [mosra/magnum-integration#61](https://github.com/mosra/magnum-integration/pull/61),
+    [mosra/magnum-integration#62](https://github.com/mosra/magnum-integration/pull/62)
+    and [mosra/magnum-integration#63](https://github.com/mosra/magnum-integration/pull/63))
 
 @section changelog-integration-2019-10 2019.10
 
