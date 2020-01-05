@@ -259,6 +259,7 @@ void ContextGLTest::constructMove() {
     CORRADE_COMPARE(a.context(), nullptr);
     CORRADE_COMPARE(b.context(), context);
 
+    CORRADE_COMPARE(&b.atlasTexture(), ImGui::GetIO().Fonts->TexID);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
 
     Context c{{}};
@@ -267,8 +268,12 @@ void ContextGLTest::constructMove() {
 
     c = std::move(b);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), cContext);
+    CORRADE_COMPARE(&b.atlasTexture(), ImGui::GetIO().Fonts->TexID);
+    ImGui::SetCurrentContext(c.context());
+    CORRADE_COMPARE(&c.atlasTexture(), ImGui::GetIO().Fonts->TexID);
 
     /* This should not blow up */
+    ImGui::SetCurrentContext(cContext);
     c.newFrame();
 
     MAGNUM_VERIFY_NO_GL_ERROR();

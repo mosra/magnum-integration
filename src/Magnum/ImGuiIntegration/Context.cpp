@@ -130,6 +130,11 @@ Context::Context(NoCreateT) noexcept: _context{nullptr}, _shader{NoCreate}, _tex
 
 Context::Context(Context&& other) noexcept: _context{other._context}, _shader{std::move(other._shader)}, _texture{std::move(other._texture)}, _vertexBuffer{std::move(other._vertexBuffer)}, _indexBuffer{std::move(other._indexBuffer)}, _timeline{std::move(other._timeline)}, _mesh{std::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling} {
     other._context = nullptr;
+    /* Update the pointer to _texture */
+    ImGuiContext* current = ImGui::GetCurrentContext();
+    ImGui::SetCurrentContext(_context);
+    ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
+    ImGui::SetCurrentContext(current);
 }
 
 Context::~Context() {
@@ -150,6 +155,15 @@ Context& Context::operator=(Context&& other) noexcept {
     std::swap(_mesh, other._mesh);
     std::swap(_supersamplingRatio, other._supersamplingRatio);
     std::swap(_eventScaling, other._eventScaling);
+
+    /* Update the pointers to _texture */
+    ImGuiContext* current = ImGui::GetCurrentContext();
+    ImGui::SetCurrentContext(_context);
+    ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
+    ImGui::SetCurrentContext(other._context);
+    ImGui::GetIO().Fonts->SetTexID(reinterpret_cast<ImTextureID>(&other._texture));
+    ImGui::SetCurrentContext(current);
+
     return *this;
 }
 
