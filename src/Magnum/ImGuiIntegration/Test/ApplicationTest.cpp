@@ -105,7 +105,7 @@ void ApplicationTest::drawEvent() {
         stopTextInput();
     #endif
 
-    ImGui::ShowTestWindow();
+    ImGui::ShowDemoWindow();
 
     #ifndef CORRADE_TARGET_ANDROID
     /* Update application cursor */
