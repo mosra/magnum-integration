@@ -198,6 +198,7 @@ documentation for more information. See also @ref building-integration and
     information.
 
 */
+
 /** @dir Magnum/GlmIntegration
  * @brief Namespace @ref Magnum::GlmIntegration
  */
@@ -232,6 +233,21 @@ set(WITH_GLM ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
+@section usage Usage
+
+GlmIntegration provides built in conversion between GLM's types and Magnum's own types.
+For example, a @cb{.cpp} glm::vec3 @ce can be easily cast to magnum's equivalent
+@cb{.cpp} Vector3<float> @ce :
+
+@code{.cpp}
+#include <Magnum/GlmIntegration/Integration.h>
+
+glm::vec3 a{1.0f, 2.0f, 3.0f};
+Vector3 b(a);
+
+auto c = Matrix4::rotation(35.0_degf, Vector3(a));
+@endcode
+
 The integration routines are provided in @ref Magnum/GlmIntegration/Integration.h,
 @ref Magnum/GlmIntegration/GtcIntegration.h and
 @ref Magnum/GlmIntegration/GtxIntegration.h headers, see their documentation
@@ -259,6 +275,7 @@ for more information. See also @ref building-integration and
     before including the file. See @ref singles and @ref Math for more
     information.
 */
+
 /** @namespace glm
 @brief GLM namespace.
 
