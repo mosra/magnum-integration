@@ -164,6 +164,21 @@ set(WITH_EIGEN ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
+@section usage Usage
+
+EigenIntegration provides built in conversion between Eigen's types and Magnum's own types.
+For example, an @cb{.cpp} Eigen::Vector3f @ce can be easily cast to Magnum's equivalent
+@cb{.cpp} Vector3 @ce :
+
+@code{.cpp}
+#include <Magnum/EigenIntegration/Integration.h>
+
+Eigen::Vector3f a{1.0f, 2.0f, 3.0f};
+Vector3 b(a);
+
+auto c = Matrix4::rotation(Vector3(a), 35.0_degf);
+@endcode
+
 The integration routines are provided in the
 @ref Magnum/EigenIntegration/Integration.h and
 @ref Magnum/EigenIntegration/GeometryIntegration.h headers, see their
@@ -236,8 +251,8 @@ add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @section usage Usage
 
 GlmIntegration provides built in conversion between GLM's types and Magnum's own types.
-For example, a @cb{.cpp} glm::vec3 @ce can be easily cast to magnum's equivalent
-@cb{.cpp} Vector3<float> @ce :
+For example, a @cb{.cpp} glm::vec3 @ce can be easily cast to Magnum's equivalent
+@cb{.cpp} Vector3 @ce :
 
 @code{.cpp}
 #include <Magnum/GlmIntegration/Integration.h>
