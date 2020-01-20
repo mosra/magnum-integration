@@ -136,6 +136,8 @@ types. See also the @ref examples-dart example, @ref building-integration and
 
 Conversion of math types from and to the Eigen library.
 
+@section EigenIntegration-usage Usage
+
 This library depends on the [Eigen](http://eigen.tuxfamily.org/) library and is
 built if `WITH_EIGEN` is enabled when building Magnum Integration. To use this
 library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
@@ -164,11 +166,21 @@ set(WITH_EIGEN ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
+See also @ref building-integration and @ref cmake-integration for more
+information.
+
+@section EigenIntegration-type-conversion Type conversion
+
+The library provides built-in conversion between Eigen's types and Magnum's own
+types. For example, an @m_class{m-doc-external} [Eigen::Vector3f](https://eigen.tuxfamily.org/dox/group__matrixtypedefs.html#ga5ec9ce2d8adbcd6888f3fbf2e1c095a4)
+can be easily cast to Magnum's equivalent @ref Magnum::Vector3 "Vector3":
+
+@snippet EigenIntegration.cpp namespace
+
 The integration routines are provided in the
 @ref Magnum/EigenIntegration/Integration.h and
 @ref Magnum/EigenIntegration/GeometryIntegration.h headers, see their
-documentation for more information. See also @ref building-integration and
-@ref cmake-integration.
+documentation for more information.
 
 @m_class{m-block m-warning}
 
@@ -206,6 +218,8 @@ documentation for more information. See also @ref building-integration and
 
 Conversion of math types from and to the GLM library, debug output.
 
+@section GlmIntegration-usage Usage
+
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
 if `WITH_GLM` is enabled when building Magnum Integration. To use this
 library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
@@ -231,6 +245,14 @@ if necessary.
 set(WITH_GLM ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
+
+@section GlmIntegration-type-conversion Type conversion
+
+The library provides built-in conversion between GLM's types and Magnum's own
+types. For example, a `glm::vec3` can be easily cast to Magnum's equivalent
+@ref Magnum::Vector3 "Vector3":
+
+@snippet GlmIntegration.cpp namespace
 
 The integration routines are provided in @ref Magnum/GlmIntegration/Integration.h,
 @ref Magnum/GlmIntegration/GtcIntegration.h and

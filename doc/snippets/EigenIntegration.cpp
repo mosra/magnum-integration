@@ -35,6 +35,19 @@ using namespace Magnum::Math::Literals;
 
 int main() {
 {
+/* The include is already above, so doing it again here should be harmless */
+/* [namespace] */
+#include <Magnum/EigenIntegration/Integration.h>
+
+Eigen::Vector3f a{1.0f, 2.0f, 3.0f};
+Vector3 b(a);
+
+auto c = Matrix4::rotation(35.0_degf, Vector3(a));
+/* [namespace] */
+static_cast<void>(c);
+}
+
+{
 /* [Integration] */
 Eigen::Vector3f a{1.0f, 2.0f, 3.0f};
 Vector3 b(a);
