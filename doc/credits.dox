@@ -36,6 +36,8 @@ namespace Magnum {
     @ref ImGuiIntegration library
 -   **Guillaume Jacquemin** ([\@williamjcm](https://github.com/williamjcm)) ---
     improvements of the @ref ImGuiIntegration library, MSYS2 packages
+-   **Jackson Campolattaro** ([\@JacksonCampolattaro](https://github.com/JacksonCampolattaro))
+    --- documentation improvements
 -   **Jan Dupal** ([\@JanDupal](https://github.com/JanDupal)) --- the
     @ref BulletIntegration library
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
