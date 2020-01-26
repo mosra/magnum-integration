@@ -351,7 +351,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         /* Generate smooth normals */
-        MeshTools::generateSmoothNormalsInto<UnsignedInt>(indices, positions[0], normals[0]);
+        MeshTools::generateSmoothNormalsInto(Containers::StridedArrayView1D<const UnsignedInt>{indices}, positions[0], normals[0]);
 
         /* Create the mesh data */
         Trade::MeshData3D meshData{MeshPrimitive::Triangles, indices, positions, normals, std::vector<std::vector<Vector2>>(), std::vector<std::vector<Color4>>()};
