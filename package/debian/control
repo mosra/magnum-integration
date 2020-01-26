@@ -17,5 +17,5 @@ Description: Integration libraries for the Magnum C++11/C++14 graphics engine
 Package: magnum-integration
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, magnum, libbulletcollision2.83.6|libbullet2.87
+Depends: ${shlibs:Depends}, ${misc:Depends}, magnum, libbulletcollision2.83.6|libbullet2.87|libbullet2.88
 Description: Integration libraries for the Magnum C++11/C++14 graphics engine
