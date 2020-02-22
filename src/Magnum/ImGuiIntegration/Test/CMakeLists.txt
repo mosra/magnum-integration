@@ -30,6 +30,7 @@ corrade_add_test(ImGuiIntegrationTest IntegrationTest.cpp
     LIBRARIES MagnumImGuiIntegration)
 
 set_target_properties(
+    ImGuiContextTest
     ImGuiIntegrationTest
     PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 
