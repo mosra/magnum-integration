@@ -50,7 +50,7 @@ you want to have more control. Cross-compiling is very similar to
 -   @ref building-integration-packages-gentoo
 -   @ref building-integration-packages-brew
 
-@subsection building-integration-packages-vcpkg Vcpkg packages on Windows
+@subsection building-integration-packages-vcpkg Vcpkg package
 
 Magnum Integration libraries are available as a [Vcpkg](https://github.com/Microsoft/vcpkg)
 package. See @ref building-packages-vcpkg "the Magnum Vcpkg documentation" for
