@@ -62,7 +62,7 @@ namespace Magnum {
 
 -   Various minor fixes (see [mosra/magnum-integration#68](https://github.com/mosra/magnum-integration/pull/68))
 
-@subsection changelog-latest-documentation Documentation
+@subsection changelog-integration-latest-documentation Documentation
 
 -   Various fixes and clarifications (see
     [mosra/magnum-integration#66](https://github.com/mosra/magnum-integration/pull/66))
