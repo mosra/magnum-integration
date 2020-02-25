@@ -139,12 +139,11 @@ void DartIntegrationTest::pendulum() {
     Eigen::Vector3d T = trans.translation();
 
     /* Convert it to axis-angle representation */
-    Math::Vector3<Float> t(T[0], T[1], T[2]);
-    Math::Vector3<Float> u(axis(0), axis(1), axis(2));
+    Vector3 t(T[0], T[1], T[2]);
+    Vector3 u(axis(0), axis(1), axis(2));
     Rad theta(R.angle());
 
-    Math::Matrix4<Float> transformation;
-    transformation = Math::Matrix4<Float>::translation(t) * Math::Matrix4<Float>::rotation(theta, u);
+    Matrix4 transformation = Matrix4::translation(t)*Matrix4::rotation(theta, u);
 
     CORRADE_VERIFY(objects.size() == 15);
     CORRADE_COMPARE(objTest.object().absoluteTransformationMatrix(), transformation);
