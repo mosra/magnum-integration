@@ -58,6 +58,10 @@ namespace Magnum {
 -   Avoid using obsolete ImGui APIs in tests (see
     [mosra/magnum-integration#65](https://github.com/mosra/magnum-integration/pull/65))
 
+@subsection changelog-integration-latest-buildsystem Build system
+
+-   Various minor fixes (see [mosra/magnum-integration#68](https://github.com/mosra/magnum-integration/pull/68))
+
 @subsection changelog-latest-documentation Documentation
 
 -   Various fixes and clarifications (see
