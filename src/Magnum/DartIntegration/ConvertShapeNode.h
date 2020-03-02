@@ -62,7 +62,7 @@ struct MAGNUM_DARTINTEGRATION_EXPORT ShapeData {
      *
      * Used internally by @ref convertShapeNode().
      */
-    explicit ShapeData(Containers::Array<Trade::MeshData3D> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling);
+    explicit ShapeData(Containers::Array<Trade::MeshData> meshes, Containers::Array<Trade::PhongMaterialData> materials, Containers::Array<Containers::Optional<Trade::ImageData2D>> images, Containers::Array<Containers::Optional<Trade::TextureData>> textures, const Vector3& scaling);
 
     /** @brief Copying is not allowed */
     ShapeData(const ShapeData&) = delete;
@@ -85,7 +85,7 @@ struct MAGNUM_DARTINTEGRATION_EXPORT ShapeData {
      * optionally texture data in @ref images and @ref textures at the same
      * index.
      */
-    Containers::Array<Trade::MeshData3D> meshes;
+    Containers::Array<Trade::MeshData> meshes;
 
     /** @brief Material data corresponding to meshes */
     Containers::Array<Trade::PhongMaterialData> materials;
