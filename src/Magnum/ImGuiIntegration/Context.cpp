@@ -320,9 +320,6 @@ void Context::drawFrame() {
         for(std::int_fast32_t c = 0; c < cmdList->CmdBuffer.Size; ++c) {
             const ImDrawCmd* pcmd = &cmdList->CmdBuffer[c];
 
-            auto userTexture = static_cast<GL::Texture2D*>(pcmd->TextureId);
-            _shader.bindTexture(*userTexture);
-
             GL::Renderer::setScissor(Range2Di{Range2D{
                 {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},
                 {pcmd->ClipRect.z, fbSize.y() - pcmd->ClipRect.y}}
@@ -336,7 +333,9 @@ void Context::drawFrame() {
 
             indexBufferOffset += pcmd->ElemCount;
 
-            _mesh.draw(_shader);
+            _shader
+                .bindTexture(*static_cast<GL::Texture2D*>(pcmd->TextureId))
+                .draw(_mesh);
         }
     }
 

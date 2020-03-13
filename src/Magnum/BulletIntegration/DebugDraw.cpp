@@ -124,9 +124,10 @@ void DebugDraw::flushLines() {
     _buffer.setData(_bufferData, GL::BufferUsage::DynamicDraw);
 
     /* Update shader and draw */
-    _shader.setTransformationProjectionMatrix(_transformationProjectionMatrix);
-    _mesh.setCount(_bufferData.size()/2)
-         .draw(_shader);
+    _mesh.setCount(_bufferData.size()/2);
+    _shader
+        .setTransformationProjectionMatrix(_transformationProjectionMatrix)
+        .draw(_mesh);
 
     /* Clear buffer to receive new data */
     arrayResize(_bufferData, 0);
