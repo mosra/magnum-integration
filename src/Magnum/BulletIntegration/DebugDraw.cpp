@@ -26,6 +26,7 @@
 
 #include "DebugDraw.h"
 
+#include <Corrade/Containers/GrowableArray.h>
 #include <Magnum/Math/Color.h>
 
 namespace Magnum { namespace BulletIntegration {
@@ -64,7 +65,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
 
 DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{GL::MeshPrimitive::Lines} {
     _mesh.addVertexBuffer(_buffer, 0, Shaders::VertexColor3D::Position{}, Shaders::VertexColor3D::Color3{});
-    _bufferData.reserve(initialBufferCapacity*4);
+    arrayReserve(_bufferData, initialBufferCapacity*4);
 }
 
 DebugDraw::DebugDraw(NoCreateT) noexcept: _shader{NoCreate}, _buffer{NoCreate}, _mesh{NoCreate} {}
@@ -88,10 +89,9 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 }
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) {
-    _bufferData.emplace_back(from);
-    _bufferData.push_back(Color3(fromColor));
-    _bufferData.emplace_back(to);
-    _bufferData.push_back(Color3(toColor));
+    arrayAppend(_bufferData, {
+        Vector3{from}, Vector3{fromColor},
+        Vector3{to}, Vector3{toColor}});
 
     /* The flushLines() API was added at some point between 2.83 and 2.83.4,
        but that's below the resolution of the constant below. Moreover, 284
@@ -120,17 +120,16 @@ void DebugDraw::draw3dText(const btVector3&, const char*) {
 }
 
 void DebugDraw::flushLines() {
-   /* Update buffer with new data */
-   _buffer.setData(Containers::ArrayView<Vector3>(_bufferData.data(), _bufferData.size()),
-                   GL::BufferUsage::DynamicDraw);
+    /* Update buffer with new data */
+    _buffer.setData(_bufferData, GL::BufferUsage::DynamicDraw);
 
-   /* Update shader and draw */
-   _shader.setTransformationProjectionMatrix(_transformationProjectionMatrix);
-   _mesh.setCount(_bufferData.size()/2)
-        .draw(_shader);
+    /* Update shader and draw */
+    _shader.setTransformationProjectionMatrix(_transformationProjectionMatrix);
+    _mesh.setCount(_bufferData.size()/2)
+         .draw(_shader);
 
-   /* Clear buffer to receive new data */
-   _bufferData.clear();
+    /* Clear buffer to receive new data */
+    arrayResize(_bufferData, 0);
 }
 
 }}

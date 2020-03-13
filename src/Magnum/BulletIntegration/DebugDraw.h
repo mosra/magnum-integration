@@ -30,8 +30,7 @@
  * @brief Implementation of `btIDebugDraw` for physics visualization in Bullet
  */
 
-#include <vector>
-#include <Corrade/Containers/ArrayView.h>
+#include <Corrade/Containers/Array.h>
 #include <Corrade/Utility/Macros.h>
 #include <LinearMath/btIDebugDraw.h>
 #include <Magnum/GL/Buffer.h>
@@ -248,7 +247,7 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
 
         GL::Buffer _buffer;
         GL::Mesh _mesh;
-        std::vector<Vector3> _bufferData;
+        Containers::Array<Vector3> _bufferData;
 };
 
 CORRADE_ENUMSET_OPERATORS(DebugDraw::Modes)
