@@ -62,6 +62,13 @@ namespace Magnum {
 
 -   Various minor fixes (see [mosra/magnum-integration#68](https://github.com/mosra/magnum-integration/pull/68))
 
+@subsection changelog-integration-latest-bugfixes Bug fixes
+
+-   Due to a SDL2 bug on Windows that halts all event processing when dragging
+    a window across the screen, ImGui v1.68 and newer would receive zero delta
+    time and assert. @ref ImGuiIntegration::Context now detects that and passes
+    a non-zero delta time in that case. See also [mosra/magnum-integration#57](https://github.com/mosra/magnum-integration/issues/57).
+
 @subsection changelog-integration-latest-documentation Documentation
 
 -   Various fixes and clarifications (see

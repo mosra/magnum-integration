@@ -32,6 +32,8 @@ namespace Magnum {
 -   **Allie** ([\@bowling-allie](https://github.com/bowling-allie)) ---
     making @ref BulletIntegration work with Bullet from Emscripten Ports,
     improvements to @ref ImGuiIntegration
+-   **Andrew Huang** ([\@andyroiiid](https://github.com/andyroiiid)) ---
+    @ref ImGuiIntegration fixes
 -   **[\@denesik](https://github.com/denesik)** --- base of the
     @ref ImGuiIntegration library
 -   **Guillaume Jacquemin** ([\@williamjcm](https://github.com/williamjcm)) ---
