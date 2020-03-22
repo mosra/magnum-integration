@@ -82,19 +82,28 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
     ShapeData shapeData{{}, {}, {}, {}, Vector3{1.0f}};
 
-    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
+    Color4 diffuseColor = 0xffffffff_rgbaf;
+    Color4 specularColor = 0xffffffff_rgbaf;
     if(convertTypes & ConvertShapeType::Material) {
         /* Get material information -- we ignore the alpha value. Note that
            this material is not necessarily used for the MeshShapeNodes */
         Eigen::Vector4d col = shapeNode.getVisualAspect()->getRGBA();
 
         /* Get diffuse color from Dart ShapeNode */
-        nodeMaterial.diffuseColor() = Color4(col(0), col(1), col(2), col(3));
+        diffuseColor = Color4(col(0), col(1), col(2), col(3));
 
         /* Remove specular color from soft bodies */
         if(shape->getType() == dart::dynamics::SoftMeshShape::getStaticType())
-            nodeMaterial.specularColor() = Color4{0.f, 0.f, 0.f, 0.f};
+            specularColor = 0x00000000_rgbaf;
+    }
 
+    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{},
+        0x000000ff_rgbaf, {},
+        diffuseColor, {},
+        specularColor, {}, {}, Matrix3{},
+        Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
+
+    if(convertTypes & ConvertShapeType::Material) {
         if(shape->getType() != dart::dynamics::MeshShape::getStaticType()) {
             shapeData.materials = Containers::Array<Trade::PhongMaterialData>(Containers::NoInit, 1);
             new(&shapeData.materials[0]) Trade::PhongMaterialData{std::move(nodeMaterial)};
@@ -263,11 +272,14 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                                colors as Color4 */
                             CORRADE_INTERNAL_ASSERT(meshData->attributeFormat(Trade::MeshAttribute::Color) == VertexFormat::Vector4);
                             Color4 meshColor = meshData->attribute<Color4>(Trade::MeshAttribute::Color)[colorIndex];
-                            materials[j] = Trade::PhongMaterialData{{}, Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
-                            materials[j]->diffuseColor() = Color3(meshColor[0], meshColor[1], meshColor[2]);
-                            /* default colors for ambient (black) and specular (white) */
-                            materials[j]->ambientColor() = Vector3{0.f, 0.f, 0.f};
-                            materials[j]->specularColor() = Vector3{1.f, 1.f, 1.f};
+                            /* default colors for ambient (black) and specular
+                               (white) */
+                            materials[j] = Trade::PhongMaterialData{
+                                Trade::PhongMaterialData::Flags{},
+                                0x000000ff_rgbaf, {},
+                                meshColor, {},
+                                0xffffffff_rgbaf, {}, {}, Matrix3{},
+                                Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
 
                         /* Fallback to SHAPE_COLOR if MeshData has no colors */
                         } else {
