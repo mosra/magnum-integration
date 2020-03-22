@@ -272,6 +272,17 @@ void Context::newFrame() {
 
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = _timeline.previousFrameDuration();
+    /* Since v1.68 and https://github.com/ocornut/imgui/commit/3c07ec6a6126fb6b98523a9685d1f0f78ca3c40c,
+       ImGui disallows zero delta time to "prevent subtle issues".
+       Unfortunately that *does* cause subtle issues, especially in combination
+       with SDL2 on Windows -- when the window is being dragged across the
+       screen, SDL temporarily halts all event processing and then fires all
+       pending events at once, causing zero delta time. A bugreport for this
+       is opened since 2016 -- https://bugzilla.libsdl.org/show_bug.cgi?id=2077
+       but there was nothing done last time I checked (March 2020). More info
+       also at https://github.com/mosra/magnum-integration/issues/57 */
+    if(ImGui::GetFrameCount() != 0)
+        io.DeltaTime = Math::max(io.DeltaTime, std::numeric_limits<float>::epsilon());
 
     /* Fire delayed mouse events. This sets MouseDown both in case the press
        happened in this frame but also if both press and release happened at
