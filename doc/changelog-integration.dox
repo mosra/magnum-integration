@@ -61,6 +61,8 @@ namespace Magnum {
 @subsection changelog-integration-latest-buildsystem Build system
 
 -   Various minor fixes (see [mosra/magnum-integration#68](https://github.com/mosra/magnum-integration/pull/68))
+-   The library again compiles and tests cleanly with @ref CORRADE_NO_ASSERT
+    enabled, and this setup is verified on the CI to avoid further regressions
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
