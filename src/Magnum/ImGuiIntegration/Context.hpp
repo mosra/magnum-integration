@@ -268,7 +268,7 @@ template<class Application> void Context::updateApplicationCursor(Application& a
             return;
     }
 
-    CORRADE_ASSERT_UNREACHABLE(); /* LCOV_EXCL_LINE */
+    CORRADE_INTERNAL_ASSERT_UNREACHABLE(); /* LCOV_EXCL_LINE */
 }
 
 }}
