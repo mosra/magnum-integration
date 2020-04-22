@@ -116,7 +116,7 @@ Layer& Compositor::addLayer(const LayerType type) {
         case LayerType::Quad:
             return addLayerQuad();
     }
-    CORRADE_ASSERT_UNREACHABLE(); /* LCOV_EXCL_LINE */
+    CORRADE_INTERNAL_ASSERT_UNREACHABLE(); /* LCOV_EXCL_LINE */
 }
 
 Layer& Compositor::addLayer(std::unique_ptr<Layer> layer) {
