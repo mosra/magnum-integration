@@ -467,7 +467,7 @@ void IntegrationTest::debugBVec() {
 
 void IntegrationTest::debugVec() {
     std::ostringstream out;
-    Debug{&out} << glm::lowp_ivec3{1, 42, -3};
+    Debug{&out} << glm::ivec3{1, 42, -3};
     Debug{&out} << glm::highp_vec4{0.7f, -1.5f, 3.4f, 0.1f};
     /* What the hell, how is this verbosity ever useful?! */
     #if GLM_VERSION < 96 /* ugh!! */
