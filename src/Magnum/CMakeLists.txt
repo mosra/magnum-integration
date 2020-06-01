@@ -24,6 +24,31 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# Generate version header. If Git is found and this is a Git working copy,
+# extract values from there, otherwise use just MAGNUMINTEGRATION_VERSION_YEAR
+# / MONTH that are set in project root CMakeLists.
+find_package(Git)
+if(Git_FOUND)
+    # Match only tags starting with `v`, always use the long format so we have
+    # a commit hash also on a tagged version
+    execute_process(COMMAND ${GIT_EXECUTABLE} describe --match "v*" --long
+        OUTPUT_VARIABLE MAGNUMINTEGRATION_VERSION_STRING
+        RESULT_VARIABLE _MAGNUMINTEGRATION_VERSION_RESULT
+        ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(MAGNUMINTEGRATION_VERSION_STRING MATCHES "^v([0-9][0-9][0-9][0-9])\\.0?([0-9][0-9])-([0-9]+)-g([a-f0-9]+)$")
+        set(MAGNUMINTEGRATION_VERSION_YEAR ${CMAKE_MATCH_1})
+        set(MAGNUMINTEGRATION_VERSION_MONTH ${CMAKE_MATCH_2})
+        set(MAGNUMINTEGRATION_VERSION_COMMIT ${CMAKE_MATCH_3})
+        set(MAGNUMINTEGRATION_VERSION_HASH ${CMAKE_MATCH_4})
+    elseif(_MAGNUMINTEGRATION_VERSION_RESULT EQUAL 0)
+        message(WARNING "Can't match Git version from ${MAGNUMINTEGRATION_VERSION_STRING}")
+    endif()
+endif()
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/versionIntegration.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/versionIntegration.h)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/versionIntegration.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR})
+
 if(WITH_BULLET)
     add_subdirectory(BulletIntegration)
 endif()
@@ -46,4 +71,8 @@ endif()
 
 if(WITH_OVR)
     add_subdirectory(OvrIntegration)
+endif()
+
+if(BUILD_TESTS)
+    add_subdirectory(Test)
 endif()
