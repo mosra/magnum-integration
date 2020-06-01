@@ -64,7 +64,7 @@ set_target_properties(MagnumImGuiIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/ImGuiIntegration")
 if(NOT BUILD_STATIC)
-    set_target_properties(MagnumImGuiIntegration PROPERTIES VERSION ${MAGNUM_LIBRARY_VERSION} SOVERSION ${MAGNUM_LIBRARY_SOVERSION})
+    set_target_properties(MagnumImGuiIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
 elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumImGuiIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()

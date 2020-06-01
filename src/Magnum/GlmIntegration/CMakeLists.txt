@@ -54,7 +54,7 @@ set_target_properties(MagnumGlmIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/GlmIntegration")
 if(NOT BUILD_STATIC)
-    set_target_properties(MagnumGlmIntegration PROPERTIES VERSION ${MAGNUM_LIBRARY_VERSION} SOVERSION ${MAGNUM_LIBRARY_SOVERSION})
+    set_target_properties(MagnumGlmIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
 elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()

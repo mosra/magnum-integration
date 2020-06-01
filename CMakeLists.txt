@@ -99,8 +99,8 @@ endif()
 set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR share/cmake/MagnumIntegration)
 
 # Library version
-set(MAGNUM_LIBRARY_VERSION 2.3)
-set(MAGNUM_LIBRARY_SOVERSION 2)
+set(MAGNUMINTEGRATION_LIBRARY_VERSION 2.3)
+set(MAGNUMINTEGRATION_LIBRARY_SOVERSION 2)
 
 # A single output location. After a decade of saying NO THIS IS A NON-SOLUTION
 # TO A NON-PROBLEM I reconsidered my views and enabled this, because:
