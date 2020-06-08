@@ -26,7 +26,7 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-find_package(Magnum REQUIRED GL)
+find_package(Magnum REQUIRED GL Shaders)
 find_package(ImGui REQUIRED Sources)
 
 if(BUILD_STATIC)
@@ -36,14 +36,8 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
 
-corrade_add_resource(MagnumImGuiIntegrationShaders_RCS resources.conf)
-set_target_properties(MagnumImGuiIntegrationShaders_RCS-dependencies PROPERTIES
-    FOLDER "Magnum/ImGuiIntegration")
-
 set(MagnumImGuiIntegration_SRCS
-    Context.cpp
-
-    ${MagnumImGuiIntegrationShaders_RCS})
+    Context.cpp)
 
 set(MagnumImGuiIntegration_HEADERS
     Context.h
@@ -69,8 +63,12 @@ elseif(BUILD_STATIC_PIC)
     set_target_properties(MagnumImGuiIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumImGuiIntegration
-    PUBLIC Magnum::GL ImGui::ImGui
-    PRIVATE ImGui::Sources)
+    PUBLIC
+        Magnum::GL
+        Magnum::Shaders
+        ImGui::ImGui
+    PRIVATE
+        ImGui::Sources)
 
 if(BUILD_TESTS)
     add_subdirectory(Test)

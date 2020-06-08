@@ -58,7 +58,7 @@ cmake .. ^
     -DWITH_TEXTURETOOLS=OFF ^
     -DWITH_OPENGLTESTER=ON ^
     -DWITH_WINDOWLESSWGLAPPLICATION=ON ^
-    -DWITH_SDL2APPLICATION=%TARGET_GLES3% ^
+    -DWITH_SDL2APPLICATION=ON ^
     -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -87,7 +87,7 @@ cmake .. ^
     -DWITH_DART=OFF ^
     -DWITH_EIGEN=ON ^
     -DWITH_GLM=ON ^
-    -DWITH_IMGUI=%TARGET_GLES3% ^
+    -DWITH_IMGUI=ON ^
     -DWITH_OVR=OFF ^
     -DBUILD_TESTS=ON ^
     -DBUILD_GL_TESTS=ON ^

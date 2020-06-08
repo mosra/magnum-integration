@@ -43,37 +43,17 @@
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/TextureFormat.h>
 #include <Magnum/GL/Version.h>
-#include <Magnum/Math/Matrix4.h>
+#include <Magnum/Math/Matrix3.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
-#ifdef MAGNUM_IMGUIINTEGRATION_BUILD_STATIC
-static void importShaderResources() {
-    CORRADE_RESOURCE_INITIALIZE(MagnumImGuiIntegrationShaders_RCS)
-}
-#endif
-
 namespace Magnum { namespace ImGuiIntegration {
-
-namespace Implementation {
-    ImGuiShader::ImGuiShader(NoCreateT): GL::AbstractShaderProgram{NoCreate} {}
-
-    ImGuiShader& ImGuiShader::setProjectionMatrix(const Matrix4& matrix) {
-        setUniform(_projMatrixUniform, matrix);
-        return *this;
-    }
-
-    ImGuiShader& ImGuiShader::bindTexture(GL::Texture2D& texture) {
-        texture.bind(TextureLayer);
-        return *this;
-    }
-}
 
 Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{*ImGui::CreateContext(), size, windowSize, framebufferSize} {}
 
 Context::Context(const Vector2i& size): Context{Vector2{size}, size, size} {}
 
-Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): _context{&context} {
+Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): _context{&context}, _shader{Shaders::Flat2D::Flag::Textured|Shaders::Flat2D::Flag::VertexColor} {
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
@@ -114,12 +94,12 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     relayout(size, windowSize, framebufferSize);
 
     _mesh.setPrimitive(GL::MeshPrimitive::Triangles);
-    _mesh.addVertexBuffer(
-        _vertexBuffer, 0, Implementation::ImGuiShader::Position{},
-        Implementation::ImGuiShader::TextureCoordinates{},
-        Implementation::ImGuiShader::Color(Implementation::ImGuiShader::Color::Components::Four,
-            Implementation::ImGuiShader::Color::DataType::UnsignedByte,
-            Implementation::ImGuiShader::Color::DataOption::Normalized));
+    _mesh.addVertexBuffer(_vertexBuffer, 0,
+        Shaders::Flat2D::Position{},
+        Shaders::Flat2D::TextureCoordinates{},
+        Shaders::Flat2D::Color4{
+            Shaders::Flat2D::Color4::DataType::UnsignedByte,
+            Shaders::Flat2D::Color4::DataOption::Normalized});
 
     _timeline.start();
 }
@@ -311,11 +291,11 @@ void Context::drawFrame() {
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
     drawData->ScaleClipRects(io.DisplayFramebufferScale);
 
-    const Matrix4 projection =
-        Matrix4::translation({-1.0f, 1.0f, 0.0f})
-        *Matrix4::scaling({2.0f/Vector2(io.DisplaySize), 1.0f})
-        *Matrix4::scaling({1.0f, -1.0f, -1.0f});
-    _shader.setProjectionMatrix(projection);
+    const Matrix3 projection =
+        Matrix3::translation({-1.0f, 1.0f})*
+        Matrix3::scaling({2.0f/Vector2(io.DisplaySize)})*
+        Matrix3::scaling({1.0f, -1.0f});
+    _shader.setTransformationProjectionMatrix(projection);
 
     for(std::int_fast32_t n = 0; n < drawData->CmdListsCount; ++n) {
         const ImDrawList* cmdList = drawData->CmdLists[n];
@@ -355,58 +335,6 @@ void Context::drawFrame() {
        the framebuffer clear would only happen on whatever the last scissor
        was. (And I hope the floating-point precision is enough here.) */
     GL::Renderer::setScissor(Range2Di{Range2D{{}, fbSize}.scaled(_supersamplingRatio)});
-}
-
-namespace Implementation {
-
-ImGuiShader::ImGuiShader() {
-    #ifdef MAGNUM_IMGUIINTEGRATION_BUILD_STATIC
-    /* Import resources on static build, if not already */
-    if(!Utility::Resource::hasGroup("MagnumImGuiIntegrationShaders"))
-        importShaderResources();
-    #endif
-    Utility::Resource rs("MagnumImGuiIntegrationShaders");
-
-    #ifndef MAGNUM_TARGET_GLES
-    const GL::Version version = GL::Context::current().supportedVersion({GL::Version::GL330, GL::Version::GL310, GL::Version::GL300, GL::Version::GL210});
-    #else
-    const GL::Version version = GL::Context::current().supportedVersion({GL::Version::GLES300, GL::Version::GLES200});
-    #endif
-
-    GL::Shader vert{version, GL::Shader::Type::Vertex};
-    GL::Shader frag{version, GL::Shader::Type::Fragment};
-
-    #ifndef MAGNUM_TARGET_GLES
-    /* Enable explicit attribute locations in shader if they are supported,
-       otherwise bind locations directly */
-    if(GL::Context::current().isExtensionSupported<GL::Extensions::ARB::explicit_attrib_location>(version)) {
-        vert.addSource({"#define EXPLICIT_ATTRIB_LOCATION\n"});
-    } else {
-        bindAttributeLocation(Position::Location, "position");
-        bindAttributeLocation(TextureCoordinates::Location, "textureCoords");
-        bindAttributeLocation(Color::Location, "color");
-    }
-
-    /* Enable explicit uniform locations if they are supported */
-    if(GL::Context::current().isExtensionSupported<GL::Extensions::ARB::explicit_uniform_location>(version)) {
-        vert.addSource({"#define EXPLICIT_UNIFORM_LOCATION\n"});
-    }
-    #endif
-
-    vert.addSource(rs.get("ImGui.vert"));
-    frag.addSource(rs.get("ImGui.frag"));
-
-    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert, frag}));
-
-    attachShaders({vert, frag});
-
-    CORRADE_INTERNAL_ASSERT_OUTPUT(link());
-
-    _projMatrixUniform = uniformLocation("projectionMatrix");
-
-    setUniform(uniformLocation("colorTexture"), TextureLayer);
-}
-
 }
 
 }}

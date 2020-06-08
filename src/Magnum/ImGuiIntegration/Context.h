@@ -38,6 +38,7 @@
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
+#include <Magnum/Shaders/Flat.h>
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 
@@ -46,30 +47,6 @@ struct ImGuiContext;
 #endif
 
 namespace Magnum { namespace ImGuiIntegration {
-
-namespace Implementation {
-
-class ImGuiShader: public GL::AbstractShaderProgram {
-    public:
-        typedef GL::Attribute<0, Vector2> Position;
-        typedef GL::Attribute<1, Vector2> TextureCoordinates;
-        typedef GL::Attribute<2, Vector4> Color;
-
-        explicit ImGuiShader();
-        explicit ImGuiShader(NoCreateT);
-
-        ImGuiShader& setProjectionMatrix(const Matrix4& matrix);
-        ImGuiShader& bindTexture(GL::Texture2D& texture);
-
-    private:
-        enum: Int {
-            TextureLayer = 0
-        };
-
-        Int _projMatrixUniform;
-};
-
-}
 
 /**
 @brief Dear ImGui context
@@ -535,7 +512,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
     private:
         ImGuiContext* _context;
-        Implementation::ImGuiShader _shader;
+        Shaders::Flat2D _shader;
         GL::Texture2D _texture{NoCreate};
         GL::Buffer _vertexBuffer{GL::Buffer::TargetHint::Array};
         GL::Buffer _indexBuffer{GL::Buffer::TargetHint::ElementArray};
