@@ -33,6 +33,11 @@
 #include "Magnum/ImGuiIntegration/Context.hpp"
 #include "Magnum/ImGuiIntegration/Widgets.h"
 
+#ifdef MAGNUM_TARGET_GLES2
+#include <Magnum/GL/PixelFormat.h>
+#include <Magnum/ImageView.h>
+#endif
+
 namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
 struct WidgetsGLTest: GL::OpenGLTester {
@@ -64,7 +69,12 @@ void WidgetsGLTest::image() {
     c.drawFrame();
 
     GL::Texture2D texture;
+    #ifndef MAGNUM_TARGET_GLES2
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
+    #else
+    texture.setImage(0, GL::TextureFormat::RGB,
+        ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}, nullptr});
+    #endif
 
     Corrade::Utility::System::sleep(1);
 
@@ -86,7 +96,12 @@ void WidgetsGLTest::imageButton() {
     c.drawFrame();
 
     GL::Texture2D texture;
+    #ifndef MAGNUM_TARGET_GLES2
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
+    #else
+    texture.setImage(0, GL::TextureFormat::RGB,
+        ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}, nullptr});
+    #endif
 
     Corrade::Utility::System::sleep(1);
 

@@ -222,8 +222,13 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
         _texture = GL::Texture2D{};
         _texture.setMagnificationFilter(GL::SamplerFilter::Linear)
             .setMinificationFilter(GL::SamplerFilter::Linear)
+            #ifndef MAGNUM_TARGET_GLES2
             .setStorage(1, GL::TextureFormat::RGBA8, image.size())
-            .setSubImage(0, {}, image);
+            .setSubImage(0, {}, image)
+            #else
+            .setImage(0, GL::TextureFormat::RGBA, image)
+            #endif
+            ;
 
         /* Clear texture to save RAM, we have it on the GPU now */
         io.Fonts->ClearTexData();
