@@ -76,7 +76,7 @@ void WidgetsGLTest::image() {
         ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}, nullptr});
     #endif
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     c.newFrame();
 
@@ -103,7 +103,7 @@ void WidgetsGLTest::imageButton() {
         ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}, nullptr});
     #endif
 
-    Corrade::Utility::System::sleep(1);
+    Utility::System::sleep(1);
 
     c.newFrame();
 
