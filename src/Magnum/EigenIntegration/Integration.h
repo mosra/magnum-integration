@@ -142,7 +142,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<c
     #endif
 >>> {
     static Vector<size, T> from(const Eigen::Ref<const Eigen::Array<T, size, 1>>& other) {
-        Vector<size, T> out{NoInit};
+        Vector<size, T> out{Magnum::NoInit};
         for(std::size_t i = 0; i != size; ++i)
             out[i] = other(i, 0);
         return out;
@@ -191,7 +191,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<c
     #endif
 >>> {
     static Vector<size, T> from(const Eigen::Ref<const Eigen::Matrix<T, size, 1>>& other) {
-        Vector<size, T> out{NoInit};
+        Vector<size, T> out{Magnum::NoInit};
         for(std::size_t i = 0; i != size; ++i)
             out[i] = other(i, 0);
         return out;
@@ -240,7 +240,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     #endif
 >>> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Ref<const Eigen::Array<T, rows, cols>>& other) {
-        RectangularMatrix<cols, rows, T> out{NoInit};
+        RectangularMatrix<cols, rows, T> out{Magnum::NoInit};
         for(std::size_t col = 0; col != cols; ++col)
             for(std::size_t row = 0; row != rows; ++row)
                 out[col][row] = other(row, col);
@@ -291,7 +291,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     #endif
 >>> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Ref<const Eigen::Matrix<T, rows, cols>>& other) {
-        RectangularMatrix<cols, rows, T> out{NoInit};
+        RectangularMatrix<cols, rows, T> out{Magnum::NoInit};
         for(std::size_t col = 0; col != cols; ++col)
             for(std::size_t row = 0; row != rows; ++row)
                 out[col][row] = other(row, col);
