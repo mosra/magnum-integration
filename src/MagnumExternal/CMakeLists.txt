@@ -23,24 +23,19 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
-# On MSVC remove /W3, as we are replacing it with /W4. Could be removed as of
-# 3.15 with this: https://cmake.org/cmake/help/latest/policy/CMP0092.html
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
-    string(REPLACE "/W3" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+# To help Homebrew and other packages, ImGui sources can be cloned to
+# src/MagnumExternal/ImGui and we will use those without any extra effort
+# from the outside. The *.cpp files from there will get compiled into the
+# ImGuiIntegration library and the *.h files will get installed here. The
+# FindImGui.cmake module then will look into include/MagnumExternal/ImGui as
+# a fallback if IMGUI_DIR is not set and no CMake config file is found.
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ImGui)
+    install(FILES
+        ImGui/imgui.h
+        ImGui/imgui_internal.h
+        ImGui/imconfig.h
+        ImGui/imstb_textedit.h
+        ImGui/imstb_rectpack.h
+        ImGui/imstb_truetype.h
+        DESTINATION ${MAGNUM_EXTERNAL_INCLUDE_INSTALL_DIR}/ImGui)
 endif()
-
-set_directory_properties(PROPERTIES
-    CORRADE_CXX_STANDARD 11
-    CORRADE_USE_PEDANTIC_FLAGS ON)
-
-# On Windows enable UNICODE/_UNICODE macros to avoid accidentally passing UTF-8
-# values to ANSI functions
-if(CORRADE_TARGET_WINDOWS)
-    add_definitions("-DUNICODE" "-D_UNICODE")
-endif()
-
-add_subdirectory(Magnum)
-add_subdirectory(MagnumExternal)
-
-# Magnum integration include dir for superprojects
-set(MAGNUMINTEGRATION_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "")

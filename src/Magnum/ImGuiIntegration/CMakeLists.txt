@@ -27,6 +27,17 @@
 #
 
 find_package(Magnum REQUIRED GL Shaders)
+
+# To help Homebrew and other packages, ImGui sources can be cloned to
+# src/MagnumExternal/ImGui and we will use those without any extra effort
+# from the outside. The *.cpp files from there will get compiled into this
+# library and the *.h files will be installed alongside Magnum. The
+# FindImGui.cmake module then will look into include/MagnumExternal/ImGui as
+# a fallback if IMGUI_DIR is not set and no CMake config file is found.
+if(NOT IMGUI_DIR AND EXISTS ${PROJECT_SOURCE_DIR}/src/MagnumExternal/ImGui)
+    set(IMGUI_DIR ${PROJECT_SOURCE_DIR}/src/MagnumExternal/ImGui)
+endif()
+
 find_package(ImGui REQUIRED Sources)
 
 if(BUILD_STATIC)

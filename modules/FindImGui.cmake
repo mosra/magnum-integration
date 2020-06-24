@@ -94,7 +94,9 @@ else()
     # Disable the find root path here, it overrides the
     # CMAKE_FIND_ROOT_PATH_MODE_INCLUDE setting potentially set in
     # toolchains.
-    find_path(ImGui_INCLUDE_DIR NAMES imgui.h HINTS ${IMGUI_DIR}
+    find_path(ImGui_INCLUDE_DIR NAMES imgui.h
+        HINTS ${IMGUI_DIR}
+        PATH_SUFFIXES MagnumExternal/ImGui
         NO_CMAKE_FIND_ROOT_PATH)
     mark_as_advanced(ImGui_INCLUDE_DIR)
 
