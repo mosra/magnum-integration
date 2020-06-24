@@ -69,8 +69,10 @@ endif()
 # Vcpkg distributes imgui as a library with a config file, so try that first --
 # but only if IMGUI_DIR wasn't explicitly passed, in which case we'll look
 # there instead
-find_package(imgui CONFIG QUIET)
-if(imgui_FOUND AND NOT IMGUI_DIR)
+if(NOT IMGUI_DIR AND NOT TARGET imgui::imgui)
+    find_package(imgui CONFIG QUIET)
+endif()
+if(NOT IMGUI_DIR AND TARGET imgui::imgui)
     if(NOT TARGET ImGui::ImGui)
         add_library(ImGui::ImGui INTERFACE IMPORTED)
         # TODO: remove once 1.71 is obsolete
