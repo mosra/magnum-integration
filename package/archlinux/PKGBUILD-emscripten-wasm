@@ -32,7 +32,7 @@ build() {
         -DWITH_BULLET=ON \
         -DWITH_DART=OFF \
         -DWITH_GLM=OFF \
-        -DWITH_IMGUI=OFF \
+        -DWITH_IMGUI=ON \
         -DBUILD_TESTS=OFF
     ninja
 }
