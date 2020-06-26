@@ -7,7 +7,7 @@ arch=('i686' 'x86_64')
 url="https://magnum.graphics"
 license=('MIT')
 depends=('magnum-git' 'bullet' 'eigen' 'glm')
-makedepends=('cmake' 'git')
+makedepends=('cmake' 'git' 'ninja')
 provides=('magnum-integration')
 conflicts=('magnum-integration')
 source=("git+git://github.com/mosra/magnum-integration.git")
@@ -29,11 +29,12 @@ build() {
         -DWITH_EIGEN=ON \
         -DWITH_GLM=ON \
         -DWITH_DART=OFF \
-        -DWITH_IMGUI=OFF
-    make
+        -DWITH_IMGUI=OFF \
+        -G Ninja
+    ninja
 }
 
 package() {
     cd "$srcdir/build"
-    make DESTDIR="$pkgdir/" install
+    DESTDIR="$pkgdir/" ninja install
 }
