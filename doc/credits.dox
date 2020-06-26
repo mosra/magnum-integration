@@ -59,6 +59,8 @@ namespace Magnum {
     package updates, a PPA repository for stable versions
 -   **Olga Turanksaya** ([\@olga-python](https://github.com/olga-python)) ---
     Gentoo ebuild
+-   **[\@pezcode](https://github.com/pezcode)** --- improvements to the
+    @ref ImGuiIntegration library
 -   **[\@ShaddyDC](https://github.com/ShaddyDC)** --- base of the
     @ref ImGuiIntegration library
 -   **[\@sigman78](https://github.com/sigman78)** --- initial implementation of

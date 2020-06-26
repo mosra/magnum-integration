@@ -30,16 +30,23 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@section changelog-integration-latest Changes since 2019.10
+@anchor changelog-integration-latest
 
-@subsection changelog-integration-latest-new New features
+@section changelog-integration-2020-06 2020.06
+
+Released 2020-06-27, tagged as
+[v2020.06](https://github.com/mosra/magnum-integration/releases/tag/v2020.06).
+
+@subsection changelog-integration-2020-06-new New features
 
 -   New @ref ImGuiIntegration::Context::updateApplicationCursor() allowing
     ImGui to update application cursor using the new
     @ref Platform::Sdl2Application::setCursor() "*Application::setCursor()"
-    APIs (see [mosra/magnum-integration#56](https://github.com/mosra/magnum-integration/pull/56))
+    APIs (see [mosra/magnum-integration#56](https://github.com/mosra/magnum-integration/pull/56),
+    [mosra/magnum-integration#71](https://github.com/mosra/magnum-integration/pull/71)
+    and [mosra/magnum-integration#72](https://github.com/mosra/magnum-integration/pull/72))
 
-@subsection changelog-integration-latest-changes Changes and improvements
+@subsection changelog-integration-2020-06-changes Changes and improvements
 
 -   Simplified @ref DartIntegration internals using @ref EigenIntegration,
     ignoring NaN values sometimes coming from DART (see
@@ -67,20 +74,20 @@ namespace Magnum {
 -   @ref ImGuiIntegration now uses Magnum's own @ref Shaders::Flat2D instead of
     a custom shader, which finally makes it work on GLES2 and WebGL 1
 
-@subsection changelog-integration-latest-buildsystem Build system
+@subsection changelog-integration-2020-06-buildsystem Build system
 
 -   Various minor fixes (see [mosra/magnum-integration#68](https://github.com/mosra/magnum-integration/pull/68))
 -   The library again compiles and tests cleanly with @ref CORRADE_NO_ASSERT
     enabled, and this setup is verified on the CI to avoid further regressions
 
-@subsection changelog-integration-latest-bugfixes Bug fixes
+@subsection changelog-integration-2020-06-bugfixes Bug fixes
 
 -   Due to a SDL2 bug on Windows that halts all event processing when dragging
     a window across the screen, ImGui v1.68 and newer would receive zero delta
     time and assert. @ref ImGuiIntegration::Context now detects that and passes
     a non-zero delta time in that case. See also [mosra/magnum-integration#57](https://github.com/mosra/magnum-integration/issues/57).
 
-@subsection changelog-integration-latest-documentation Documentation
+@subsection changelog-integration-2020-06-documentation Documentation
 
 -   Various fixes and clarifications (see
     [mosra/magnum-integration#66](https://github.com/mosra/magnum-integration/pull/66))
