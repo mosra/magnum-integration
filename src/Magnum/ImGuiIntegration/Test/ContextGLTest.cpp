@@ -71,6 +71,7 @@ struct Application {
     enum class Cursor {
         Arrow,
         Hand,
+        Hidden,
         TextInput,
         ResizeAll,
         ResizeWE,
@@ -664,7 +665,7 @@ void ContextGLTest::updateCursor() {
     CORRADE_VERIFY(app.currentCursor == Application::Cursor::Hand);
 
     /* Change to a cursor that is unknown -> fallback to an arrow */
-    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+    ImGui::SetMouseCursor(ImGuiMouseCursor_COUNT);
     c.updateApplicationCursor(app);
     CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
 

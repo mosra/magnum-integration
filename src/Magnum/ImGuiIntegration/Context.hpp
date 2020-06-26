@@ -260,6 +260,9 @@ template<class Application> void Context::updateApplicationCursor(Application& a
         case ImGuiMouseCursor_Hand:
             application.setCursor(Application::Cursor::Hand);
             return;
+        case ImGuiMouseCursor_None:
+            application.setCursor(Application::Cursor::Hidden);
+            return;
 
         /* For unknown cursors we set Arrow as well */
         case ImGuiMouseCursor_Arrow:
