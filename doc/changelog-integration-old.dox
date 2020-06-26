@@ -30,6 +30,144 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
+@section changelog-integration-2018-04 2018.04
+
+Released 2018-05-01, tagged as
+[v2018.04](https://github.com/mosra/magnum-integration/releases/tag/v2018.04).
+
+@subsection changelog-integration-2018-04-dependencies Dependency changes
+
+-   Building for Android now requires CMake 3.7 with builtin Android
+    crosscompilation support, the old toolchains were removed. Only the Clang
+    and libc++ toolchain is now supported, support for GCC and libstdc++ was
+    dropped, as it was still missing some important C++11 functionality. See
+    @ref building-cross-android for more information.
+
+@subsection changelog-integration-2018-04-changes Changes and improvements
+
+-   Second experimental version of the @ref DartIntegration library ---
+    `DartIntegration::DartObject` and `DartIntegration::DartSkeleton` got
+    replaced with @ref DartIntegration::Object and @ref DartIntegration::World,
+    which is now able to track updates to all shapes and propagate that to the
+    user. See [mosra/magnum-integration#29](https://github.com/mosra/magnum-integration/pull/29),
+    [mosra/magnum-integration#30](https://github.com/mosra/magnum-integration/issues/30).
+
+@subsection changelog-integration-2018-04-buildsystem Build system
+
+-   Homebrew macOS packages were updated to install the stable version by
+    default
+-   Fixed the Debian package after introducing `SOVERSION` to all libraries
+    (see [mosra/magnum#237](https://github.com/mosra/magnum/issues/237))
+-   Fixed the Debian package to not include a revision. While just a warning on
+    Ubuntu, it's a hard error on Debian. (See [mosra/corrade#44](https://github.com/mosra/corrade/issues/44).)
+
+@section changelog-integration-2018-02 2018.02
+
+Released 2018-02-15, tagged as
+[v2018.02](https://github.com/mosra/magnum-integration/releases/tag/v2018.02).
+See the [release announcement](https://blog.magnum.graphics/announcements/2018.02/)
+for a high-level overview.
+
+@subsection changelog-integration-2018-02-dependencies Dependency changes
+
+-   Completely removed NaCl support (see https://blog.chromium.org/2017/05/goodbye-pnacl-hello-webassembly.html)
+-   Dropped support for the old MinGW32 (only MinGW-w64 is supported now)
+-   Bumped minimal CMake version to 2.8.12
+-   Removed support for macOS 10.8 and older
+-   Dropped the `compatibility` branch and all support for MSVC 2013 and GCC <
+    4.7
+
+@subsection changelog-integration-2018-02-new New features
+
+-   MSVC 2015 and MSVC 2017 support in `master` branch
+-   ANGLE ES2/ES3 support, ability to create desktop GLES contexts on Windows
+-   Windows Phone/Store support via ANGLE
+-   iOS support
+-   WebAssembly support when building for Emscripten
+-   WebGL 2.0 support
+-   New experimental @ref DartIntegration library, integrating
+    [DART Dynamic Animation and Robotics Toolkit](http://dartsim.github.io/)
+    (see [mosra/magnum-integration#28](https://github.com/mosra/magnum-integration/pull/28))
+-   New @ref OvrIntegration library, integrating Oculus SDK (see
+    [mosra/magnum-integration#3](https://github.com/mosra/magnum-integration/pull/3),
+    [mosra/magnum-integration#4](https://github.com/mosra/magnum-integration/issues/4),
+    [mosra/magnum-integration#5](https://github.com/mosra/magnum-integration/pull/5),
+    [mosra/magnum-integration#6](https://github.com/mosra/magnum-integration/issues/6),
+    [mosra/magnum-integration#7](https://github.com/mosra/magnum-integration/pull/7),
+    [mosra/magnum-integration#8](https://github.com/mosra/magnum-integration/issues/8),
+    [mosra/magnum-integration#9](https://github.com/mosra/magnum-integration/pull/9),
+    [mosra/magnum-integration#10](https://github.com/mosra/magnum-integration/pull/10),
+    [mosra/magnum-integration#12](https://github.com/mosra/magnum-integration/pull/12),
+    [mosra/magnum-integration#13](https://github.com/mosra/magnum-integration/issues/13),
+    [mosra/magnum-integration#15](https://github.com/mosra/magnum-integration/pull/15),
+    [mosra/magnum-integration#17](https://github.com/mosra/magnum-integration/pull/17))
+-   New @ref BulletIntegration::DebugDraw class for simple and easy physics
+    debugging (see
+    [mosra/magnum-integration#11](https://github.com/mosra/magnum-integration/issues/11),
+    [mosra/magnum-integration#21](https://github.com/mosra/magnum-integration/pull/21))
+
+@subsection changelog-integration-2018-02-changes Changes and improvements
+
+-   Extended math type conversion in @ref BulletIntegration, improved tests
+    for @ref BulletIntegration::MotionState (see
+    [mosra/magnum-integration#22](https://github.com/mosra/magnum-integration/pull/22))
+-   Fixed linker errors when using @ref BulletIntegration compiled as DLL on
+    Windows
+-   Various code modernization improvements (see
+    [mosra/magnum-integration#25](https://github.com/mosra/magnum-integration/pull/25))
+
+@subsection changelog-integration-2018-02-buildsystem Build system
+
+-   Continuous testing for Linux, macOS, Windows MSVC, Windows MinGW, Windows RT,
+    iOS, Android and Emscripten on [Travis CI](https://travis-ci.org/mosra/magnum-integration)
+    and [AppVeyor CI](https://ci.appveyor.com/project/mosra/magnum-integration),
+    with code coverage on [codecov.io](https://codecov.io/gh/mosra/magnum-integration);
+    replacing the unmaintained and outdated Jenkins configuration
+-   Support for CMake subprojects. You can now clone Magnum Plugins into a
+    subdirectory in your project and add it using @cmake add_subdirectory() @ce.
+    The @cmake find_package() @ce command will then use the CMake subproject
+    instead of looking for it in system-wide locations.
+-   Reworked CMake buildsystem to use the new imported target workflow, see
+    @ref cmake-integration for more information
+-   CMake targets are now organized in folders for better development
+    experience in IDEs such as Visual Studio or Xcode
+-   Added a @ref building-integration-packages-brew "Homebrew package"
+-   `MACOSX_RPATH` is now enabled by default on CMake 3.0+
+-   `FindMagnumIntegration.cmake` now properly handles Bullet installations
+    with both debug and release libraries (see
+    [mosra/magnum-integration#14](https://github.com/mosra/magnum-integration/pull/14))
+-   Fixed static @ref BulletIntegration libraries being treated as dynamic (see
+    [mosra/magnum-integration#16](https://github.com/mosra/magnum-integration/pull/16))
+-   Enabling only C++ in CMake @cmake project() @ce call, if possible, to speed
+    up initial CMake run
+
+@subsection changelog-integration-2018-02-bugfixes Bug fixes
+
+-   Properly respecting the `BUILD_STATIC` CMake option when building and
+    avoiding treatment of static libraries as dynamic on Windows
+-   Various compilation fixes (see
+    [mosra/magnum-integration#23](https://github.com/mosra/magnum-integration/issues/23),
+    [mosra/magnum-integration#24](https://github.com/mosra/magnum-integration/pull/24),
+    [mosra/magnum-integration#27](https://github.com/mosra/magnum-integration/pull/27))
+
+@subsection changelog-integration-2018-02-deprecated Deprecated APIs
+
+-   @ref BulletIntegration::DebugDraw::Mode enum and
+    @ref BulletIntegration::DebugDraw::Modes
+    enum set are deprecated, use `BulletIntegration::DebugDraw::DebugMode`
+    and `BulletIntegration::DebugDraw::DebugModes` instead
+
+@subsection changelog-integration-2018-02-compatibility Potential compatibility breakages, removed APIs
+
+No APIs were removed since last release.
+
+@subsection changelog-integration-2018-02-documentation Documentation
+
+-   New documentation theme powered by [m.css](http://mcss.mosra.cz) and
+    related massive updates of *everything*
+-   The @ref building-integration documentation now prefers package
+    installation instead of manual build
+
 @section changelog-integration-2015-05 2015.05
 
 Released 2015-05-09, tagged as
