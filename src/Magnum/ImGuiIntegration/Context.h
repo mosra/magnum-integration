@@ -371,7 +371,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Font texture used in `ImFontAtlas`
-         * @m_since_latest_{integration}
+         * @m_since_{integration,2020,06}
          */
         GL::Texture2D& atlasTexture() { return _texture; }
 
@@ -500,7 +500,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Update application mouse cursor
-         * @m_since_latest_{integration}
+         * @m_since_{integration,2020,06}
          *
          * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
          * then queries @cpp ImGui::GetMouseCursor() @ce, propagating that to
