@@ -45,7 +45,7 @@ namespace Magnum {
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
     @ref OvrIntegration library, improvements to Bullet integration
     and the migration of magnum-imgui to @ref ImGuiIntegration library
--   **Jordan Peck ([\@Auburns](https://github.com/Auburns)) --- improvements
+-   **Jordan Peck** ([\@Auburns](https://github.com/Auburns)) --- improvements
     to the @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
