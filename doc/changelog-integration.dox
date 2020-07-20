@@ -30,7 +30,16 @@ namespace Magnum {
 @tableofcontents
 @m_footernavigation
 
-@anchor changelog-integration-latest
+@section changelog-integration-latest Changes since 2020.06
+
+@subsection changelog-integration-2019-10-compatibility Potential compatibility breakages, removed APIs
+
+-   Removed `BulletIntegration::DebugDraw::DebugMode`, `DebugModes`, `mode()`
+    and `setDebugMode()` deprecated in 2018.10, use
+    @ref BulletIntegration::DebugDraw::Mode,
+    @ref BulletIntegration::DebugDraw::Modes "Modes",
+    @ref BulletIntegration::DebugDraw::mode() "mode()" and
+    @ref BulletIntegration::DebugDraw::setMode() "setMode()" instead
 
 @section changelog-integration-2020-06 2020.06
 
@@ -285,7 +294,7 @@ Released 2018-10-23, tagged as
     @ref BulletIntegration::DebugDraw::setMode() "setMode()" instead. The
     @ref BulletIntegration::DebugDraw::Mode "Mode" and
     @ref BulletIntegration::DebugDraw::Modes "Modes" enums were deprecated by
-    mistake in 2018.02, now they are revert back to non-deprecated state.
+    mistake in 2018.02, now they are reverted back to non-deprecated state.
 -   `BulletIntegration::DebugDraw::Mode::FastWirefram` has a typo and is
     deprecated, use @ref BulletIntegration::DebugDraw::Mode::FastWireframe
     instead

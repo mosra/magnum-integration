@@ -111,14 +111,6 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             /** Draw fast wireframes */
             FastWireframe = DBG_FastWireframe,
 
-            #ifdef MAGNUM_BUILD_DEPRECATED
-            /** Draw fast wireframes
-             * @m_deprecated_since{2018,10} Use @ref Mode::FastWireframe
-             *      instead.
-             */
-            FastWirefram CORRADE_DEPRECATED_ENUM("use FastWireframe instead") = FastWireframe,
-            #endif
-
             /** Draw normals */
             DrawNormals = DBG_DrawNormals,
 
@@ -132,26 +124,12 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             #endif
         };
 
-        #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @brief @copybrief Mode
-         * @m_deprecated_since{2018,10} Use @ref Mode instead.
-         */
-        typedef CORRADE_DEPRECATED("use Mode instead") Mode DebugMode;
-        #endif
-
         /**
          * @brief Debug modes
          *
          * @see @ref setMode()
          */
         typedef Containers::EnumSet<Mode> Modes;
-
-        #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @brief @copybrief Modes
-         * @m_deprecated_since{2018,10} Use @ref Modes instead.
-         */
-        typedef CORRADE_DEPRECATED("use Modes instead") Modes DebugModes;
-        #endif
 
         /**
          * @brief Constructor
@@ -209,15 +187,6 @@ class MAGNUM_BULLETINTEGRATION_EXPORT DebugDraw: public btIDebugDraw {
             _mode = mode;
             return *this;
         }
-
-        #ifdef MAGNUM_BUILD_DEPRECATED
-        /** @brief @copybrief setMode()
-         * @m_deprecated_since{2018,10} Use @ref setMode() instead.
-         */
-        CORRADE_DEPRECATED("use setMode() instead") DebugDraw& setDebugMode(Modes mode) {
-            return setMode(mode);
-        }
-        #endif
 
         /** @brief Set transformation projection matrix used for rendering */
         DebugDraw& setTransformationProjectionMatrix(const Matrix4& matrix) {
