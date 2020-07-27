@@ -32,7 +32,7 @@ namespace Magnum {
 
 @section changelog-integration-latest Changes since 2020.06
 
-@subsection changelog-integration-2019-10-compatibility Potential compatibility breakages, removed APIs
+@subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
 -   Removed `BulletIntegration::DebugDraw::DebugMode`, `DebugModes`, `mode()`
     and `setDebugMode()` deprecated in 2018.10, use
