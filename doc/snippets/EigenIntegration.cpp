@@ -65,6 +65,24 @@ static_cast<void>(d);
 }
 
 {
+/* [IntegrationStridedArrayView] */
+float data[15];
+Containers::StridedArrayView2D<float> view{data, {3,5}};
+
+/* To avoid a copy make sure to provide the correct type or use auto. */
+auto map = EigenIntegration::arrayCast(view);
+
+/* Copy everything into Eigen Matrix. */
+Eigen::MatrixXf m = map;
+
+/* Get back a StridedArrayView onto the second row. */
+Containers::StridedArrayView1D<float> rowView = EigenIntegration::arrayCast(m.row(2));
+
+/* [IntegrationStridedArrayView] */
+static_cast<void>(rowView);
+}
+
+{
 /* [GeometryIntegration] */
 auto a = Matrix3::translation({-1.5f, 0.3f})*
          Matrix3::rotation(25.0_degf)*

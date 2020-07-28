@@ -77,6 +77,14 @@ struct IntegrationTest: TestSuite::Tester {
 
     void matrixArray();
     void matrixMatrix();
+
+    void stridedArrayView();
+    void matrixXfBlock();
+    void matrixXfMap();
+    void matrixXf();
+    void matrixXfTranspose();
+    void vectorXf();
+    void vectorXfBlock();
 };
 
 IntegrationTest::IntegrationTest() {
@@ -86,7 +94,15 @@ IntegrationTest::IntegrationTest() {
               &IntegrationTest::vectorMatrix,
 
               &IntegrationTest::matrixArray,
-              &IntegrationTest::matrixMatrix});
+              &IntegrationTest::matrixMatrix,
+
+              &IntegrationTest::stridedArrayView,
+              &IntegrationTest::matrixXf,
+              &IntegrationTest::matrixXfBlock,
+              &IntegrationTest::matrixXfMap,
+              &IntegrationTest::matrixXfTranspose,
+              &IntegrationTest::vectorXf,
+              &IntegrationTest::vectorXfBlock});
 }
 
 void IntegrationTest::boolVector() {
@@ -213,6 +229,78 @@ void IntegrationTest::matrixMatrix() {
     CORRADE_COMPARE(Matrix3x2d{cbref}, a);
 
     CORRADE_COMPARE_AS((cast<Eigen::Matrix<double, 2, 3>>(a)), b, EigenType);
+}
+
+
+void IntegrationTest::stridedArrayView() {
+    float data[4*5];
+    for(int i = 0; i < 4*5; ++i) data[i] = float(i);
+    Containers::StridedArrayView2D<float> view1(data, {4, 5});
+    auto mapped = arrayCast(view1);
+    auto view2 = arrayCast(mapped);
+    for(int i = 0; i < 4; ++i) {
+        for(int j = 0; j < 5; ++j) {
+            CORRADE_COMPARE(view1[i][j], view2[i][j]);
+        }
+    }
+}
+
+void IntegrationTest::matrixXf() {
+    Eigen::MatrixXf m = Eigen::MatrixXf::Random(4,5);
+    auto view = arrayCast(m);
+    auto mapped = arrayCast(view);
+    CORRADE_COMPARE_AS(mapped, m, EigenType);
+}
+
+void IntegrationTest::matrixXfMap() {
+    float data[4*5];
+    for(int i = 0; i < 4*5; ++i) data[i] = float(i);
+    Eigen::Map<Eigen::MatrixXf> mapped1(data, 4, 5);
+    auto view = arrayCast(mapped1);
+    auto mapped2 = arrayCast(view);
+    CORRADE_VERIFY(mapped1.isApprox(mapped2));
+}
+
+void IntegrationTest::matrixXfBlock() {
+    Eigen::MatrixXf m = Eigen::MatrixXf::Random(4,5);
+    auto block = m.block(1,1,3, 4);
+    auto view = arrayCast(block);
+    auto mapped = arrayCast(view);
+    CORRADE_VERIFY(mapped.isApprox(block));
+}
+
+void IntegrationTest::matrixXfTranspose() {
+    Eigen::MatrixXf m = Eigen::MatrixXf::Random(4,5);
+    auto view = arrayCast(m.transpose());
+    auto mapped = arrayCast(view);
+    CORRADE_VERIFY(mapped.isApprox(m.transpose()));
+}
+
+void IntegrationTest::vectorXf() {
+    Eigen::VectorXf v = Eigen::VectorXf::Random(4);
+    auto view1 = arrayCast(v);
+    auto mapped1 = arrayCast(view1);
+    CORRADE_VERIFY(v.isApprox(mapped1));
+
+    auto vt = v.transpose();
+    auto view2 = arrayCast(vt);
+    auto mapped2 = arrayCast(view2);
+    /* since arrayCast always returns a Vector we compare with the original one */
+    CORRADE_VERIFY(v.isApprox(mapped2));
+}
+
+void IntegrationTest::vectorXfBlock() {
+    Eigen::MatrixXf m = Eigen::MatrixXf::Random(4, 5);
+    auto row = m.row(1);
+    auto view1 = arrayCast(row);
+    auto mapped1 = arrayCast(view1);
+    /* need to transpose since arrayCast returns a column vector */
+    CORRADE_VERIFY(mapped1.isApprox(row.transpose()));
+
+    auto col = m.col(2);
+    auto view2 = arrayCast(col);
+    auto mapped2 = arrayCast(view2);
+    CORRADE_VERIFY(mapped2.isApprox(col));
 }
 
 }}}}
