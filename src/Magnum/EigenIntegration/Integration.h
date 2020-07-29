@@ -408,7 +408,7 @@ template<class Derived> inline typename std::enable_if<(Eigen::internal::traits<
 Overload that takes care of any Eigen Expression that was not handled by @ref Magnum::EigenIntegration::arrayCast().
 @snippet EigenIntegration.cpp IntegrationStridedArrayView
 */
-template<class Derived> inline typename std::enable_if<(Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic) && (Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic), Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
+template<class Derived> inline typename std::enable_if<Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
     using Scalar = typename Derived::Scalar;
     /* we assume that the Eigen expression is a slice of some continuous piece of memory */
     std::size_t size = from.rows()*from.colStride() + from.cols()*from.rowStride();
