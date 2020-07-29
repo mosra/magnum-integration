@@ -377,8 +377,8 @@ template<class To, std::size_t size, class T> inline To cast(const Math::Vector<
 template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
     using MatrixT = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
     using StrideT = Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>;
-    auto size = from.size();
-    auto stride = from.stride();
+    const Containers::StridedDimensions2D<std::size_t> size = from.size();
+    const Containers::StridedDimensions2D<std::ptrdiff_t> stride = from.stride();
     return Eigen::Map<MatrixT, Eigen::Unaligned, StrideT>(reinterpret_cast<T*>(from.data()), size[0], size[1], StrideT(stride[0]/sizeof(T), stride[1]/sizeof(T)));
 }
 
