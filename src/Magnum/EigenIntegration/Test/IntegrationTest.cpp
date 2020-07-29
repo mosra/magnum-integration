@@ -239,9 +239,8 @@ void IntegrationTest::stridedArrayView() {
     auto mapped = arrayCast(view1);
     auto view2 = arrayCast(mapped);
     for(int i = 0; i < 4; ++i) {
-        for(int j = 0; j < 5; ++j) {
-            CORRADE_COMPARE(view1[i][j], view2[i][j]);
-        }
+        CORRADE_ITERATION(i);
+        CORRADE_COMPARE_AS(view1[i], view2[i], TestSuite::Compare::Container);
     }
 }
 
