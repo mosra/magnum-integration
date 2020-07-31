@@ -81,6 +81,9 @@ struct IntegrationTest: TestSuite::Tester {
 
     using View2Df = Containers::StridedArrayView2D<float>;
     using View1Df = Containers::StridedArrayView1D<float>;
+    using MatrixXfRowMajor = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+    using Map2Df = Eigen::Map<MatrixXfRowMajor, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>;
+    using Map1Df = Eigen::Map<Eigen::VectorXf, Eigen::Unaligned, Eigen::InnerStride<>>;
 
     void stridedArrayViewBlock();
     void stridedArrayViewTranspose();
@@ -228,7 +231,6 @@ void IntegrationTest::matrixMatrix() {
     CORRADE_COMPARE_AS((cast<Eigen::Matrix<double, 2, 3>>(a)), b, EigenType);
 }
 
-
 void IntegrationTest::stridedArrayViewBlock() {
     Eigen::MatrixXf m = Eigen::MatrixXf::Random(4, 5);
     auto row = m.row(1);
@@ -252,9 +254,9 @@ void IntegrationTest::stridedArrayViewBlock() {
         }
     }
 
-    auto rowMapped = arrayCast(rowView);
-    auto colMapped = arrayCast(colView);
-    auto blockMapped = arrayCast(blockView);
+    Map1Df rowMapped = arrayCast(rowView);
+    Map1Df colMapped = arrayCast(colView);
+    Map2Df blockMapped = arrayCast(blockView);
 
     /* need to transpose since arrayCast returns a column vector */
     CORRADE_VERIFY(rowMapped.isApprox(row.transpose()));
@@ -268,7 +270,7 @@ void IntegrationTest::stridedArrayViewTranspose() {
     for(int i = 0; i < 4*5; ++i) data[i] = float(i);
     View2Df view(data, {4, 5});
     View2Df viewTransposed = view.transposed<0,1>();
-    auto mapped = arrayCast(viewTransposed);
+    Map2Df mapped = arrayCast(viewTransposed);
 
     for(int i = 0; i < 4; ++i) {
         for (int j = 0; j < 5; ++j) {
@@ -289,19 +291,13 @@ void IntegrationTest::stridedArrayViewTranspose() {
 
 void IntegrationTest::stridedArrayViewReverse() {
     Eigen::MatrixXf m = Eigen::MatrixXf::Random(4, 5);
-    Eigen::VectorXf v = Eigen::VectorXf::Random(4);
 
-    auto rowReversed = m.rowwise().reverse();
-    auto colReversed = m.colwise().reverse();
-    auto reversed = m.reverse();
+    View2Df rowReversedView = arrayCast(m.rowwise().reverse());
+    View2Df colReversedView = arrayCast(m.colwise().reverse());
+    View2Df reversedView = arrayCast(m.reverse());
 
-    auto vReversed = v.reverse();
-
-    View2Df rowReversedView = arrayCast(rowReversed);
-    View2Df colReversedView = arrayCast(colReversed);
-    View2Df reversedView = arrayCast(reversed);
-
-    View1Df vReversedView = arrayCast(vReversed);
+    View1Df col0ReversedView = arrayCast(m.col(0).reverse());
+    View1Df row0ReversedView = arrayCast(m.row(0).reverse());
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 5; ++j) {
@@ -312,20 +308,25 @@ void IntegrationTest::stridedArrayViewReverse() {
     }
 
     for (int k = 0; k < 4; ++k) {
-        CORRADE_COMPARE(vReversedView[k], v[4 - k -1]);
+        CORRADE_COMPARE(col0ReversedView[k], m.col(0)[4 - k - 1]);
+    }
+    for (int k = 0; k < 5; ++k) {
+        CORRADE_COMPARE(row0ReversedView[k], m.row(0)[5 - k - 1]);
     }
 
-    auto mapped1 = arrayCast(rowReversedView.flipped<1>());
-    auto mapped2 = arrayCast(colReversedView.flipped<0>());
-    auto mapped3 = arrayCast(reversedView.flipped<0>().flipped<1>());
+    Map2Df mapped1 = arrayCast(rowReversedView.flipped<1>());
+    Map2Df mapped2 = arrayCast(colReversedView.flipped<0>());
+    Map2Df mapped3 = arrayCast(reversedView.flipped<0>().flipped<1>());
 
-    auto mapped4 = arrayCast(vReversedView.flipped<0>());
+    Map1Df mapped4 = arrayCast(col0ReversedView.flipped<0>());
+    Map1Df mapped5 = arrayCast(row0ReversedView.flipped<0>());
 
     CORRADE_VERIFY(mapped1.isApprox(m));
     CORRADE_VERIFY(mapped2.isApprox(m));
     CORRADE_VERIFY(mapped3.isApprox(m));
 
-    CORRADE_VERIFY(mapped4.isApprox(v));
+    CORRADE_VERIFY(mapped4.isApprox(m.col(0)));
+    CORRADE_VERIFY(mapped5.isApprox(m.row(0).transpose()));
 }
 
 void IntegrationTest::stridedArrayViewBroadcasted() {
@@ -334,7 +335,7 @@ void IntegrationTest::stridedArrayViewBroadcasted() {
         data[k] = float(k);
 
     View1Df view{data};
-    auto mapped = arrayCast(view.slice<2>().broadcasted<1>(10));
+    Map2Df mapped = arrayCast(view.slice<2>().broadcasted<1>(10));
 
     for(int i = 0; i < 5; ++i) {
         for (int j = 0; j < 10; ++j) {
