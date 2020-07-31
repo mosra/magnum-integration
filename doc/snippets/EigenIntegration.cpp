@@ -69,17 +69,22 @@ static_cast<void>(d);
 float data[15];
 Containers::StridedArrayView2D<float> view{data, {3,5}};
 
-/* To avoid a copy make sure to provide the correct type or use auto. */
+/**
+To avoid a copy make sure to either use auto, or specify the correct type.
+In this case the correct type would be
+Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>.
+*/
 auto map = EigenIntegration::arrayCast(view);
 
-/* Copy everything into Eigen Matrix. */
-Eigen::MatrixXf m = map;
+/* To actually copy the data, specify an Eigen Matrix as the declaration type. */
+Eigen::MatrixXf m = EigenIntegration::arrayCast(view);
 
 /* Get back a StridedArrayView onto the second row. */
 Containers::StridedArrayView1D<float> rowView = EigenIntegration::arrayCast(m.row(2));
 
 /* [IntegrationStridedArrayView] */
 static_cast<void>(rowView);
+static_cast<void>(map);
 }
 
 {
