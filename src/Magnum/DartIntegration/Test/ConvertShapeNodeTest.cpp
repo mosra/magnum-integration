@@ -49,6 +49,7 @@
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/TestSuite/Tester.h>
 #include <Corrade/Utility/Directory.h>
+#include <Magnum/Math/Color.h>
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData3D.h>

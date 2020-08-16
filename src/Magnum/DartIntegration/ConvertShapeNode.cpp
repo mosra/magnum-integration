@@ -46,6 +46,7 @@
 #include <Corrade/Utility/DebugStl.h>
 #include <Corrade/Utility/Directory.h>
 #include <Magnum/Mesh.h>
+#include <Magnum/Math/Color.h>
 #include <Magnum/MeshTools/GenerateNormals.h>
 #include <Magnum/MeshTools/Transform.h>
 #include <Magnum/Primitives/Capsule.h>

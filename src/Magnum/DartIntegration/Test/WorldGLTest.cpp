@@ -44,6 +44,7 @@
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/OpenGLTester.h>
 #include <Magnum/GL/Texture.h>
+#include <Magnum/Math/Color.h>
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include <Magnum/SceneGraph/Object.hpp>
 #include <Magnum/SceneGraph/SceneGraph.h>
