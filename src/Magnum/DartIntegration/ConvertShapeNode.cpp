@@ -254,7 +254,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                 /* Only get materials from mesh if the appropriate color mode */
                 if(importer->materialCount() && convertTypes & ConvertShapeType::Material) {
                     if(colorMode == dart::dynamics::MeshShape::ColorMode::MATERIAL_COLOR) {
-                        auto matPtr = importer->material(meshObjectData.material());
+                        Containers::Pointer<Trade::AbstractMaterialData> matPtr = importer->material(meshObjectData.material());
                         if(matPtr) {
                             materials[j] = std::move(*static_cast<Trade::PhongMaterialData*>(matPtr.get()));
                         } else {
