@@ -66,8 +66,8 @@ install:
 - IF "%TARGET_GLES2%" == "OFF" set TARGET_GLES3=ON
 
 # Eigen
-- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\3.3.7.tar.bz2 appveyor DownloadFile http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
-- 7z x 3.3.7.tar.bz2 -o%APPVEYOR_BUILD_FOLDER%\deps && 7z x %APPVEYOR_BUILD_FOLDER%\deps\3.3.7.tar -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\eigen-eigen-323c052e1731 eigen
+- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\eigen-3.3.7.tar.gz appveyor DownloadFile https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz
+- 7z x eigen-3.3.7.tar.gz -o%APPVEYOR_BUILD_FOLDER%\deps && 7z x %APPVEYOR_BUILD_FOLDER%\deps\eigen-3.3.7.tar -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\eigen-3.3.7 eigen
 
 # GLM
 - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\0.9.9.0.zip appveyor DownloadFile https://github.com/g-truc/glm/archive/0.9.9.0.zip

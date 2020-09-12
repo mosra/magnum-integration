@@ -200,7 +200,7 @@ install:
 # GLM and Eigen for non-native builds. Put into a separate folder so it can be
 # used without including the global native system dir.
 - if ( [ "$TARGET" == "android" ] || [ "$TARGET" == "ios-simulator" ] || [ "$TARGET" == "emscripten" ] ) && [ ! -e "$HOME/glm/detail" ]; then cd $HOME ; wget -nc --no-check-certificate https://github.com/g-truc/glm/archive/0.9.9.0.tar.gz && mkdir -p glm && cd glm && tar --strip-components=1 -xzf ../0.9.9.0.tar.gz && cd $TRAVIS_BUILD_DIR ; fi
-- if ( [ "$TARGET" == "android" ] || [ "$TARGET" == "ios-simulator" ] || [ "$TARGET" == "emscripten" ] ) && [ ! -e "$HOME/eigen/Eigen" ]; then cd $HOME ; wget -nc --no-check-certificate http://bitbucket.org/eigen/eigen/get/3.3.7.tar.gz && mkdir -p eigen && cd eigen && tar --strip-components=1 -xzf ../3.3.7.tar.gz && cd $TRAVIS_BUILD_DIR ; fi
+- if ( [ "$TARGET" == "android" ] || [ "$TARGET" == "ios-simulator" ] || [ "$TARGET" == "emscripten" ] ) && [ ! -e "$HOME/eigen/Eigen" ]; then cd $HOME ; wget -nc --no-check-certificate https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && mkdir -p eigen && cd eigen && tar --strip-components=1 -xzf ../eigen-3.3.7.tar.gz && cd $TRAVIS_BUILD_DIR ; fi
 
 # DART and its dependencies. Temporarily disabled on Linux because of GCC 4 and
 # 5 ABI mismatch on 16.04, https://github.com/dartsim/dart/issues/967#issuecomment-469075835
