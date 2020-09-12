@@ -86,10 +86,10 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     io.KeyMap[ImGuiKey_X]          = ImGuiKey_X;
     io.KeyMap[ImGuiKey_Y]          = ImGuiKey_Y;
     io.KeyMap[ImGuiKey_Z]          = ImGuiKey_Z;
-    
-    // Tell ImGui that changing mouse cursors is supported
+
+    /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-    
+
     /** @todo Set clipboard text once Platform supports it */
 
     /* Set up framebuffer sizes, font supersampling etc. and upload the glyph
