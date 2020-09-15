@@ -41,6 +41,11 @@ namespace Magnum {
     @ref BulletIntegration::DebugDraw::mode() "mode()" and
     @ref BulletIntegration::DebugDraw::setMode() "setMode()" instead
 
+@subsection changelog-integration-latest-documentation Documentation
+
+-   Various improvements and clarifications (see
+    [mosra/magnum-integration#75](https://github.com/mosra/magnum-integration/issues/75))
+
 @section changelog-integration-2020-06 2020.06
 
 Released 2020-06-27, tagged as
