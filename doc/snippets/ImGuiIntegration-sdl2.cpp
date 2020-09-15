@@ -109,6 +109,10 @@ GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
 GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
 GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
 GL::Renderer::disable(GL::Renderer::Feature::Blending);
+
+// ...
+
+redraw();
 /* [Context-usage-per-frame] */
 }
 }

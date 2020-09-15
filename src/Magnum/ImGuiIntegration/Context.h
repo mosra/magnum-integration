@@ -51,13 +51,13 @@ namespace Magnum { namespace ImGuiIntegration {
 /**
 @brief Dear ImGui context
 
-Handles initialization and destruction of Dear ImGui context and implements a
+Handles initialization and destruction of a Dear ImGui context and implements a
 Magnum-based rendering backend.
 
 @section ImGuiIntegration-Context-usage Usage
 
 Creating the @ref Context instance will create the Dear ImGui context and make
-it current. From that point you can use ImGui calls.
+it current. From that point on you can use ImGui calls.
 
 @snippet ImGuiIntegration.cpp Context-usage
 
@@ -78,6 +78,17 @@ setting cursors.
 
 <b></b>
 
+@m_class{m-note m-warning}
+
+@par
+    As shown above, because Dear ImGui has frame-based event handling, you're
+    * *required* to constantly @ref Platform::Sdl2Application::redraw() "redraw()",
+    instead of just waiting on input events. While that's not a problem for
+    games, for regular apps that unfortunately means your application will use
+    the CPU even when completely idle.
+
+<b></b>
+
 @m_class{m-block m-info}
 
 @par Reduced renderer state setup
@@ -95,11 +106,19 @@ functions are meant to be used inside event handlers of application classes
 such as @ref Platform::Sdl2Application, directly passing the @p event parameter
 to them. The returned value is then @cpp true @ce if ImGui used the event (and
 thus it shouldn't be propagated further) and @cpp false @ce otherwise.
-Implementation of those templated functions is provided in a separate
-@ref ImGuiIntegration/Context.hpp file, don't forget to include it at the point
-of use to avoid linker errors. Example:
 
 @snippet ImGuiIntegration-sdl2.cpp Context-events
+
+<b></b>
+
+@m_class{m-note m-warning}
+
+@par
+    As shown above, implementation of those templated functions is provided in
+    a separate @ref ImGuiIntegration/Context.hpp file --- don't forget to
+    include it at the point of use to avoid linker errors. This is done in
+    order to optimize compile times, as the event handling implementation is
+    rather large. See @ref compilation-speedup-hpp for more information.
 
 @subsection ImGuiIntegration-Context-usage-text-input Text input
 
