@@ -31,6 +31,8 @@
 #include "Magnum/SceneGraph/MatrixTransformation3D.h"
 #include "Magnum/DartIntegration/World.h"
 
+#define DOXYGEN_IGNORE(...) __VA_ARGS__
+
 using namespace Magnum;
 
 dart::simulation::WorldPtr createWorldInDart();
@@ -49,7 +51,7 @@ int main() {
 #endif
 {
 /* [Object-bodynode] */
-dart::dynamics::BodyNode* bodyNode;
+dart::dynamics::BodyNode* bodyNode = DOXYGEN_IGNORE({});
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 auto* obj = new DartIntegration::Object{object, bodyNode};
 /* [Object-bodynode] */
@@ -58,7 +60,7 @@ static_cast<void>(obj);
 
 {
 /* [Object-shapenode] */
-dart::dynamics::ShapeNode* shapeNode;
+dart::dynamics::ShapeNode* shapeNode = DOXYGEN_IGNORE({});
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 auto* obj = new DartIntegration::Object{object, shapeNode};
 /* [Object-shapenode] */
