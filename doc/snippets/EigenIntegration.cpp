@@ -81,9 +81,8 @@ Float data[15];
 Containers::StridedArrayView2D<Float> view{data, {3, 5}};
 
 /* To avoid a copy make sure to either use `auto` or specify the correct type.
-   In this case the correct type would be `Eigen::Map<Eigen::Matrix<float,
-   Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned,
-   Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>`. */
+   In this case the correct type would be `Eigen::Map<Eigen::MatrixXf,
+   Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>`. */
 auto map = EigenIntegration::arrayCast(view);
 
 /* To actually copy the data, specify an Eigen Matrix as the type */

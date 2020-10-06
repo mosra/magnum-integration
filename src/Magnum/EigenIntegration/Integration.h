@@ -395,11 +395,33 @@ template<class To, std::size_t size, class T> inline To cast(const Math::Vector<
 
 @see @ref EigenIntegration-stridedarrayview
 */
-template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
-    using StrideT = Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>;
+template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
     const Containers::StridedDimensions<2, std::size_t> size = from.size();
     const Containers::StridedDimensions<2, std::ptrdiff_t> stride = from.stride();
-    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, StrideT>(reinterpret_cast<T*>(from.data()), size[0], size[1], StrideT(stride[0]/sizeof(T), stride[1]/sizeof(T)));
+    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>(
+        reinterpret_cast<T*>(from.data()), size[0], size[1],
+        /* This is strange, but correct -- while the size is (rows, cols), the
+           stride is (inner, outer) where inner is pointer increment between
+           two consecutive entries within a given column of a column-major
+           matrix (so our column stride) and outer is pointer increment between two consecutive columns of a column-major matrix (so our row
+           stride): https://eigen.tuxfamily.org/dox/classEigen_1_1Stride.html
+
+           Alternatively we could define the Matrix as RowMajor and then those
+           two would be swapped, but that would make the output type even
+           longer (right now it's usually "just" something like
+
+            Eigen::Map<Eigen::MatrixXf, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>
+
+           or
+
+            Eigen::Map<Eigen::MatrixXd, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>
+
+           in user code, which isn't *that* bad compared to a fully expanded
+           Eigen::Matrix type. According to https://eigen.tuxfamily.org/dox/group__TutorialMapClass.html#TutorialMapTypes,
+           (see the StrideType example snippet), these two approaches are
+           equivalent. */
+        {Eigen::Index(stride[1]/sizeof(T)),
+         Eigen::Index(stride[0]/sizeof(T))});
 }
 
 /**

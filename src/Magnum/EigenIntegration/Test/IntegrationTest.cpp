@@ -86,8 +86,7 @@ struct IntegrationTest: TestSuite::Tester {
     void stridedArrayViewBroadcasted();
 };
 
-using MatrixXfRowMajor = Eigen::Matrix<Float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
-using Map2Df = Eigen::Map<MatrixXfRowMajor, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>;
+using Map2Df = Eigen::Map<Eigen::MatrixXf, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>;
 using Map1Df = Eigen::Map<Eigen::VectorXf, Eigen::Unaligned, Eigen::InnerStride<>>;
 
 IntegrationTest::IntegrationTest() {
