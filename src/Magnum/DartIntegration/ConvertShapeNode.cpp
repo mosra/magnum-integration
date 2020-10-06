@@ -41,6 +41,7 @@
 #include <dart/dynamics/SoftMeshShape.hpp>
 #include <dart/dynamics/SphereShape.hpp>
 #include <Corrade/Containers/ArrayViewStl.h>
+#include <Corrade/Containers/GrowableArray.h>
 #include <Corrade/Containers/Optional.h>
 #include <Corrade/Containers/StridedArrayView.h>
 #include <Corrade/Utility/DebugStl.h>
@@ -83,26 +84,29 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
 
     ShapeData shapeData{{}, {}, {}, {}, Vector3{1.0f}};
 
-    Color4 diffuseColor = 0xffffffff_rgbaf;
-    Color4 specularColor = 0xffffffff_rgbaf;
+    Containers::Array<Trade::MaterialAttributeData> nodeMaterialAttributes;
     if(convertTypes & ConvertShapeType::Material) {
         /* Get material information -- we ignore the alpha value. Note that
            this material is not necessarily used for the MeshShapeNodes */
         Eigen::Vector4d col = shapeNode.getVisualAspect()->getRGBA();
 
         /* Get diffuse color from Dart ShapeNode */
-        diffuseColor = Color4(col(0), col(1), col(2), col(3));
+        arrayAppend(nodeMaterialAttributes, Containers::InPlaceInit,
+            Trade::MaterialAttribute::DiffuseColor,
+            Color4(col(0), col(1), col(2), col(3)));
 
-        /* Remove specular color from soft bodies */
+        /* Remove specular color from soft bodies (otherwise the default would
+           be white) */
         if(shape->getType() == dart::dynamics::SoftMeshShape::getStaticType())
-            specularColor = 0x00000000_rgbaf;
+            arrayAppend(nodeMaterialAttributes, Containers::InPlaceInit,
+                Trade::MaterialAttribute::SpecularColor, 0x00000000_rgbaf);
     }
 
-    Trade::PhongMaterialData nodeMaterial{Trade::PhongMaterialData::Flags{},
-        0x000000ff_rgbaf, {},
-        diffuseColor, {},
-        specularColor, {}, {}, Matrix3{},
-        Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
+    /* Larger shininess than the default to make things look less plastic */
+    arrayAppend(nodeMaterialAttributes, Containers::InPlaceInit,
+        Trade::MaterialAttribute::Shininess, 2000.0f);
+
+    Trade::PhongMaterialData nodeMaterial{Trade::MaterialType::Phong, std::move(nodeMaterialAttributes)};
 
     if(convertTypes & ConvertShapeType::Material) {
         if(shape->getType() != dart::dynamics::MeshShape::getStaticType()) {
@@ -254,9 +258,9 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                 /* Only get materials from mesh if the appropriate color mode */
                 if(importer->materialCount() && convertTypes & ConvertShapeType::Material) {
                     if(colorMode == dart::dynamics::MeshShape::ColorMode::MATERIAL_COLOR) {
-                        Containers::Pointer<Trade::AbstractMaterialData> matPtr = importer->material(meshObjectData.material());
-                        if(matPtr) {
-                            materials[j] = std::move(*static_cast<Trade::PhongMaterialData*>(matPtr.get()));
+                        Containers::Optional<Trade::MaterialData> material = importer->material(meshObjectData.material());
+                        if(material) {
+                            materials[j] = std::move(*material).as<Trade::PhongMaterialData>();
                         } else {
                             Warning{} << "DartIntegration::convertShapeNode(): could not load material with index" << meshObjectData.material() << Debug::nospace << ". Falling back to SHAPE_COLOR mode";
                             materials[j] = std::move(nodeMaterial);
@@ -276,11 +280,9 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                             /* default colors for ambient (black) and specular
                                (white) */
                             materials[j] = Trade::PhongMaterialData{
-                                Trade::PhongMaterialData::Flags{},
-                                0x000000ff_rgbaf, {},
-                                meshColor, {},
-                                0xffffffff_rgbaf, {}, {}, Matrix3{},
-                                Trade::MaterialAlphaMode::Opaque, 0.5f, 2000.0f};
+                                Trade::MaterialType::Phong,
+                                {{Trade::MaterialAttribute::DiffuseColor, meshColor},
+                                 {Trade::MaterialAttribute::Shininess, 2000.0f}}};
 
                         /* Fallback to SHAPE_COLOR if MeshData has no colors */
                         } else {
