@@ -216,6 +216,15 @@ with window size. When window size, framebuffer size or DPI scaling changes
 call @ref relayout() with the new values. If the pixel density is changed, this
 will result in the font caches being rebuilt.
 
+@m_class{m-note m-warning}
+
+@par
+    Additional steps are needed on some platforms in order to make the
+    executable itself DPI-aware --- otherwise it will appear blurry on HiDPI
+    displays. See the corresponding sections in
+    @ref platforms-windows-hidpi "Windows" and
+    @ref platforms-macos-hidpi "macOS / iOS" platform docs for details.
+
 @subsection ImGuiIntegration-Context-dpi-fonts HiDPI fonts
 
 @note
