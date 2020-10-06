@@ -3,6 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
                 2020 Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2020 Janos <janos.meny@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -79,17 +80,15 @@ struct IntegrationTest: TestSuite::Tester {
     void matrixArray();
     void matrixMatrix();
 
-    using View2Df = Containers::StridedArrayView2D<float>;
-    using View1Df = Containers::StridedArrayView1D<float>;
-    using MatrixXfRowMajor = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
-    using Map2Df = Eigen::Map<MatrixXfRowMajor, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>;
-    using Map1Df = Eigen::Map<Eigen::VectorXf, Eigen::Unaligned, Eigen::InnerStride<>>;
-
     void stridedArrayViewBlock();
     void stridedArrayViewTranspose();
     void stridedArrayViewReverse();
     void stridedArrayViewBroadcasted();
 };
+
+using MatrixXfRowMajor = Eigen::Matrix<Float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+using Map2Df = Eigen::Map<MatrixXfRowMajor, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>;
+using Map1Df = Eigen::Map<Eigen::VectorXf, Eigen::Unaligned, Eigen::InnerStride<>>;
 
 IntegrationTest::IntegrationTest() {
     addTests({&IntegrationTest::boolVector,
@@ -237,20 +236,24 @@ void IntegrationTest::stridedArrayViewBlock() {
     auto row = m.row(1);
     auto col = m.col(2);
     auto block = m.block(1, 1, 2, 3);
-    View1Df rowView = arrayCast(row);
-    View1Df colView = arrayCast(col);
-    View2Df blockView = arrayCast(block);
+    Containers::StridedArrayView1D<Float> rowView = arrayCast(row);
+    Containers::StridedArrayView1D<Float> colView = arrayCast(col);
+    Containers::StridedArrayView2D<Float> blockView = arrayCast(block);
 
-    for (int k = 0; k < 5; ++k) {
+    for(Int k = 0; k != 5; ++k) {
+        CORRADE_ITERATION(k);
         CORRADE_COMPARE(rowView[k], row[k]);
     }
 
-    for (int k = 0; k < 4; ++k) {
+    for(Int k = 0; k != 4; ++k) {
+        CORRADE_ITERATION(k);
         CORRADE_COMPARE(colView[k], col[k]);
     }
 
-    for(int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 2; ++j) {
+    for(Int i = 0; i != 3; ++i) {
+        CORRADE_ITERATION(i);
+        for(Int j = 0; j != 2; ++j) {
+            CORRADE_ITERATION(j);
             CORRADE_COMPARE(blockView[j][i], block(j, i));
         }
     }
@@ -267,23 +270,27 @@ void IntegrationTest::stridedArrayViewBlock() {
 }
 
 void IntegrationTest::stridedArrayViewTranspose() {
-    float data[4*5];
-    for(int i = 0; i < 4*5; ++i) data[i] = float(i);
-    View2Df view(data, {4, 5});
-    View2Df viewTransposed = view.transposed<0,1>();
+    Float data[4*5];
+    for(Int i = 0; i != 4*5; ++i)
+        data[i] = Float(i);
+
+    Containers::StridedArrayView2D<Float> view{data, {4, 5}};
+    Containers::StridedArrayView2D<Float> viewTransposed = view.transposed<0, 1>();
     Map2Df mapped = arrayCast(viewTransposed);
 
-    for(int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 5; ++j) {
+    for(Int i = 0; i != 4; ++i) {
+        CORRADE_ITERATION(i);
+        for(Int j = 0; j != 5; ++j) {
+            CORRADE_ITERATION(j);
             CORRADE_COMPARE(mapped(j, i), viewTransposed[j][i]);
         }
     }
 
     Eigen::MatrixXf m = mapped;
-    View2Df view2 = arrayCast(mapped.transpose());
-    View2Df view3 = arrayCast(m.transpose());
+    Containers::StridedArrayView2D<Float> view2 = arrayCast(mapped.transpose());
+    Containers::StridedArrayView2D<Float> view3 = arrayCast(m.transpose());
 
-    for(int i = 0; i < 4; ++i) {
+    for(Int i = 0; i != 4; ++i) {
         CORRADE_ITERATION(i);
         CORRADE_COMPARE_AS(view[i], view2[i], TestSuite::Compare::Container);
         CORRADE_COMPARE_AS(view[i], view3[i], TestSuite::Compare::Container);
@@ -293,25 +300,29 @@ void IntegrationTest::stridedArrayViewTranspose() {
 void IntegrationTest::stridedArrayViewReverse() {
     Eigen::MatrixXf m = Eigen::MatrixXf::Random(4, 5);
 
-    View2Df rowReversedView = arrayCast(m.rowwise().reverse());
-    View2Df colReversedView = arrayCast(m.colwise().reverse());
-    View2Df reversedView = arrayCast(m.reverse());
+    Containers::StridedArrayView2D<Float> rowReversedView = arrayCast(m.rowwise().reverse());
+    Containers::StridedArrayView2D<Float> colReversedView = arrayCast(m.colwise().reverse());
+    Containers::StridedArrayView2D<Float> reversedView = arrayCast(m.reverse());
 
-    View1Df col0ReversedView = arrayCast(m.col(0).reverse());
-    View1Df row0ReversedView = arrayCast(m.row(0).reverse());
+    Containers::StridedArrayView1D<Float> col0ReversedView = arrayCast(m.col(0).reverse());
+    Containers::StridedArrayView1D<Float> row0ReversedView = arrayCast(m.row(0).reverse());
 
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 5; ++j) {
+    for(Int i = 0; i != 4; ++i) {
+        CORRADE_ITERATION(i);
+        for(Int j = 0; j != 5; ++j) {
+            CORRADE_ITERATION(j);
             CORRADE_COMPARE(m(i, j), colReversedView[4 - i - 1][j]);
             CORRADE_COMPARE(m(i, j), rowReversedView[i][5 - j - 1]);
             CORRADE_COMPARE(m(i, j), reversedView[4 - i - 1][5 - j -1]);
         }
     }
 
-    for (int k = 0; k < 4; ++k) {
+    for(Int k = 0; k != 4; ++k) {
+        CORRADE_ITERATION(k);
         CORRADE_COMPARE(col0ReversedView[k], m.col(0)[4 - k - 1]);
     }
-    for (int k = 0; k < 5; ++k) {
+    for(Int k = 0; k != 5; ++k) {
+        CORRADE_ITERATION(k);
         CORRADE_COMPARE(row0ReversedView[k], m.row(0)[5 - k - 1]);
     }
 
@@ -331,22 +342,26 @@ void IntegrationTest::stridedArrayViewReverse() {
 }
 
 void IntegrationTest::stridedArrayViewBroadcasted() {
-    float data[5];
-    for (int k = 0; k < 5; ++k)
-        data[k] = float(k);
+    Float data[5];
+    for(Int k = 0; k != 5; ++k)
+        data[k] = Float(k);
 
-    View1Df view{data};
+    Containers::StridedArrayView1D<Float> view{data};
     Map2Df mapped = arrayCast(view.slice<2>().broadcasted<1>(10));
 
-    for(int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 10; ++j) {
+    for(Int i = 0; i != 5; ++i) {
+        CORRADE_ITERATION(i);
+        for(Int j = 0; j != 10; ++j) {
+            CORRADE_ITERATION(j);
             CORRADE_COMPARE(mapped(i, j), view[i]);
         }
     }
 
-    View2Df view2 = arrayCast(mapped);
-    for(int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 10; ++j) {
+    Containers::StridedArrayView2D<Float> view2 = arrayCast(mapped);
+    for(Int i = 0; i != 5; ++i) {
+        CORRADE_ITERATION(i);
+        for(Int j = 0; j != 10; ++j) {
+            CORRADE_ITERATION(j);
             CORRADE_COMPARE(view2[i][j], data[i]);
         }
     }

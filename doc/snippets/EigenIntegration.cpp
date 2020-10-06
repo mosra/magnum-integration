@@ -3,6 +3,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
                 2020 Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2020 Janos <janos.meny@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -30,6 +31,8 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/Matrix4.h"
 
+#define DOXYGEN_IGNORE(...) __VA_ARGS__
+
 using namespace Magnum;
 using namespace Magnum::Math::Literals;
 
@@ -45,6 +48,14 @@ Vector3 b(a);
 auto c = Matrix4::rotation(35.0_degf, Vector3(a));
 /* [namespace] */
 static_cast<void>(c);
+}
+
+{
+/* [namespace-view] */
+Eigen::MatrixXd data = DOXYGEN_IGNORE({});
+Containers::StridedArrayView2D<Double> view = EigenIntegration::arrayCast(data);
+/* [namespace-view] */
+static_cast<void>(view);
 }
 
 {
@@ -65,24 +76,23 @@ static_cast<void>(d);
 }
 
 {
-/* [IntegrationStridedArrayView] */
-float data[15];
-Containers::StridedArrayView2D<float> view{data, {3,5}};
+/* [Integration-arrayCast] */
+Float data[15];
+Containers::StridedArrayView2D<Float> view{data, {3, 5}};
 
-/**
-To avoid a copy make sure to either use auto, or specify the correct type.
-In this case the correct type would be
-Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>.
-*/
+/* To avoid a copy make sure to either use `auto` or specify the correct type.
+   In this case the correct type would be `Eigen::Map<Eigen::Matrix<float,
+   Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned,
+   Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>`. */
 auto map = EigenIntegration::arrayCast(view);
 
-/* To actually copy the data, specify an Eigen Matrix as the declaration type. */
+/* To actually copy the data, specify an Eigen Matrix as the type */
 Eigen::MatrixXf m = EigenIntegration::arrayCast(view);
 
-/* Get back a StridedArrayView onto the second row. */
-Containers::StridedArrayView1D<float> rowView = EigenIntegration::arrayCast(m.row(2));
-
-/* [IntegrationStridedArrayView] */
+/* Get back a StridedArrayView onto the second row */
+Containers::StridedArrayView1D<Float> rowView =
+    EigenIntegration::arrayCast(m.row(2));
+/* [Integration-arrayCast] */
 static_cast<void>(rowView);
 static_cast<void>(map);
 }

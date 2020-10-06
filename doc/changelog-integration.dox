@@ -32,6 +32,12 @@ namespace Magnum {
 
 @section changelog-integration-latest Changes since 2020.06
 
+@subsection changelog-integration-latest-new New features
+
+-   Conversion between dynamic Eigen types and
+    @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
+    using @ref EigenIntegration::arrayCast() (see [mosra/magnum-integration#74](https://github.com/mosra/magnum-integration/pull/74))
+
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
 -   Removed `BulletIntegration::DebugDraw::DebugMode`, `DebugModes`, `mode()`

@@ -5,6 +5,7 @@
 
     Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
                 2020 Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2020 Janos <janos.meny@googlemail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -29,9 +30,12 @@
 @brief Conversion of Eigen array and matrix types
 @m_since_{integration,2019,10}
 
-Provides conversion for the following types. See
+@section EigenIntegration-math Math type conversion
+
+Provides conversion for the following fixed-size types. See
 @ref Magnum/EigenIntegration/GeometryIntegration.h for conversion of special
-geometry types.
+geometry types and @ref EigenIntegration-stridedarrayview for conversion of
+dynamically sized types.
 
 | Magnum vector type                             | Equivalent Eigen type    |
 | ---------------------------------------------- | ------------------------ |
@@ -69,10 +73,25 @@ usable with @ref Corrade::Utility::Debug if you include
 
 @snippet EigenIntegration.cpp Integration
 
+@section EigenIntegration-stridedarrayview Multidimensional strided array view conversion
+
+In addition to converting betweem fixed-size types, which always involves a
+copy, it's possible to make @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
+instances point to Eigen types and, conversely, an @m_class{m-doc-external} [Eigen::Map](https://eigen.tuxfamily.org/dox/classEigen_1_1Map.html)
+from any @ref Containers::StridedArrayView1D or @ref Containers::StridedArrayView2D "StridedArrayView2D" using
+@ref EigenIntegration::arrayCast():
+
+@snippet EigenIntegration.cpp Integration-arrayCast
+
 @see @ref types-thirdparty-integration
 */
 
+/* I would usually frown upon unconditionally including this relatively huge
+   header into a widely-used utility header, but it's *Eigen* we're dealing
+   with -- no amount of Magnum's code can compete with Eigen's sky-high compile
+   times. */
 #include <Corrade/Containers/StridedArrayView.h>
+
 #include <Magnum/Math/RectangularMatrix.h>
 #include <Eigen/Core>
 
@@ -371,73 +390,145 @@ template<class To, std::size_t size, class T> inline To cast(const Math::Vector<
 }
 
 /**
-@brief Convert Corrades StridedArrayView2D to Eigens Dynamic Matrix Type.
+@brief Convert a @ref Containers::StridedArrayView2D to Eigen's dynamic matrix type
+@m_since_latest
+
+@see @ref EigenIntegration-stridedarrayview
 */
 template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
-    using MatrixT = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
     using StrideT = Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>;
     const Containers::StridedDimensions<2, std::size_t> size = from.size();
     const Containers::StridedDimensions<2, std::ptrdiff_t> stride = from.stride();
-    return Eigen::Map<MatrixT, Eigen::Unaligned, StrideT>(reinterpret_cast<T*>(from.data()), size[0], size[1], StrideT(stride[0]/sizeof(T), stride[1]/sizeof(T)));
+    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, Eigen::Unaligned, StrideT>(reinterpret_cast<T*>(from.data()), size[0], size[1], StrideT(stride[0]/sizeof(T), stride[1]/sizeof(T)));
 }
 
 /**
-@brief Convert Corrades StridedArrayView1D to Eigens Dynamic Vector Type.
-Since for a one dimensional StridedArrayView there is no column or row version
-we always return an Eigen Column Vector.
+@brief Convert a @ref Containers::StridedArrayView1D to Eigen's dynamic vector type
+@m_since_latest
+
+Since for a one-dimensional @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
+there is no column or row version, we always return an Eigen column vector.
+@see @ref EigenIntegration-stridedarrayview
 */
 template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::Unaligned, Eigen::InnerStride<>> arrayCast(const Containers::StridedArrayView1D<T>& from) {
-    using MatrixT = Eigen::Matrix<T, Eigen::Dynamic, 1>;
-    return Eigen::Map<MatrixT, Eigen::Unaligned, Eigen::InnerStride<>>(reinterpret_cast<T*>(from.data()), from.size(), Eigen::InnerStride<>(from.stride()/sizeof(T)));
+    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::Unaligned, Eigen::InnerStride<>>(reinterpret_cast<T*>(from.data()), from.size(), Eigen::InnerStride<>(from.stride()/sizeof(T)));
 }
 
 /**
-@brief Convert an Eigen Expression to Corrades StridedArrayView1D
-If it is known at compile time that the Eigen Expression has either
-one Column or one Row, then this function maps the Eigen Expression
-to a one dimensional StridedArrayView.
+@brief Convert an Eigen expression to @ref Containers::StridedArrayView1D
+@m_since_latest
+
+If it is known at compile time that the Eigen expression has either one column
+or one row, then this function maps the Eigen expression to a
+@ref Containers::StridedArrayView1D. Otherwise the overload below is picked,
+returning a @ref Containers::StridedArrayView2D.
+@see @ref EigenIntegration-stridedarrayview
 */
-template<class Derived> inline typename std::enable_if<(Eigen::internal::traits<Derived>::ColsAtCompileTime == 1) || (Eigen::internal::traits<Derived>::RowsAtCompileTime == 1), Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
-    using Scalar = typename Derived::Scalar;
-    return Containers::StridedArrayView1D<Scalar>({const_cast<Scalar*>(&from(0,0)), ~std::size_t{}}, std::size_t(from.size()), std::ptrdiff_t(from.innerStride()*sizeof(Scalar)));
+template<class Derived> inline typename std::enable_if<
+    #ifndef DOXYGEN_GENERATING_OUTPUT
+    Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1
+    #else
+    ...
+    #endif
+, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
+    return {
+        /* We assume that the memory the Eigen expression is referencing is in
+           bounds, so the view size passed is ~std::size_t{} */
+        {const_cast<typename Derived::Scalar*>(&from(0,0)), ~std::size_t{}},
+        std::size_t(from.size()),
+        std::ptrdiff_t(from.innerStride()*sizeof(typename Derived::Scalar))
+    };
 }
 
 /**
-@brief Convert an Eigen Expression to Corrades StridedArrayView2D
-Overload that takes care of any Eigen Expression that was not handled by @ref Magnum::EigenIntegration::arrayCast().
-@snippet EigenIntegration.cpp IntegrationStridedArrayView
+@brief Convert an Eigen expression to @ref Containers::StridedArrayView2D
+@m_since_latest
+
+Takes care of any Eigen expression that was not handled by the one-dimensional
+overload above.
+@see @ref EigenIntegration-stridedarrayview
 */
-template<class Derived> inline typename std::enable_if<Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
-    using Scalar = typename Derived::Scalar;
-    /* We assume that the memory the Eigen Expression is referencing is in bounds. */
-    return Containers::StridedArrayView2D<Scalar>({const_cast<Scalar*>(&from(0,0)), ~std::size_t{}}, {std::size_t(from.rows()), std::size_t(from.cols())}, {std::ptrdiff_t(from.rowStride())*std::ptrdiff_t(sizeof(Scalar)), std::ptrdiff_t(from.colStride())*std::ptrdiff_t(sizeof(Scalar))});
+template<class Derived> inline typename std::enable_if<
+    #ifndef DOXYGEN_GENERATING_OUTPUT
+    Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic
+    #else
+    ...
+    #endif
+, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
+    return {
+        /* We assume that the memory the Eigen expression is referencing is in
+           bounds, so the view size passed is ~std::size_t{} */
+        {const_cast<typename Derived::Scalar*>(&from(0,0)), ~std::size_t{}}, {std::size_t(from.rows()),
+         std::size_t(from.cols())},
+        {std::ptrdiff_t(from.rowStride()*sizeof(typename Derived::Scalar)),
+         std::ptrdiff_t(from.colStride()*sizeof(typename Derived::Scalar))}
+    };
 }
 
 /**
-@overload
-This function handles Eigen Reverse Expressions with at least one extent known at compile time.
+@brief Convert an Eigen reverse expression to @ref Containers::StridedArrayView1D
+@m_since_latest
+
+If it is known at compile time that the Eigen reverse expression has either one
+column or one row, then this function maps the Eigen reverse expression to a
+@ref Containers::StridedArrayView1D. Otherwise the overload below is picked,
+returning a @ref Containers::StridedArrayView2D.
+@see @ref EigenIntegration-stridedarrayview
 */
-template<class Derived, int Direction> inline typename std::enable_if<Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
-    using Scalar = typename Derived::Scalar;
+template<class Derived, int Direction> inline typename std::enable_if<
+    #ifndef DOXYGEN_GENERATING_OUTPUT
+    Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1
+    #else
+    ...
+    #endif
+, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
+    constexpr bool isColVector =
+        Eigen::internal::traits<Derived>::ColsAtCompileTime == 1;
+    constexpr bool isRowVector =
+        Eigen::internal::traits<Derived>::RowsAtCompileTime == 1;
+    constexpr Int reverse = (Direction == Eigen::BothDirections ||
+        (Direction == Eigen::Vertical && isRowVector) ||
+        (Direction == Eigen::Horizontal && isColVector)) ? -1 : 1;
+
     const auto& nested = from.nestedExpression();
-    constexpr bool isColVector = Eigen::internal::traits<Derived>::ColsAtCompileTime == 1;
-    constexpr bool isRowVector = !isColVector;
-    constexpr bool reverse = (Direction == Eigen::Vertical && isRowVector) || (Direction == Eigen::Horizontal && isColVector)|| Direction == Eigen::BothDirections;
-    const std::ptrdiff_t stride = sizeof(Scalar)*nested.innerStride()*(reverse ? -1 : 1);
-    return Containers::StridedArrayView1D<Scalar>({const_cast<Scalar*>(&from(0,0)), ~std::size_t{}}, std::size_t(nested.size()), stride);
+    return {
+        /* We assume that the memory the Eigen expression is referencing is in
+           bounds, so the view size passed is ~std::size_t{} */
+        {const_cast<typename Derived::Scalar*>(&from(0,0)), ~std::size_t{}},
+        std::size_t(nested.size()),
+        std::ptrdiff_t(nested.innerStride()*reverse*sizeof(typename Derived::Scalar))
+    };
 }
 
 /**
-@overload
-This function handles Eigen Reverse Expressions with two dynamic extents.
+@brief Convert an Eigen reverse expression to @ref Containers::StridedArrayView2D
+@m_since_latest
+
+Takes care of any Eigen expression that was not handled by the one-dimensional
+overload above.
+@see @ref EigenIntegration-stridedarrayview
 */
-template<class Derived, int Direction> inline typename std::enable_if<Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
-    using Scalar = typename Derived::Scalar;
+template<class Derived, int Direction> inline typename std::enable_if<
+    #ifndef DOXYGEN_GENERATING_OUTPUT
+    Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic
+    #else
+    ...
+    #endif
+, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
+    constexpr Int reverseCol = (Direction == Eigen::Vertical ||
+                                Direction == Eigen::BothDirections) ? -1 : 1;
+    constexpr Int reverseRow = (Direction == Eigen::Horizontal ||
+                                Direction == Eigen::BothDirections) ? -1 : 1;
+
     const auto& nested = from.nestedExpression();
-    constexpr bool reverseCol = Direction == Eigen::Vertical   || Direction == Eigen::BothDirections;
-    constexpr bool reverseRow = Direction == Eigen::Horizontal || Direction == Eigen::BothDirections;
-    const Containers::StridedDimensions<2, std::ptrdiff_t> stride{std::ptrdiff_t(sizeof(Scalar))*nested.rowStride()*(reverseCol ? -1 : 1), std::ptrdiff_t(sizeof(Scalar))*nested.colStride()*(reverseRow ? -1 : 1)} ;
-    return Containers::StridedArrayView2D<Scalar>({const_cast<Scalar*>(&from(0, 0)), ~std::size_t{}}, {std::size_t(nested.rows()), std::size_t(nested.cols())}, stride);
+    return {
+        /* We assume that the memory the Eigen expression is referencing is in
+           bounds, so the view size passed is ~std::size_t{} */
+        {const_cast<typename Derived::Scalar*>(&from(0, 0)), ~std::size_t{}},
+        {std::size_t(nested.rows()), std::size_t(nested.cols())},
+        {std::ptrdiff_t(sizeof(typename Derived::Scalar))*nested.rowStride()*reverseCol,
+         std::ptrdiff_t(sizeof(typename Derived::Scalar))*nested.colStride()*reverseRow}
+    };
 }
 
 }
