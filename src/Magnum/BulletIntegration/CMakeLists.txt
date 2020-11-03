@@ -56,12 +56,6 @@ add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-# Silence pedantic warnings in Bullet headers. If we use the Emscripten port,
-# no find_package() was called and the variable is not defined, so no point in
-# calling it.
-if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
-    target_include_directories(MagnumBulletIntegration SYSTEM PUBLIC ${BULLET_INCLUDE_DIRS})
-endif()
 set_target_properties(MagnumBulletIntegration PROPERTIES
     DEBUG_POSTFIX "-d"
     FOLDER "Magnum/BulletIntegration")
@@ -76,12 +70,14 @@ target_link_libraries(MagnumBulletIntegration PUBLIC
     Magnum::SceneGraph
     Magnum::Shaders)
 
+# If we use the Emscripten port, no find_package() was called and the targets
+# are not defined.
 if(USE_EMSCRIPTEN_PORTS_BULLET)
     target_compile_options(MagnumBulletIntegration PUBLIC "SHELL:-s USE_BULLET=1")
     target_link_options(MagnumBulletIntegration PUBLIC "SHELL:-s USE_BULLET=1")
 else()
-    target_link_libraries(MagnumBulletIntegration PUBLIC
-        ${BULLET_LIBRARIES})
+    # Interestingly enough, we need just the LinearMath here
+    target_link_libraries(MagnumBulletIntegration PUBLIC Bullet::LinearMath)
 endif()
 
 install(TARGETS MagnumBulletIntegration
