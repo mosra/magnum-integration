@@ -106,32 +106,31 @@ if(TARGET BulletCollision)
                 INTERFACE_LINK_LIBRARIES Bullet${_library})
         endif()
     endforeach()
+
+    # Bullet3Common doesn't have an INTERFACE_INCLUDE_DIRECTORIES property as
+    # bullet only uses include_directories(), not the target_*() variant. This
+    # means that linking to any of the targets will not drag along any include
+    # directory, which we have to fix -- and since everything depends on
+    # LinearMath, we can add it just for that target.
+    #
+    # In case of a CMake subproject, we derive the include directory from the
+    # target SOURCE_DIR.
+    #
+    # In case of Vcpkg, SOURCE_DIR is likely meaningless, but because the Vcpkg
+    # package uses a patched config file, we can use BULLET_INCLUDE_DIR.
+    if(BULLET_INCLUDE_DIR)
+        set(_BULLET_INTERFACE_INCLUDE_DIRECTORIES ${BULLET_INCLUDE_DIR})
+    else()
+        get_target_property(_BULLET_INTERFACE_INCLUDE_DIRECTORIES BulletCollision SOURCE_DIR)
+        get_filename_component(_BULLET_INTERFACE_INCLUDE_DIRECTORIES ${_BULLET_INTERFACE_INCLUDE_DIRECTORIES} DIRECTORY)
+    endif()
+
     # Why, Bullet, why?
     if(NOT TARGET Bullet::LinearMath)
         # Aliases of (global) targets [..] CMake 3.11 [...], as above
         add_library(Bullet::LinearMath INTERFACE IMPORTED)
         set_target_properties(Bullet::LinearMath PROPERTIES
-            INTERFACE_LINK_LIBRARIES LinearMath)
-
-        # Bullet3Common doesn't have an INTERFACE_INCLUDE_DIRECTORIES property
-        # as bullet only uses include_directories(), not the target_*()
-        # variant. This means that linking to any of the targets will not drag
-        # along any include directory, which we have to fix -- and since
-        # everything depends on LinearMath, we can add it just for that target.
-        #
-        # In case of a CMake subproject, we derive the include directory from
-        # the target SOURCE_DIR.
-        #
-        # In case of Vcpkg, SOURCE_DIR is likely meaningless, but because the
-        # Vcpkg package uses a patched config file, we can use
-        # BULLET_INCLUDE_DIR instead.
-        if(BULLET_INCLUDE_DIR)
-            set(_BULLET_INTERFACE_INCLUDE_DIRECTORIES ${BULLET_INCLUDE_DIR})
-        else()
-            get_target_property(_BULLET_INTERFACE_INCLUDE_DIRECTORIES BulletCollision SOURCE_DIR)
-            get_filename_component(_BULLET_INTERFACE_INCLUDE_DIRECTORIES ${_BULLET_INTERFACE_INCLUDE_DIRECTORIES} DIRECTORY)
-        endif()
-        set_target_properties(Bullet::LinearMath PROPERTIES
+            INTERFACE_LINK_LIBRARIES LinearMath
             INTERFACE_INCLUDE_DIRECTORIES ${_BULLET_INTERFACE_INCLUDE_DIRECTORIES})
     endif()
 
