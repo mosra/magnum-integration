@@ -28,6 +28,8 @@ namespace Magnum {
 /** @page building-integration Downloading and building integration libraries
 @brief Guide how to download and build integration libraries for the Magnum engine.
 
+@m_keyword{Building integration libraries,,}
+
 @tableofcontents
 @m_footernavigation
 
