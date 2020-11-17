@@ -208,8 +208,21 @@ sudo dpkg -i ../magnum-integration*.deb
 
 If you want to pass additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", add
-them to `dh_auto_configure` at the bottom of `debian/rules`. Watch out, as
-indentation has to be done using tabs, not spaces.
+them to `dh_auto_configure` at the bottom of `package/debian/rules`. Watch out,
+as indentation has to be done using tabs, not spaces.
+
+@m_class{m-block m-warning}
+
+@par Enabling ImGui integration
+@parblock
+ImGui doesn't provide any packages for Debian and thus the Magnum Integration
+package doesn't have it enabled by default. In order to enable it, put ImGui
+sources (or [clone a branch of your choice](https://github.com/ocornut/imgui))
+into `src/MagnumExternal/ImGui` (note the capitalization) and set `WITH_IMGUI`
+to `ON` in `package/debian/rules`. When you run `dpkg-buildpackage`, CMake will
+automatically discover the ImGui sources, build them and also install their
+headers for use by depending projects.
+@endparblock
 
 There are also Debian packages for
 @ref building-plugins-packages-deb "Magnum Plugins",
