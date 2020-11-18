@@ -92,6 +92,7 @@ from any @ref Containers::StridedArrayView1D or @ref Containers::StridedArrayVie
    times. */
 #include <Corrade/Containers/StridedArrayView.h>
 
+#include <Magnum/Magnum.h>
 #include <Magnum/Math/RectangularMatrix.h>
 #include <Eigen/Core>
 
