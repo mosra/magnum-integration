@@ -1,0 +1,360 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@1.1.1
+
+notify:
+  webhooks:
+    # Unfortunately Gitter messages are too verbose (one five-line message per
+    # each job in the build matrix) and thus not wanted
+    #- url: https://webhooks.gitter.im/e/cfbadbd34d28708a57c6
+
+executors:
+  ubuntu-16_04:
+    docker:
+    - image: ubuntu:xenial-20201014
+  xcode-10_0:
+    macos:
+      xcode: 10.0.0
+  emscripten:
+    docker:
+    # 1.39.0 is the oldest on Docker. Anything before 1.39.2 is useless as emar
+    # randomly asserts: https://github.com/emscripten-core/emscripten/pull/9742
+    # Then, anything before 1.39.6 is useless as well because emar has a
+    # filesystem race and randomly complains that a file doesn't exist:
+    # https://github.com/mosra/magnum/issues/413,
+    # https://github.com/emscripten-core/emscripten/pull/10161
+    - image: emscripten/emsdk:1.39.6-upstream
+
+commands:
+  install-base-linux:
+    parameters:
+      extra:
+        type: string
+        default: ""
+    steps:
+    - run:
+        name: Update apt and install base packages
+        # Git is needed always for cloning Corrade and Magnum
+        command: |
+          apt update
+          if [[ "$CMAKE_CXX_FLAGS" == *"--coverage"* ]]; then export LCOV_PACKAGES="lcov curl"; fi
+          apt install -y git ninja-build $LCOV_PACKAGES << parameters.extra >>
+
+  install-base-macos:
+    parameters:
+      extra:
+        type: string
+        default: ""
+    steps:
+    - run:
+        name: Install base packages
+        # As usual, homebrew takes five minutes to update and then explodes in
+        # a spectacular way. How is this acceptable?!
+        command: |
+          if [[ "$CMAKE_CXX_FLAGS" == *"--coverage"* ]]; then export LCOV_PACKAGES="lcov"; fi
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake ninja $LCOV_PACKAGES << parameters.extra >>
+
+  install-gcc-4_8:
+    steps:
+    - run:
+        name: Install GCC 4.8
+        # For some reason, CMake needs a working C compiler, so provice CC as
+        # well for the case when default gcc isn't installed.
+        command: |
+          apt install -y g++-4.8
+          echo 'export CC=gcc-4.8' >> $BASH_ENV
+          echo 'export CXX=g++-4.8' >> $BASH_ENV
+
+  install-clang-3_8:
+    steps:
+    - run:
+        name: Install Clang 3.8
+        # https://askubuntu.com/questions/787383/how-to-install-llvm-3-9
+        # because the `deb` commands from https://apt.llvm.org don't work
+        #
+        # The software-properties-common need to be installed in order to have
+        # apt-add-repository. Sigh, adding a repository should be a core
+        # feature ffs!
+        #
+        # The apt-transport-https needs to be installed because
+        #  E: The method driver /usr/lib/apt/methods/https could not be found.
+        #  N: Is the package apt-transport-https installed?
+        #
+        # For some reason, CMake needs a working C compiler, so provice CC as
+        # well for the case when default gcc isn't installed.
+        #
+        # The llvm-symbolizer link needs to be set in order to have usable
+        # symbols in the output. This affects suppressions as well, meaning
+        # they won't work if the symbols are not resolvable. It's not enough to
+        # just `export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.8`
+        # because it then complains that
+        #
+        #   External symbolizer path is set to '/usr/bin/llvm-symbolizer-3.8'
+        #   which isn't a known symbolizer. Please set the path to the
+        #   llvm-symbolizer binary or other known tool.
+        #
+        # Probably because because it detects tool type based on the filename?
+        # Ugh.
+        command: |
+          apt install -y software-properties-common apt-transport-https wget
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+          apt-add-repository "deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main"
+          apt update
+          apt install -y clang-3.8
+          echo 'export CC=clang-3.8' >> $BASH_ENV
+          echo 'export CXX=clang++-3.8' >> $BASH_ENV
+          ln -s /usr/bin/llvm-symbolizer{-3.8,}
+
+  install-cmake-3_4:
+    steps:
+    - run:
+        name: Install CMake 3.4
+        command: |
+          apt install -y wget
+          mkdir -p $HOME/cmake && cd $HOME/cmake
+          wget -nc --no-check-certificate https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz
+          tar --strip-components=1 -xzf cmake-3.4.3-Linux-x86_64.tar.gz
+          echo 'export PATH=$HOME/cmake/bin:$PATH' >> $BASH_ENV
+          source $BASH_ENV && cmake --version | grep 3.4
+
+  install-swiftshader-gles:
+    parameters:
+      build:
+        type: string
+    steps:
+    - run:
+        name: Install SwiftShader GLES
+        # Zip from https://github.com/mosra/magnum-ci/tree/swiftshader and
+        # self-hosted because GH Actions would make it too simple for people if
+        # you could just download the artifacts directly, right? RIGHT?
+        command: |
+          mkdir -p $HOME/swiftshader && cd $HOME/swiftshader
+          wget https://ci.magnum.graphics/swiftshader-gles-r5464.a6940c8e6e-<< parameters.build >>.zip
+          unzip swiftshader-gles-r5464.a6940c8e6e-<< parameters.build >>.zip
+
+  install-imgui:
+    steps:
+    - run:
+        name: Install ImGui
+        command: |
+          export IMGUI_VERSION=v1.72
+          mkdir -p $HOME/imgui && cd $HOME/imgui
+          wget --no-check-certificate https://github.com/ocornut/imgui/archive/$IMGUI_VERSION.tar.gz
+          tar --strip-components=1 -xzf $IMGUI_VERSION.tar.gz
+
+  install-glm:
+    steps:
+    - run:
+        name: Install GLM
+        command: |
+          export GLM_VERSION=0.9.9.0
+          mkdir -p $HOME/glm && cd $HOME/glm
+          wget --no-check-certificate https://github.com/g-truc/glm/archive/$GLM_VERSION.tar.gz
+          tar --strip-components=1 -xzf $GLM_VERSION.tar.gz
+
+  install-eigen:
+    steps:
+    - run:
+        name: Install Eigen
+        command: |
+          export EIGEN_VERSION=3.3.7
+          mkdir -p $HOME/eigen && cd $HOME/eigen
+          wget --no-check-certificate https://gitlab.com/libeigen/eigen/-/archive/$EIGEN_VERSION/eigen-$EIGEN_VERSION.tar.gz
+          tar --strip-components=1 -xzf eigen-$EIGEN_VERSION.tar.gz
+
+  build:
+    parameters:
+      script:
+        type: string
+    steps:
+    - checkout
+    - run:
+        name: Build & test
+        command: |
+          if [ "$BUILD_STATIC" != "ON" ]; then export BUILD_STATIC=OFF; fi
+          if [ "$BUILD_DEPRECATED" != "OFF" ]; then export BUILD_DEPRECATED=ON; fi
+          if [ "$WITH_DART" != "OFF" ]; then export WITH_DART=ON; fi
+          ./package/ci/<< parameters.script >>
+
+  lcov:
+    steps:
+    - run:
+        name: Collect code coverage
+        # Keep in sync with PKBUILD-coverage, travis.yml and appveyor-lcov.sh,
+        # please
+        command: |
+          lcov $LCOV_EXTRA_OPTS --directory . --capture --output-file coverage.info > /dev/null
+          lcov $LCOV_EXTRA_OPTS --extract coverage.info "*/src/Magnum*/*" --output-file coverage.info > /dev/null
+          lcov $LCOV_EXTRA_OPTS --remove coverage.info "*/Test/*" --output-file coverage.info > /dev/null
+          lcov $LCOV_EXTRA_OPTS --remove coverage.info "*/build/src/*" --output-file coverage.info > /dev/null
+    - codecov/upload:
+        file: coverage.info
+
+jobs:
+  linux-gl:
+    executor: ubuntu-16_04
+    environment:
+      CMAKE_CXX_FLAGS: --coverage
+      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: GLX
+      # DART temporarily disabled on Linux because of GCC 4 and 5 ABI mismatch
+      # on 16.04: https://github.com/dartsim/dart/issues/967#issuecomment-469075835
+      WITH_DART: "OFF"
+    steps:
+    - install-base-linux:
+        # SDL needed for some snippets
+        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+    - install-gcc-4_8
+    - install-cmake-3_4
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+    - lcov
+
+  linux-gles2:
+    executor: ubuntu-16_04
+    environment:
+      CMAKE_CXX_FLAGS: --coverage
+      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: EGL
+      # STUPID yml interprets unquoted ON as a boolean
+      TARGET_GLES2: "ON"
+      # Disabled due to GCC 4/5 ABI mismatch, see above
+      WITH_DART: "OFF"
+    steps:
+    - install-base-linux:
+        # SDL needed for some snippets
+        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
+    - install-gcc-4_8
+    - install-cmake-3_4
+    - install-swiftshader-gles:
+        build: ubuntu-16.04
+    - install-imgui
+    - build:
+        script: unix-desktop-gles.sh
+    - lcov
+
+  linux-gles3:
+    executor: ubuntu-16_04
+    environment:
+      CMAKE_CXX_FLAGS: --coverage
+      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: EGL
+      # STUPID yml interprets unquoted OFF as a boolean
+      TARGET_GLES2: "OFF"
+      # Disabled due to GCC 4/5 ABI mismatch, see above
+      WITH_DART: "OFF"
+    steps:
+    - install-base-linux:
+        # SDL needed for some snippets
+        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
+    - install-gcc-4_8
+    - install-cmake-3_4
+    - install-swiftshader-gles:
+        build: ubuntu-16.04
+    - install-imgui
+    - build:
+        script: unix-desktop-gles.sh
+    - lcov
+
+  linux-nondeprecated:
+    executor: ubuntu-16_04
+    environment:
+      # STUPID yml interprets unquoted OFF as a boolean
+      BUILD_DEPRECATED: "OFF"
+      CMAKE_CXX_FLAGS: -DCORRADE_NO_ASSERT
+      CONFIGURATION: Release
+      PLATFORM_GL_API: GLX
+      # Disabled due to GCC 4/5 ABI mismatch, see above
+      WITH_DART: "OFF"
+    steps:
+    - install-base-linux:
+        # SDL needed for some snippets
+        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+    - install-gcc-4_8
+    - install-cmake-3_4
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+
+  linux-sanitizers:
+    executor: ubuntu-16_04
+    environment:
+      # STUPID yml interprets unquoted OFF as a boolean. Applications don't
+      # have any automated tests, so building them for sanitizers doesn't make
+      # sense.
+      BUILD_APPLICATIONS: "OFF"
+      CMAKE_CXX_FLAGS: -fsanitize=address
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: GLX
+      # Disabled due to GCC 4/5 ABI mismatch, see above
+      WITH_DART: "OFF"
+    steps:
+    - install-base-linux:
+        # SDL needed for some snippets
+        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+    - install-clang-3_8
+    - install-cmake-3_4
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+
+  macos-gl:
+    # On 9.4, freeglut (which is a dependency of dart or bullet, probably)
+    # fails to install because of an unsatisfied XQuartz dependency. Not sure
+    # what that is about, using an image that works instead.
+    executor: xcode-10_0
+    environment:
+      CMAKE_CXX_FLAGS: --coverage
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: CGL
+    steps:
+    - install-base-macos:
+        extra: sdl2 bullet eigen glm dartsim wget
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+    - lcov
+
+  emscripten-webgl1:
+    executor: emscripten
+    environment:
+      # STUPID yml interprets unquoted ON as a boolean
+      TARGET_GLES2: "ON"
+    steps:
+    - install-base-linux
+    - install-imgui
+    - install-glm
+    - install-eigen
+    - build:
+        script: emscripten.sh
+
+  emscripten-webgl2:
+    executor: emscripten
+    environment:
+      # STUPID yml interprets unquoted OFF as a boolean
+      TARGET_GLES2: "OFF"
+    steps:
+    - install-base-linux
+    - install-imgui
+    - install-glm
+    - install-eigen
+    - build:
+        script: emscripten.sh
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - linux-gl
+    - linux-gles2
+    - linux-gles3
+    - linux-nondeprecated
+    - linux-sanitizers
+    - macos-gl
+    - emscripten-webgl1
+    - emscripten-webgl2

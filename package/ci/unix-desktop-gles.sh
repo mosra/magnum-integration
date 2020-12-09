@@ -22,13 +22,9 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DCMAKE_PREFIX_PATH=$HOME/sdl2 \
-    -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
+    -DCMAKE_PREFIX_PATH="$HOME/sdl2;$HOME/swiftshader" \
+    -DCMAKE_INSTALL_RPATH="$HOME/deps/lib;$HOME/swiftshader/lib" \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DEGL_LIBRARY=$HOME/swiftshader/libEGL.so \
-    -DOPENGLES2_LIBRARY=$HOME/swiftshader/libGLESv2.so \
-    -DOPENGLES3_LIBRARY=$HOME/swiftshader/libGLESv2.so \
-    -DCMAKE_INSTALL_RPATH=$HOME/swiftshader \
     -DTARGET_GLES=ON \
     -DTARGET_GLES2=$TARGET_GLES2 \
     -DWITH_AUDIO=OFF \
@@ -52,14 +48,10 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DCMAKE_PREFIX_PATH="$HOME/deps-dart;$HOME/sdl2" \
-    -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
+    -DCMAKE_PREFIX_PATH="$HOME/deps-dart;$HOME/sdl2;$HOME/swiftshader" \
+    -DCMAKE_INSTALL_RPATH="$HOME/deps/lib;$HOME/swiftshader/lib" \
     -DIMGUI_DIR=$HOME/imgui \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DEGL_LIBRARY=$HOME/swiftshader/libEGL.so \
-    -DOPENGLES2_LIBRARY=$HOME/swiftshader/libGLESv2.so \
-    -DOPENGLES3_LIBRARY=$HOME/swiftshader/libGLESv2.so \
-    -DCMAKE_INSTALL_RPATH=$HOME/swiftshader \
     -DWITH_BULLET=ON \
     -DWITH_DART=OFF \
     -DWITH_EIGEN=ON \

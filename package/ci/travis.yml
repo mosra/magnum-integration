@@ -13,76 +13,76 @@ addons:
 
 matrix:
   include:
-  - language: cpp
-    os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-    - JOBID=linux-gl
-    - TARGET=desktop
-    - CMAKE_CXX_FLAGS="--coverage"
-    - LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
-    - CONFIGURATION=Debug
-  - language: cpp
-    os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-    - JOBID=linux-nondeprecated
-    - TARGET=desktop
-    - BUILD_DEPRECATED=OFF
-    - CMAKE_CXX_FLAGS="-DCORRADE_NO_ASSERT"
-    - CONFIGURATION=Release
-  - language: cpp
-    os: linux
-    dist: xenial
-    compiler: clang
-    env:
-    - JOBID=linux-sanitizers
-    - TARGET=desktop-sanitizers
-    - CMAKE_CXX_FLAGS=-fsanitize=address
-    - CONFIGURATION=Debug
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-xenial
-        packages:
-        - libgl1-mesa-dev
-        - clang-3.8
-        - ninja-build
-        # Needed for some snippets
-        - libsdl2-dev
-        - libbullet-dev
-        - libeigen3-dev
-        - libglm-dev
-  - language: cpp
-    os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-    - JOBID=linux-gles2
-    - TARGET=desktop-gles
-    - TARGET_GLES2=ON
-    - CMAKE_CXX_FLAGS="--coverage"
-    - LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
-  - language: cpp
-    os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-    - JOBID=linux-gles3
-    - TARGET=desktop-gles
-    - TARGET_GLES2=OFF
-    - CMAKE_CXX_FLAGS="--coverage"
-    - LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
-  - language: cpp
-    os: osx
-    compiler: clang
-    env:
-    - JOBID=macos-gl
-    - TARGET=desktop
-    - CMAKE_CXX_FLAGS="--coverage"
-    - CONFIGURATION=Debug
+  #- language: cpp
+    #os: linux
+    #dist: xenial
+    #compiler: gcc
+    #env:
+    #- JOBID=linux-gl
+    #- TARGET=desktop
+    #- CMAKE_CXX_FLAGS="--coverage"
+    #- LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
+    #- CONFIGURATION=Debug
+  #- language: cpp
+    #os: linux
+    #dist: xenial
+    #compiler: gcc
+    #env:
+    #- JOBID=linux-nondeprecated
+    #- TARGET=desktop
+    #- BUILD_DEPRECATED=OFF
+    #- CMAKE_CXX_FLAGS="-DCORRADE_NO_ASSERT"
+    #- CONFIGURATION=Release
+  #- language: cpp
+    #os: linux
+    #dist: xenial
+    #compiler: clang
+    #env:
+    #- JOBID=linux-sanitizers
+    #- TARGET=desktop-sanitizers
+    #- CMAKE_CXX_FLAGS=-fsanitize=address
+    #- CONFIGURATION=Debug
+    #addons:
+      #apt:
+        #sources:
+        #- llvm-toolchain-xenial
+        #packages:
+        #- libgl1-mesa-dev
+        #- clang-3.8
+        #- ninja-build
+        ## Needed for some snippets
+        #- libsdl2-dev
+        #- libbullet-dev
+        #- libeigen3-dev
+        #- libglm-dev
+  #- language: cpp
+    #os: linux
+    #dist: xenial
+    #compiler: gcc
+    #env:
+    #- JOBID=linux-gles2
+    #- TARGET=desktop-gles
+    #- TARGET_GLES2=ON
+    #- CMAKE_CXX_FLAGS="--coverage"
+    #- LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
+  #- language: cpp
+    #os: linux
+    #dist: xenial
+    #compiler: gcc
+    #env:
+    #- JOBID=linux-gles3
+    #- TARGET=desktop-gles
+    #- TARGET_GLES2=OFF
+    #- CMAKE_CXX_FLAGS="--coverage"
+    #- LCOV_EXTRA_OPTS="--gcov-tool /usr/bin/gcov-4.8"
+  #- language: cpp
+    #os: osx
+    #compiler: clang
+    #env:
+    #- JOBID=macos-gl
+    #- TARGET=desktop
+    #- CMAKE_CXX_FLAGS="--coverage"
+    #- CONFIGURATION=Debug
   - language: cpp
     os: osx
     osx_image: xcode7.3
@@ -97,20 +97,20 @@ matrix:
     - JOBID=ios-gles3
     - TARGET=ios-simulator
     - TARGET_GLES2=OFF
-  - language: cpp
-    os: osx
-    osx_image: xcode9.3
-    env:
-    - JOBID=emscripten-webgl1
-    - TARGET=emscripten
-    - TARGET_GLES2=ON
-  - language: cpp
-    os: osx
-    osx_image: xcode9.3
-    env:
-    - JOBID=emscripten-webgl2
-    - TARGET=emscripten
-    - TARGET_GLES2=OFF
+  #- language: cpp
+    #os: osx
+    #osx_image: xcode9.3
+    #env:
+    #- JOBID=emscripten-webgl1
+    #- TARGET=emscripten
+    #- TARGET_GLES2=ON
+  #- language: cpp
+    #os: osx
+    #osx_image: xcode9.3
+    #env:
+    #- JOBID=emscripten-webgl2
+    #- TARGET=emscripten
+    #- TARGET_GLES2=OFF
   - language: android
     os: linux
     # Setting xenial here will cause it to use 12.04, with GCC 4.6 and other
@@ -175,7 +175,6 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-sanitizers" ]; then export CXX=clang++-3.8; fi
 - if [ "$BUILD_DEPRECATED" != "OFF" ]; then export BUILD_DEPRECATED=ON; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PLATFORM_GL_API=GLX; fi
-- if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then export WITH_BULLET=OFF; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ]; then wget -nc https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip && unzip -q android-*.zip; fi
 # Download CMake 3.4.3 to ensure we're still compatible with it (Travis has
 # 3.9 since December 2017). Also, the PATH setting can't be cached, so it's
@@ -214,12 +213,12 @@ install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-gles" ] && [ ! -e "$HOME/swiftshader/libEGL.so" ]; then cd $HOME ; wget https://ci.magnum.graphics/swiftshader-chromium-587878.tar.gz && mkdir -p swiftshader && cd swiftshader && tar -xzf ../swiftshader-chromium-587878.tar.gz && cd $TRAVIS_BUILD_DIR ; fi
 
 script:
-- if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then ./package/ci/travis-desktop.sh; fi
-- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-gles" ]; then ./package/ci/travis-desktop-gles.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && ( [ "$TARGET" == "desktop" ] || [ "$TARGET" == "desktop-sanitizers" ] ); then ./package/ci/unix-desktop.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "desktop-gles" ]; then ./package/ci/unix-desktop-gles.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TARGET" == "android" ]; then ./package/ci/travis-android-arm.sh; fi
-- if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then ./package/ci/travis-desktop.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "desktop" ]; then ./package/ci/unix-desktop.sh; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "ios-simulator" ]; then ./package/ci/travis-ios-simulator.sh; fi
-- if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "emscripten" ]; then ./package/ci/travis-emscripten.sh; fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$TARGET" == "emscripten" ]; then ./package/ci/emscripten.sh; fi
 # Travis somehow is not able to gather all output, try to force it using this
 - sync
 

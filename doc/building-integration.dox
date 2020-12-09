@@ -362,11 +362,17 @@ described in @ref building-doc.
 
 @section building-integration-ci Continuous Integration
 
+@subsection building-integration-ci-circleci CircleCI
+
+In `package/ci/` there is a `circle.yml` file with Linux GCC 4.8, macOS, Linux
+desktop GLES2/GLES3, Emscripten WebGL1/WebGL2, AddressSanitizer and
+ThreadSanitizer configuration. Online at
+https://circleci.com/gh/mosra/magnum-integration.
+
 @subsection building-integration-ci-travis Travis
 
-In `package/ci/` there is a `travis.yml` file with Linux GCC 4.8, macOS, Linux
-desktop GLES2/GLES3, iOS GLES2/GLES3, Emscripten WebGL1/WebGL2, Android
-GLES2/GLES3, AddressSanitizer and ThreadSanitizer configuration. Online at
+In `package/ci/` there is a `travis.yml` file with iOS GLES2/GLES3 and Android
+GLES2/GLES3 configuration. Online at
 https://travis-ci.com/mosra/magnum-integration.
 
 @subsection building-integration-ci-appveyor AppVeyor
