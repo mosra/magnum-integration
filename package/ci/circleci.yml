@@ -370,6 +370,30 @@ jobs:
         script: unix-desktop-gles.sh
     - lcov
 
+  linux-static:
+    executor: ubuntu-18_04
+    environment:
+      # STUPID yml interprets unquoted ON as a boolean
+      BUILD_STATIC: "ON"
+      CMAKE_CXX_FLAGS: --coverage
+      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
+      CONFIGURATION: Debug
+      # STUPID yml interprets unquoted ON as a boolean
+      TARGET_EGL: "ON"
+      # Disabled due to GCC 4/5 ABI mismatch, see above
+      WITH_DART: "OFF"
+    steps:
+    # libidn11 needed by CMake. SDL needed for some snippets.
+    - install-base-linux:
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
+    - install-gcc-4_8
+    - install-cmake:
+        version: "3.5.2"
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+    - lcov
+
   linux-nondeprecated:
     executor: ubuntu-18_04
     environment:
@@ -446,6 +470,21 @@ jobs:
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
+    - lcov
+
+  macos-static:
+    executor: xcode-14_0
+    environment:
+      # STUPID yml interprets unquoted ON as a boolean
+      BUILD_STATIC: "ON"
+      CMAKE_CXX_FLAGS: --coverage
+      CONFIGURATION: Debug
+    steps:
+    - install-base-macos:
+        extra: sdl2 glfw bullet eigen glm dartsim wget
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
     - lcov
 
   emscripten-webgl1:
@@ -561,6 +600,10 @@ workflows:
         requires:
         - linux-gl
         - linux-nondeprecated
+    - linux-static:
+        requires:
+        - linux-gl
+        - linux-nondeprecated
     - linux-sanitizers:
         requires:
         - linux-gl
@@ -573,6 +616,10 @@ workflows:
     - macos-gles3:
         requires:
         - linux-gles3
+        - macos-gl
+    - macos-static:
+        requires:
+        - linux-static
         - macos-gl
     - emscripten-webgl1:
         requires:

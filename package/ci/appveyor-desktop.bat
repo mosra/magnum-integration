@@ -49,6 +49,7 @@ cmake .. ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DCORRADE_WITH_INTERCONNECT=OFF ^
     -DCORRADE_UTILITY_USE_ANSI_COLORS=ON ^
+    -DCORRADE_BUILD_STATIC=%BUILD_STATIC% ^
     %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -76,6 +77,8 @@ cmake .. ^
     -DMAGNUM_WITH_OPENGLTESTER=ON ^
     -DMAGNUM_WITH_SDL2APPLICATION=ON ^
     -DMAGNUM_WITH_GLFWAPPLICATION=ON ^
+    -DMAGNUM_BUILD_STATIC=%BUILD_STATIC% ^
+    -DMAGNUM_BUILD_PLUGINS_STATIC=%BUILD_STATIC% ^
     %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -110,6 +113,7 @@ cmake .. ^
     -DMAGNUM_WITH_OVRINTEGRATION=ON ^
     -DMAGNUM_BUILD_TESTS=ON ^
     -DMAGNUM_BUILD_GL_TESTS=ON ^
+    -DMAGNUM_BUILD_STATIC=%BUILD_STATIC% ^
     %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . || exit /b
 

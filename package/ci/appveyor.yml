@@ -27,6 +27,20 @@ environment:
     APPVEYOR_JOB_NAME: windows-msvc2022
     ENABLE_BULLET: ON
   - TARGET: desktop
+    COMPILER: msvc
+    PLATFORM: x64
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    APPVEYOR_JOB_NAME: windows-static-msvc2019
+    BUILD_STATIC: ON
+    ENABLE_BULLET: ON
+  - TARGET: desktop
+    COMPILER: msvc
+    PLATFORM: x64
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    APPVEYOR_JOB_NAME: windows-static-msvc2022
+    BUILD_STATIC: ON
+    ENABLE_BULLET: ON
+  - TARGET: desktop
     COMPILER: msvc-clang
     PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
