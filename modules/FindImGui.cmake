@@ -129,13 +129,13 @@ macro(_imgui_setup_source_file source_var)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?Clang"
         AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
         set_property(SOURCE ${${source_var}} APPEND_STRING PROPERTY COMPILE_FLAGS
-            " -Wno-old-style-cast -Wno-zero-as-null-pointer-constant")
+            " -Wno-old-style-cast")
     endif()
 
     # GCC-specific flags
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set_property(SOURCE ${${source_var}} APPEND_STRING PROPERTY COMPILE_FLAGS
-            " -Wno-double-promotion")
+            " -Wno-double-promotion -Wno-zero-as-null-pointer-constant")
     endif()
 
     mark_as_advanced(${source_var})
