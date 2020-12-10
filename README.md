@@ -3,7 +3,7 @@ providing integration of various math and physics libraries into the engine
 itself.
 
 [![Join the chat at https://gitter.im/mosra/magnum](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mosra/magnum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://circleci.com/gh/mosra/magnum-integration.svg?style=shield)](https://circleci.com/gh/mosra/magnum-integration||)
+[![Build Status](https://circleci.com/gh/mosra/magnum-integration.svg?style=shield)](https://circleci.com/gh/mosra/magnum-integration)
 [![Build Status](https://travis-ci.com/mosra/magnum-integration.svg?branch=master)](https://travis-ci.com/mosra/magnum-integration)
 [![Build Status](https://ci.appveyor.com/api/projects/status/hs6ykva1ld74vavr/branch/master?svg=true)](https://ci.appveyor.com/project/mosra/magnum-integration/branch/master)
 [![Coverage Status](https://codecov.io/gh/mosra/magnum-integration/branch/master/graph/badge.svg)](https://codecov.io/gh/mosra/magnum-integration)
