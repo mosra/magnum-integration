@@ -69,6 +69,8 @@ namespace Magnum {
     the @ref GlmIntegration library
 -   **Tomáš Skřivan** ([\@lecopivo](https://github.com/lecopivo)) --- base of
     the @ref ImGuiIntegration library
+-   **Tracy Ma** ([\@linuxaged](https://github.com/linuxaged)) ---
+    `FindImGui.cmake` updates
 
 */
 
