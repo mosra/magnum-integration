@@ -56,6 +56,8 @@ namespace Magnum {
 
 -   Various improvements and clarifications (see
     [mosra/magnum-integration#75](https://github.com/mosra/magnum-integration/issues/75))
+-   Documented how to enable ImGui in Debian packages (see
+    [mosra/magnum-integration#73](https://github.com/mosra/magnum-integration/issues/73))
 
 @section changelog-integration-2020-06 2020.06
 
