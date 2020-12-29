@@ -90,8 +90,10 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 
 void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) {
     arrayAppend(_bufferData, {
-        Vector3{from}, Vector3{fromColor},
-        Vector3{to}, Vector3{toColor}});
+        Vector3{Math::Vector3<btScalar>{from}},
+        Vector3{Math::Vector3<btScalar>{fromColor}},
+        Vector3{Math::Vector3<btScalar>{to}},
+        Vector3{Math::Vector3<btScalar>{toColor}}});
 
     /* The flushLines() API was added at some point between 2.83 and 2.83.4,
        but that's below the resolution of the constant below. Moreover, 284

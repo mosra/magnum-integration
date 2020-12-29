@@ -35,9 +35,6 @@
 
 namespace Magnum { namespace BulletIntegration { namespace Test { namespace {
 
-typedef Math::Vector<3, btScalar> Vector3;
-typedef Math::RectangularMatrix<3, 3, btScalar> Matrix3;
-
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
@@ -55,26 +52,30 @@ IntegrationTest::IntegrationTest() {
 }
 
 void IntegrationTest::vector() {
-    Vector3 a{1.0f, 2.0f, 3.0f};
-    btVector3 b{1.0f, 2.0f, 3.0f};
+    Math::Vector3<btScalar> a{btScalar(1.0), btScalar(2.0), btScalar(3.0)};
+    btVector3 b{btScalar(1.0), btScalar(2.0), btScalar(3.0)};
 
-    CORRADE_COMPARE(Vector3{b}, a);
+    CORRADE_COMPARE(Math::Vector3<btScalar>{b}, a);
     /* Clang can't handle {} (huh?) */
     CORRADE_VERIFY(btVector3(a) == b);
 }
 
 void IntegrationTest::matrix3() {
     /* Magnum is column-major */
-    const Matrix3 a{Vector3{ 0.133333f, 0.933333f, -0.333333f},
-                    Vector3{-0.666667f, 0.333333f,  0.666667f},
-                    Vector3{ 0.733333f, 0.133333f,  0.666667f}};
+    const Math::Matrix3x3<btScalar> a{
+        Math::Vector3<btScalar>{btScalar( 0.133333333333333), btScalar(0.933333333333333), btScalar(-0.333333333333333)},
+        Math::Vector3<btScalar>{btScalar(-0.666666666666667), btScalar(0.333333333333333), btScalar( 0.666666666666667)},
+        Math::Vector3<btScalar>{btScalar( 0.733333333333333), btScalar(0.133333333333333), btScalar( 0.666666666666667)}
+    };
 
     /* Bullet is row-major */
-    const btMatrix3x3 b{ 0.133333f, -0.666667f, 0.733333f,
-                         0.933333f,  0.333333f, 0.133333f,
-                        -0.333333f,  0.666667f, 0.666667f};
+    const btMatrix3x3 b{
+        btScalar( 0.133333333333333), btScalar(-0.666666666666667), btScalar(0.733333333333333),
+        btScalar( 0.933333333333333), btScalar( 0.333333333333333), btScalar(0.133333333333333),
+        btScalar(-0.333333333333333), btScalar( 0.666666666666667), btScalar(0.666666666666667)
+    };
 
-    CORRADE_COMPARE(Matrix3{b}, a);
+    CORRADE_COMPARE(Math::Matrix3x3<btScalar>{b}, a);
 
     /* Comparing directly fails on floating-point inaccuracies, need to use
        fuzzy compare */
@@ -88,28 +89,28 @@ void IntegrationTest::matrix3() {
        result */
     btQuaternion q;
     b.getRotation(q);
-    CORRADE_COMPARE(Quaternion::fromMatrix(a), Quaternion(q));
+    CORRADE_COMPARE(Math::Quaternion<btScalar>::fromMatrix(a), Math::Quaternion<btScalar>{q});
 }
 
 void IntegrationTest::matrix4() {
-    const Quaternion rotation = Quaternion{{1.0f, 2.0f, 3.0f}, 4.0f}.normalized();
-    constexpr Vector3 translation{1.0f, 2.0f, 3.0f};
+    const auto rotation = Math::Quaternion<btScalar>{{btScalar(1.0), btScalar(2.0), btScalar(3.0)}, btScalar(4.0)}.normalized();
+    constexpr Math::Vector3<btScalar> translation{btScalar(1.0), btScalar(2.0), btScalar(3.0)};
 
-    const Matrix4 a = Matrix4::from(rotation.toMatrix(), translation);
+    const auto a = Math::Matrix4<btScalar>::from(rotation.toMatrix(), translation);
     const btTransform b{btQuaternion{rotation}, btVector3{translation}};
 
-    CORRADE_COMPARE(Matrix4{b}, a);
+    CORRADE_COMPARE(Math::Matrix4<btScalar>{b}, a);
 
     const btTransform btA = btTransform(a);
-    CORRADE_COMPARE(Quaternion{btA.getRotation()}, rotation);
-    CORRADE_COMPARE(Vector3{btA.getOrigin()}, translation);
+    CORRADE_COMPARE(Math::Quaternion<btScalar>{btA.getRotation()}, rotation);
+    CORRADE_COMPARE(Math::Vector3<btScalar>{btA.getOrigin()}, translation);
 }
 
 void IntegrationTest::quaternion() {
-    Quaternion a{{1.0f, 2.0f, 3.0f}, 4.0f};
-    btQuaternion b{1.0f, 2.0f, 3.0f, 4.0f};
+    Math::Quaternion<btScalar> a{{btScalar(1.0), btScalar(2.0), btScalar(3.0)}, btScalar(4.0)};
+    btQuaternion b{btScalar(1.0), btScalar(2.0), btScalar(3.0), btScalar(4.0)};
 
-    CORRADE_COMPARE(Quaternion{b}, a);
+    CORRADE_COMPARE(Math::Quaternion<btScalar>{b}, a);
     CORRADE_VERIFY(btQuaternion{a} == b);
 }
 

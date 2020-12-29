@@ -39,12 +39,18 @@
 #include "Magnum/BulletIntegration/Integration.h"
 #include "Magnum/BulletIntegration/MotionState.h"
 
+#ifdef BT_USE_DOUBLE_PRECISION
+#include <Magnum/SceneGraph/Object.hpp>
+#include <Magnum/SceneGraph/AbstractFeature.hpp>
+#include <Magnum/SceneGraph/MatrixTransformation3D.hpp>
+#endif
+
 namespace Magnum { namespace BulletIntegration { namespace Test { namespace {
 
 using namespace Math::Literals;
 
-typedef SceneGraph::Object<SceneGraph::MatrixTransformation3D> Object3D;
-typedef SceneGraph::Scene<SceneGraph::MatrixTransformation3D> Scene3D;
+typedef SceneGraph::Object<SceneGraph::BasicMatrixTransformation3D<btScalar>> Object3D;
+typedef SceneGraph::Scene<SceneGraph::BasicMatrixTransformation3D<btScalar>> Scene3D;
 
 struct MotionStateTest: TestSuite::Tester {
     explicit MotionStateTest();
@@ -62,28 +68,28 @@ void MotionStateTest::test() {
     btCollisionDispatcher dispatcher{&collisionConfig};
     btDbvtBroadphase broadphase;
     btDiscreteDynamicsWorld btWorld{&dispatcher, &broadphase, nullptr, &collisionConfig};
-    btWorld.setGravity(btVector3{0.0f, 0.0f, 0.0f});
+    btWorld.setGravity(btVector3{btScalar(0.0), btScalar(0.0), btScalar(0.0)});
 
     /* Setup scene graph */
     Scene3D scene;
     Object3D object{&scene};
 
-    Matrix4 transformation = Matrix4::translation({1.0f, 2.0f, 3.0f})*Matrix4::rotationX(45.0_degf);
+    auto transformation = Math::Matrix4<btScalar>::translation({btScalar(1.0), btScalar(2.0), btScalar(3.0)})*Math::Matrix4<btScalar>::rotationX(Math::Deg<btScalar>{btScalar(45.0)});
 
     /* Setup rigid body which will receive the motion state */
     MotionState motionState{object};
-    btSphereShape collisionShape{0.0f};
-    btRigidBody rigidBody(1.0f, &motionState.btMotionState(), &collisionShape);
+    btSphereShape collisionShape{btScalar(0.0)};
+    btRigidBody rigidBody(btScalar(1.0), &motionState.btMotionState(), &collisionShape);
     btWorld.addRigidBody(&rigidBody);
 
     /* Rigid body should have no transformation initially */
-    CORRADE_COMPARE(Matrix4{rigidBody.getCenterOfMassTransform()}, Matrix4{});
+    CORRADE_COMPARE(Math::Matrix4<btScalar>{rigidBody.getCenterOfMassTransform()}, Math::Matrix4<btScalar>{});
 
     /* Reset transformation of rigid body transformation */
     rigidBody.setWorldTransform(btTransform{transformation});
 
     /* Motion state will get updated through btWorld */
-    btWorld.stepSimulation(1.0f);
+    btWorld.stepSimulation(btScalar(1.0));
 
     CORRADE_COMPARE(object.transformationMatrix(), transformation);
 }

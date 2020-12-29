@@ -60,6 +60,7 @@ btWorld->debugDrawWorld();
 #pragma GCC diagnostic pop
 #endif
 
+#ifndef BT_USE_DOUBLE_PRECISION
 {
 /* [Integration] */
 btVector3 a{20.0f, 50.0f, -1.0f};
@@ -71,7 +72,9 @@ auto c = btQuaternion(Quaternion::rotation(15.0_degf, Vector3::xAxis()));
 static_cast<void>(b);
 static_cast<void>(c);
 }
+#endif
 
+#ifndef BT_USE_DOUBLE_PRECISION
 {
 #ifdef __clang__
 #pragma GCC diagnostic push
@@ -106,4 +109,5 @@ rigidBody->setMotionState(&motionState->btMotionState());
 #pragma GCC diagnostic pop
 #endif
 }
+#endif
 }
