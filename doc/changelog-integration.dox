@@ -47,6 +47,10 @@ namespace Magnum {
 
 -   Updated `FindImGui.cmake` to optionally include the new `imgui_tables.cpp`
     source present in latest versions (see [mosra/magnum-integration#78](https://github.com/mosra/magnum-integration/pull/78))
+-   `FindBullet.cmake` now attemps to discover presence of the
+    `BT_USE_DOUBLE_PRECISION` preprocessor macro on both system-wide and
+    subproject workflow and adds it to the imported target to prevent linker
+    errors
 
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 

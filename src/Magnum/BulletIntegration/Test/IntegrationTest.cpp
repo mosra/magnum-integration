@@ -49,6 +49,10 @@ IntegrationTest::IntegrationTest() {
               &IntegrationTest::matrix3,
               &IntegrationTest::matrix4,
               &IntegrationTest::quaternion});
+
+    #ifdef BT_USE_DOUBLE_PRECISION
+    Debug{} << "Using Bullet with BT_USE_DOUBLE_PRECISION enabled";
+    #endif
 }
 
 void IntegrationTest::vector() {
