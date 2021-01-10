@@ -24,8 +24,7 @@ class MagnumIntegration < Formula
     system "mkdir build"
     cd "build" do
       system "cmake",
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_INSTALL_PREFIX=#{prefix}",
+        *std_cmake_args,
         "-DWITH_BULLET=#{(build.with? 'bullet') ? 'ON' : 'OFF'}",
         "-DWITH_DART=#{(build.with? 'dartsim') ? 'ON' : 'OFF'}",
         "-DWITH_EIGEN=#{(build.with? 'eigen') ? 'ON' : 'OFF'}",
