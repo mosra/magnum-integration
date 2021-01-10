@@ -101,6 +101,8 @@ if(CORRADE_TARGET_WINDOWS)
     list(APPEND _MAGNUMINTEGRATION_LIBRARY_COMPONENTS Ovr)
 endif()
 set(_MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS Eigen)
+# Nothing is enabled by default right now
+set(_MAGNUMINTEGRATION_IMPLICITLY_ENABLED_COMPONENTS )
 
 # Inter-component dependencies (none yet)
 # set(_MAGNUMINTEGRATION_Component_DEPENDENCIES Dependency)
@@ -119,6 +121,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
 endforeach()
 
 # Join the lists, remove duplicate components
+set(_MAGNUMINTEGRATION_ORIGINAL_FIND_COMPONENTS ${MagnumIntegration_FIND_COMPONENTS})
 if(_MAGNUMINTEGRATION_ADDITIONAL_COMPONENTS)
     list(INSERT MagnumIntegration_FIND_COMPONENTS 0 ${_MAGNUMINTEGRATION_ADDITIONAL_COMPONENTS})
 endif()
@@ -159,11 +162,14 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
                 set_property(TARGET MagnumIntegration::${_component} PROPERTY
                     IMPORTED_LOCATION_DEBUG ${MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG})
             endif()
-        endif()
 
         # Header-only library components
-        if(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
+        elseif(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
             add_library(MagnumIntegration::${_component} INTERFACE IMPORTED)
+
+        # Something unknown, skip. FPHSA will take care of handling this below.
+        else()
+            continue()
         endif()
 
         # Bullet integration library
@@ -286,7 +292,41 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
     endif()
 endforeach()
 
+# For CMake 3.16+ with REASON_FAILURE_MESSAGE, provide additional potentially
+# useful info about the failed components.
+if(NOT CMAKE_VERSION VERSION_LESS 3.16)
+    set(_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE )
+    # Go only through the originally specified find_package() components, not
+    # the dependencies added by us afterwards
+    foreach(_component ${_MAGNUMINTEGRATION_ORIGINAL_FIND_COMPONENTS})
+        if(MagnumIntegration_${_component}_FOUND)
+            continue()
+        endif()
+
+        # If it's not known at all, tell the user -- it might be a new library
+        # and an old Find module, or something platform-specific.
+        if(NOT _component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
+            list(APPEND _MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE "${_component} is not a known component on this platform.")
+        # Otherwise, if it's not among implicitly built components, hint that
+        # the user may need to enable it
+        # TODO: currently, the _FOUND variable doesn't reflect if dependencies
+        #   were found. When it will, this needs to be updated to avoid
+        #   misleading messages.
+        elseif(NOT _component IN_LIST _MAGNUMINTEGRATION_IMPLICITLY_ENABLED_COMPONENTS)
+            string(TOUPPER ${_component} _COMPONENT)
+            list(APPEND _MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE "${_component} is not built by default. Make sure you enabled WITH_${_COMPONENT} when building Magnum Integration.")
+        # Otherwise we have no idea. Better be silent than to print something
+        # misleading.
+        else()
+        endif()
+    endforeach()
+
+    string(REPLACE ";" " " _MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE "${_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE}")
+    set(_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE REASON_FAILURE_MESSAGE "${_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE}")
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MagnumIntegration
     REQUIRED_VARS MAGNUMINTEGRATION_INCLUDE_DIR
-    HANDLE_COMPONENTS)
+    HANDLE_COMPONENTS
+    ${_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE})
