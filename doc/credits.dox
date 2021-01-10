@@ -44,6 +44,8 @@ namespace Magnum {
     array views in @ref EigenIntegration
 -   **Jan Dupal** ([\@JanDupal](https://github.com/JanDupal)) --- the
     @ref BulletIntegration library
+-   **John Laxson** ([\@jlaxson](https://github.com/jlaxson)) --- Homebrew
+    package improvements
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
     @ref OvrIntegration library, improvements to Bullet integration
     and the migration of magnum-imgui to @ref ImGuiIntegration library

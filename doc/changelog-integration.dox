@@ -47,10 +47,14 @@ namespace Magnum {
 
 -   Updated `FindImGui.cmake` to optionally include the new `imgui_tables.cpp`
     source present in latest versions (see [mosra/magnum-integration#78](https://github.com/mosra/magnum-integration/pull/78))
+-   Linux, Emscripten and macOS builds were migrated from Travis to Circle CI
 -   `FindBullet.cmake` now attemps to discover presence of the
     `BT_USE_DOUBLE_PRECISION` preprocessor macro on both system-wide and
     subproject workflow and adds it to the imported target to prevent linker
     errors
+-   The Homebrew package now uses `std_cmake_args` instead of hardcoded build
+    type and install prefix, which resolves certain build issues (see
+    [mosra/homebrew-magnum#6](https://github.com/mosra/homebrew-magnum/pull/6))
 
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 
