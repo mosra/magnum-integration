@@ -96,8 +96,11 @@ mark_as_advanced(MAGNUMINTEGRATION_INCLUDE_DIR)
 
 # Component distinction (listing them explicitly to avoid mistakes with finding
 # components from other repositories)
-set(_MAGNUMINTEGRATION_LIBRARY_COMPONENT_LIST Bullet Dart Eigen ImGui Glm Ovr)
-set(_MAGNUMINTEGRATION_HEADER_ONLY_COMPONENT_LIST Eigen)
+set(_MAGNUMINTEGRATION_LIBRARY_COMPONENTS Bullet Dart Eigen ImGui Glm)
+if(CORRADE_TARGET_WINDOWS)
+    list(APPEND _MAGNUMINTEGRATION_LIBRARY_COMPONENTS Ovr)
+endif()
+set(_MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS Eigen)
 
 # Inter-component dependencies (none yet)
 # set(_MAGNUMINTEGRATION_Component_DEPENDENCIES Dependency)
@@ -123,13 +126,6 @@ if(MagnumIntegration_FIND_COMPONENTS)
     list(REMOVE_DUPLICATES MagnumIntegration_FIND_COMPONENTS)
 endif()
 
-# Convert components lists to regular expressions so I can use if(MATCHES).
-# TODO: Drop this once CMake 3.3 and if(IN_LIST) can be used
-foreach(_WHAT LIBRARY HEADER_ONLY)
-    string(REPLACE ";" "|" _MAGNUMINTEGRATION_${_WHAT}_COMPONENTS "${_MAGNUMINTEGRATION_${_WHAT}_COMPONENT_LIST}")
-    set(_MAGNUMINTEGRATION_${_WHAT}_COMPONENTS "^(${_MAGNUMINTEGRATION_${_WHAT}_COMPONENTS})$")
-endforeach()
-
 # Find all components
 foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
     string(TOUPPER ${_component} _COMPONENT)
@@ -141,7 +137,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         set(MagnumIntegration_${_component}_FOUND TRUE)
     else()
         # Library components
-        if(_component MATCHES ${_MAGNUMINTEGRATION_LIBRARY_COMPONENTS} AND NOT _component MATCHES ${_MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS})
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND NOT _component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
             add_library(MagnumIntegration::${_component} UNKNOWN IMPORTED)
 
             # Try to find both debug and release version
@@ -166,7 +162,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         endif()
 
         # Header-only library components
-        if(_component MATCHES ${_MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS})
+        if(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
             add_library(MagnumIntegration::${_component} INTERFACE IMPORTED)
         endif()
 
@@ -251,14 +247,14 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         endif()
 
         # Find library includes
-        if(_component MATCHES ${_MAGNUMINTEGRATION_LIBRARY_COMPONENTS})
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
             find_path(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR
                 NAMES ${_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES}
                 HINTS ${MAGNUMINTEGRATION_INCLUDE_DIR}/Magnum/${_component}Integration)
             mark_as_advanced(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR)
         endif()
 
-        if(_component MATCHES ${_MAGNUMINTEGRATION_LIBRARY_COMPONENTS})
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
             # Link to core Magnum library, add other Magnum required and
             # optional dependencies
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
@@ -282,7 +278,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         endif()
 
         # Decide if the library was found
-        if(_component MATCHES ${_MAGNUMINTEGRATION_LIBRARY_COMPONENTS} AND _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR AND (_component MATCHES ${_MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS} OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE))
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR AND (_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE))
             set(MagnumIntegration_${_component}_FOUND TRUE)
         else()
             set(MagnumIntegration_${_component}_FOUND FALSE)
