@@ -91,7 +91,7 @@ if(WIN32)
         endif()
     endif()
 else()
-    error("The Oculus SDK does not support ${CMAKE_SYSTEM_NAME}.")
+    message(SEND_ERROR "The Oculus SDK does not support ${CMAKE_SYSTEM_NAME}.")
 endif()
 
 include(SelectLibraryConfigurations)
