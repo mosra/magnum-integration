@@ -135,6 +135,8 @@
 #  MAGNUM_BUILD_STATIC          - Defined if compiled as static libraries
 #  MAGNUM_BUILD_STATIC_UNIQUE_GLOBALS - Defined if static libraries keep the
 #   globals unique even across different shared libraries
+#  MAGNUM_<PLUGIN>_BUILD_STATIC - Defined if a certain plugin is built as
+#   static (libraries all share the same MAGNUM_BUILD_STATIC variable)
 #  MAGNUM_TARGET_GL             - Defined if compiled with OpenGL interop
 #  MAGNUM_TARGET_GLES           - Defined if compiled for OpenGL ES
 #  MAGNUM_TARGET_GLES2          - Defined if compiled for OpenGL ES 2.0
@@ -950,13 +952,17 @@ foreach(_component ${Magnum_FIND_COMPONENTS})
             mark_as_advanced(_MAGNUM_${_COMPONENT}_INCLUDE_DIR)
         endif()
 
-        # Automatic import of static plugins. Skip in case the include dir was
-        # not found -- that'll fail later with a proper message.
+        # Check if built as static, automatic import of static plugins. Skip in
+        # case the include dir was not found -- that'll fail later with a
+        # proper message.
         if(_component IN_LIST _MAGNUM_PLUGIN_COMPONENTS AND _MAGNUM_${_COMPONENT}_INCLUDE_DIR)
-            # Automatic import of static plugins
             file(READ ${_MAGNUM_${_COMPONENT}_INCLUDE_DIR}/configure.h _magnum${_component}Configure)
             string(FIND "${_magnum${_component}Configure}" "#define MAGNUM_${_COMPONENT}_BUILD_STATIC" _magnum${_component}_BUILD_STATIC)
             if(NOT _magnum${_component}_BUILD_STATIC EQUAL -1)
+                set(MAGNUM_${_COMPONENT}_BUILD_STATIC ON)
+            endif()
+
+            if(MAGNUM_${_COMPONENT}_BUILD_STATIC)
                 set_property(TARGET Magnum::${_component} APPEND PROPERTY
                     INTERFACE_SOURCES ${_MAGNUM_${_COMPONENT}_INCLUDE_DIR}/importStaticPlugin.cpp)
             endif()
