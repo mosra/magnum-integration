@@ -91,11 +91,23 @@ class MAGNUM_BULLETINTEGRATION_EXPORT MotionState: public SceneGraph::AbstractBa
         /** @brief Motion state */
         btMotionState& btMotionState() { return *this; }
 
+    protected:
+        /**
+         * @brief Get world transformation
+         *
+         * Updates @p worldTrans with relative object rotation and translation.
+         */
+        void getWorldTransform(btTransform& worldTrans) const override;
+
+        /**
+         * @brief Set world transformation
+         *
+         * Updates object translation and rotation with @p worldTrans.
+         */
+        void setWorldTransform(const btTransform& worldTrans) override;
+
     private:
         explicit MotionState(SceneGraph::AbstractBasicObject3D<btScalar>& object, SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& transformation);
-
-        void MAGNUM_BULLETINTEGRATION_LOCAL getWorldTransform(btTransform& worldTrans) const override;
-        void MAGNUM_BULLETINTEGRATION_LOCAL setWorldTransform(const btTransform& worldTrans) override;
 
         SceneGraph::AbstractBasicTranslationRotation3D<btScalar>& _transformation;
         bool _broken{false};

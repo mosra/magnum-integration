@@ -42,6 +42,9 @@ namespace Magnum {
 
 -   @ref BulletIntegration now supports Bullet compiled for double precision as
     well
+-   Made it possible to override and call
+    @ref BulletIntegration::MotionState::getWorldTransform() /
+    @ref BulletIntegration::MotionState::setWorldTransform() from user code
 
 @subsection changelog-integration-latest-buildsystem Build system
 
