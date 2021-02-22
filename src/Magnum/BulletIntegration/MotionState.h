@@ -69,7 +69,7 @@ transform directly on the @cpp btRigidBody @ce:
 
 @snippet BulletIntegration.cpp MotionState-update
 
-Keep in mind that hanges to a rigid body using
+Keep in mind that changes to a rigid body using
 @cpp btRigidBody::setWorldTransform() @ce may only update the motion state of
 non-static objects and while @cpp btDynamicsWorld::stepSimulation() @ce is
 called.
