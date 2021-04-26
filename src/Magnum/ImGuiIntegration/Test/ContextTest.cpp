@@ -51,8 +51,8 @@ void ContextTest::constructNoCreate() {
 }
 
 void ContextTest::constructCopy() {
-    CORRADE_VERIFY(!(std::is_constructible<Context, const Context&>{}));
-    CORRADE_VERIFY(!(std::is_assignable<Context, const Context&>{}));
+    CORRADE_VERIFY(!std::is_constructible<Context, const Context&>{});
+    CORRADE_VERIFY(!std::is_assignable<Context, const Context&>{});
 }
 
 }}}}

@@ -57,8 +57,8 @@ void DebugDrawTest::constructNoInit() {
 }
 
 void DebugDrawTest::constructCopy() {
-    CORRADE_VERIFY(!(std::is_constructible<DebugDraw, const DebugDraw&>{}));
-    CORRADE_VERIFY(!(std::is_assignable<DebugDraw, const DebugDraw&>{}));
+    CORRADE_VERIFY(!std::is_constructible<DebugDraw, const DebugDraw&>{});
+    CORRADE_VERIFY(!std::is_assignable<DebugDraw, const DebugDraw&>{});
 }
 
 void DebugDrawTest::debugMode() {
