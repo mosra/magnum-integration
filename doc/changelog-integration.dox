@@ -116,8 +116,9 @@ Released 2020-06-27, tagged as
     header is not included by any other header to avoid trigerring a full
     rebuild when Git commit changes. If Git is not found, only the first two
     defines are present.
--   @ref ImGuiIntegration now uses Magnum's own @ref Shaders::Flat2D instead of
-    a custom shader, which finally makes it work on GLES2 and WebGL 1
+-   @ref ImGuiIntegration now uses Magnum's own @cpp Shaders::Flat2D @ce
+    instead of a custom shader, which finally makes it work on GLES2 and WebGL
+    1
 
 @subsection changelog-integration-2020-06-buildsystem Build system
 

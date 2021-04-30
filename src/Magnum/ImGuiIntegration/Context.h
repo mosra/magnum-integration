@@ -38,7 +38,7 @@
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
-#include <Magnum/Shaders/Flat.h>
+#include <Magnum/Shaders/FlatGL.h>
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 
@@ -540,7 +540,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
     private:
         ImGuiContext* _context;
-        Shaders::Flat2D _shader;
+        Shaders::FlatGL2D _shader;
         GL::Texture2D _texture{NoCreate};
         GL::Buffer _vertexBuffer{GL::Buffer::TargetHint::Array};
         GL::Buffer _indexBuffer{GL::Buffer::TargetHint::ElementArray};

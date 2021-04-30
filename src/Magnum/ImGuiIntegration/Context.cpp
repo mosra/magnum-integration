@@ -53,7 +53,7 @@ Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i
 
 Context::Context(const Vector2i& size): Context{Vector2{size}, size, size} {}
 
-Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): _context{&context}, _shader{Shaders::Flat2D::Flag::Textured|Shaders::Flat2D::Flag::VertexColor} {
+Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): _context{&context}, _shader{Shaders::FlatGL2D::Flag::Textured|Shaders::FlatGL2D::Flag::VertexColor} {
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
@@ -98,11 +98,11 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
 
     _mesh.setPrimitive(GL::MeshPrimitive::Triangles);
     _mesh.addVertexBuffer(_vertexBuffer, 0,
-        Shaders::Flat2D::Position{},
-        Shaders::Flat2D::TextureCoordinates{},
-        Shaders::Flat2D::Color4{
-            Shaders::Flat2D::Color4::DataType::UnsignedByte,
-            Shaders::Flat2D::Color4::DataOption::Normalized});
+        Shaders::FlatGL2D::Position{},
+        Shaders::FlatGL2D::TextureCoordinates{},
+        Shaders::FlatGL2D::Color4{
+            Shaders::FlatGL2D::Color4::DataType::UnsignedByte,
+            Shaders::FlatGL2D::Color4::DataOption::Normalized});
 
     _timeline.start();
 }
