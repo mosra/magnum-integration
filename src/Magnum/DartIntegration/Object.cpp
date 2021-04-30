@@ -165,7 +165,7 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
 
     /* Get meshes */
     if(loadType & ConvertShapeType::Mesh) {
-        _drawData->meshes = Containers::Array<GL::Mesh>(Containers::NoInit, shapeData->meshes.size());
+        _drawData->meshes = Containers::Array<GL::Mesh>(NoInit, shapeData->meshes.size());
         for(UnsignedInt i = 0; i < shapeData->meshes.size(); i++)
             new(&_drawData->meshes[i]) GL::Mesh{MeshTools::compile(shapeData->meshes[i])};
     }

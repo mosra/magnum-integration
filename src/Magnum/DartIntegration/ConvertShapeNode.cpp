@@ -91,26 +91,26 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         Eigen::Vector4d col = shapeNode.getVisualAspect()->getRGBA();
 
         /* Get diffuse color from Dart ShapeNode */
-        arrayAppend(nodeMaterialAttributes, Containers::InPlaceInit,
+        arrayAppend(nodeMaterialAttributes, InPlaceInit,
             Trade::MaterialAttribute::DiffuseColor,
             Color4(col(0), col(1), col(2), col(3)));
 
         /* Remove specular color from soft bodies (otherwise the default would
            be white) */
         if(shape->getType() == dart::dynamics::SoftMeshShape::getStaticType())
-            arrayAppend(nodeMaterialAttributes, Containers::InPlaceInit,
+            arrayAppend(nodeMaterialAttributes, InPlaceInit,
                 Trade::MaterialAttribute::SpecularColor, 0x00000000_rgbaf);
     }
 
     /* Larger shininess than the default to make things look less plastic */
-    arrayAppend(nodeMaterialAttributes, Containers::InPlaceInit,
+    arrayAppend(nodeMaterialAttributes, InPlaceInit,
         Trade::MaterialAttribute::Shininess, 2000.0f);
 
     Trade::PhongMaterialData nodeMaterial{Trade::MaterialType::Phong, std::move(nodeMaterialAttributes)};
 
     if(convertTypes & ConvertShapeType::Material) {
         if(shape->getType() != dart::dynamics::MeshShape::getStaticType()) {
-            shapeData.materials = Containers::Array<Trade::PhongMaterialData>(Containers::NoInit, 1);
+            shapeData.materials = Containers::Array<Trade::PhongMaterialData>(NoInit, 1);
             new(&shapeData.materials[0]) Trade::PhongMaterialData{std::move(nodeMaterial)};
         }
     }
@@ -126,7 +126,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         if(convertTypes & ConvertShapeType::Mesh) {
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData{Primitives::cubeSolid()};
         }
 
@@ -143,7 +143,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             Float h(capsuleShape->getHeight());
             Float halfLength = 0.5f*h/r;
 
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData{Primitives::capsule3DSolid(32, 32, 32, halfLength)};
 
             Matrix4 rot = Matrix4::rotationX(90.0_degf);
@@ -164,7 +164,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             Float h(coneShape->getHeight());
             Float halfLength = 0.5f*h/r;
 
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData{Primitives::coneSolid(32, 32, halfLength, Primitives::ConeFlag::CapEnd)};
 
             Matrix4 rot = Matrix4::rotationX(90.0_degf);
@@ -185,7 +185,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             Float h(cylinderShape->getHeight());
             Float halfLength = 0.5f*h/r;
 
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData{Primitives::cylinderSolid(32, 32, halfLength, Primitives::CylinderFlag::CapEnds)};
 
             Matrix4 rot = Matrix4::rotationX(90.0_degf);
@@ -203,7 +203,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         if(convertTypes & ConvertShapeType::Mesh) {
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData{Primitives::icosphereSolid(5)};
         }
 
@@ -328,13 +328,13 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         if(convertTypes & ConvertShapeType::Mesh) {
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, meshes.size());
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, meshes.size());
             for(UnsignedInt m = 0; m < meshes.size(); m++)
                 new(&shapeData.meshes[m]) Trade::MeshData{std::move(*meshes[m])};
         }
 
         if(convertTypes & ConvertShapeType::Material) {
-            shapeData.materials = Containers::Array<Trade::PhongMaterialData>(Containers::NoInit, materials.size());
+            shapeData.materials = Containers::Array<Trade::PhongMaterialData>(NoInit, materials.size());
             for(UnsignedInt m = 0; m < materials.size(); m++)
                 new(&shapeData.materials[m]) Trade::PhongMaterialData{std::move(*materials[m])};
             shapeData.images = std::move(images);
@@ -355,7 +355,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             Vector3 position;
             Vector3 normal;
         };
-        Containers::Array<char> vertexData{Containers::NoInit,
+        Containers::Array<char> vertexData{NoInit,
             sizeof(Vertex)*bn->getNumPointMasses()};
         auto vertices = Containers::arrayCast<Vertex>(vertexData);
         Containers::StridedArrayView1D<Vector3> positions{vertexData,
@@ -370,7 +370,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         /* Create indices */
-        Containers::Array<char> indexData{Containers::NoInit,
+        Containers::Array<char> indexData{NoInit,
             sizeof(UnsignedInt)*bn->getNumFaces()*3};
         auto indices = Containers::arrayCast<UnsignedInt>(indexData);
         for(UnsignedInt i = 0; i < bn->getNumFaces(); ++i) {
@@ -384,7 +384,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         MeshTools::generateSmoothNormalsInto(Containers::StridedArrayView1D<const UnsignedInt>{indices}, positions, normals);
 
         /* Create the mesh data */
-        shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+        shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
         new(&shapeData.meshes[0]) Trade::MeshData{MeshPrimitive::Triangles,
             std::move(indexData), Trade::MeshIndexData{indices},
             std::move(vertexData), {
@@ -402,7 +402,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         if(convertTypes & ConvertShapeType::Mesh) {
-            shapeData.meshes = Containers::Array<Trade::MeshData>(Containers::NoInit, 1);
+            shapeData.meshes = Containers::Array<Trade::MeshData>(NoInit, 1);
             new(&shapeData.meshes[0]) Trade::MeshData{Primitives::icosphereSolid(4)};
         }
     }
