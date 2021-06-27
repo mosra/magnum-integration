@@ -80,8 +80,8 @@ install:
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" 7z x SDL2-devel-2.0.9-mingw.tar.gz & 7z x SDL2-devel-2.0.9-mingw.tar & ren SDL2-2.0.9 SDL
 
 # ImGui
-- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\imgui-1.72.zip appveyor DownloadFile https://github.com/ocornut/imgui/archive/v1.72.zip -FileName imgui-1.72.zip
-- 7z x imgui-1.72.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\imgui-1.72 imgui
+- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\imgui-1.82.zip appveyor DownloadFile https://github.com/ocornut/imgui/archive/v1.82.zip -FileName imgui-1.82.zip
+- 7z x imgui-1.82.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\imgui-1.82 imgui
 
 # OVR SDK
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.26.0_public_minimal.zip appveyor DownloadFile https://ci.magnum.graphics/ovr_sdk_win_1.26.0_public_minimal.zip
@@ -99,4 +99,4 @@ cache:
 - 2.86.1.zip -> package/ci/appveyor-cache-reset.txt
 - 0.9.9.0.zip -> package/ci/appveyor-cache-reset.txt
 - 3.3.7.tar.bz2 -> package/ci/appveyor-cache-reset.txt
-- imgui-1.72.zip -> package/ci/appveyor-cache-reset.txt
+- imgui-1.82.zip -> package/ci/appveyor-cache-reset.txt
