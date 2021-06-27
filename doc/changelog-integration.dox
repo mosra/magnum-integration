@@ -50,6 +50,8 @@ namespace Magnum {
 
 -   Updated `FindImGui.cmake` to optionally include the new `imgui_tables.cpp`
     source present in latest versions (see [mosra/magnum-integration#78](https://github.com/mosra/magnum-integration/pull/78))
+-   Updated `FindImGui.cmake` to link to `imm32` on MinGW, which is needed
+    since ImGui 1.82.
 -   Linux, Emscripten and macOS builds were migrated from Travis to Circle CI
 -   `FindBullet.cmake` now attemps to discover presence of the
     `BT_USE_DOUBLE_PRECISION` preprocessor macro on both system-wide and
