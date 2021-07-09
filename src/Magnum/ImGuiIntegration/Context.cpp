@@ -318,23 +318,34 @@ void Context::drawFrame() {
 
         for(std::int_fast32_t c = 0; c < cmdList->CmdBuffer.Size; ++c) {
             const ImDrawCmd* pcmd = &cmdList->CmdBuffer[c];
+            if (pcmd->UserCallback)
+            {
+                // User callback, registered via ImDrawList::AddCallback()
+                // ImDrawCallback_ResetRenderState is a special callback value
+                // used by the user to request the renderer to reset render
+                // state. We do not have anything to do here though...
+                if (pcmd->UserCallback == ImDrawCallback_ResetRenderState)
+                    ;
+                else
+                    pcmd->UserCallback(cmdList, pcmd);
+            } else {
+                GL::Renderer::setScissor(Range2Di{Range2D{
+                            {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},
+                            {pcmd->ClipRect.z, fbSize.y() - pcmd->ClipRect.y}}
+                                                  .scaled(_supersamplingRatio)});
 
-            GL::Renderer::setScissor(Range2Di{Range2D{
-                {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},
-                {pcmd->ClipRect.z, fbSize.y() - pcmd->ClipRect.y}}
-                    .scaled(_supersamplingRatio)});
+                _mesh.setCount(pcmd->ElemCount);
+                _mesh.setIndexBuffer(_indexBuffer, indexBufferOffset*sizeof(ImDrawIdx),
+                                     sizeof(ImDrawIdx) == 2
+                                     ? GL::MeshIndexType::UnsignedShort
+                                     : GL::MeshIndexType::UnsignedInt);
 
-            _mesh.setCount(pcmd->ElemCount);
-            _mesh.setIndexBuffer(_indexBuffer, indexBufferOffset*sizeof(ImDrawIdx),
-                sizeof(ImDrawIdx) == 2
-                ? GL::MeshIndexType::UnsignedShort
-                : GL::MeshIndexType::UnsignedInt);
+                indexBufferOffset += pcmd->ElemCount;
 
-            indexBufferOffset += pcmd->ElemCount;
-
-            _shader
-                .bindTexture(*static_cast<GL::Texture2D*>(pcmd->TextureId))
-                .draw(_mesh);
+                _shader
+                    .bindTexture(*static_cast<GL::Texture2D*>(pcmd->TextureId))
+                    .draw(_mesh);
+            }
         }
     }
 
