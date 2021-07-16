@@ -390,6 +390,17 @@ set(WITH_IMGUI ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
+Dear ImGui configuration can normally be manipulated at compile time by
+defining `IMGUI_USER_CONFIG` which is then included by the Dear ImGui library.
+However, this library already uses this feature and defining
+`IMGUI_USER_CONFIG` will not work correctly. In order to provide your own file
+you can instead define `MAGNUM_IMGUIINTEGRATION_USER_CONFIG` and this file will
+be included correctly:
+
+@code{.cmake}
+target_compile_definitions(your-app PRIVATE -DMAGNUM_IMGUIINTEGRATION_USER_CONFIG="my_imconfig.h")
+@endcode
+
 Routines for math type conversion are provided in @ref Magnum/ImGuiIntegration/Integration.h,
 Magnum-based rendering backend for Dear ImGui is in the @ref Context class. See
 also the @ref examples-imgui example, @ref building-integration and
