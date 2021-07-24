@@ -45,6 +45,7 @@ namespace Magnum {
 -   Made it possible to override and call
     @ref BulletIntegration::MotionState::getWorldTransform() /
     @ref BulletIntegration::MotionState::setWorldTransform() from user code
+-   Implemented conversion for @ref Math::Range in @ref EigenIntegration
 
 @subsection changelog-integration-latest-buildsystem Build system
 

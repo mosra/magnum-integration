@@ -45,6 +45,8 @@ struct GeometryIntegrationTest: TestSuite::Tester {
     void transform2DAffineCompact();
     void transform3DProjective();
     void transform3DAffineCompact();
+
+    void box();
 };
 
 GeometryIntegrationTest::GeometryIntegrationTest() {
@@ -57,7 +59,9 @@ GeometryIntegrationTest::GeometryIntegrationTest() {
               &GeometryIntegrationTest::transform2DIsometry,
               &GeometryIntegrationTest::transform2DAffineCompact,
               &GeometryIntegrationTest::transform3DProjective,
-              &GeometryIntegrationTest::transform3DAffineCompact});
+              &GeometryIntegrationTest::transform3DAffineCompact,
+
+              &GeometryIntegrationTest::box});
 }
 
 using namespace Math::Literals;
@@ -195,6 +199,23 @@ void GeometryIntegrationTest::transform3DAffineCompact() {
     /* Verify also the cast function, people don't need to use it but should
        be allowed to for consistency */
     CORRADE_VERIFY(cast<Eigen::AffineCompact3d>(a43).isApprox(b));
+}
+
+void GeometryIntegrationTest::box() {
+    Range1D a1{-5.0f, 25.0f};
+    Range2Di a2{{-5, 0}, {25, 1}};
+    Range3Dd a3{{-5.0, 0.0, 2.0}, {25.0, 1.0, 3.5}};
+    /* Haha silly verbosity. Haha this constructor isn't constexpr?! */
+    Eigen::AlignedBox1f b1{-5.0f, 25.0f};
+    Eigen::AlignedBox2i b2{Eigen::Vector2i{-5, 0}, Eigen::Vector2i{25, 1}};
+    Eigen::AlignedBox3d b3{Eigen::Vector3d{-5.0, 0.0, 2.0}, Eigen::Vector3d{25.0, 1.0, 3.5}};
+
+    CORRADE_COMPARE(Range1D{b1}, a1);
+    CORRADE_COMPARE(Range2Di{b2}, a2);
+    CORRADE_COMPARE(Range3Dd{b3}, a3);
+    CORRADE_VERIFY(Eigen::AlignedBox1f{a1}.isApprox(b1));
+    CORRADE_VERIFY(Eigen::AlignedBox2i{a2}.isApprox(b2));
+    CORRADE_VERIFY(Eigen::AlignedBox3d{a3}.isApprox(b3));
 }
 
 }}}}

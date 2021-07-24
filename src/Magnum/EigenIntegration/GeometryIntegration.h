@@ -41,6 +41,7 @@ vector types.
 | @ref Magnum::Math::Matrix3<T> "Math::Matrix3<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 2, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 2, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 2, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
 | @ref Magnum::Math::Matrix4x3<T> "Math::Matrix4x3<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 3, AffineCompact>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
 | @ref Magnum::Math::Matrix4<T> "Math::Matrix4<T>" | @m_class{m-doc-external} [Eigen::Transform<T, 3, Affine>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 3, Projective>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html), \n @m_class{m-doc-external} [Eigen::Transform<T, 3, Isometry>](https://eigen.tuxfamily.org/dox/classEigen_1_1Transform.html) |
+| @ref Magnum::Math::Range "Math::Range<dimensions,T>" | @m_class{m-doc-external} [Eigen::AlignedBox<T, dimensions>](https://eigen.tuxfamily.org/dox/classEigen_1_1AlignedBox.html) |
 
 Example usage:
 
@@ -52,6 +53,7 @@ Example usage:
 
 #include <Eigen/Geometry>
 #include <Magnum/Math/Quaternion.h>
+#include <Magnum/Math/Range.h>
 
 #include "Magnum/EigenIntegration/Integration.h"
 
@@ -119,6 +121,18 @@ template<class T> struct QuaternionConverter<T, Eigen::Quaternion<T>> {
     static Eigen::Quaternion<T> to(const Quaternion<T>& other) {
         /* Eigen's quaternion constructor is ordered w x y z */
         return {other.scalar(), other.vector().x(), other.vector().y(), other.vector().z()};
+    }
+};
+
+template<UnsignedInt dimensions, class T> struct RangeConverter<dimensions, T, Eigen::AlignedBox<T, int(dimensions)>> {
+    static Range<dimensions, T> from(const Eigen::AlignedBox<T, int(dimensions)>& other) {
+        return Range<dimensions, T>{Vector<dimensions, T>{other.min()}, Vector<dimensions, T>{other.max()}};
+    }
+
+    static Eigen::AlignedBox<T, int(dimensions)> to(const Range<dimensions, T>& other) {
+        /* Can't use explicit conversion because of the all-catching implicit
+           constructor of Eigen::Matrix */
+        return Eigen::AlignedBox<T, int(dimensions)>{VectorConverter<dimensions, T, Eigen::Matrix<T, int(dimensions), 1>>::to(other.min()), VectorConverter<dimensions, T, Eigen::Matrix<T, int(dimensions), 1>>::to(other.max())};
     }
 };
 
