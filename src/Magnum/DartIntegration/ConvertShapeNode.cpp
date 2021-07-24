@@ -310,7 +310,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             for(UnsignedInt i = 0; i < importer->textureCount(); ++i) {
                 /* Cannot load, leave this element set to NullOpt */
                 Containers::Optional<Trade::TextureData> textureData = importer->texture(i);
-                if(!textureData || textureData->type() != Trade::TextureData::Type::Texture2D) {
+                if(!textureData || textureData->type() != Trade::TextureType::Texture2D) {
                     Warning{} << "DartIntegration::convertShapeNode(): cannot load texture, skipping";
                     continue;
                 }
