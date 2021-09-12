@@ -38,6 +38,8 @@ namespace Magnum {
     @ref ImGuiIntegration library
 -   **Guillaume Jacquemin** ([\@williamjcm](https://github.com/williamjcm)) ---
     improvements of the @ref ImGuiIntegration library, MSYS2 packages
+-   **Hans Loeblich** ([\@thehans](https://github.com/thehans)) ---
+    improvements to Debian package building experience
 -   **Jackson Campolattaro** ([\@JacksonCampolattaro](https://github.com/JacksonCampolattaro))
     --- documentation improvements
 -   **[\@Janos95](https://github.com/Janos95)** --- Conversion of dynamic
