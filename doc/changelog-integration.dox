@@ -46,6 +46,10 @@ namespace Magnum {
     @ref BulletIntegration::MotionState::getWorldTransform() /
     @ref BulletIntegration::MotionState::setWorldTransform() from user code
 -   Implemented conversion for @ref Math::Range in @ref EigenIntegration
+-   It's now possible to supply additional ImGui user configuration by defining
+    the `MAGNUM_IMGUIINTEGRATION_USER_CONFIG` macro. See the
+    @ref ImGuiIntegration namespace documentation for an example, see also
+    [mosra/magnum-integration#85](https://github.com/mosra/magnum-integration/pull/85).
 
 @subsection changelog-integration-latest-buildsystem Build system
 
