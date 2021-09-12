@@ -29,9 +29,15 @@ corrade_add_test(ImGuiContextTest ContextTest.cpp
 corrade_add_test(ImGuiIntegrationTest IntegrationTest.cpp
     LIBRARIES MagnumImGuiIntegration)
 
+corrade_add_test(ImGuiUserConfigTest UserConfigTest.cpp
+    LIBRARIES MagnumImGuiIntegration)
+target_compile_definitions(ImGuiUserConfigTest PRIVATE
+    -DMAGNUM_IMGUIINTEGRATION_USER_CONFIG="Magnum/ImGuiIntegration/Test/UserConfigTest.h")
+
 set_target_properties(
     ImGuiContextTest
     ImGuiIntegrationTest
+    ImGuiUserConfigTest
     PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 
 if(BUILD_GL_TESTS)
