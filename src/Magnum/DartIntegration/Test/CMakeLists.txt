@@ -51,6 +51,19 @@ elseif(DART_io-urdf_FOUND)
     target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE dart-io-urdf)
 endif()
 
+# We need AssimpImporter for the tests. Try to find it -- if it's static, link
+# to it. If not, let the plugin manager find it on the filesystem at runtime.
+find_package(Magnum COMPONENTS AnyImageImporter)
+find_package(MagnumPlugins COMPONENTS AssimpImporter)
+if(Magnum_AnyImageImporter_FOUND AND MAGNUM_ANYIMAGEIMPORTER_BUILD_STATIC)
+    target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE
+        Magnum::AnyImageImporter)
+endif()
+if(Magnum_AssimpImporter_FOUND AND MAGNUM_ASSIMPIMPORTER_BUILD_STATIC)
+    target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE
+        MagnumPlugins::AssimpImporter)
+endif()
+
 set_target_properties(
     DartIntegrationConvertShapeNodeTest
     PROPERTIES FOLDER "Magnum/DartIntegration/Test")
@@ -63,6 +76,14 @@ if(BUILD_GL_TESTS)
         target_link_libraries(DartIntegrationWorldGLTest PRIVATE dart-utils-urdf)
     elseif(DART_io-urdf_FOUND)
         target_link_libraries(DartIntegrationWorldGLTest PRIVATE dart-io-urdf)
+    endif()
+    if(Magnum_AnyImageImporter_FOUND AND MAGNUM_ANYIMAGEIMPORTER_BUILD_STATIC)
+        target_link_libraries(DartIntegrationWorldGLTest PRIVATE
+            Magnum::AnyImageImporter)
+    endif()
+    if(Magnum_AssimpImporter_FOUND AND MAGNUM_ASSIMPIMPORTER_BUILD_STATIC)
+        target_link_libraries(DartIntegrationWorldGLTest PRIVATE
+            MagnumPlugins::AssimpImporter)
     endif()
 
     set_target_properties(

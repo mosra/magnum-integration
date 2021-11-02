@@ -12,6 +12,7 @@ cmake .. \
     -DCMAKE_BUILD_TYPE=$CONFIGURATION \
     -DWITH_INTERCONNECT=OFF \
     -DBUILD_DEPRECATED=$BUILD_DEPRECATED \
+    -DBUILD_STATIC=$BUILD_STATIC \
     -G Ninja
 ninja install
 cd ../..
@@ -41,11 +42,25 @@ cmake .. \
     -DWITH_WINDOWLESS${PLATFORM_GL_API}APPLICATION=ON \
     -DWITH_SDL2APPLICATION=ON \
     -DBUILD_DEPRECATED=$BUILD_DEPRECATED \
+    -DBUILD_STATIC=$BUILD_STATIC \
     -G Ninja
+
+# For DartIntegration we need plugins, in case of a static build there's no
+# way for the test to know the plugin install directory so we have to hardcode
+# it
+if [ "$WITH_DART" == "ON" ] && [ "$BUILD_STATIC" == "ON" ]; then
+    cmake . -DMAGNUM_PLUGINS_DEBUG_DIR=$HOME/deps/lib/magnum-d
+fi
+
 ninja install
 cd ../..
 
-# DartIntegration needs plugins
+# DartIntegration needs plugins. TODO: AssimpImporter uses a growable deleter,
+# which, when the plugin is dynamic but all libraries static, is not correctly
+# whitelisted by AbstractImporter checks (because the Trade lib has a different
+# copy of it) and thus it asserts. The assert is right (because the deleter
+# would get dangling after plugin unload), but I don't know what's the right
+# way to fix that yet. Until I know, plugins are built as static as well.
 if [ "$WITH_DART" == "ON" ]; then
     # Magnum Plugins
     git clone --depth 1 git://github.com/mosra/magnum-plugins.git
@@ -58,6 +73,7 @@ if [ "$WITH_DART" == "ON" ]; then
         -DCMAKE_BUILD_TYPE=$CONFIGURATION \
         -DWITH_ASSIMPIMPORTER=$WITH_DART \
         -DWITH_STBIMAGEIMPORTER=$WITH_DART \
+        -DBUILD_PLUGINS_STATIC=$BUILD_STATIC \
         -G Ninja
     ninja install
     cd ../..
@@ -79,6 +95,7 @@ cmake .. \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON \
+    -DBUILD_STATIC=$BUILD_STATIC \
     -G Ninja
 # Otherwise the job gets killed (probably because using too much memory)
 ninja -j4

@@ -273,6 +273,29 @@ jobs:
         script: unix-desktop-gles.sh
     - lcov
 
+  linux-static:
+    executor: ubuntu-16_04
+    environment:
+      # STUPID yml interprets unquoted ON as a boolean
+      # https://stackoverflow.com/questions/53648244/specifying-the-string-value-yes-in-a-yaml-property
+      BUILD_STATIC: "ON"
+      CMAKE_CXX_FLAGS: --coverage
+      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: GLX
+      # Disabled due to GCC 4/5 ABI mismatch, see above
+      WITH_DART: "OFF"
+    steps:
+    - install-base-linux:
+        # SDL needed for some snippets
+        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+    - install-gcc-4_8
+    - install-cmake-3_4
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+    - lcov
+
   linux-nondeprecated:
     executor: ubuntu-16_04
     environment:
@@ -325,6 +348,25 @@ jobs:
         script: unix-desktop.sh
     - lcov
 
+  macos-static:
+    # On 9.4, freeglut (which is a dependency of dart or bullet, probably)
+    # fails to install because of an unsatisfied XQuartz dependency. Not sure
+    # what that is about, using an image that works instead.
+    executor: xcode-10_0
+    environment:
+      # STUPID yml interprets unquoted ON as a boolean
+      BUILD_STATIC: "ON"
+      CMAKE_CXX_FLAGS: --coverage
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: CGL
+    steps:
+    - install-base-macos:
+        extra: sdl2 bullet eigen glm dartsim wget
+    - install-imgui
+    - build:
+        script: unix-desktop.sh
+    - lcov
+
   emscripten-webgl1:
     executor: emscripten
     environment:
@@ -355,11 +397,13 @@ workflows:
   version: 2
   build:
     jobs:
-    - linux-gl
-    - linux-gles2
-    - linux-gles3
-    - linux-nondeprecated
-    - linux-sanitizers
-    - macos-gl
-    - emscripten-webgl1
-    - emscripten-webgl2
+    #- linux-gl
+    #- linux-gles2
+    #- linux-gles3
+    - linux-static
+    #- linux-nondeprecated
+    #- linux-sanitizers
+    #- macos-gl
+    - macos-static
+    #- emscripten-webgl1
+    #- emscripten-webgl2

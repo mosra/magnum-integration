@@ -33,6 +33,7 @@ cmake .. ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DWITH_INTERCONNECT=OFF ^
     -DUTILITY_USE_ANSI_COLORS=ON ^
+    -DBUILD_STATIC=%BUILD_STATIC% ^
     -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -58,6 +59,7 @@ cmake .. ^
     -DWITH_OPENGLTESTER=ON ^
     -DWITH_WINDOWLESSWGLAPPLICATION=ON ^
     -DWITH_SDL2APPLICATION=ON ^
+    -DBUILD_STATIC=%BUILD_STATIC% ^
     -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
@@ -92,6 +94,7 @@ cmake .. ^
     -DWITH_OVR=ON ^
     -DBUILD_TESTS=ON ^
     -DBUILD_GL_TESTS=ON ^
+    -DBUILD_STATIC=%BUILD_STATIC% ^
     -G Ninja || exit /b
 cmake --build . || exit /b
 
