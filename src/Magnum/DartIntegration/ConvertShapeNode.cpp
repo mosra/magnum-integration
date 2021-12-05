@@ -43,6 +43,7 @@
 #include <Corrade/Containers/ArrayViewStl.h>
 #include <Corrade/Containers/GrowableArray.h>
 #include <Corrade/Containers/Optional.h>
+#include <Corrade/Containers/Pair.h>
 #include <Corrade/Containers/StridedArrayView.h>
 #include <Corrade/Utility/DebugStl.h>
 #include <Corrade/Utility/Directory.h>
@@ -58,8 +59,8 @@
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData.h>
-#include <Magnum/Trade/MeshObjectData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
+#include <Magnum/Trade/SceneData.h>
 #include <Magnum/Trade/TextureData.h>
 
 #include "Magnum/EigenIntegration/Integration.h"
@@ -230,26 +231,19 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
             return Containers::NullOpt;
         }
 
-        /* Count mesh objects */
-        UnsignedInt meshesCount = 0;
-        for(UnsignedInt i = 0; i < importer->object3DCount(); i++) {
-            auto objectData = importer->object3D(i);
-            if(objectData->instanceType() == Trade::ObjectInstanceType3D::Mesh) meshesCount++;
-        }
-
-        Containers::Array<Containers::Optional<Trade::MeshData>> meshes(meshesCount);
-        Containers::Array<Containers::Optional<Trade::PhongMaterialData>> materials(meshesCount);
-
-        UnsignedInt j = 0;
-        for(UnsignedInt i = 0; i < importer->object3DCount(); i++) {
-            auto objectData = importer->object3D(i);
-            if(objectData->instanceType() != Trade::ObjectInstanceType3D::Mesh)
-                continue;
-
-            Trade::MeshObjectData3D& meshObjectData = static_cast<Trade::MeshObjectData3D&>(*objectData);
-            Containers::Optional<Trade::MeshData> meshData = importer->mesh(meshObjectData.instance());
+        /* Import all meshes from the scene. Assuming AssimpImporter, which has
+           no concept of multiple scenes */
+        CORRADE_INTERNAL_ASSERT(importer->sceneCount() == 1);
+        const Containers::Optional<Trade::SceneData> scene = importer->scene(0);
+        CORRADE_INTERNAL_ASSERT(scene);
+        const Containers::Array<Containers::Pair<UnsignedInt, Containers::Pair<UnsignedInt, Int>>> meshesMaterials = scene->meshesMaterialsAsArray();
+        Containers::Array<Containers::Optional<Trade::MeshData>> meshes(meshesMaterials.size());
+        Containers::Array<Containers::Optional<Trade::PhongMaterialData>> materials(meshesMaterials.size());
+        for(UnsignedInt i = 0; i != meshesMaterials.size(); i++) {
+            const Containers::Pair<UnsignedInt, Int>& meshMaterial = meshesMaterials[i].second();
+            Containers::Optional<Trade::MeshData> meshData = importer->mesh(meshMaterial.first());
             if(!meshData) {
-                Error{} << "DartIntegration::convertShapeNode(): could not load mesh with index" << meshObjectData.instance();
+                Error{} << "DartIntegration::convertShapeNode(): could not load mesh with index" << meshMaterial.first();
                 return Containers::NullOpt;
             }
 
@@ -258,12 +252,15 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                 /* Only get materials from mesh if the appropriate color mode */
                 if(importer->materialCount() && convertTypes & ConvertShapeType::Material) {
                     if(colorMode == dart::dynamics::MeshShape::ColorMode::MATERIAL_COLOR) {
-                        Containers::Optional<Trade::MaterialData> material = importer->material(meshObjectData.material());
+                        /* Assuming AssimpImporter, which has no concept of
+                           unassigned materials */
+                        CORRADE_INTERNAL_ASSERT(meshMaterial.second() != -1);
+                        Containers::Optional<Trade::MaterialData> material = importer->material(meshMaterial.second());
                         if(material) {
-                            materials[j] = std::move(*material).as<Trade::PhongMaterialData>();
+                            materials[i] = std::move(*material).as<Trade::PhongMaterialData>();
                         } else {
-                            Warning{} << "DartIntegration::convertShapeNode(): could not load material with index" << meshObjectData.material() << Debug::nospace << ". Falling back to SHAPE_COLOR mode";
-                            materials[j] = std::move(nodeMaterial);
+                            Warning{} << "DartIntegration::convertShapeNode(): could not load material with index" << meshMaterial.second() << Debug::nospace << ". Falling back to SHAPE_COLOR mode";
+                            materials[i] = std::move(nodeMaterial);
                         }
 
                     } else if(colorMode == dart::dynamics::MeshShape::ColorMode::COLOR_INDEX) {
@@ -279,7 +276,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                             Color4 meshColor = meshData->attribute<Color4>(Trade::MeshAttribute::Color)[colorIndex];
                             /* default colors for ambient (black) and specular
                                (white) */
-                            materials[j] = Trade::PhongMaterialData{
+                            materials[i] = Trade::PhongMaterialData{
                                 Trade::MaterialType::Phong,
                                 {{Trade::MaterialAttribute::DiffuseColor, meshColor},
                                  {Trade::MaterialAttribute::Shininess, 2000.0f}}};
@@ -287,20 +284,18 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
                         /* Fallback to SHAPE_COLOR if MeshData has no colors */
                         } else {
                             Warning{} << "DartIntegration::convertShapeNode(): Assimp mesh has no colors. Falling back to SHAPE_COLOR mode";
-                            materials[j] = std::move(nodeMaterial);
+                            materials[i] = std::move(nodeMaterial);
                         }
 
                     } else if (colorMode == dart::dynamics::MeshShape::ColorMode::SHAPE_COLOR) {
-                        materials[j] = std::move(nodeMaterial);
+                        materials[i] = std::move(nodeMaterial);
                     }
                 }
             }
 
             if(convertTypes & ConvertShapeType::Mesh) {
-                meshes[j] = std::move(*meshData);
+                meshes[i] = std::move(*meshData);
             }
-
-            ++j;
         }
 
         Containers::Array<Containers::Optional<Trade::TextureData>> textures(importer->textureCount());
