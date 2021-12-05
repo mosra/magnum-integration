@@ -31,7 +31,7 @@
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/Matrix4.h"
 
-#define DOXYGEN_IGNORE(...) __VA_ARGS__
+#define DOXYGEN_ELLIPSIS(...) __VA_ARGS__
 
 using namespace Magnum;
 using namespace Magnum::Math::Literals;
@@ -52,7 +52,7 @@ static_cast<void>(c);
 
 {
 /* [namespace-view] */
-Eigen::MatrixXd data = DOXYGEN_IGNORE({});
+Eigen::MatrixXd data = DOXYGEN_ELLIPSIS({});
 Containers::StridedArrayView2D<Double> view = EigenIntegration::arrayCast(data);
 /* [namespace-view] */
 static_cast<void>(view);
