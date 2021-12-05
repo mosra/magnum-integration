@@ -152,7 +152,7 @@ void MyApp::viewportEvent(ViewportEvent& event) {
     const Vector2 size = Vector2{event.windowSize()}/event.dpiScaling();
 
     /* Reload fonts if pixel density changed */
-    const Float supersamplingRatio = event.framebufferSize().x()/size.x();
+    const Float supersamplingRatio = Float(event.framebufferSize().x())/size.x();
     if(supersamplingRatio != _supersamplingRatio) {
         _supersamplingRatio = supersamplingRatio;
 
