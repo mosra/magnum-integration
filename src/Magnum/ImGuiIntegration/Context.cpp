@@ -307,7 +307,6 @@ void Context::drawFrame() {
 
     for(std::int_fast32_t n = 0; n < drawData->CmdListsCount; ++n) {
         const ImDrawList* cmdList = drawData->CmdLists[n];
-        ImDrawIdx indexBufferOffset = 0;
 
         _vertexBuffer.setData(
             {cmdList->VtxBuffer.Data, std::size_t(cmdList->VtxBuffer.Size)},
@@ -325,12 +324,10 @@ void Context::drawFrame() {
                     .scaled(_supersamplingRatio)});
 
             _mesh.setCount(pcmd->ElemCount);
-            _mesh.setIndexBuffer(_indexBuffer, indexBufferOffset*sizeof(ImDrawIdx),
+            _mesh.setIndexBuffer(_indexBuffer, pcmd->IdxOffset*sizeof(ImDrawIdx),
                 sizeof(ImDrawIdx) == 2
                 ? GL::MeshIndexType::UnsignedShort
                 : GL::MeshIndexType::UnsignedInt);
-
-            indexBufferOffset += pcmd->ElemCount;
 
             _shader
                 .bindTexture(*static_cast<GL::Texture2D*>(pcmd->TextureId))
