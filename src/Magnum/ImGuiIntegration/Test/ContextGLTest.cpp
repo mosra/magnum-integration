@@ -55,35 +55,49 @@
 
 namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
-enum class Modifier: Int {
-    Shift, Ctrl, Alt, Super
+struct InputEvent {
+    enum class Modifier: Int {
+        Shift = 1 << 0,
+        Ctrl = 1 << 1,
+        Alt = 1 << 2,
+        Super = 1 << 3
+    };
+    typedef Containers::EnumSet<Modifier> Modifiers;
+
+    InputEvent(Modifiers modifiers) : _modifiers(modifiers) {}
+
+    Modifiers _modifiers;
+
+    Modifiers modifiers() { return _modifiers; }
 };
-typedef Containers::EnumSet<Modifier> Modifiers;
 
 enum class Button: Int {
     Left, Middle, Right
 };
 
-struct MouseEvent {
+struct MouseEvent: public InputEvent {
     typedef Magnum::ImGuiIntegration::Test::Button Button;
+
+    MouseEvent(Button button, Vector2i position, Modifiers modifiers) :
+        InputEvent(modifiers), _button(button), _position(position) {}
 
     Button _button;
     Vector2i _position;
-    Modifiers _modifiers;
 
     Button button() { return _button; }
     Vector2i position() { return _position; }
-    Modifiers modifiers() { return _modifiers; }
+
 };
 
-struct MouseScrollEvent {
+struct MouseScrollEvent: public InputEvent {
+    MouseScrollEvent(Vector2 offset, Vector2i position, Modifiers modifiers) :
+        InputEvent(modifiers), _offset(offset), _position(position) {}
+
     Vector2 _offset;
     Vector2i _position;
-    Modifiers _modifiers;
 
     Vector2 offset() { return _offset; }
     Vector2i position() { return _position; }
-    Modifiers modifiers() { return _modifiers; }
 };
 
 struct Application {
@@ -102,7 +116,7 @@ struct Application {
     Cursor currentCursor = Cursor::None;
 };
 
-struct KeyEvent {
+struct KeyEvent: public InputEvent {
     enum class Key: Int {
         Unknown,
         LeftShift, RightShift, LeftCtrl, RightCtrl,
@@ -115,7 +129,8 @@ struct KeyEvent {
 
         F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 
-        Space, Tab, Comma, Period, Minus, Plus, Slash, Percent, Smicolon, Equal,
+        Space, Tab, Quote, Comma, Period, Minus, Plus, Slash, Percent,
+        Semicolon, Equal, LeftBracket, RightBracket, Backslash, Backquote,
 
         Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine,
 
@@ -128,6 +143,9 @@ struct KeyEvent {
         NumSix, NumSeven, NumEight, NumNine, NumDecimal, NumDivide,
         NumMultiply, NumSubtract, NumAdd, NumEnter, NumEqual,
     };
+
+    KeyEvent(Key key, Modifiers modifiers) :
+        InputEvent(modifiers), _key(key) {}
 
     Key _key;
 
@@ -565,8 +583,10 @@ void ContextGLTest::mouseInput() {
     MouseEvent right{Button::Right, {3, 4}, {}};
     MouseEvent middle{Button::Middle, {5, 6}, {}};
 
-    /* In order to avoid imgui ignoring mouse clicks if both press and release
-       happens in the same frame, the events are propagated to it only during
+    /* The queued IO events in imgui 1.87 and up don't report any data until
+       newFrame() is called. Our workaround for the legacy IO system that keeps
+       imgui from ignoring mouse clicks if both press and release happen in the
+       same frame behaves the same way. Events are propagated to it only during
        newFrame() -- which means we need to check *after* it gets called. See
        mouseInputTooFast() below for more. */
 
@@ -615,17 +635,23 @@ void ContextGLTest::mouseInput() {
     /* Mouse Movement */
     MouseEvent move{Button{}, {1, 2}, {}};
     c.handleMouseMoveEvent(move);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+    c.drawFrame();
 
     /* Scrolling/Mouse Wheel */
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 0.0f, Float);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, Float);
 
-    MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, Modifiers{}};
+    MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, {}};
     c.handleMouseScrollEvent(scroll);
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{17.0f, 23.0f}));
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, -1.2f, Float);
+    c.drawFrame();
 
     /* Unknown buttons shouldn't be propagated to imgui */
     MouseEvent unknownButton{Button(666), {1, 2}, {}};
@@ -660,19 +686,36 @@ void ContextGLTest::keyInput() {
 
     CORRADE_VERIFY(!ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
 
-    KeyEvent keyTab{KeyEvent::Key::Tab};
+    /* The queued IO events in imgui 1.87 and up don't report any data until
+       newFrame() is called */
+
+    KeyEvent keyTab{KeyEvent::Key::Tab, {}};
     c.handleKeyPressEvent(keyTab);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
+    c.drawFrame();
 
     c.handleKeyReleaseEvent(keyTab);
+    c.newFrame();
     CORRADE_VERIFY(!ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
+    c.drawFrame();
 
-    KeyEvent keyAlt{KeyEvent::Key::LeftAlt};
+    /* Key presses don't affect imgui modifier key state */
+    KeyEvent keyAlt{KeyEvent::Key::LeftAlt, {}};
     c.handleKeyPressEvent(keyAlt);
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::GetIO().KeyAlt);
+    c.drawFrame();
+
+    /* Only event modifier flags do */
+    KeyEvent modifierAlt{KeyEvent::Key::LeftAlt, KeyEvent::Modifier::Alt};
+    c.handleKeyPressEvent(modifierAlt);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::GetIO().KeyAlt);
+    c.drawFrame();
 
     /* Unknown keys shouldn't be propagated to imgui */
-    KeyEvent unknownKey{KeyEvent::Key(666)};
+    KeyEvent unknownKey{KeyEvent::Key(666), {}};
     CORRADE_VERIFY(!c.handleKeyPressEvent(unknownKey));
     CORRADE_VERIFY(!c.handleKeyReleaseEvent(unknownKey));
 }
@@ -680,9 +723,12 @@ void ContextGLTest::keyInput() {
 void ContextGLTest::textInput() {
     Context c{{}};
 
+    /* The queued IO events in imgui 1.87 and up don't report any data until
+       newFrame() is called */
+
     TextInputEvent textEvent{{"abc"}};
     c.handleTextInputEvent(textEvent);
-
+    c.newFrame();
     ImWchar expected[3]{'a', 'b', 'c'};
     /* This changed from InputCharacters to InputQueueCharacters in 1.67. Yes,
        it's a private API, but there's no other way to test if the event works
@@ -690,6 +736,7 @@ void ContextGLTest::textInput() {
     CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputQueueCharacters.begin(), ImGui::GetIO().InputQueueCharacters.size()),
         Containers::arrayView(expected),
         TestSuite::Compare::Container);
+    c.drawFrame();
 }
 
 void ContextGLTest::updateCursor() {
@@ -764,7 +811,7 @@ void ContextGLTest::multipleContexts() {
     b.handleMouseReleaseEvent(left);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
-    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, Modifiers{}};
+    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, {}};
     a.handleMouseScrollEvent(scroll);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 
@@ -772,7 +819,7 @@ void ContextGLTest::multipleContexts() {
     b.handleMouseMoveEvent(move);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
-    KeyEvent tab{KeyEvent::Key::Tab};
+    KeyEvent tab{KeyEvent::Key::Tab, {}};
     a.handleKeyPressEvent(tab);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 

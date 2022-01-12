@@ -58,35 +58,25 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
-    /* The KeyMap is meant to be for mapping from engine-native zero-based
-       enums to ImGui enums in order to avoid complex switch-case and allow
-       users to use native enums with ImGui input APIs. However Magnum only
-       wraps the native enums from SDL, GLFW, Android etc. and these are
-       generally not zero-based, so we need a switch-case in Context.hpp and
-       the below mapping looks kinda suspicious. Should get revisited once
-       there are changes in ImGui event handling code. Related discussion:
-       https://github.com/ocornut/imgui/pull/2269#issuecomment-453485633 */
     ImGuiIO &io = ImGui::GetIO();
-    io.KeyMap[ImGuiKey_Tab]        = ImGuiKey_Tab;
-    io.KeyMap[ImGuiKey_LeftArrow]  = ImGuiKey_LeftArrow;
-    io.KeyMap[ImGuiKey_RightArrow] = ImGuiKey_RightArrow;
-    io.KeyMap[ImGuiKey_UpArrow]    = ImGuiKey_UpArrow;
-    io.KeyMap[ImGuiKey_DownArrow]  = ImGuiKey_DownArrow;
-    io.KeyMap[ImGuiKey_PageUp]     = ImGuiKey_PageUp;
-    io.KeyMap[ImGuiKey_PageDown]   = ImGuiKey_PageDown;
-    io.KeyMap[ImGuiKey_Home]       = ImGuiKey_Home;
-    io.KeyMap[ImGuiKey_End]        = ImGuiKey_End;
-    io.KeyMap[ImGuiKey_Delete]     = ImGuiKey_Delete;
-    io.KeyMap[ImGuiKey_Backspace]  = ImGuiKey_Backspace;
-    io.KeyMap[ImGuiKey_Space]      = ImGuiKey_Space;
-    io.KeyMap[ImGuiKey_Enter]      = ImGuiKey_Enter;
-    io.KeyMap[ImGuiKey_Escape]     = ImGuiKey_Escape;
-    io.KeyMap[ImGuiKey_A]          = ImGuiKey_A;
-    io.KeyMap[ImGuiKey_C]          = ImGuiKey_C;
-    io.KeyMap[ImGuiKey_V]          = ImGuiKey_V;
-    io.KeyMap[ImGuiKey_X]          = ImGuiKey_X;
-    io.KeyMap[ImGuiKey_Y]          = ImGuiKey_Y;
-    io.KeyMap[ImGuiKey_Z]          = ImGuiKey_Z;
+
+    /* Legacy IO handling (< 1.87) requires a mapping from ImGuiKey to
+       engine-native zero-based key IDs. Theoretically this avoids complex
+       switch-cases and allows users to use native enums with ImGui input APIs.
+       However Magnum only wraps the native enums from SDL, GLFW, Android etc.
+       and these are generally not zero-based, so we need a switch-case in
+       Context.hpp and the below mapping.
+       The new IO API transitions to using ImGuiKey enums everywhere. Since we
+       previously already reused ImGuiKey as the native IDs, this is a seemless
+       change. More info here: https://github.com/ocornut/imgui/issues/4858. */
+    #if !MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+    constexpr ImGuiKey KeysStart = ImGuiKey_Tab;
+    constexpr ImGuiKey KeysEnd = ImGuiKey_COUNT;
+    for(ImGuiKey key = KeysStart; key != KeysEnd; ++key) {
+        /* The key range is not guaranteed to begin at 0 */
+        io.KeyMap[key] = key - KeysStart;
+    }
+    #endif
 
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -295,15 +285,20 @@ void Context::newFrame() {
 
     /* Fire delayed mouse events. This sets MouseDown both in case the press
        happened in this frame but also if both press and release happened at
-       the same frame */
+       the same frame. Not needed for the queued IO events in imgui 1.87 and
+       up. */
+    #if !MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     for(const Int buttonId: {0, 1, 2})
         io.MouseDown[buttonId] = _mousePressed[buttonId] || _mousePressedInThisFrame[buttonId];
+    #endif
 
     ImGui::NewFrame();
 
     /* It's a new frame, clear any indicators for received mouse presses in
        this frame */
+    #if !MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     _mousePressedInThisFrame = {};
+    #endif
 }
 
 void Context::drawFrame() {

@@ -47,86 +47,152 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO &io = ImGui::GetIO();
+    const typename KeyEvent::Modifiers modifiers = event.modifiers();
+
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+    io.AddKeyEvent(ImGuiKey_ModCtrl, modifiers >= KeyEvent::Modifier::Ctrl);
+    io.AddKeyEvent(ImGuiKey_ModShift, modifiers >= KeyEvent::Modifier::Shift);
+    io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= KeyEvent::Modifier::Alt);
+    io.AddKeyEvent(ImGuiKey_ModSuper, modifiers >= KeyEvent::Modifier::Super);
+    #else
+    io.KeyCtrl  = modifiers >= KeyEvent::Modifier::Ctrl;
+    io.KeyShift = modifiers >= KeyEvent::Modifier::Shift;
+    io.KeyAlt   = modifiers >= KeyEvent::Modifier::Alt;
+    io.KeySuper = modifiers >= KeyEvent::Modifier::Super;
+    #endif
 
     switch(event.key()) {
         /* LCOV_EXCL_START */
-        case KeyEvent::Key::LeftShift:
-        case KeyEvent::Key::RightShift:
-            io.KeyShift = value;
-            break;
-        case KeyEvent::Key::LeftCtrl:
-        case KeyEvent::Key::RightCtrl:
-            io.KeyCtrl = value;
-            break;
-        case KeyEvent::Key::LeftAlt:
-        case KeyEvent::Key::RightAlt:
-            io.KeyAlt = value;
-            break;
-        case KeyEvent::Key::LeftSuper:
-        case KeyEvent::Key::RightSuper:
-            io.KeySuper = value;
-            break;
-        case KeyEvent::Key::Tab:
-            io.KeysDown[ImGuiKey_Tab] = value;
-            break;
-        case KeyEvent::Key::Up:
-            io.KeysDown[ImGuiKey_UpArrow] = value;
-            break;
-        case KeyEvent::Key::Down:
-            io.KeysDown[ImGuiKey_DownArrow] = value;
-            break;
-        case KeyEvent::Key::Left:
-            io.KeysDown[ImGuiKey_LeftArrow] = value;
-            break;
-        case KeyEvent::Key::Right:
-            io.KeysDown[ImGuiKey_RightArrow] = value;
-            break;
-        case KeyEvent::Key::Home:
-            io.KeysDown[ImGuiKey_Home] = value;
-            break;
-        case KeyEvent::Key::End:
-            io.KeysDown[ImGuiKey_End] = value;
-            break;
-        case KeyEvent::Key::PageUp:
-            io.KeysDown[ImGuiKey_PageUp] = value;
-            break;
-        case KeyEvent::Key::PageDown:
-            io.KeysDown[ImGuiKey_PageDown] = value;
-            break;
-        case KeyEvent::Key::Enter:
-        case KeyEvent::Key::NumEnter:
-            io.KeysDown[ImGuiKey_Enter] = value;
-            break;
-        case KeyEvent::Key::Esc:
-            io.KeysDown[ImGuiKey_Escape] = value;
-            break;
-        case KeyEvent::Key::Space:
-            io.KeysDown[ImGuiKey_Space] = value;
-            break;
-        case KeyEvent::Key::Backspace:
-            io.KeysDown[ImGuiKey_Backspace] = value;
-            break;
-        case KeyEvent::Key::Delete:
-            io.KeysDown[ImGuiKey_Delete] = value;
-            break;
-        case KeyEvent::Key::A:
-            io.KeysDown[ImGuiKey_A] = value;
-            break;
-        case KeyEvent::Key::C:
-            io.KeysDown[ImGuiKey_C] = value;
-            break;
-        case KeyEvent::Key::V:
-            io.KeysDown[ImGuiKey_V] = value;
-            break;
-        case KeyEvent::Key::X:
-            io.KeysDown[ImGuiKey_X] = value;
-            break;
-        case KeyEvent::Key::Y:
-            io.KeysDown[ImGuiKey_Y] = value;
-            break;
-        case KeyEvent::Key::Z:
-            io.KeysDown[ImGuiKey_Z] = value;
-            break;
+        #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+        #define _c(key, imgui) \
+            case KeyEvent::Key::key: \
+                io.AddKeyEvent(ImGuiKey_ ## imgui, value); \
+                break;
+        #else
+        #define _c(key, imgui) \
+            case KeyEvent::Key::key: \
+                io.KeysDown[ImGuiKey_ ## imgui - ImGuiKey_Tab] = value; \
+                break;
+        #endif
+
+        _c(Tab, Tab)
+        _c(Left, LeftArrow)
+        _c(Right, RightArrow)
+        _c(Up, UpArrow)
+        _c(Down, DownArrow)
+        _c(PageUp, PageUp)
+        _c(PageDown, PageDown)
+        _c(Home, Home)
+        _c(End, End)
+        _c(Delete, Delete)
+        _c(Backspace, Backspace)
+        _c(Space, Space)
+        _c(Enter, Enter)
+        /* NumEnter is handled below */
+        _c(Esc, Escape)
+        _c(A, A)
+        _c(C, C)
+        _c(V, V)
+        _c(X, X)
+        _c(Y, Y)
+        _c(Z, Z)
+
+        #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+        _c(Insert, Insert)
+        _c(Quote, Apostrophe)
+        _c(Comma, Comma)
+        _c(Minus, Minus)
+        _c(Period, Period)
+        _c(Slash, Slash)
+        _c(Semicolon, Semicolon)
+        _c(Equal, Equal)
+        _c(LeftBracket, LeftBracket)
+        _c(Backslash, Backslash)
+        _c(RightBracket, RightBracket)
+        _c(Backquote, GraveAccent)
+        _c(CapsLock, CapsLock)
+         _c(ScrollLock, ScrollLock)
+        _c(NumLock, NumLock)
+        _c(PrintScreen, PrintScreen)
+        _c(Pause, Pause)
+        _c(NumZero, Keypad0)
+        _c(NumOne, Keypad1)
+        _c(NumTwo, Keypad2)
+        _c(NumThree, Keypad3)
+        _c(NumFour, Keypad4)
+        _c(NumFive, Keypad5)
+        _c(NumSix, Keypad6)
+        _c(NumSeven, Keypad7)
+        _c(NumEight, Keypad8)
+        _c(NumNine, Keypad9)
+        _c(NumDecimal, KeypadDecimal)
+        _c(NumDivide, KeypadDivide)
+        _c(NumMultiply, KeypadMultiply)
+        _c(NumSubtract, KeypadSubtract)
+        _c(NumAdd, KeypadAdd)
+        _c(NumEnter, KeypadEnter)
+        _c(NumEqual, KeypadEqual)
+        _c(LeftShift, LeftShift)
+        _c(LeftCtrl, LeftCtrl)
+        _c(LeftAlt, LeftAlt)
+        _c(LeftSuper, LeftSuper)
+        _c(RightShift, RightShift)
+        _c(RightCtrl, RightCtrl)
+        _c(RightAlt, RightAlt)
+        _c(RightSuper, RightSuper)
+        _c(Menu, Menu)
+        _c(Zero, 0)
+        _c(One, 1)
+        _c(Two, 2)
+        _c(Three, 3)
+        _c(Four, 4)
+        _c(Five, 5)
+        _c(Six, 6)
+        _c(Seven, 7)
+        _c(Eight, 8)
+        _c(Nine, 9)
+        /* A is handled above */
+        _c(B, B)
+        /* C is handled above */
+        _c(D, D)
+        _c(E, E)
+        _c(F, F)
+        _c(G, G)
+        _c(H, H)
+        _c(I, I)
+        _c(J, J)
+        _c(K, K)
+        _c(L, L)
+        _c(M, M)
+        _c(N, N)
+        _c(O, O)
+        _c(P, P)
+        _c(Q, Q)
+        _c(R, R)
+        _c(S, S)
+        _c(T, T)
+        _c(U, U)
+        /* V is handled above */
+        _c(W, W)
+        /* X, Y, Z are handled above */
+        _c(F1, F1)
+        _c(F2, F2)
+        _c(F3, F3)
+        _c(F4, F4)
+        _c(F5, F5)
+        _c(F6, F6)
+        _c(F7, F7)
+        _c(F8, F8)
+        _c(F9, F9)
+        _c(F10, F10)
+        _c(F11, F11)
+        _c(F12, F12)
+        #else
+        /* Older imgui versions had no KeypadEnter, emulate it */
+        _c(NumEnter, Enter)
+        #endif
+
+        #undef _c
         /* LCOV_EXCL_STOP */
 
         /* Unknown key, do nothing */
@@ -141,9 +207,11 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
+    const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    std::size_t buttonId;
+    /* ImGuiMouseButton convenience enum only exists since 1.75, but the values
+       are guaranteed to be 0-2 */
+    Int buttonId;
     switch(event.button()) {
         case MouseEvent::Button::Left:
             buttonId = 0;
@@ -159,14 +227,21 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
         default: return false;
     }
 
-    /* Instead of setting io.MouseDown directly, we delay this until the
-       newFrame() call in order to prevent mouse clicks from being ignored when
-       both a press and a release happens in the same frame. Apart from this
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+    io.AddMousePosEvent(position.x(), position.y());
+    io.AddMouseButtonEvent(buttonId, value);
+    #else
+    io.MousePos = ImVec2(position);
+    /* Workaround to prevent mouse clicks from being ignored when both a press
+       and a release happens in the same frame. Instead of setting io.MouseDown
+       directly, we delay this until the newFrame() call. Apart from this
        happening when the app can't render fast enough, for some reason it also
        happens with SDL2 on macOS -- press delayed by a significant amount of
-       time */
+       time. Not needed for the queued IO events in imgui 1.87 and up where
+       input events are spaced out over multiple frames. */
     _mousePressed.set(buttonId, value);
     if(value) _mousePressedInThisFrame.set(buttonId, true);
+    #endif
 
     return io.WantCaptureMouse;
 }
@@ -184,9 +259,17 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
-    io.MouseWheel += event.offset().y();
+    const Vector2 position = Vector2(event.position())*_eventScaling;
+
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+    io.AddMousePosEvent(position.x(), position.y());
+    io.AddMouseWheelEvent(event.offset().x(), event.offset().y());
+    #else
+    io.MousePos = ImVec2(position);
     io.MouseWheelH += event.offset().x();
+    io.MouseWheel += event.offset().y();
+    #endif
+
     return io.WantCaptureMouse;
 }
 
@@ -195,7 +278,14 @@ template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
+    const Vector2 position = Vector2(event.position())*_eventScaling;
+
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+    io.AddMousePosEvent(position.x(), position.y());
+    #else
+    io.MousePos = ImVec2(position);
+    #endif
+
     return io.WantCaptureMouse;
 }
 
