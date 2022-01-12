@@ -48,85 +48,52 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
 
     ImGuiIO &io = ImGui::GetIO();
 
+    /* Since 1.87 ImGuiKey entries don't start at 0, so we need to subtract
+       the first value to index into KeysDown:
+       https://github.com/ocornut/imgui/issues/4858 */
+    constexpr ImGuiKey KeysStart = ImGuiKey_Tab;
+
     switch(event.key()) {
         /* LCOV_EXCL_START */
-        case KeyEvent::Key::LeftShift:
-        case KeyEvent::Key::RightShift:
-            io.KeyShift = value;
-            break;
-        case KeyEvent::Key::LeftCtrl:
-        case KeyEvent::Key::RightCtrl:
-            io.KeyCtrl = value;
-            break;
-        case KeyEvent::Key::LeftAlt:
-        case KeyEvent::Key::RightAlt:
-            io.KeyAlt = value;
-            break;
-        case KeyEvent::Key::LeftSuper:
-        case KeyEvent::Key::RightSuper:
-            io.KeySuper = value;
-            break;
-        case KeyEvent::Key::Tab:
-            io.KeysDown[ImGuiKey_Tab] = value;
-            break;
-        case KeyEvent::Key::Up:
-            io.KeysDown[ImGuiKey_UpArrow] = value;
-            break;
-        case KeyEvent::Key::Down:
-            io.KeysDown[ImGuiKey_DownArrow] = value;
-            break;
-        case KeyEvent::Key::Left:
-            io.KeysDown[ImGuiKey_LeftArrow] = value;
-            break;
-        case KeyEvent::Key::Right:
-            io.KeysDown[ImGuiKey_RightArrow] = value;
-            break;
-        case KeyEvent::Key::Home:
-            io.KeysDown[ImGuiKey_Home] = value;
-            break;
-        case KeyEvent::Key::End:
-            io.KeysDown[ImGuiKey_End] = value;
-            break;
-        case KeyEvent::Key::PageUp:
-            io.KeysDown[ImGuiKey_PageUp] = value;
-            break;
-        case KeyEvent::Key::PageDown:
-            io.KeysDown[ImGuiKey_PageDown] = value;
-            break;
-        case KeyEvent::Key::Enter:
-        case KeyEvent::Key::NumEnter:
-            io.KeysDown[ImGuiKey_Enter] = value;
-            break;
-        case KeyEvent::Key::Esc:
-            io.KeysDown[ImGuiKey_Escape] = value;
-            break;
-        case KeyEvent::Key::Space:
-            io.KeysDown[ImGuiKey_Space] = value;
-            break;
-        case KeyEvent::Key::Backspace:
-            io.KeysDown[ImGuiKey_Backspace] = value;
-            break;
-        case KeyEvent::Key::Delete:
-            io.KeysDown[ImGuiKey_Delete] = value;
-            break;
-        case KeyEvent::Key::A:
-            io.KeysDown[ImGuiKey_A] = value;
-            break;
-        case KeyEvent::Key::C:
-            io.KeysDown[ImGuiKey_C] = value;
-            break;
-        case KeyEvent::Key::V:
-            io.KeysDown[ImGuiKey_V] = value;
-            break;
-        case KeyEvent::Key::X:
-            io.KeysDown[ImGuiKey_X] = value;
-            break;
-        case KeyEvent::Key::Y:
-            io.KeysDown[ImGuiKey_Y] = value;
-            break;
-        case KeyEvent::Key::Z:
-            io.KeysDown[ImGuiKey_Z] = value;
-            break;
+        #define _b(key) case KeyEvent::Key::Left ## key: \
+                        case KeyEvent::Key::Right ## key: \
+                            io.Key ## key = value; \
+                            break;
+        #define _c(key, target) case KeyEvent::Key::key: \
+                            io.KeysDown[ImGuiKey_ ## target - KeysStart] = value; \
+                            break;
+        #define _d(key) _c(key, key)
+
+        _b(Shift)
+        _b(Ctrl)
+        _b(Alt)
+        _b(Super)
+
+        _d(Tab)
+        _c(Up, UpArrow)
+        _c(Down, DownArrow)
+        _c(Left, LeftArrow)
+        _c(Right, RightArrow)
+        _d(Home)
+        _d(End)
+        _d(PageUp)
+        _d(PageDown)
+        _d(Enter)
+        _c(NumEnter, Enter)
+        _c(Esc, Escape)
+        _d(Space)
+        _d(Backspace)
+        _d(Delete)
+        _d(A)
+        _d(C)
+        _d(V)
+        _d(X)
+        _d(Y)
+        _d(Z)
+
+        #undef _b
+        #undef _c
+        #undef _d
         /* LCOV_EXCL_STOP */
 
         /* Unknown key, do nothing */

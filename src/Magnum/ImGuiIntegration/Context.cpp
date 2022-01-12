@@ -57,6 +57,8 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
+    ImGuiIO &io = ImGui::GetIO();
+
     /* The KeyMap is meant to be for mapping from engine-native zero-based
        enums to ImGui enums in order to avoid complex switch-case and allow
        users to use native enums with ImGui input APIs. However Magnum only
@@ -64,28 +66,16 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
        generally not zero-based, so we need a switch-case in Context.hpp and
        the below mapping looks kinda suspicious. Should get revisited once
        there are changes in ImGui event handling code. Related discussion:
-       https://github.com/ocornut/imgui/pull/2269#issuecomment-453485633 */
-    ImGuiIO &io = ImGui::GetIO();
-    io.KeyMap[ImGuiKey_Tab]        = ImGuiKey_Tab;
-    io.KeyMap[ImGuiKey_LeftArrow]  = ImGuiKey_LeftArrow;
-    io.KeyMap[ImGuiKey_RightArrow] = ImGuiKey_RightArrow;
-    io.KeyMap[ImGuiKey_UpArrow]    = ImGuiKey_UpArrow;
-    io.KeyMap[ImGuiKey_DownArrow]  = ImGuiKey_DownArrow;
-    io.KeyMap[ImGuiKey_PageUp]     = ImGuiKey_PageUp;
-    io.KeyMap[ImGuiKey_PageDown]   = ImGuiKey_PageDown;
-    io.KeyMap[ImGuiKey_Home]       = ImGuiKey_Home;
-    io.KeyMap[ImGuiKey_End]        = ImGuiKey_End;
-    io.KeyMap[ImGuiKey_Delete]     = ImGuiKey_Delete;
-    io.KeyMap[ImGuiKey_Backspace]  = ImGuiKey_Backspace;
-    io.KeyMap[ImGuiKey_Space]      = ImGuiKey_Space;
-    io.KeyMap[ImGuiKey_Enter]      = ImGuiKey_Enter;
-    io.KeyMap[ImGuiKey_Escape]     = ImGuiKey_Escape;
-    io.KeyMap[ImGuiKey_A]          = ImGuiKey_A;
-    io.KeyMap[ImGuiKey_C]          = ImGuiKey_C;
-    io.KeyMap[ImGuiKey_V]          = ImGuiKey_V;
-    io.KeyMap[ImGuiKey_X]          = ImGuiKey_X;
-    io.KeyMap[ImGuiKey_Y]          = ImGuiKey_Y;
-    io.KeyMap[ImGuiKey_Z]          = ImGuiKey_Z;
+       https://github.com/ocornut/imgui/pull/2269#issuecomment-453485633.
+       This entire mechanism is deprecated since 1.87:
+       https://github.com/ocornut/imgui/issues/4858
+       ImGuiKey entries now start at 512, which makes them unsuitable for
+       indexing directly into KeyMap, so we have to remap them to 0. */
+    /** @todo Add support for the new IO key handling introduced in 1.87 */
+    constexpr ImGuiKey KeysStart = ImGuiKey_Tab;
+    constexpr ImGuiKey KeysEnd = ImGuiKey_COUNT;
+    for(ImGuiKey key = KeysStart; key != KeysEnd; ++key)
+        io.KeyMap[key] = key - KeysStart;
 
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
