@@ -173,6 +173,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void draw();
     void drawTexture();
     void drawScissor();
+    void drawVertexOffset();
     void drawIndexOffset();
 
     private:
@@ -212,6 +213,7 @@ ContextGLTest::ContextGLTest() {
         &ContextGLTest::draw,
         &ContextGLTest::drawTexture,
         &ContextGLTest::drawScissor,
+        &ContextGLTest::drawVertexOffset,
         &ContextGLTest::drawIndexOffset
         },
         &ContextGLTest::drawSetup,
@@ -964,6 +966,51 @@ void ContextGLTest::drawScissor() {
     Containers::Array<Color4ub> pixels{NoInit, size_t(_framebuffer.viewport().size().product())};
     for(Color4ub& p: pixels)
         p = Color4ub{DrawClearColor*255.0f};
+
+    CORRADE_COMPARE_WITH(
+        _framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}),
+        (ImageView2D{PixelFormat::RGBA8Unorm, _framebuffer.viewport().size(), pixels}),
+        (DebugTools::CompareImage{5.0f, 0.1f}));
+}
+
+void ContextGLTest::drawVertexOffset() {
+    Context c{{200, 200}, {70, 70}, _framebuffer.viewport().size()};
+
+    if(!(ImGui::GetIO().BackendFlags & ImGuiBackendFlags_RendererHasVtxOffset))
+        CORRADE_SKIP("Vertex offset not supported");
+
+    if(sizeof(ImDrawIdx) != 2)
+        CORRADE_SKIP("ImDrawIdx is too large");
+
+    /* ImGui doesn't draw anything the first frame */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    Utility::System::sleep(1);
+
+    c.newFrame();
+
+    /* Last drawlist that gets rendered, covers the entire display */
+    ImDrawList* drawList = ImGui::GetForegroundDrawList();
+    const ImVec2& size = ImGui::GetIO().DisplaySize;
+
+    drawList->AddRectFilled({0.0f, 0.0f}, size, IM_COL32(255, 0, 0, 255));
+    CORRADE_COMPARE(drawList->VtxBuffer.Size, 4);
+
+    while(drawList->VtxBuffer.Size + 4 < std::numeric_limits<ImDrawIdx>::max()) {
+        drawList->AddRectFilled({0.0f, 0.0f}, size, IM_COL32(255, 0, 0, 255));
+    }
+    drawList->AddRectFilled({0.0f, 0.0f}, size, IM_COL32(0, 255, 0, 255));
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    Containers::Array<Color4ub> pixels{NoInit, size_t(_framebuffer.viewport().size().product())};
+    for(Color4ub& p: pixels)
+        p = Color4ub{0, 255, 0, 255};
 
     CORRADE_COMPARE_WITH(
         _framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}),

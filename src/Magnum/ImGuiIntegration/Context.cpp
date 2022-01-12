@@ -91,6 +91,26 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 
+    /* Check if we can support base vertex > 0 in draw commands */
+    #if !(defined(MAGNUM_TARGET_WEBGL) && defined(MAGNUM_TARGET_GLES2))
+    if(
+    #if defined(MAGNUM_TARGET_WEBGL)
+        GL::Context::current().isExtensionSupported<GL::Extensions::WEBGL::draw_instanced_base_vertex_base_instance>()
+    #elif defined(MAGNUM_TARGET_GLES)
+        /* Supported since GLES 3.2 but the extensions aren't fully covered by
+           3.2 (and hence not in core) so we still need the version check */
+        GL::Context::current().isVersionSupported(GL::Version::GLES320) ||
+        GL::Context::current().isExtensionSupported<GL::Extensions::OES::draw_elements_base_vertex>() ||
+        GL::Context::current().isExtensionSupported<GL::Extensions::EXT::draw_elements_base_vertex>()
+    #else
+        /* Core since OpenGL 3.2 */
+        GL::Context::current().isExtensionSupported<GL::Extensions::ARB::draw_elements_base_vertex>()
+    #endif
+    ) {
+        io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+    }
+    #endif
+
     /** @todo Set clipboard text once Platform supports it */
 
     /* Set up framebuffer sizes, font supersampling etc. and upload the glyph
@@ -324,6 +344,8 @@ void Context::drawFrame() {
                 {pcmd->ClipRect.z, fbSize.y() - pcmd->ClipRect.y}}
                     .scaled(_supersamplingRatio)});
 
+            /* Only > 0 if ImGuiBackendFlags_RendererHasVtxOffset is set */
+            _mesh.setBaseVertex(pcmd->VtxOffset);
             _mesh.setCount(pcmd->ElemCount);
             _mesh.setIndexBuffer(_indexBuffer, pcmd->IdxOffset*sizeof(ImDrawIdx),
                 sizeof(ImDrawIdx) == 2
