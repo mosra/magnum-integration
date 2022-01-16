@@ -5,14 +5,14 @@ set PATH=%APPVEYOR_BUILD_FOLDER%\deps-native\bin;%PATH%
 rem Build ANGLE. The repo is now just a README redirecting to googlesource.
 rem I don't want to bother with this right now, so checking out last usable
 rem version from 2017. TODO: fix when I can be bothered
-git clone --depth 10 git://github.com/MSOpenTech/angle.git || exit /b
+git clone --depth 10 https://github.com/MSOpenTech/angle.git || exit /b
 cd angle || exit /b
 git checkout c61d0488abd9663e0d4d2450db7345baa2c0dfb6 || exit /b
 cd winrt\10\src || exit /b
 msbuild angle.sln /p:Configuration=Release || exit /b
 cd ..\..\..\.. || exit /b
 
-git clone --depth 1 git://github.com/mosra/corrade.git || exit /b
+git clone --depth 1 https://github.com/mosra/corrade.git || exit /b
 cd corrade || exit /b
 
 rem Build native corrade-rc
@@ -42,7 +42,7 @@ cmake --build . --config Release --target install -- /m /v:m || exit /b
 cd .. && cd ..
 
 rem Crosscompile Magnum
-git clone --depth 1 git://github.com/mosra/magnum.git || exit /b
+git clone --depth 1 https://github.com/mosra/magnum.git || exit /b
 cd magnum || exit /b
 mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
