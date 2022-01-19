@@ -230,6 +230,7 @@ namespace Implementation {
 MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(ResizeAll)
 MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(ResizeNESW)
 MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(ResizeNWSE)
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(No)
 #undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR
 #endif
 
@@ -261,6 +262,11 @@ template<class Application> void Context::updateApplicationCursor(Application& a
         case ImGuiMouseCursor_Hand:
             application.setCursor(Application::Cursor::Hand);
             return;
+        #if IMGUI_VERSION_NUM >= 17500
+        case ImGuiMouseCursor_NotAllowed:
+            application.setCursor(Implementation::OptionalNoCursor<Application>::Cursor);
+            return;
+        #endif
         case ImGuiMouseCursor_None:
             application.setCursor(Application::Cursor::Hidden);
             return;
