@@ -40,6 +40,8 @@
 #include "Magnum/ImGuiIntegration/Integration.h"
 #include "Magnum/ImGuiIntegration/Context.h"
 
+#define HAS_NEW_IMGUI_IO (IMGUI_VERSION_NUM >= 18615)
+
 namespace Magnum { namespace ImGuiIntegration {
 
 template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool value) {
@@ -47,53 +49,152 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO &io = ImGui::GetIO();
+    const typename KeyEvent::Modifiers modifiers = event.modifiers();
 
-    /* Since 1.87 ImGuiKey entries don't start at 0, so we need to subtract
-       the first value to index into KeysDown:
-       https://github.com/ocornut/imgui/issues/4858 */
-    constexpr ImGuiKey KeysStart = ImGuiKey_Tab;
+    #if HAS_NEW_IMGUI_IO
+    io.AddKeyEvent(ImGuiKey_ModCtrl, modifiers >= KeyEvent::Modifier::Ctrl);
+    io.AddKeyEvent(ImGuiKey_ModShift, modifiers >= KeyEvent::Modifier::Shift);
+    io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= KeyEvent::Modifier::Alt);
+    io.AddKeyEvent(ImGuiKey_ModSuper, modifiers >= KeyEvent::Modifier::Super);
+    #else
+    io.KeyCtrl  = modifiers >= KeyEvent::Modifier::Ctrl;
+    io.KeyShift = modifiers >= KeyEvent::Modifier::Shift;
+    io.KeyAlt   = modifiers >= KeyEvent::Modifier::Alt;
+    io.KeySuper = modifiers >= KeyEvent::Modifier::Super;
+    #endif
 
     switch(event.key()) {
         /* LCOV_EXCL_START */
-        #define _b(key) case KeyEvent::Key::Left ## key: \
-                        case KeyEvent::Key::Right ## key: \
-                            io.Key ## key = value; \
-                            break;
-        #define _c(key, target) case KeyEvent::Key::key: \
-                            io.KeysDown[ImGuiKey_ ## target - KeysStart] = value; \
-                            break;
-        #define _d(key) _c(key, key)
+        #if HAS_NEW_IMGUI_IO
+        #define _c(key, imgui) \
+            case KeyEvent::Key::key: \
+                io.AddKeyEvent(ImGuiKey_ ## imgui, value); \
+                break;
+        #else
+        #define _c(key, imgui) \
+            case KeyEvent::Key::key: \
+                io.KeysDown[ImGuiKey_ ## imgui - ImGuiKey_Tab] = value; \
+                break;
+        #endif
 
-        _b(Shift)
-        _b(Ctrl)
-        _b(Alt)
-        _b(Super)
-
-        _d(Tab)
-        _c(Up, UpArrow)
-        _c(Down, DownArrow)
+        _c(Tab, Tab)
         _c(Left, LeftArrow)
         _c(Right, RightArrow)
-        _d(Home)
-        _d(End)
-        _d(PageUp)
-        _d(PageDown)
-        _d(Enter)
-        _c(NumEnter, Enter)
+        _c(Up, UpArrow)
+        _c(Down, DownArrow)
+        _c(PageUp, PageUp)
+        _c(PageDown, PageDown)
+        _c(Home, Home)
+        _c(End, End)
+        _c(Delete, Delete)
+        _c(Backspace, Backspace)
+        _c(Space, Space)
+        _c(Enter, Enter)
+        /* NumEnter is handled below */
         _c(Esc, Escape)
-        _d(Space)
-        _d(Backspace)
-        _d(Delete)
-        _d(A)
-        _d(C)
-        _d(V)
-        _d(X)
-        _d(Y)
-        _d(Z)
+        _c(A, A)
+        _c(C, C)
+        _c(V, V)
+        _c(X, X)
+        _c(Y, Y)
+        _c(Z, Z)
 
-        #undef _b
+        #if HAS_NEW_IMGUI_IO
+        _c(Insert, Insert)
+        _c(Quote, Apostrophe)
+        _c(Comma, Comma)
+        _c(Minus, Minus)
+        _c(Period, Period)
+        _c(Slash, Slash)
+        _c(Semicolon, Semicolon)
+        _c(Equal, Equal)
+        _c(LeftBracket, LeftBracket)
+        _c(Backslash, Backslash)
+        _c(RightBracket, RightBracket)
+        _c(Backquote, GraveAccent)
+        _c(CapsLock, CapsLock)
+         _c(ScrollLock, ScrollLock)
+        _c(NumLock, NumLock)
+        _c(PrintScreen, PrintScreen)
+        _c(Pause, Pause)
+        _c(NumZero, Keypad0)
+        _c(NumOne, Keypad1)
+        _c(NumTwo, Keypad2)
+        _c(NumThree, Keypad3)
+        _c(NumFour, Keypad4)
+        _c(NumFive, Keypad5)
+        _c(NumSix, Keypad6)
+        _c(NumSeven, Keypad7)
+        _c(NumEight, Keypad8)
+        _c(NumNine, Keypad9)
+        _c(NumDecimal, KeypadDecimal)
+        _c(NumDivide, KeypadDivide)
+        _c(NumMultiply, KeypadMultiply)
+        _c(NumSubtract, KeypadSubtract)
+        _c(NumAdd, KeypadAdd)
+        _c(NumEnter, KeypadEnter)
+        _c(NumEqual, KeypadEqual)
+        _c(LeftShift, LeftShift)
+        _c(LeftCtrl, LeftCtrl)
+        _c(LeftAlt, LeftAlt)
+        _c(LeftSuper, LeftSuper)
+        _c(RightShift, RightShift)
+        _c(RightCtrl, RightCtrl)
+        _c(RightAlt, RightAlt)
+        _c(RightSuper, RightSuper)
+        _c(Menu, Menu)
+        _c(Zero, 0)
+        _c(One, 1)
+        _c(Two, 2)
+        _c(Three, 3)
+        _c(Four, 4)
+        _c(Five, 5)
+        _c(Six, 6)
+        _c(Seven, 7)
+        _c(Eight, 8)
+        _c(Nine, 9)
+        /* A is handled above */
+        _c(B, B)
+        /* C is handled above */
+        _c(D, D)
+        _c(E, E)
+        _c(F, F)
+        _c(G, G)
+        _c(H, H)
+        _c(I, I)
+        _c(J, J)
+        _c(K, K)
+        _c(L, L)
+        _c(M, M)
+        _c(N, N)
+        _c(O, O)
+        _c(P, P)
+        _c(Q, Q)
+        _c(R, R)
+        _c(S, S)
+        _c(T, T)
+        _c(U, U)
+        /* V is handled above */
+        _c(W, W)
+        /* X, Y, Z are handled above */
+        _c(F1, F1)
+        _c(F2, F2)
+        _c(F3, F3)
+        _c(F4, F4)
+        _c(F5, F5)
+        _c(F6, F6)
+        _c(F7, F7)
+        _c(F8, F8)
+        _c(F9, F9)
+        _c(F10, F10)
+        _c(F11, F11)
+        _c(F12, F12)
+        #else
+        /* Older imgui versions had no KeypadEnter, emulate it */
+        _c(NumEnter, Enter)
+        #endif
+
         #undef _c
-        #undef _d
         /* LCOV_EXCL_STOP */
 
         /* Unknown key, do nothing */
@@ -108,9 +209,11 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
+    const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    std::size_t buttonId;
+    /* ImGuiMouseButton convenience enum only exists since 1.75, but the values
+       are guaranteed to be 0-2 */
+    Int buttonId;
     switch(event.button()) {
         case MouseEvent::Button::Left:
             buttonId = 0;
@@ -126,14 +229,21 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
         default: return false;
     }
 
-    /* Instead of setting io.MouseDown directly, we delay this until the
-       newFrame() call in order to prevent mouse clicks from being ignored when
-       both a press and a release happens in the same frame. Apart from this
+    #if HAS_NEW_IMGUI_IO
+    io.AddMousePosEvent(position.x(), position.y());
+    io.AddMouseButtonEvent(buttonId, value);
+    #else
+    io.MousePos = ImVec2(position);
+    /* Workaround to prevent mouse clicks from being ignored when both a press
+       and a release happens in the same frame. Instead of setting io.MouseDown
+       directly, we delay this until the newFrame() call. Apart from this
        happening when the app can't render fast enough, for some reason it also
        happens with SDL2 on macOS -- press delayed by a significant amount of
-       time */
+       time. Not needed for the queued IO events in imgui 1.87 and up where
+       input events are spaced out over multiple frames. */
     _mousePressed.set(buttonId, value);
     if(value) _mousePressedInThisFrame.set(buttonId, true);
+    #endif
 
     return io.WantCaptureMouse;
 }
@@ -151,9 +261,17 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
-    io.MouseWheel += event.offset().y();
+    const Vector2 position = Vector2(event.position())*_eventScaling;
+
+    #if HAS_NEW_IMGUI_IO
+    io.AddMousePosEvent(position.x(), position.y());
+    io.AddMouseWheelEvent(event.offset().x(), event.offset().y());
+    #else
+    io.MousePos = ImVec2(position);
     io.MouseWheelH += event.offset().x();
+    io.MouseWheel += event.offset().y();
+    #endif
+
     return io.WantCaptureMouse;
 }
 
@@ -162,7 +280,14 @@ template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent
     ImGui::SetCurrentContext(_context);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MousePos = ImVec2(Vector2(event.position())*_eventScaling);
+    const Vector2 position = Vector2(event.position())*_eventScaling;
+
+    #if HAS_NEW_IMGUI_IO
+    io.AddMousePosEvent(position.x(), position.y());
+    #else
+    io.MousePos = ImVec2(position);
+    #endif
+
     return io.WantCaptureMouse;
 }
 
@@ -243,5 +368,7 @@ template<class Application> void Context::updateApplicationCursor(Application& a
 }
 
 }}
+
+#undef HAS_NEW_IMGUI_IO
 
 #endif

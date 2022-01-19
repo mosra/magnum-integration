@@ -47,6 +47,8 @@
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
+#define HAS_NEW_IMGUI_IO (IMGUI_VERSION_NUM >= 18615)
+
 namespace Magnum { namespace ImGuiIntegration {
 
 Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{*ImGui::CreateContext(), size, windowSize, framebufferSize} {}
@@ -59,23 +61,23 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
 
     ImGuiIO &io = ImGui::GetIO();
 
-    /* The KeyMap is meant to be for mapping from engine-native zero-based
-       enums to ImGui enums in order to avoid complex switch-case and allow
-       users to use native enums with ImGui input APIs. However Magnum only
-       wraps the native enums from SDL, GLFW, Android etc. and these are
-       generally not zero-based, so we need a switch-case in Context.hpp and
-       the below mapping looks kinda suspicious. Should get revisited once
-       there are changes in ImGui event handling code. Related discussion:
-       https://github.com/ocornut/imgui/pull/2269#issuecomment-453485633.
-       This entire mechanism is deprecated since 1.87:
-       https://github.com/ocornut/imgui/issues/4858
-       ImGuiKey entries now start at 512, which makes them unsuitable for
-       indexing directly into KeyMap, so we have to remap them to 0. */
-    /** @todo Add support for the new IO key handling introduced in 1.87 */
+    /* Legacy IO handling (< 1.87) requires a mapping from ImGuiKey to
+       engine-native zero-based key IDs. Theoretically this avoids complex
+       switch-cases and allows users to use native enums with ImGui input APIs.
+       However Magnum only wraps the native enums from SDL, GLFW, Android etc.
+       and these are generally not zero-based, so we need a switch-case in
+       Context.hpp and the below mapping.
+       The new IO API transitions to using ImGuiKey enums everywhere. Since we
+       previously already reused ImGuiKey as the native IDs, this is a seemless
+       change. More info here: https://github.com/ocornut/imgui/issues/4858. */
+#if !HAS_NEW_IMGUI_IO
     constexpr ImGuiKey KeysStart = ImGuiKey_Tab;
     constexpr ImGuiKey KeysEnd = ImGuiKey_COUNT;
-    for(ImGuiKey key = KeysStart; key != KeysEnd; ++key)
+    for(ImGuiKey key = KeysStart; key != KeysEnd; ++key) {
+        /* The key range is not guaranteed to begin at 0 */
         io.KeyMap[key] = key - KeysStart;
+    }
+#endif
 
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -264,15 +266,20 @@ void Context::newFrame() {
 
     /* Fire delayed mouse events. This sets MouseDown both in case the press
        happened in this frame but also if both press and release happened at
-       the same frame */
+       the same frame. Not needed for the queued IO events in imgui 1.87 and
+       up. */
+    #if !HAS_NEW_IMGUI_IO
     for(const Int buttonId: {0, 1, 2})
         io.MouseDown[buttonId] = _mousePressed[buttonId] || _mousePressedInThisFrame[buttonId];
+    #endif
 
     ImGui::NewFrame();
 
     /* It's a new frame, clear any indicators for received mouse presses in
        this frame */
+    #if !HAS_NEW_IMGUI_IO
     _mousePressedInThisFrame = {};
+    #endif
 }
 
 void Context::drawFrame() {
