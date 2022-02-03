@@ -50,6 +50,8 @@ namespace Magnum {
     the `MAGNUM_IMGUIINTEGRATION_USER_CONFIG` macro. See the
     @ref ImGuiIntegration namespace documentation for an example, see also
     [mosra/magnum-integration#85](https://github.com/mosra/magnum-integration/pull/85).
+-   Support for @ref Platform::Sdl2Application::Cursor::No "Platform::*Application::Cursor::No"
+    in @ref ImGuiIntegration::Context (see [mosra/magnum-integration#92](https://github.com/mosra/magnum-integration/pull/92))
 
 @subsection changelog-integration-latest-buildsystem Build system
 
