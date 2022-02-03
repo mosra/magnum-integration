@@ -56,7 +56,8 @@ namespace Magnum {
 @subsection changelog-integration-latest-buildsystem Build system
 
 -   Updated `FindImGui.cmake` to optionally include the new `imgui_tables.cpp`
-    source present in latest versions (see [mosra/magnum-integration#78](https://github.com/mosra/magnum-integration/pull/78))
+    source present in latest versions (see [mosra/magnum-integration#78](https://github.com/mosra/magnum-integration/pull/78),
+    [mosra/magnum-integration#81](https://github.com/mosra/magnum-integration/issues/81))
 -   Updated `FindImGui.cmake` to link to `imm32` on MinGW, which is needed
     since ImGui 1.82.
 -   Linux, Emscripten and macOS builds were migrated from Travis to Circle CI
@@ -144,6 +145,8 @@ Released 2020-06-27, tagged as
 -   Various minor fixes (see [mosra/magnum-integration#68](https://github.com/mosra/magnum-integration/pull/68))
 -   The library again compiles and tests cleanly with @ref CORRADE_NO_ASSERT
     enabled, and this setup is verified on the CI to avoid further regressions
+-   Updated @ref GlmIntegration tests to build against 0.9.9.8 (see
+    [mosra/magnum-integration#70](https://github.com/mosra/magnum-integration/issues/70))
 
 @subsection changelog-integration-2020-06-bugfixes Bug fixes
 
