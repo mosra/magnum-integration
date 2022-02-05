@@ -41,8 +41,42 @@ set_target_properties(
     PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 
 if(BUILD_GL_TESTS)
+    find_package(Corrade REQUIRED PluginManager)
+    find_package(Magnum REQUIRED Trade DebugTools)
+
+    if(CORRADE_TARGET_EMSCRIPTEN OR CORRADE_TARGET_ANDROID)
+        set(IMGUIINTEGRATION_TEST_DIR ".")
+    else()
+        set(IMGUIINTEGRATION_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+    endif()
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
+                   ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
+
     corrade_add_test(ImGuiContextGLTest ContextGLTest.cpp
-        LIBRARIES MagnumImGuiIntegration Magnum::OpenGLTester)
+        LIBRARIES
+            MagnumImGuiIntegration
+            Magnum::Trade
+            Magnum::DebugTools
+            Magnum::OpenGLTester
+        FILES
+            TestFiles/draw.png
+            TestFiles/drawScissor.png
+            TestFiles/drawTexture.png
+            texture.png)
+    target_include_directories(ImGuiContextGLTest PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+    if(MAGNUM_IMGUIINTEGRATION_BUILD_STATIC)
+        # Not required
+        find_package(Magnum COMPONENTS AnyImageImporter)
+        find_package(MagnumPlugins COMPONENTS StbImageImporter)
+        if(Magnum_AnyImageImporter_FOUND)
+            target_link_libraries(ImGuiContextGLTest PRIVATE Magnum::AnyImageImporter)
+        endif()
+        if(MagnumPlugins_StbImageImporter_FOUND)
+            target_link_libraries(ImGuiContextGLTest PRIVATE MagnumPlugins::StbImageImporter)
+        endif()
+    endif()
+
     corrade_add_test(ImGuiWidgetsGLTest WidgetsGLTest.cpp
         LIBRARIES MagnumImGuiIntegration Magnum::OpenGLTester)
 
