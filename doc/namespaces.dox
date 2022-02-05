@@ -365,6 +365,8 @@ See also @ref building-integration and @ref cmake-integration. See the
 
 Conversion of math classes and rendering of Dear ImGui using Magnum.
 
+@section ImGuiIntegration-usage Usage
+
 This library depends on [Dear ImGui](https://github.com/ocornut/imgui) and is
 built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
 library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
@@ -389,6 +391,8 @@ set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 set(WITH_IMGUI ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
+
+@section ImGuiIntegration-configuration Configuration
 
 Dear ImGui configuration can normally be manipulated at compile time by
 defining `IMGUI_USER_CONFIG` which is then included by the Dear ImGui library.

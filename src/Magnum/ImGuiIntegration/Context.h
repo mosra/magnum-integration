@@ -251,6 +251,36 @@ If you don't do that, the fonts stay at the original scale, not matching the
 new UI scaling anymore. If you didn't supply any custom font, the function will
 reconfigure the builtin font automatically.
 
+@section ImGuiIntegration-Context-large-meshes Large meshes
+
+Complex user interfaces or widgets like [ImPlot](https://github.com/epezent/implot)
+may end up creating large meshes with more than 65k vertices. Because ImGui
+defaults to 16-bit index buffers this can lead to asserts or visual errors.
+
+If the underlying GL context supports @ref GL::Mesh::setBaseVertex() "setting the base vertex for indexed meshes"
+the rendering backend sets the @cpp ImGuiBackendFlags_RendererHasVtxOffset @ce
+flag. This lets ImGui know the backend can handle per-draw vertex offsets,
+removing the 65k limitation altogether. Support for that requires one of the
+following:
+
+@requires_gl32 Extension @gl_extension{ARB,draw_elements_base_vertex}
+@requires_gles32 Extension @gl_extension{OES,draw_elements_base_vertex} or
+    @gl_extension{EXT,draw_elements_base_vertex} on OpenGL ES 3.1 and older
+@requires_webgl_extension WebGL 2.0 and extension
+    @webgl_extension{WEBGL,draw_instanced_base_vertex_base_instance}
+
+If you can't guarantee that the required GL versions or extensions will be
+available at runtime (mostly relevant on WebGL) the next best option is to
+change ImGui's index type to 32-bit by adding the following line to the
+@ref ImGuiIntegration-configuration "ImGui user config":
+
+@code{.cpp}
+#define ImDrawIdx unsigned int
+@endcode
+
+This doubles the size of the index buffer but is guaranteed to work on all GL
+versions.
+
 @section ImGuiIntegration-Context-multiple-contexts Multiple contexts
 
 Each instance of @ref Context creates a new ImGui context. You can also pass an
