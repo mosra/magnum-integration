@@ -852,7 +852,7 @@ void ContextGLTest::draw() {
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "TestFiles/draw.png"),
-        (DebugTools::CompareImageToFile{_manager, 5.0f, 0.1f}));
+        (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 }
 
 void ContextGLTest::drawTexture() {
@@ -910,7 +910,7 @@ void ContextGLTest::drawTexture() {
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "TestFiles/drawTexture.png"),
-        (DebugTools::CompareImageToFile{_manager, 5.0f, 0.1f}));
+        (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 }
 
 void ContextGLTest::drawScissor() {
@@ -954,7 +954,7 @@ void ContextGLTest::drawScissor() {
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "TestFiles/drawScissor.png"),
-        (DebugTools::CompareImageToFile{_manager, 5.0f, 0.1f}));
+        (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 
     /* Scissor should be reset to the framebuffer size, otherwise the next
        clear wouldn't cover the entire framebuffer */
@@ -970,7 +970,7 @@ void ContextGLTest::drawScissor() {
     CORRADE_COMPARE_WITH(
         _framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}),
         (ImageView2D{PixelFormat::RGBA8Unorm, _framebuffer.viewport().size(), pixels}),
-        (DebugTools::CompareImage{5.0f, 0.1f}));
+        (DebugTools::CompareImage{1.0f, 0.5f}));
 }
 
 void ContextGLTest::drawVertexOffset() {
@@ -1015,7 +1015,7 @@ void ContextGLTest::drawVertexOffset() {
     CORRADE_COMPARE_WITH(
         _framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}),
         (ImageView2D{PixelFormat::RGBA8Unorm, _framebuffer.viewport().size(), pixels}),
-        (DebugTools::CompareImage{5.0f, 0.1f}));
+        (DebugTools::CompareImage{1.0f, 0.5f}));
 }
 
 void ContextGLTest::drawIndexOffset() {
@@ -1061,7 +1061,7 @@ void ContextGLTest::drawIndexOffset() {
     CORRADE_COMPARE_WITH(
         _framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}),
         (ImageView2D{PixelFormat::RGBA8Unorm, _framebuffer.viewport().size(), pixels}),
-        (DebugTools::CompareImage{5.0f, 0.1f}));
+        (DebugTools::CompareImage{1.0f, 0.5f}));
 }
 
 }}}}
