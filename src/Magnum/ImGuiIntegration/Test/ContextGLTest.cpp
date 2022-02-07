@@ -44,6 +44,12 @@ struct InputEvent {
         Super = 1 << 3
     };
     typedef Containers::EnumSet<Modifier> Modifiers;
+
+    InputEvent(Modifiers modifiers) : _modifiers(modifiers) {}
+
+    Modifiers _modifiers;
+
+    Modifiers modifiers() { return _modifiers; }
 };
 
 enum class Button: Int {
@@ -54,28 +60,25 @@ struct MouseEvent: public InputEvent {
     typedef Magnum::ImGuiIntegration::Test::Button Button;
 
     MouseEvent(Button button, Vector2i position, Modifiers modifiers) :
-        _button(button), _position(position), _modifiers(modifiers) {}
+        InputEvent(modifiers), _button(button), _position(position) {}
 
     Button _button;
     Vector2i _position;
-    Modifiers _modifiers;
 
     Button button() { return _button; }
     Vector2i position() { return _position; }
-    Modifiers modifiers() { return _modifiers; }
+
 };
 
 struct MouseScrollEvent: public InputEvent {
     MouseScrollEvent(Vector2 offset, Vector2i position, Modifiers modifiers) :
-        _offset(offset), _position(position), _modifiers(modifiers) {}
+        InputEvent(modifiers), _offset(offset), _position(position) {}
 
     Vector2 _offset;
     Vector2i _position;
-    Modifiers _modifiers;
 
     Vector2 offset() { return _offset; }
     Vector2i position() { return _position; }
-    Modifiers modifiers() { return _modifiers; }
 };
 
 struct Application {
@@ -123,13 +126,11 @@ struct KeyEvent: public InputEvent {
     };
 
     KeyEvent(Key key, Modifiers modifiers) :
-        _key(key), _modifiers(modifiers) {}
+        InputEvent(modifiers), _key(key) {}
 
     Key _key;
-    Modifiers _modifiers;
 
     Key key() { return _key; }
-    Modifiers modifiers() { return _modifiers; }
 };
 
 struct TextInputEvent {
@@ -601,7 +602,7 @@ void ContextGLTest::mouseInput() {
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 0.0f, Float);
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, Float);
 
-    MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, MouseScrollEvent::Modifiers{}};
+    MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, {}};
     c.handleMouseScrollEvent(scroll);
     Utility::System::sleep(1);
     c.newFrame();
@@ -768,7 +769,7 @@ void ContextGLTest::multipleContexts() {
     b.handleMouseReleaseEvent(left);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
-    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, MouseScrollEvent::Modifiers{}};
+    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, {}};
     a.handleMouseScrollEvent(scroll);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 
