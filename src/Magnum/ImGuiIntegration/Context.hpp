@@ -40,8 +40,6 @@
 #include "Magnum/ImGuiIntegration/Integration.h"
 #include "Magnum/ImGuiIntegration/Context.h"
 
-#define HAS_NEW_IMGUI_IO (IMGUI_VERSION_NUM >= 18615)
-
 namespace Magnum { namespace ImGuiIntegration {
 
 template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool value) {
@@ -51,7 +49,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     ImGuiIO &io = ImGui::GetIO();
     const typename KeyEvent::Modifiers modifiers = event.modifiers();
 
-    #if HAS_NEW_IMGUI_IO
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddKeyEvent(ImGuiKey_ModCtrl, modifiers >= KeyEvent::Modifier::Ctrl);
     io.AddKeyEvent(ImGuiKey_ModShift, modifiers >= KeyEvent::Modifier::Shift);
     io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= KeyEvent::Modifier::Alt);
@@ -65,7 +63,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
 
     switch(event.key()) {
         /* LCOV_EXCL_START */
-        #if HAS_NEW_IMGUI_IO
+        #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
         #define _c(key, imgui) \
             case KeyEvent::Key::key: \
                 io.AddKeyEvent(ImGuiKey_ ## imgui, value); \
@@ -99,7 +97,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         _c(Y, Y)
         _c(Z, Z)
 
-        #if HAS_NEW_IMGUI_IO
+        #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
         _c(Insert, Insert)
         _c(Quote, Apostrophe)
         _c(Comma, Comma)
@@ -229,7 +227,7 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
         default: return false;
     }
 
-    #if HAS_NEW_IMGUI_IO
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddMousePosEvent(position.x(), position.y());
     io.AddMouseButtonEvent(buttonId, value);
     #else
@@ -263,7 +261,7 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
     ImGuiIO& io = ImGui::GetIO();
     const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    #if HAS_NEW_IMGUI_IO
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddMousePosEvent(position.x(), position.y());
     io.AddMouseWheelEvent(event.offset().x(), event.offset().y());
     #else
@@ -282,7 +280,7 @@ template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent
     ImGuiIO& io = ImGui::GetIO();
     const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    #if HAS_NEW_IMGUI_IO
+    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddMousePosEvent(position.x(), position.y());
     #else
     io.MousePos = ImVec2(position);
@@ -368,7 +366,5 @@ template<class Application> void Context::updateApplicationCursor(Application& a
 }
 
 }}
-
-#undef HAS_NEW_IMGUI_IO
 
 #endif

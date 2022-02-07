@@ -47,8 +47,6 @@
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
-#define HAS_NEW_IMGUI_IO (IMGUI_VERSION_NUM >= 18615)
-
 namespace Magnum { namespace ImGuiIntegration {
 
 Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{*ImGui::CreateContext(), size, windowSize, framebufferSize} {}
@@ -70,14 +68,14 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
        The new IO API transitions to using ImGuiKey enums everywhere. Since we
        previously already reused ImGuiKey as the native IDs, this is a seemless
        change. More info here: https://github.com/ocornut/imgui/issues/4858. */
-#if !HAS_NEW_IMGUI_IO
+    #if !MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     constexpr ImGuiKey KeysStart = ImGuiKey_Tab;
     constexpr ImGuiKey KeysEnd = ImGuiKey_COUNT;
     for(ImGuiKey key = KeysStart; key != KeysEnd; ++key) {
         /* The key range is not guaranteed to begin at 0 */
         io.KeyMap[key] = key - KeysStart;
     }
-#endif
+    #endif
 
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -268,7 +266,7 @@ void Context::newFrame() {
        happened in this frame but also if both press and release happened at
        the same frame. Not needed for the queued IO events in imgui 1.87 and
        up. */
-    #if !HAS_NEW_IMGUI_IO
+    #if !MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     for(const Int buttonId: {0, 1, 2})
         io.MouseDown[buttonId] = _mousePressed[buttonId] || _mousePressedInThisFrame[buttonId];
     #endif
@@ -277,7 +275,7 @@ void Context::newFrame() {
 
     /* It's a new frame, clear any indicators for received mouse presses in
        this frame */
-    #if !HAS_NEW_IMGUI_IO
+    #if !MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     _mousePressedInThisFrame = {};
     #endif
 }
