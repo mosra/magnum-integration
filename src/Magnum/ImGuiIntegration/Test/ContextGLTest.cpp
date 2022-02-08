@@ -209,13 +209,11 @@ ContextGLTest::ContextGLTest() {
 
               &ContextGLTest::multipleContexts});
 
-    addTests({
-        &ContextGLTest::draw,
-        &ContextGLTest::drawTexture,
-        &ContextGLTest::drawScissor,
-        &ContextGLTest::drawVertexOffset,
-        &ContextGLTest::drawIndexOffset
-        },
+    addTests({&ContextGLTest::draw,
+              &ContextGLTest::drawTexture,
+              &ContextGLTest::drawScissor,
+              &ContextGLTest::drawVertexOffset,
+              &ContextGLTest::drawIndexOffset},
         &ContextGLTest::drawSetup,
         &ContextGLTest::drawTeardown);
 
