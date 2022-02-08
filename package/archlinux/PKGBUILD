@@ -34,7 +34,8 @@ build() {
 
 check() {
     cd "$_rootdir/build"
-    CORRADE_TEST_COLOR=ON ctest --output-on-failure
+    CORRADE_TEST_COLOR=ON ctest --output-on-failure -j5
+    MAGNUM_DISABLE_EXTENSIONS="GL_ARB_draw_elements_base_vertex" ctest --output-on-failure -j5 -R GLTest
 }
 
 package() {
