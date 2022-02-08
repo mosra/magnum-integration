@@ -59,7 +59,9 @@
 #
 
 # In 1.71 ImGui depends on the ApplicationServices framework for macOS
-# clipboard support. It's removed again in 1.72. TODO: remove once obsolete
+# clipboard support. Since 1.72 the dependency is optional and used only if
+# IMGUI_ENABLE_OSX_DEFAULT_CLIPBOARD_FUNCTIONS is enabled, but link to it
+# always to be nice to users.
 if(CORRADE_TARGET_APPLE)
     find_library(_IMGUI_ApplicationServices_LIBRARY ApplicationServices)
     mark_as_advanced(_IMGUI_ApplicationServices_LIBRARY)
