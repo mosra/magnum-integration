@@ -851,7 +851,7 @@ void ContextGLTest::draw() {
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
-        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "TestFiles/draw.png"),
+        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 }
 
@@ -868,7 +868,7 @@ void ContextGLTest::drawTexture() {
 
     Containers::Pointer<Trade::AbstractImporter> importer = _manager.instantiate("PngImporter");
 
-    CORRADE_VERIFY(importer->openFile(Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "texture.png")));
+    CORRADE_VERIFY(importer->openFile(Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/texture.png")));
     auto image = importer->image2D(0);
     CORRADE_VERIFY(image);
     CORRADE_COMPARE(image->format(), PixelFormat::RGB8Unorm);
@@ -909,7 +909,7 @@ void ContextGLTest::drawTexture() {
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
-        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "TestFiles/drawTexture.png"),
+        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-texture.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 }
 
@@ -953,7 +953,7 @@ void ContextGLTest::drawScissor() {
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
-        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "TestFiles/drawScissor.png"),
+        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-scissor.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 
     /* Scissor should be reset to the framebuffer size, otherwise the next

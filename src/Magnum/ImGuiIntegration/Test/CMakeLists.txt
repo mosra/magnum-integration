@@ -60,10 +60,10 @@ if(BUILD_GL_TESTS)
             Magnum::DebugTools
             Magnum::OpenGLTester
         FILES
-            TestFiles/draw.png
-            TestFiles/drawScissor.png
-            TestFiles/drawTexture.png
-            texture.png)
+            ContextTestFiles/draw.png
+            ContextTestFiles/draw-scissor.png
+            ContextTestFiles/draw-texture.png
+            ContextTestFiles/texture.png)
     target_include_directories(ImGuiContextGLTest PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
     if(MAGNUM_IMGUIINTEGRATION_BUILD_STATIC)
         # Not required
