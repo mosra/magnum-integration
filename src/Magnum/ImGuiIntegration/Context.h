@@ -9,6 +9,7 @@
     Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2019 bowling-allie <allie.smith.epic@gmail.com>
+    Copyright © 2022 Pablo Escobar <mail@rvrs.in>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -265,12 +266,12 @@ following:
 
 @requires_gl32 Extension @gl_extension{ARB,draw_elements_base_vertex}
 @requires_gles32 Extension @gl_extension{OES,draw_elements_base_vertex} or
-    @gl_extension{EXT,draw_elements_base_vertex} on OpenGL ES 3.1 and older
+    @gl_extension{EXT,draw_elements_base_vertex}
 @requires_webgl_extension WebGL 2.0 and extension
     @webgl_extension{WEBGL,draw_instanced_base_vertex_base_instance}
 
 If you can't guarantee that the required GL versions or extensions will be
-available at runtime (mostly relevant on WebGL) the next best option is to
+available at runtime (especially relevant on WebGL), the next best option is to
 change ImGui's index type to 32-bit by adding the following line to the
 @ref ImGuiIntegration-configuration "ImGui user config":
 
@@ -278,8 +279,8 @@ change ImGui's index type to 32-bit by adding the following line to the
 #define ImDrawIdx unsigned int
 @endcode
 
-This doubles the size of the index buffer but is guaranteed to work on all GL
-versions.
+This doubles the size of the index buffer, resulting in potentially reduced
+draw performance, but is guaranteed to work on all GL versions.
 
 @section ImGuiIntegration-Context-multiple-contexts Multiple contexts
 

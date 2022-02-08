@@ -6,6 +6,7 @@
     Copyright © 2018 ShaddyAQN <ShaddyAQN@gmail.com>
     Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2021 Pierre Gergondet <pierre.gergondet@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
