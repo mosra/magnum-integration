@@ -322,6 +322,24 @@ jobs:
         script: unix-desktop.sh
     - lcov
 
+  macos-gles3:
+    executor: xcode-10_3
+    environment:
+      CMAKE_CXX_FLAGS: --coverage
+      CONFIGURATION: Debug
+      PLATFORM_GL_API: EGL
+      # STUPID yml interprets unquoted OFF as a boolean
+      TARGET_GLES2: "OFF"
+    steps:
+    - install-base-macos:
+        extra: sdl2 bullet eigen glm wget
+    - install-swiftshader-gles:
+        build: macos-10.15
+    - install-imgui
+    - build:
+        script: unix-desktop-gles.sh
+    - lcov
+
   emscripten-webgl1:
     executor: emscripten
     environment:
@@ -358,5 +376,6 @@ workflows:
     - linux-nondeprecated
     - linux-sanitizers
     - macos-gl
+    - macos-gles3
     - emscripten-webgl1
     - emscripten-webgl2
