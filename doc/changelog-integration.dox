@@ -56,6 +56,11 @@ namespace Magnum {
     1.71, allowing to draw complex UIs that need more than 65k vertices (see
     [mosra/magnum-integration#82](https://github.com/mosra/magnum-integration/issues/82)
     and [mosra/magnum-integration#90](https://github.com/mosra/magnum-integration/pull/90))
+-   @ref ImGuiIntegration::Context now supports the new ImGui IO API introduced
+    in 1.87, falling back to the previous behavior for older versions (see
+    [mosra/magnum-integration#87](https://github.com/mosra/magnum-integration/issues/87),
+    [mosra/magnum-integration#91](https://github.com/mosra/magnum-integration/issues/91)
+    and [mosra/magnum-integration#93](https://github.com/mosra/magnum-integration/pull/93))
 
 @subsection changelog-integration-latest-buildsystem Build system
 
