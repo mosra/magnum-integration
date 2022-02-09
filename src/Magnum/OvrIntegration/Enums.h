@@ -190,7 +190,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Button>)
 
 /** @brief Buttons */
-struct MAGNUM_OVRINTEGRATION_EXPORT Buttons: Containers::EnumSet<Button> {
+struct Buttons: Containers::EnumSet<Button> {
     /** @brief Bit mask of all buttons on the right Touch controller */
     static constexpr
         #ifdef DOXYGEN_GENERATING_OUTPUT
@@ -273,7 +273,7 @@ MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Touch>)
 
 /** @brief Touches */
-struct MAGNUM_OVRINTEGRATION_EXPORT Touches: Containers::EnumSet<Touch> {
+struct Touches: Containers::EnumSet<Touch> {
     /** @brief Bit mask of all the button touches on the right controller */
     static constexpr
         #ifdef DOXYGEN_GENERATING_OUTPUT
