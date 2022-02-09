@@ -12,25 +12,27 @@ if "%COMPILER%" == "msvc-clang" if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual St
 if "%COMPILER%" == "msvc-clang" if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2019" set COMPILER_EXTRA=-DCMAKE_C_COMPILER="C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin/clang-cl.exe" -DCMAKE_LINKER="C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin/lld-link.exe" -DCMAKE_C_FLAGS="-m64 /EHsc" -DCMAKE_CXX_FLAGS="-m64 /EHsc"
 
 rem Build Bullet
-IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\2.86.1.zip appveyor DownloadFile https://github.com/bulletphysics/bullet3/archive/2.86.1.zip || exit /b
-7z x 2.86.1.zip || exit /b
-cd bullet3-2.86.1 || exit /b
-mkdir build && cd build || exit /b
-cmake .. ^
-    -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/bullet ^
-    -DCMAKE_BUILD_TYPE=Debug ^
-    -DUSE_GRAPHICAL_BENCHMARK=OFF ^
-    -DBUILD_CPU_DEMOS=OFF ^
-    -DBUILD_BULLET2_DEMOS=OFF ^
-    -DBUILD_BULLET3=OFF ^
-    -DBUILD_EXTRAS=OFF ^
-    -DBUILD_OPENGL3_DEMOS=OFF ^
-    -DINSTALL_LIBS=ON ^
-    -DBUILD_UNIT_TESTS=OFF ^
-    -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON ^
-    %COMPILER_EXTRA% -G Ninja || exit /b
-cmake --build . --target install || exit /b
-cd .. && cd ..
+if "%ENABLE_BULLET%" == "ON" (
+    IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\2.86.1.zip appveyor DownloadFile https://github.com/bulletphysics/bullet3/archive/2.86.1.zip || exit /b
+    7z x 2.86.1.zip || exit /b
+    cd bullet3-2.86.1 || exit /b
+    mkdir build && cd build || exit /b
+    cmake .. ^
+        -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/bullet ^
+        -DCMAKE_BUILD_TYPE=Debug ^
+        -DUSE_GRAPHICAL_BENCHMARK=OFF ^
+        -DBUILD_CPU_DEMOS=OFF ^
+        -DBUILD_BULLET2_DEMOS=OFF ^
+        -DBUILD_BULLET3=OFF ^
+        -DBUILD_EXTRAS=OFF ^
+        -DBUILD_OPENGL3_DEMOS=OFF ^
+        -DINSTALL_LIBS=ON ^
+        -DBUILD_UNIT_TESTS=OFF ^
+        -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON ^
+        %COMPILER_EXTRA% -G Ninja || exit /b
+    cmake --build . --target install || exit /b
+    cd .. && cd ..
+)
 
 rem Build Corrade
 git clone --depth 1 https://github.com/mosra/corrade.git || exit /b
@@ -93,7 +95,7 @@ cmake .. ^
     -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
-    -DWITH_BULLET=ON ^
+    -DWITH_BULLET=%ENABLE_BULLET% ^
     -DWITH_DART=OFF ^
     -DWITH_EIGEN=ON ^
     -DWITH_GLM=ON ^

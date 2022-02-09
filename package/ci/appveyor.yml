@@ -6,38 +6,48 @@ environment:
     COMPILER: msvc
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     APPVEYOR_JOB_NAME: windows-msvc2015
+    ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-msvc2017
+    ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-msvc2019
+    ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-msvc2022
+    ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc-clang
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-msvc2019-clang
+    # 2.86.1 doesn't build on clang-cl
+    ENABLE_BULLET: OFF
   - TARGET: desktop
     COMPILER: msvc-clang
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-msvc2022-clang
+    # 2.86.1 doesn't build on clang-cl
+    ENABLE_BULLET: OFF
   - TARGET: desktop
     COMPILER: msvc
     # Same reasoning as in Corrade for /EHsc
     COMPILER_EXTRA: -DCMAKE_CXX_FLAGS="/permissive- /EHsc" -DMSVC_COMPATIBILITY=OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-conforming-msvc2019
+    ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
     # Not playing with fire and using /EHsc on 2022 as well
     COMPILER_EXTRA: -DCMAKE_CXX_FLAGS="/permissive- /EHsc" -DMSVC_COMPATIBILITY=OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-conforming-msvc2022
+    ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: mingw
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
