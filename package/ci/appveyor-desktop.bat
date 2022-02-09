@@ -1,7 +1,15 @@
+if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2022" call "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build/vcvarsall.bat" x64 || exit /b
 if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2019" call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Auxiliary/Build/vcvarsall.bat" x64 || exit /b
 if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" call "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/Build/vcvarsall.bat" x64 || exit /b
 if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" call "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/vcvarsall.bat" x64 || exit /b
 set PATH=%APPVEYOR_BUILD_FOLDER%\deps\bin;%PATH%
+
+rem need to explicitly specify a 64-bit target, otherwise CMake+Ninja can't
+rem figure that out -- https://gitlab.kitware.com/cmake/cmake/issues/16259
+rem for TestSuite we need to enable exceptions explicitly with /EH as these are
+rem currently disabled -- https://github.com/catchorg/Catch2/issues/1113
+if "%COMPILER%" == "msvc-clang" if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2022" set COMPILER_EXTRA=-DCMAKE_C_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/bin/clang-cl.exe" -DCMAKE_LINKER="C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/bin/lld-link.exe" -DCMAKE_C_FLAGS="-m64 /EHsc" -DCMAKE_CXX_FLAGS="-m64 /EHsc"
+if "%COMPILER%" == "msvc-clang" if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2019" set COMPILER_EXTRA=-DCMAKE_C_COMPILER="C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin/clang-cl.exe" -DCMAKE_LINKER="C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin/lld-link.exe" -DCMAKE_C_FLAGS="-m64 /EHsc" -DCMAKE_CXX_FLAGS="-m64 /EHsc"
 
 rem Build Bullet
 IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\2.86.1.zip appveyor DownloadFile https://github.com/bulletphysics/bullet3/archive/2.86.1.zip || exit /b
@@ -20,7 +28,7 @@ cmake .. ^
     -DINSTALL_LIBS=ON ^
     -DBUILD_UNIT_TESTS=OFF ^
     -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON ^
-    -G Ninja || exit /b
+    %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
 
@@ -33,7 +41,7 @@ cmake .. ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DWITH_INTERCONNECT=OFF ^
     -DUTILITY_USE_ANSI_COLORS=ON ^
-    -G Ninja || exit /b
+    %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
@@ -59,7 +67,7 @@ cmake .. ^
     -DWITH_OPENGLTESTER=ON ^
     -DWITH_WINDOWLESSWGLAPPLICATION=ON ^
     -DWITH_SDL2APPLICATION=ON ^
-    -G Ninja || exit /b
+    %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
@@ -93,7 +101,7 @@ cmake .. ^
     -DWITH_OVR=ON ^
     -DBUILD_TESTS=ON ^
     -DBUILD_GL_TESTS=ON ^
-    -G Ninja || exit /b
+    %COMPILER_EXTRA% -G Ninja || exit /b
 cmake --build . || exit /b
 
 rem Test

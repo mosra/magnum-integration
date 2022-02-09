@@ -15,14 +15,33 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-msvc2019
   - TARGET: desktop
+    COMPILER: msvc
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    APPVEYOR_JOB_NAME: windows-msvc2022
+  - TARGET: desktop
+    COMPILER: msvc-clang
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    APPVEYOR_JOB_NAME: windows-msvc2019-clang
+  - TARGET: desktop
+    COMPILER: msvc-clang
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    APPVEYOR_JOB_NAME: windows-msvc2022-clang
+  - TARGET: desktop
+    COMPILER: msvc
+    # Same reasoning as in Corrade for /EHsc
+    COMPILER_EXTRA: -DCMAKE_CXX_FLAGS="/permissive- /EHsc" -DMSVC_COMPATIBILITY=OFF
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    APPVEYOR_JOB_NAME: windows-conforming-msvc2019
+  - TARGET: desktop
+    COMPILER: msvc
+    # Not playing with fire and using /EHsc on 2022 as well
+    COMPILER_EXTRA: -DCMAKE_CXX_FLAGS="/permissive- /EHsc" -DMSVC_COMPATIBILITY=OFF
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    APPVEYOR_JOB_NAME: windows-conforming-msvc2022
+  - TARGET: desktop
     COMPILER: mingw
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-mingw
-  - TARGET: desktop-gles
-    COMPILER: msvc
-    TARGET_GLES2: ON
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    APPVEYOR_JOB_NAME: windows-gles2-msvc2017
   - TARGET: desktop-gles
     COMPILER: msvc
     TARGET_GLES2: ON
@@ -30,19 +49,24 @@ environment:
     APPVEYOR_JOB_NAME: windows-gles2-msvc2019
   - TARGET: desktop-gles
     COMPILER: msvc
-    TARGET_GLES2: OFF
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    APPVEYOR_JOB_NAME: windows-gles3-msvc2017
+    TARGET_GLES2: ON
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    APPVEYOR_JOB_NAME: windows-gles2-msvc2022
   - TARGET: desktop-gles
     COMPILER: msvc
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-gles3-msvc2019
+  - TARGET: desktop-gles
+    COMPILER: msvc
+    TARGET_GLES2: OFF
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    APPVEYOR_JOB_NAME: windows-gles3-msvc2022
   - TARGET: rt
-    TARGET_GLES2: ON
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    APPVEYOR_JOB_NAME: windows-rt-gles2-msvc2017
-  - TARGET: rt
+    # This actually isn't needed anywhere, but without this the %COMPILE:~0,4%
+    # expressions cause a "The syntax of the command is incorrect." sometimes
+    # but not in all cases. What the fuck, cmd.exe.
+    COMPILER: msvc
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-rt-gles3-msvc2017
@@ -67,8 +91,8 @@ install:
 - 7z x 0.9.9.0.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\glm-0.9.9.0 glm
 
 # SDL2
-- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-VC.zip appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.9-VC.zip
-- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "msvc" 7z x SDL2-devel-2.0.9-VC.zip && ren SDL2-2.0.9 SDL
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-VC.zip appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.9-VC.zip
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" 7z x SDL2-devel-2.0.9-VC.zip && ren SDL2-2.0.9 SDL
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" 7z x SDL2-devel-2.0.9-mingw.tar.gz & 7z x SDL2-devel-2.0.9-mingw.tar & ren SDL2-2.0.9 SDL
 
@@ -77,11 +101,11 @@ install:
 - 7z x imgui-1.82.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\imgui-1.82 imgui
 
 # OVR SDK
-- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.26.0_public_minimal.zip appveyor DownloadFile https://ci.magnum.graphics/ovr_sdk_win_1.26.0_public_minimal.zip
-- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" 7z x ovr_sdk_win_1.26.0_public_minimal.zip -o%APPVEYOR_BUILD_FOLDER%\deps
+- IF "%TARGET%" == "desktop" IF "%COMPILER:~0,4%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.26.0_public_minimal.zip appveyor DownloadFile https://ci.magnum.graphics/ovr_sdk_win_1.26.0_public_minimal.zip
+- IF "%TARGET%" == "desktop" IF "%COMPILER:~0,4%" == "msvc" 7z x ovr_sdk_win_1.26.0_public_minimal.zip -o%APPVEYOR_BUILD_FOLDER%\deps
 
 build_script:
-- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" call package\ci\appveyor-desktop.bat
+- IF "%TARGET%" == "desktop" IF "%COMPILER:~0,4%" == "msvc" call package\ci\appveyor-desktop.bat
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" call package\ci\appveyor-desktop-mingw.bat
 - IF "%TARGET%" == "desktop-gles" call package\ci\appveyor-desktop-gles.bat
 - IF "%TARGET%" == "rt" call package\ci\appveyor-rt.bat
