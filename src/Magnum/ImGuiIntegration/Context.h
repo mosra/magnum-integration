@@ -291,7 +291,7 @@ destruction). Switching between various @cpp ImGui @ce contexts wrapped in
 @ref Context instances is done automatically when calling any of the
 @ref relayout(), @ref newFrame(), @ref drawFrame() APIs or the event handling
 functions. You can also query the instance-specific context with @ref context()
-and call @cpp ImGui::SetContextCurent() @ce manually on that.
+and call @cpp ImGui::SetCurrentContext() @ce manually on that.
 
 It's also possible to create a context-less instance using the
 @ref Context(NoCreateT) constructor and release context ownership using
@@ -399,8 +399,8 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Destructor
          *
          * If @ref context() is not @cpp nullptr @ce, makes it current using
-         * @cpp ImGui::SetContextCurent() @ce and then calls
-         * @cpp ImGui::DeleteContext() @ce.
+         * @cpp ImGui::SetCurrentContext() @ce and then calls
+         * @cpp ImGui::DestroyContext() @ce.
          */
         ~Context();
 
@@ -437,7 +437,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Relayout the context
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() and
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() and
          * adapts the internal state for a new window size or pixel density. In
          * case the pixel density gets changed, font glyph caches are rebuilt
          * to match the new pixel density.
@@ -459,7 +459,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Start a new frame
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() and
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() and
          * initializes a new ImGui frame using @cpp ImGui::NewFrame() @ce. This
          * function also decides if a text input needs to be enabled, see
          * @ref ImGuiIntegration-Context-usage-text-input for more information.
@@ -469,7 +469,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Draw a frame
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context(),
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context(),
          * @cpp ImGui::Render() @ce and then draws the frame created by ImGui
          * calls since last call to @ref newFrame() to currently bound
          * framebuffer.
@@ -483,9 +483,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle mouse press event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the mouse (so the event shouldn't be further
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the mouse (so the event shouldn't be further
          * propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
@@ -494,9 +494,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle mouse release event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the mouse (so the event shouldn't be further
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the mouse (so the event shouldn't be further
          * propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
@@ -505,9 +505,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle mouse scroll event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the mouse (so the event shouldn't be further
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the mouse (so the event shouldn't be further
          * propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
@@ -516,9 +516,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle mouse move event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the mouse (so the event shouldn't be further
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the mouse (so the event shouldn't be further
          * propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
@@ -527,10 +527,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle key press event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the keyboard (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the keyboard (so the event shouldn't be
+         * further propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
         template<class KeyEvent> bool handleKeyPressEvent(KeyEvent& event);
@@ -538,10 +538,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle key release event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the keyboard (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the keyboard (so the event shouldn't be
+         * further propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
         template<class KeyEvent> bool handleKeyReleaseEvent(KeyEvent& event);
@@ -549,10 +549,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Handle text input event
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then propagates the event to ImGui. Returns @cpp true @ce if ImGui
-         * wants to capture the keyboard (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event to ImGui. Returns @cpp true @ce if
+         * ImGui wants to capture the keyboard (so the event shouldn't be
+         * further propagated to the rest of the application), @cpp false @ce
          * otherwise.
          */
         template<class TextInputEvent> bool handleTextInputEvent(TextInputEvent& event);
@@ -561,9 +561,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Update application mouse cursor
          * @m_since_{integration,2020,06}
          *
-         * Calls @cpp ImGui::SetContextCurent() @ce on @ref context() first and
-         * then queries @cpp ImGui::GetMouseCursor() @ce, propagating that to
-         * the application via @ref Platform::Sdl2Application::setCursor() "setCursor()".
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then queries @cpp ImGui::GetMouseCursor() @ce, propagating that
+         * to the application via @ref Platform::Sdl2Application::setCursor() "setCursor()".
          * If the application doesn't implement a corresponding cursor, falls
          * back to @ref Platform::Sdl2Application::Cursor::Arrow "Cursor::Arrow".
          */
