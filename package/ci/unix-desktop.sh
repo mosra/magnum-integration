@@ -81,8 +81,7 @@ cmake .. \
     -DBUILD_TESTS=ON \
     -DBUILD_GL_TESTS=ON \
     -G Ninja
-# Otherwise the job gets killed (probably because using too much memory)
-ninja -j4
+ninja $NINJA_JOBS
 
 # DART leaks somewhere deep in std::string, run these tests separately to avoid
 # suppressing too much
