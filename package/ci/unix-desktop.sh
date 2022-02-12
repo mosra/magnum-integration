@@ -87,3 +87,6 @@ ninja $NINJA_JOBS
 # suppressing too much
 ASAN_OPTIONS="color=always" LSAN_OPTIONS="color=always" CORRADE_TEST_COLOR=ON ctest -V -E "GLTest|Dart"
 ASAN_OPTIONS="color=always" LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" CORRADE_TEST_COLOR=ON ctest -V -R Dart -E GLTest
+
+# Test install, after running the tests as for them it shouldn't be needed
+ninja install
