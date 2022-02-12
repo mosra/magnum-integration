@@ -82,11 +82,16 @@ cmake .. \
     -DWITH_SHADERS=ON \
     -DWITH_TEXT=OFF \
     -DWITH_TEXTURETOOLS=OFF \
+    -DWITH_OPENGLTESTER=ON \
     -DWITH_EMSCRIPTENAPPLICATION=ON \
+    -DWITH_WINDOWLESSEGLAPPLICATION=ON \
     -DTARGET_GLES2=$TARGET_GLES2 \
     -G Ninja
 ninja install
 cd ../..
+
+# ImGuiIntegration tests use Magnum Plugins, but only for GL tests, which we
+# don't run here
 
 # Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
 # archive is so stupid that it's not possible to just use Eigen3Config.cmake,
@@ -117,11 +122,12 @@ cmake .. \
     -DWITH_IMGUI=ON \
     -DWITH_OVR=OFF \
     -DBUILD_TESTS=ON \
+    -DBUILD_GL_TESTS=ON \
     -G Ninja
 ninja $NINJA_JOBS
 
 # Test
-CORRADE_TEST_COLOR=ON ctest -V
+CORRADE_TEST_COLOR=ON ctest -V -E GLTest
 
 # Test install, after running the tests as for them it shouldn't be needed
 ninja install
