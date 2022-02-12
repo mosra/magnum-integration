@@ -46,8 +46,7 @@ cmake .. \
 ninja install
 cd ../..
 
-# Magnum Plugins
-# Required by ImGuiIntegration tests
+# Magnum Plugins, required by ImGuiIntegration tests
 git clone --depth 1 https://github.com/mosra/magnum-plugins.git
 cd magnum-plugins
 mkdir build && cd build
