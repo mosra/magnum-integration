@@ -61,6 +61,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     io.KeySuper = modifiers >= KeyEvent::Modifier::Super;
     #endif
 
+    #ifndef DOXYGEN_GENERATING_OUTPUT /* it insists on documenting _c() */
     switch(event.key()) {
         /* LCOV_EXCL_START */
         #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
@@ -198,6 +199,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         /* Unknown key, do nothing */
         default: return false;
     }
+    #endif
 
     return io.WantCaptureKeyboard;
 }
