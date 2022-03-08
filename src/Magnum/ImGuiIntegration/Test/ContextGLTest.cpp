@@ -28,11 +28,13 @@
 #include <limits>
 #include <sstream>
 #include <Corrade/Containers/StridedArrayView.h>
+#include <Corrade/Containers/String.h>
+#include <Corrade/Containers/StringStl.h> /** @todo remove when AbstractImporter is <string>-free */
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/TestSuite/Compare/Container.h>
 #include <Corrade/Utility/DebugStl.h>
-#include <Corrade/Utility/Directory.h>
 #include <Corrade/Utility/System.h>
+#include <Corrade/Utility/Path.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/DebugTools/CompareImage.h>
 #include <Magnum/GL/Framebuffer.h>
@@ -897,7 +899,7 @@ void ContextGLTest::draw() {
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
-        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw.png"),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 }
 
@@ -914,7 +916,7 @@ void ContextGLTest::drawTexture() {
 
     Containers::Pointer<Trade::AbstractImporter> importer = _manager.instantiate("PngImporter");
 
-    CORRADE_VERIFY(importer->openFile(Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/texture.png")));
+    CORRADE_VERIFY(importer->openFile(Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/texture.png")));
     auto image = importer->image2D(0);
     CORRADE_VERIFY(image);
     CORRADE_COMPARE(image->format(), PixelFormat::RGB8Unorm);
@@ -955,7 +957,7 @@ void ContextGLTest::drawTexture() {
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
-        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-texture.png"),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-texture.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 }
 
@@ -999,7 +1001,7 @@ void ContextGLTest::drawScissor() {
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
-        Utility::Directory::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-scissor.png"),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-scissor.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
 
     /* Scissor should be reset to the framebuffer size, otherwise the next

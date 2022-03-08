@@ -46,14 +46,14 @@
 #include <dart/dynamics/Skeleton.hpp>
 #include <dart/dynamics/WeldJoint.hpp>
 #include <Corrade/Containers/Optional.h>
+#include <Corrade/Containers/String.h>
+#include <Corrade/Containers/StringStl.h>
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/TestSuite/Tester.h>
-#include <Corrade/Utility/Directory.h>
+#include <Corrade/Utility/Path.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
-#include <Magnum/Trade/MeshData3D.h>
-#include <Magnum/Trade/MeshObjectData3D.h>
 #include <Magnum/Trade/PhongMaterialData.h>
 #include <Magnum/Trade/TextureData.h>
 
@@ -215,7 +215,7 @@ void ConvertShapeNodeTest::assimpImporter() {
         Containers::Pointer<Trade::AbstractImporter> importer = _manager.loadAndInstantiate("AssimpImporter");
         CORRADE_VERIFY(importer);
 
-        const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
+        const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
         auto tmp_skel = loader.parseSkeleton(filename);
 
         auto shapeNode = tmp_skel->getBodyNode(0)->getShapeNodesWith<dart::dynamics::VisualAspect>()[0];
@@ -232,7 +232,7 @@ void ConvertShapeNodeTest::assimpImporter() {
         Containers::Pointer<Trade::AbstractImporter> importer = _manager.loadAndInstantiate("AssimpImporter");
         CORRADE_VERIFY(importer);
 
-        const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
+        const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
         auto tmp_skel = loader.parseSkeleton(filename);
 
         auto shapeNode = tmp_skel->getBodyNode(0)->getShapeNodesWith<dart::dynamics::VisualAspect>()[0];
@@ -401,7 +401,7 @@ void ConvertShapeNodeTest::urdf() {
 
     const UnsignedInt assimpVersion = aiGetVersionMajor()*100 + aiGetVersionMinor();
 
-    const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
+    const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
     auto tmpSkel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmpSkel);
 
@@ -472,7 +472,7 @@ void ConvertShapeNodeTest::multiMesh() {
     Containers::Pointer<Trade::AbstractImporter> importer = _manager.loadAndInstantiate("AssimpImporter");
     CORRADE_VERIFY(importer);
 
-    const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_multi_mesh.urdf");
+    const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test_multi_mesh.urdf");
     auto tmp_skel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmp_skel);
 
@@ -523,7 +523,7 @@ void ConvertShapeNodeTest::texture() {
     Containers::Pointer<Trade::AbstractImporter> importer = _manager.loadAndInstantiate("AssimpImporter");
     CORRADE_VERIFY(importer);
 
-    const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_texture.urdf");
+    const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test_texture.urdf");
     auto tmp_skel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmp_skel);
 

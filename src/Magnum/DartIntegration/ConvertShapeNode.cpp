@@ -45,8 +45,10 @@
 #include <Corrade/Containers/Optional.h>
 #include <Corrade/Containers/Pair.h>
 #include <Corrade/Containers/StridedArrayView.h>
+#include <Corrade/Containers/String.h>
+#include <Corrade/Containers/StringStl.h>
 #include <Corrade/Utility/DebugStl.h>
-#include <Corrade/Utility/Directory.h>
+#include <Corrade/Utility/Path.h>
 #include <Magnum/Mesh.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/MeshTools/GenerateNormals.h>
@@ -223,7 +225,7 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
 
         const aiScene* aiMesh = meshShape->getMesh();
-        std::string meshPath = Utility::Directory::path(meshShape->getMeshPath());
+        Containers::String meshPath = Utility::Path::split(meshShape->getMeshPath()).first();
 
         bool loaded = importer->openState(aiMesh, meshPath);
         if(!loaded || importer->meshCount() < 1) {

@@ -38,8 +38,10 @@
 #include <dart/dynamics/Skeleton.hpp>
 #include <dart/dynamics/WeldJoint.hpp>
 #include <dart/simulation/World.hpp>
+#include <Corrade/Containers/String.h>
+#include <Corrade/Containers/StringStl.h>
 #include <Corrade/Utility/DebugStl.h>
-#include <Corrade/Utility/Directory.h>
+#include <Corrade/Utility/Path.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/OpenGLTester.h>
@@ -182,7 +184,7 @@ void DartIntegrationTest::urdf() {
 
     const UnsignedInt assimpVersion = aiGetVersionMajor()*100 + aiGetVersionMinor();
 
-    const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
+    const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test.urdf");
     auto tmpSkel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmpSkel);
 
@@ -215,7 +217,7 @@ void DartIntegrationTest::multiMesh() {
     dart::io::DartLoader loader;
     #endif
 
-    const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_multi_mesh.urdf");
+    const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test_multi_mesh.urdf");
     auto tmpSkel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmpSkel);
 
@@ -259,7 +261,7 @@ void DartIntegrationTest::texture() {
     dart::io::DartLoader loader;
     #endif
 
-    const std::string filename = Utility::Directory::join(DARTINTEGRATION_TEST_DIR, "urdf/test_texture.urdf");
+    const std::string filename = Utility::Path::join(DARTINTEGRATION_TEST_DIR, "urdf/test_texture.urdf");
     auto tmpSkel = loader.parseSkeleton(filename);
     CORRADE_VERIFY(tmpSkel);
 
