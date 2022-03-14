@@ -55,7 +55,10 @@ static_cast<void>(c);
 }
 
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [Integration] */
+#include <Magnum/GlmIntegration/Integration.h>
+
 glm::vec3 a{1.0f, 2.0f, 3.0f};
 Vector3 b(a);
 
@@ -69,7 +72,10 @@ static_cast<void>(c);
 
 #if GLM_VERSION >= 97
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [GtcIntegration] */
+#include <Magnum/GlmIntegration/GtcIntegration.h>
+
 Quaterniond a = Quaterniond::rotation(35.0_deg, Vector3d::xAxis());
 glm::dquat b(a);
 
@@ -80,7 +86,10 @@ static_cast<void>(b);
 }
 
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [GtxIntegration] */
+#include <Magnum/GlmIntegration/GtxIntegration.h>
+
 DualQuaternion a = DualQuaternion::translation({1.0f, 2.0f, 3.0f});
 glm::dualquat b(a);
 

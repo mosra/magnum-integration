@@ -30,6 +30,8 @@
 #include "Magnum/BulletIntegration/DebugDraw.h"
 #include "Magnum/BulletIntegration/MotionState.h"
 
+#define DOXYGEN_ELLIPSIS(...) __VA_ARGS__
+
 using namespace Magnum;
 
 int main() {
@@ -62,7 +64,12 @@ btWorld->debugDrawWorld();
 
 #ifndef BT_USE_DOUBLE_PRECISION
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [Integration] */
+#include <Magnum/BulletIntegration/Integration.h>
+
+DOXYGEN_ELLIPSIS()
+
 btVector3 a{20.0f, 50.0f, -1.0f};
 Vector3 b(a);
 

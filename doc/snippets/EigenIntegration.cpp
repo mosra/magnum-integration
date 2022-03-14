@@ -42,6 +42,8 @@ int main() {
 /* [namespace] */
 #include <Magnum/EigenIntegration/Integration.h>
 
+DOXYGEN_ELLIPSIS()
+
 Eigen::Vector3f a{1.0f, 2.0f, 3.0f};
 Vector3 b(a);
 
@@ -59,7 +61,12 @@ static_cast<void>(view);
 }
 
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [Integration] */
+#include <Magnum/EigenIntegration/Integration.h>
+
+DOXYGEN_ELLIPSIS()
+
 Eigen::Vector3f a{1.0f, 2.0f, 3.0f};
 Vector3 b(a);
 
@@ -97,7 +104,12 @@ static_cast<void>(map);
 }
 
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [GeometryIntegration] */
+#include <Magnum/EigenIntegration/GeometryIntegration.h>
+
+DOXYGEN_ELLIPSIS()
+
 auto a = Matrix3::translation({-1.5f, 0.3f})*
          Matrix3::rotation(25.0_degf)*
          Matrix3::scaling({1.23f, 2.0f});
