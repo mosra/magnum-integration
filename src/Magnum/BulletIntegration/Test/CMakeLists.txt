@@ -24,14 +24,12 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/BulletIntegration/Test")
+
 corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationDebugDrawTest DebugDrawTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationMotionStateTest MotionStateTest.cpp LIBRARIES
     MagnumBulletIntegration
     Bullet::Dynamics)
-
-set_target_properties(
-    BulletIntegrationTest
-    BulletIntegrationDebugDrawTest
-    BulletIntegrationMotionStateTest
-    PROPERTIES FOLDER "Magnum/BulletIntegration/Test")

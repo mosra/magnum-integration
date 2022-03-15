@@ -24,10 +24,9 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/OvrIntegration/Test")
+
 corrade_add_test(OvrIntegrationTest IntegrationTest.cpp LIBRARIES MagnumOvrIntegration)
 corrade_add_test(OvrEnumsTest EnumsTest.cpp LIBRARIES MagnumOvrIntegration)
-
-set_target_properties(
-    OvrEnumsTest
-    OvrIntegrationTest
-    PROPERTIES FOLDER "Magnum/OvrIntegration/Test")

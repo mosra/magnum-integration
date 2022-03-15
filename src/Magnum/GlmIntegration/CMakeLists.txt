@@ -24,6 +24,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/GlmIntegration")
+
 find_package(GLM REQUIRED)
 
 if(BUILD_STATIC)
@@ -50,9 +54,7 @@ add_library(MagnumGlmIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumGlmIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-set_target_properties(MagnumGlmIntegration PROPERTIES
-    DEBUG_POSTFIX "-d"
-    FOLDER "Magnum/GlmIntegration")
+set_target_properties(MagnumGlmIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(NOT BUILD_STATIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
 elseif(BUILD_STATIC_PIC)

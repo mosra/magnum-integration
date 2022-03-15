@@ -23,6 +23,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/doc/snippets")
+
 # On MSVC remove /W3, as we are replacing it with /W4
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
     string(REPLACE "/W3" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -35,31 +39,26 @@ set_directory_properties(PROPERTIES
 if(WITH_BULLET)
     add_library(snippets-BulletIntegration STATIC BulletIntegration.cpp)
     target_link_libraries(snippets-BulletIntegration PRIVATE MagnumBulletIntegration)
-    set_target_properties(snippets-BulletIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()
 
 if(WITH_DART)
     add_library(snippets-DartIntegration STATIC DartIntegration.cpp)
     target_link_libraries(snippets-DartIntegration PRIVATE MagnumDartIntegration)
-    set_target_properties(snippets-DartIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()
 
 if(WITH_EIGEN)
     add_library(snippets-EigenIntegration STATIC EigenIntegration.cpp)
     target_link_libraries(snippets-EigenIntegration PRIVATE MagnumEigenIntegration)
-    set_target_properties(snippets-EigenIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()
 
 if(WITH_GLM)
     add_library(snippets-GlmIntegration STATIC GlmIntegration.cpp)
     target_link_libraries(snippets-GlmIntegration PRIVATE MagnumGlmIntegration)
-    set_target_properties(snippets-GlmIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()
 
 if(WITH_IMGUI)
     add_library(snippets-ImGuiIntegration STATIC ImGuiIntegration.cpp)
     target_link_libraries(snippets-ImGuiIntegration PRIVATE MagnumImGuiIntegration)
-    set_target_properties(snippets-ImGuiIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 
     find_package(Magnum COMPONENTS Sdl2Application QUIET)
     if(Magnum_Sdl2Application_FOUND)
@@ -67,12 +66,10 @@ if(WITH_IMGUI)
         target_link_libraries(snippets-ImGuiIntegration-sdl2 PRIVATE
             MagnumImGuiIntegration
             Magnum::Sdl2Application)
-        set_target_properties(snippets-ImGuiIntegration-sdl2 PROPERTIES FOLDER "Magnum/doc/snippets")
     endif()
 endif()
 
 if(WITH_OVR)
     add_library(snippets-OvrIntegration STATIC OvrIntegration.cpp)
     target_link_libraries(snippets-OvrIntegration PRIVATE MagnumOvrIntegration)
-    set_target_properties(snippets-OvrIntegration PROPERTIES FOLDER "Magnum/doc/snippets")
 endif()

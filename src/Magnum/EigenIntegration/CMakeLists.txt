@@ -23,6 +23,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/EigenIntegration")
+
 find_package(Eigen3 REQUIRED)
 # We could drop this once we can use at least 3.3.1 (Ubuntu 16.04 has only 3.3
 # beta, which doesn't have this target yet), however for Travis and AppVeyor
@@ -51,7 +55,6 @@ set_target_properties(MagnumEigenIntegration PROPERTIES
 
 # Force IDEs to display all header files in project view
 add_custom_target(MagnumEigenIntegration-headers SOURCES ${MagnumEigenIntegration_HEADERS})
-set_target_properties(MagnumEigenIntegration-headers PROPERTIES FOLDER "Magnum/EigenIntegration")
 
 install(FILES ${MagnumEigenIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/EigenIntegration)
 

@@ -25,6 +25,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/ImGuiIntegration/Test")
+
 corrade_add_test(ImGuiContextTest ContextTest.cpp
     LIBRARIES MagnumImGuiIntegration)
 corrade_add_test(ImGuiIntegrationTest IntegrationTest.cpp
@@ -34,12 +38,6 @@ corrade_add_test(ImGuiUserConfigTest UserConfigTest.cpp
     LIBRARIES MagnumImGuiIntegration)
 target_compile_definitions(ImGuiUserConfigTest PRIVATE
     -DMAGNUM_IMGUIINTEGRATION_USER_CONFIG="Magnum/ImGuiIntegration/Test/UserConfigTest.h")
-
-set_target_properties(
-    ImGuiContextTest
-    ImGuiIntegrationTest
-    ImGuiUserConfigTest
-    PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 
 if(BUILD_GL_TESTS)
     find_package(Corrade REQUIRED PluginManager)
@@ -80,11 +78,6 @@ if(BUILD_GL_TESTS)
 
     corrade_add_test(ImGuiWidgetsGLTest WidgetsGLTest.cpp
         LIBRARIES MagnumImGuiIntegration Magnum::OpenGLTester)
-
-    set_target_properties(
-        ImGuiContextGLTest
-        ImGuiWidgetsGLTest
-        PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")
 endif()
 
 # GUI test application for quick ability to verify changes w/o having to
@@ -139,4 +132,3 @@ endif()
 target_link_libraries(ImGuiApplicationTest PRIVATE
     MagnumImGuiIntegration
     Corrade::Main)
-set_target_properties(ImGuiApplicationTest PROPERTIES FOLDER "Magnum/ImGuiIntegration/Test")

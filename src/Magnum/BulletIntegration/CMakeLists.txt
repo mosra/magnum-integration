@@ -25,6 +25,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/BulletIntegration")
+
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
 
 if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
@@ -56,9 +60,7 @@ add_library(MagnumBulletIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-set_target_properties(MagnumBulletIntegration PROPERTIES
-    DEBUG_POSTFIX "-d"
-    FOLDER "Magnum/BulletIntegration")
+set_target_properties(MagnumBulletIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(NOT BUILD_STATIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
 elseif(BUILD_STATIC_PIC)

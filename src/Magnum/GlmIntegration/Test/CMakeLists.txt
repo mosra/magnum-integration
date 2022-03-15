@@ -24,6 +24,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/GlmIntegration/Test")
+
 corrade_add_test(GlmIntegrationTest IntegrationTest.cpp LIBRARIES MagnumGlmIntegration)
 corrade_add_test(GlmIntegrationGtcIntegrationTest GtcIntegrationTest.cpp LIBRARIES MagnumGlmIntegration)
 corrade_add_test(GlmIntegrationGtxIntegrationTest GtxIntegrationTest.cpp LIBRARIES MagnumGlmIntegration)

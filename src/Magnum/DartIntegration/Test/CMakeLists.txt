@@ -24,6 +24,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/DartIntegration/Test")
+
 if(CORRADE_TARGET_EMSCRIPTEN OR CORRADE_TARGET_ANDROID)
     set(DARTINTEGRATION_TEST_DIR ".")
 else()
@@ -51,10 +55,6 @@ elseif(DART_io-urdf_FOUND)
     target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE dart-io-urdf)
 endif()
 
-set_target_properties(
-    DartIntegrationConvertShapeNodeTest
-    PROPERTIES FOLDER "Magnum/DartIntegration/Test")
-
 if(BUILD_GL_TESTS)
     corrade_add_test(DartIntegrationWorldGLTest
         WorldGLTest.cpp common.h
@@ -64,8 +64,4 @@ if(BUILD_GL_TESTS)
     elseif(DART_io-urdf_FOUND)
         target_link_libraries(DartIntegrationWorldGLTest PRIVATE dart-io-urdf)
     endif()
-
-    set_target_properties(
-        DartIntegrationWorldGLTest
-        PROPERTIES FOLDER "Magnum/DartIntegration/Test")
 endif()

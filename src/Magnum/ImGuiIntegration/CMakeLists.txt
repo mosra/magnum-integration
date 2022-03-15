@@ -26,6 +26,10 @@
 #   DEALINGS IN THE SOFTWARE.
 #
 
+# IDE folder in VS, Xcode etc. CMake 3.12+, older versions have only the FOLDER
+# property that would have to be set on each target separately.
+set(CMAKE_FOLDER "Magnum/ImGuiIntegration")
+
 find_package(Magnum REQUIRED GL Shaders)
 
 # To help Homebrew and other packages, ImGui sources can be cloned to
@@ -65,9 +69,7 @@ add_library(MagnumImGuiIntegration ${SHARED_OR_STATIC}
 target_include_directories(MagnumImGuiIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
-set_target_properties(MagnumImGuiIntegration PROPERTIES
-    DEBUG_POSTFIX "-d"
-    FOLDER "Magnum/ImGuiIntegration")
+set_target_properties(MagnumImGuiIntegration PROPERTIES DEBUG_POSTFIX "-d")
 if(NOT BUILD_STATIC)
     set_target_properties(MagnumImGuiIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
 elseif(BUILD_STATIC_PIC)
