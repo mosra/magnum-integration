@@ -25,6 +25,7 @@
 */
 
 #include <imgui.h>
+#include <Corrade/Containers/StringView.h>
 #include <Corrade/Utility/Resource.h>
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
