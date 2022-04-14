@@ -1,6 +1,6 @@
 EAPI=5
 
-EGIT_REPO_URI="git://github.com/mosra/magnum-integration.git"
+EGIT_REPO_URI="https://github.com/mosra/magnum-integration.git"
 
 inherit cmake-utils git-r3
 

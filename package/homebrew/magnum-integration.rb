@@ -4,7 +4,7 @@ class MagnumIntegration < Formula
   url "https://github.com/mosra/magnum-integration/archive/v2020.06.tar.gz"
   # wget https://github.com/mosra/magnum-integration/archive/v2020.06.tar.gz -O - | sha256sum
   sha256 "4eb461e0a38d7be69a52b8faf7664493da4e4cabc2c4fa86bd672d2e8f0a9311"
-  head "git://github.com/mosra/magnum-integration.git"
+  head "https://github.com/mosra/magnum-integration.git"
 
   depends_on "cmake" => :build
   depends_on "eigen" => :recommended

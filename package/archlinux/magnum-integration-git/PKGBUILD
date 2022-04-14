@@ -11,7 +11,7 @@ depends=('magnum-git' 'bullet' 'eigen' 'glm')
 makedepends=('cmake' 'git' 'ninja')
 provides=('magnum-integration')
 conflicts=('magnum-integration')
-source=("git+git://github.com/mosra/magnum-integration.git"
+source=("git+https://github.com/mosra/magnum-integration.git"
         "https://github.com/ocornut/imgui/archive/v${_imgui_pkgver}.tar.gz")
 sha1sums=('SKIP'
           '6d5d7688197e8002d916da8ddee81bfdd471176d')

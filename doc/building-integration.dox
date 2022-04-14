@@ -118,7 +118,7 @@ PKGBUILD files in the `package/archlinux` directory. They allow you to build
 and install the package directly from source tree. Example usage:
 
 @code{.sh}
-git clone git://github.com/mosra/magnum-integration && cd magnum-integration
+git clone https://github.com/mosra/magnum-integration && cd magnum-integration
 cd package/archlinux
 makepkg -fp PKGBUILD # or any other PKGBUILD file
 @endcode
@@ -165,7 +165,7 @@ depend on corresponding @ref building-corrade-packages-msys "Corrade" and
 @ref building-packages-msys "Magnum" MSYS2 packages. Example usage:
 
 @code{.sh}
-git clone git://github.com/mosra/magnum-integration && cd magnum-integration
+git clone https://github.com/mosra/magnum-integration && cd magnum-integration
 cd package/msys
 makepkg -fp PKGBUILD
 @endcode
@@ -196,7 +196,7 @@ directory to package root, link or copy the `package/debian` directory there
 and run `dpkg-buildpackage`:
 
 @code{.sh}
-git clone git://github.com/mosra/magnum-integration && cd magnum-integration
+git clone https://github.com/mosra/magnum-integration && cd magnum-integration
 ln -s package/debian .
 dpkg-buildpackage --no-sign
 @endcode
@@ -239,7 +239,7 @@ Gentoo Git ebuild is available in the `package/gentoo` directory. Get the
 install Magnum Integration like this:
 
 @code{.sh}
-git clone git://github.com/mosra/magnum-integration && cd magnum-integration
+git clone https://github.com/mosra/magnum-integration && cd magnum-integration
 cd package/gentoo
 sudo ebuild dev-libs/magnum-integration/magnum-integration-9999.ebuild manifest clean merge
 @endcode
