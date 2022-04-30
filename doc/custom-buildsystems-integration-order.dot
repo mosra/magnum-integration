@@ -62,5 +62,6 @@ digraph "Magnum Integration dependency order" {
     MagnumEigenIntegration -> Magnum
     MagnumGlmIntegration -> Magnum
     MagnumImGuiIntegration -> MagnumGL
+    MagnumImGuiIntegration -> MagnumShaders
     MagnumOvrIntegration -> MagnumGL
 }
