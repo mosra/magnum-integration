@@ -111,7 +111,7 @@ void IntegrationTest::boolVector() {
     b << false, true, false, true;
     CORRADE_COMPARE(Math::BoolVector<4>{b}, a);
 
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
        here. We don't care one bit, so silence that. Clang doesn't have this
        warning enabled in UseCorrade.cmake. */
@@ -120,7 +120,7 @@ void IntegrationTest::boolVector() {
     #endif
     Eigen::Ref<Eigen::Array<bool, 4, 1>> bref{b};
     Eigen::Ref<const Eigen::Array<bool, 4, 1>> cbref{b};
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
     CORRADE_COMPARE(Math::BoolVector<4>{bref}, a);
@@ -135,7 +135,7 @@ void IntegrationTest::vectorArray() {
     b << 1.5f, 0.3f, -1.1f, 0.6f;
     CORRADE_COMPARE(Vector4{b}, a);
 
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
        here. We don't care one bit, so silence that. Clang doesn't have this
        warning enabled in UseCorrade.cmake. */
@@ -144,7 +144,7 @@ void IntegrationTest::vectorArray() {
     #endif
     Eigen::Ref<Eigen::Array4f> bref{b};
     Eigen::Ref<const Eigen::Array4f> cbref{b};
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
     CORRADE_COMPARE(Vector4{bref}, a);
@@ -158,7 +158,7 @@ void IntegrationTest::vectorMatrix() {
     Eigen::Vector4i b{1, 0, -3, 4457};
     CORRADE_COMPARE(Vector4i{b}, a);
 
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
        here. We don't care one bit, so silence that. Clang doesn't have this
        warning enabled in UseCorrade.cmake. */
@@ -167,7 +167,7 @@ void IntegrationTest::vectorMatrix() {
     #endif
     Eigen::Ref<Eigen::Vector4i> bref{b};
     Eigen::Ref<const Eigen::Vector4i> cbref{b};
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
     CORRADE_COMPARE(Vector4i{bref}, a);
@@ -185,7 +185,7 @@ void IntegrationTest::matrixArray() {
          0.3f, 0.6f, 7.8f;
     CORRADE_COMPARE(Matrix3x2{b}, a);
 
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
        here. We don't care one bit, so silence that. Clang doesn't have this
        warning enabled in UseCorrade.cmake. */
@@ -194,7 +194,7 @@ void IntegrationTest::matrixArray() {
     #endif
     Eigen::Ref<Eigen::Array<float, 2, 3>> bref{b};
     Eigen::Ref<const Eigen::Array<float, 2, 3>> cbref{b};
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
     CORRADE_COMPARE(Matrix3x2{bref}, a);
@@ -212,7 +212,7 @@ void IntegrationTest::matrixMatrix() {
          0.3, 0.6, 7.8;
     CORRADE_COMPARE(Matrix3x2d{b}, a);
 
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
        here. We don't care one bit, so silence that. Clang doesn't have this
        warning enabled in UseCorrade.cmake. */
@@ -221,7 +221,7 @@ void IntegrationTest::matrixMatrix() {
     #endif
     Eigen::Ref<Eigen::Matrix<double, 2, 3>> bref{b};
     Eigen::Ref<const Eigen::Matrix<double, 2, 3>> cbref{b};
-    #if defined(__GNUC__) && !defined(__clang__)
+    #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
     CORRADE_COMPARE(Matrix3x2d{bref}, a);

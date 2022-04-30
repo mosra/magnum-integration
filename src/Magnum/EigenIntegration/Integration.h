@@ -139,7 +139,7 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, i
     #endif
 >> {
     static BoolVector<size> from(const Eigen::Array<bool, size, 1>& other) {
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
            here. We don't care one bit, so silence that. Clang doesn't have
            this warning enabled in UseCorrade.cmake. */
@@ -147,7 +147,7 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, i
         #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
         #endif
         return BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1>>>::from(other);
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         #pragma GCC diagnostic pop
         #endif
     }
@@ -188,7 +188,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array
     #endif
 >> {
     static Vector<size, T> from(const Eigen::Array<T, size, 1>& other) {
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
            here. We don't care one bit, so silence that. Clang doesn't have
            this warning enabled in UseCorrade.cmake. */
@@ -196,7 +196,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array
         #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
         #endif
         return VectorConverter<size, T, Eigen::Ref<const Eigen::Array<T, int(size), 1>>>::from(other);
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         #pragma GCC diagnostic pop
         #endif
     }
@@ -237,7 +237,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matri
     #endif
 >> {
     static Vector<size, T> from(const Eigen::Matrix<T, size, 1>& other) {
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
            here. We don't care one bit, so silence that. Clang doesn't have
            this warning enabled in UseCorrade.cmake. */
@@ -245,7 +245,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matri
         #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
         #endif
         return VectorConverter<size, T, Eigen::Ref<const Eigen::Matrix<T, int(size), 1>>>::from(other);
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         #pragma GCC diagnostic pop
         #endif
     }
@@ -287,7 +287,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     #endif
 >> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Array<T, rows, cols>& other) {
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
            here. We don't care one bit, so silence that. Clang doesn't have
            this warning enabled in UseCorrade.cmake. */
@@ -295,7 +295,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
         #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
         #endif
         return RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Array<T, int(rows), int(cols)>>>::from(other);
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         #pragma GCC diagnostic pop
         #endif
     }
@@ -338,7 +338,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     #endif
 >> {
     static RectangularMatrix<cols, rows, T> from(const Eigen::Matrix<T, rows, cols>& other) {
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
            here. We don't care one bit, so silence that. Clang doesn't have
            this warning enabled in UseCorrade.cmake. */
@@ -346,7 +346,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
         #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
         #endif
         return RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Matrix<T, int(rows), int(cols)>>>::from(other);
-        #if defined(__GNUC__) && !defined(__clang__)
+        #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         #pragma GCC diagnostic pop
         #endif
     }
