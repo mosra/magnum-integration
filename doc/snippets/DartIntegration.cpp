@@ -42,13 +42,6 @@ template<class T> void updateMeshesAndMaterials(T&);
 
 int main() {
 
-#ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
 {
 /* [Object-bodynode] */
 dart::dynamics::BodyNode* bodyNode = DOXYGEN_ELLIPSIS({});
@@ -66,9 +59,6 @@ auto* obj = new DartIntegration::Object{object, shapeNode};
 /* [Object-shapenode] */
 static_cast<void>(obj);
 }
-#if defined(__GNUC__) || defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
 
 {
 /* [World-init] */

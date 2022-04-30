@@ -35,17 +35,10 @@
 using namespace Magnum;
 
 int main() {
-#ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
 {
 Matrix4 projection, transformation;
 /* [DebugDraw-usage] */
-btDynamicsWorld* btWorld;
+btDynamicsWorld* btWorld = DOXYGEN_ELLIPSIS({});
 BulletIntegration::DebugDraw debugDraw;
 
 debugDraw.setMode(BulletIntegration::DebugDraw::Mode::DrawWireframe|
@@ -58,9 +51,6 @@ debugDraw.setTransformationProjectionMatrix(projection*transformation);
 btWorld->debugDrawWorld();
 /* [DebugDraw-usage-per-frame] */
 }
-#if defined(__GNUC__) || defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
 
 #ifndef BT_USE_DOUBLE_PRECISION
 {
@@ -83,15 +73,8 @@ static_cast<void>(c);
 
 #ifndef BT_USE_DOUBLE_PRECISION
 {
-#ifdef __clang__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
 /* [MotionState-usage] */
-btDynamicsWorld* btWorld;
+btDynamicsWorld* btWorld = DOXYGEN_ELLIPSIS({});
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 
 auto motionState = new BulletIntegration::MotionState{object};
@@ -112,9 +95,6 @@ rigidBody->setWorldTransform(btTransform(object.transformationMatrix()));
 /* [MotionState-usage-after] */
 rigidBody->setMotionState(&motionState->btMotionState());
 /* [MotionState-usage-after] */
-#if defined(__GNUC__) || defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
 }
 #endif
 }
