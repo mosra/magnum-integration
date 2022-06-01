@@ -249,8 +249,9 @@ jobs:
       LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
       PLATFORM_GL_API: GLX
-      # DART temporarily disabled on Linux because of GCC 4 and 5 ABI mismatch
+      # DART was disabled on Ubuntu 16.04 because of GCC 4 and 5 ABI mismatch
       # on 16.04: https://github.com/dartsim/dart/issues/967#issuecomment-469075835
+      # TODO: investigate and re-enable on 18.04
       WITH_DART: "OFF"
     steps:
     - install-base-linux:
