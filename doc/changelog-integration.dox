@@ -64,6 +64,9 @@ namespace Magnum {
 
 @subsection changelog-integration-latest-buildsystem Build system
 
+-   The oldest supported Clang version is now 6.0 (available on Ubuntu 18.04),
+    or equivalently Apple Clang 10.0 (Xcode 10). Oldest supported GCC version
+    is still 4.8.
 -   Updated `FindImGui.cmake` to optionally include the new `imgui_tables.cpp`
     source present in latest versions (see [mosra/magnum-integration#78](https://github.com/mosra/magnum-integration/pull/78),
     [mosra/magnum-integration#81](https://github.com/mosra/magnum-integration/issues/81))

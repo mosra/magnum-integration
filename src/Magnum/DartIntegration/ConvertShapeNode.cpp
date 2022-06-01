@@ -404,9 +404,8 @@ Containers::Optional<ShapeData> convertShapeNode(dart::dynamics::ShapeNode& shap
         }
     }
 
-    /* Needs to be explicit on GCC 4.8 and Clang 3.8 so it can properly upcast
-       the pointer. Just std::move() works as well, but that gives a warning
-       on GCC 9. */
+    /* Needs to be explicit on GCC 4.8 so it can properly upcast the pointer.
+       Just std::move() works as well, but that gives a warning on GCC 9. */
     return Containers::optional(std::move(shapeData));
 }
 
