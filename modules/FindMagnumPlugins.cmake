@@ -13,9 +13,9 @@
 # This command will not try to find any actual plugin. The plugins are:
 #
 #  AssimpImporter               - Assimp importer
+#  AstcImporter                 - ASTC importer
 #  BasisImageConverter          - Basis image converter
 #  BasisImporter                - Basis importer
-#  CgltfImporter                - GLTF importer using cgltf
 #  DdsImporter                  - DDS importer
 #  DevIlImageImporter           - Image importer using DevIL
 #  DrFlacAudioImporter          - FLAC audio importer using dr_flac
@@ -24,6 +24,7 @@
 #  Faad2AudioImporter           - AAC audio importer using FAAD2
 #  FreeTypeFont                 - FreeType font
 #  GlslangShaderConverter       - Glslang shader converter
+#  GltfImporter                 - glTF importer
 #  HarfBuzzFont                 - HarfBuzz font
 #  IcoImporter                  - ICO importer
 #  JpegImageConverter           - JPEG image converter
@@ -45,6 +46,12 @@
 #  StbTrueTypeFont              - TrueType font using stb_truetype
 #  StbVorbisAudioImporter       - OGG audio importer using stb_vorbis
 #  StlImporter                  - STL importer
+#  WebPImporter                 - WebP importer
+#
+# If Magnum is built with MAGNUM_BUILD_DEPRECATED enabled, these additional
+# plugins are available for backwards compatibility purposes:
+#
+#  CgltfImporter                - glTF importer using cgltf
 #  TinyGltfImporter             - GLTF importer using tiny_gltf
 #
 # Some plugins expose their internal state through separate libraries. The
@@ -117,6 +124,9 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
     if(_component STREQUAL AssimpImporter)
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES AnyImageImporter)
     elseif(_component STREQUAL CgltfImporter)
+        # TODO remove when the deprecated plugin is gone
+        list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES AnyImageImporter)
+    elseif(_component STREQUAL GltfImporter)
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES AnyImageImporter)
     elseif(_component STREQUAL MeshOptimizerSceneConverter)
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES MeshTools)
@@ -129,6 +139,7 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
     elseif(_component STREQUAL StanfordSceneConverter)
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES MeshTools)
     elseif(_component STREQUAL TinyGltfImporter)
+        # TODO remove when the deprecated plugin is gone
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES AnyImageImporter)
     endif()
 
@@ -145,23 +156,28 @@ mark_as_advanced(MAGNUMPLUGINS_INCLUDE_DIR)
 # components from other repositories)
 set(_MAGNUMPLUGINS_LIBRARY_COMPONENTS OpenDdl)
 set(_MAGNUMPLUGINS_PLUGIN_COMPONENTS
-    AssimpImporter BasisImageConverter BasisImporter CgltfImporter DdsImporter
+    AssimpImporter AstcImporter BasisImageConverter BasisImporter DdsImporter
     DevIlImageImporter DrFlacAudioImporter DrMp3AudioImporter
     DrWavAudioImporter Faad2AudioImporter FreeTypeFont GlslangShaderConverter
-    HarfBuzzFont IcoImporter JpegImageConverter JpegImporter
+    GltfImporter HarfBuzzFont IcoImporter JpegImageConverter JpegImporter
     KtxImageConverter KtxImporter MeshOptimizerSceneConverter
     MiniExrImageConverter OpenExrImageConverter OpenExrImporter
     OpenGexImporter PngImageConverter PngImporter PrimitiveImporter
     SpirvToolsShaderConverter StanfordImporter StanfordSceneConverter
     StbDxtImageConverter StbImageConverter StbImageImporter
-    StbTrueTypeFont StbVorbisAudioImporter StlImporter
-    TinyGltfImporter)
+    StbTrueTypeFont StbVorbisAudioImporter StlImporter WebPImporter)
 # Nothing is enabled by default right now
 set(_MAGNUMPLUGINS_IMPLICITLY_ENABLED_COMPONENTS )
 
 # Inter-component dependencies
 set(_MAGNUMPLUGINS_HarfBuzzFont_DEPENDENCIES FreeTypeFont)
 set(_MAGNUMPLUGINS_OpenGexImporter_DEPENDENCIES OpenDdl)
+
+# CgltfImporter and TinyGltfImporter, available only on a deprecated build
+if(MAGNUM_BUILD_DEPRECATED)
+    list(APPEND _MAGNUMPLUGINS_PLUGIN_COMPONENTS CgltfImporter TinyGltfImporter)
+    set(_MAGNUMPLUGINS_CgltfImporter_DEPENDENCIES GltfImporter)
+endif()
 
 # Ensure that all inter-component dependencies are specified as well
 set(_MAGNUMPLUGINS_ADDITIONAL_COMPONENTS )
@@ -300,6 +316,8 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
             set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES Assimp::Assimp)
 
+        # AstcImporter has no dependencies
+
         # BasisImageConverter / BasisImporter has only compiled-in
         # dependencies, except in case of vcpkg, then we need to link to a
         # library. Use a similar logic as in FindBasisUniversal, so in case an
@@ -357,6 +375,8 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
             find_package(Glslang REQUIRED)
             set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES Glslang::Glslang)
+
+        # GltfImporter has no dependencies
 
         # HarfBuzzFont plugin dependencies
         elseif(_component STREQUAL HarfBuzzFont)
@@ -454,6 +474,12 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
         # StlImporter has no dependencies
         # TinyGltfImporter has no dependencies
 
+        # WebPImporter plugin dependencies
+        elseif(_component STREQUAL WebPImporter)
+            find_package(WebP REQUIRED)
+            set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES WebP::WebP)
+
         endif()
 
         # Find plugin/library includes
@@ -521,7 +547,7 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.16)
         #   misleading messages.
         elseif(NOT _component IN_LIST _MAGNUMPLUGINS_IMPLICITLY_ENABLED_COMPONENTS)
             string(TOUPPER ${_component} _COMPONENT)
-            list(APPEND _MAGNUMPLUGINS_REASON_FAILURE_MESSAGE "${_component} is not built by default. Make sure you enabled WITH_${_COMPONENT} when building Magnum Plugins.")
+            list(APPEND _MAGNUMPLUGINS_REASON_FAILURE_MESSAGE "${_component} is not built by default. Make sure you enabled MAGNUM_WITH_${_COMPONENT} when building Magnum Plugins.")
         # Otherwise we have no idea. Better be silent than to print something
         # misleading.
         else()
