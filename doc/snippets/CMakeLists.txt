@@ -36,27 +36,27 @@ set_directory_properties(PROPERTIES
     CORRADE_CXX_STANDARD 11
     CORRADE_USE_PEDANTIC_FLAGS ON)
 
-if(WITH_BULLET)
+if(MAGNUM_WITH_BULLET)
     add_library(snippets-BulletIntegration STATIC BulletIntegration.cpp)
     target_link_libraries(snippets-BulletIntegration PRIVATE MagnumBulletIntegration)
 endif()
 
-if(WITH_DART)
+if(MAGNUM_WITH_DART)
     add_library(snippets-DartIntegration STATIC DartIntegration.cpp)
     target_link_libraries(snippets-DartIntegration PRIVATE MagnumDartIntegration)
 endif()
 
-if(WITH_EIGEN)
+if(MAGNUM_WITH_EIGEN)
     add_library(snippets-EigenIntegration STATIC EigenIntegration.cpp)
     target_link_libraries(snippets-EigenIntegration PRIVATE MagnumEigenIntegration)
 endif()
 
-if(WITH_GLM)
+if(MAGNUM_WITH_GLM)
     add_library(snippets-GlmIntegration STATIC GlmIntegration.cpp)
     target_link_libraries(snippets-GlmIntegration PRIVATE MagnumGlmIntegration)
 endif()
 
-if(WITH_IMGUI)
+if(MAGNUM_WITH_IMGUI)
     add_library(snippets-ImGuiIntegration STATIC ImGuiIntegration.cpp)
     target_link_libraries(snippets-ImGuiIntegration PRIVATE MagnumImGuiIntegration)
 
@@ -69,7 +69,7 @@ if(WITH_IMGUI)
     endif()
 endif()
 
-if(WITH_OVR)
+if(MAGNUM_WITH_OVR)
     add_library(snippets-OvrIntegration STATIC OvrIntegration.cpp)
     target_link_libraries(snippets-OvrIntegration PRIVATE MagnumOvrIntegration)
 endif()

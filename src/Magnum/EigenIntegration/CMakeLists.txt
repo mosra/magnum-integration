@@ -58,7 +58,7 @@ add_custom_target(MagnumEigenIntegration-headers SOURCES ${MagnumEigenIntegratio
 
 install(FILES ${MagnumEigenIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/EigenIntegration)
 
-if(BUILD_TESTS)
+if(MAGNUM_BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 

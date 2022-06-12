@@ -39,7 +39,7 @@ corrade_add_test(ImGuiUserConfigTest UserConfigTest.cpp
 target_compile_definitions(ImGuiUserConfigTest PRIVATE
     -DMAGNUM_IMGUIINTEGRATION_USER_CONFIG="Magnum/ImGuiIntegration/Test/UserConfigTest.h")
 
-if(BUILD_GL_TESTS)
+if(MAGNUM_BUILD_GL_TESTS)
     find_package(Corrade REQUIRED PluginManager)
     find_package(Magnum REQUIRED Trade DebugTools)
 

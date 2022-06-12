@@ -55,7 +55,7 @@ elseif(DART_io-urdf_FOUND)
     target_link_libraries(DartIntegrationConvertShapeNodeTest PRIVATE dart-io-urdf)
 endif()
 
-if(BUILD_GL_TESTS)
+if(MAGNUM_BUILD_GL_TESTS)
     corrade_add_test(DartIntegrationWorldGLTest
         WorldGLTest.cpp common.h
         LIBRARIES Magnum::OpenGLTester MagnumDartIntegration)

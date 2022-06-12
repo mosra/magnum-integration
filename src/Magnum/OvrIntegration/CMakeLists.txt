@@ -31,7 +31,7 @@ set(CMAKE_FOLDER "Magnum/OvrIntegration")
 find_package(Magnum REQUIRED GL)
 find_package(OVR REQUIRED)
 
-if(BUILD_STATIC)
+if(MAGNUM_BUILD_STATIC)
     set(MAGNUM_OVRINTEGRATION_BUILD_STATIC 1)
 endif()
 
@@ -66,9 +66,9 @@ target_include_directories(MagnumOvrIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
 set_target_properties(MagnumOvrIntegration PROPERTIES DEBUG_POSTFIX "-d")
-if(NOT BUILD_STATIC)
+if(NOT MAGNUM_BUILD_STATIC)
     set_target_properties(MagnumOvrIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
-elseif(BUILD_STATIC_PIC)
+elseif(MAGNUM_BUILD_STATIC_PIC)
     set_target_properties(MagnumOvrIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumOvrIntegration
@@ -83,7 +83,7 @@ install(TARGETS MagnumOvrIntegration
 install(FILES ${MagnumOvrIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/OvrIntegration)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/OvrIntegration)
 
-if(BUILD_TESTS)
+if(MAGNUM_BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 

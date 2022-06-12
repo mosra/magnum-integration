@@ -87,7 +87,7 @@ vcpkg install magnum-integration
 
 Note that just a subset of integration libraries is installed by default. To
 opt-in or opt-out of additional features, you can use the following syntax;
-feature names are simply names of CMake `WITH_*` options from the
+feature names are simply names of CMake `MAGNUM_WITH_*` options from the
 @ref building-integration-features section but lowercase, e.g.:
 
 @code{.bat}
@@ -220,10 +220,10 @@ as indentation has to be done using tabs, not spaces.
 ImGui doesn't provide any packages for Debian and thus the Magnum Integration
 package doesn't have it enabled by default. In order to enable it, put ImGui
 sources (or [clone a branch of your choice](https://github.com/ocornut/imgui))
-into `src/MagnumExternal/ImGui` (note the capitalization) and set `WITH_IMGUI`
-to `ON` in `package/debian/rules`. When you run `dpkg-buildpackage`, CMake will
-automatically discover the ImGui sources, build them and also install their
-headers for use by depending projects.
+into `src/MagnumExternal/ImGui` (note the capitalization) and set
+`MAGNUM_WITH_IMGUI` to `ON` in `package/debian/rules`. When you run
+`dpkg-buildpackage`, CMake will automatically discover the ImGui sources, build
+them and also install their headers for use by depending projects.
 @endparblock
 
 There are also Debian packages for
@@ -301,9 +301,9 @@ cross-compiling and platform-specific issues.
 
 Similarly to Magnum, the libraries are build as shared by default. If you are
 developing for a platform which doesn't support shared libraries or if you just
-want to link them statically, enable `BUILD_STATIC` to build the libraries as
-static. If you plan to use them with shared libraries later, enable also
-position-independent code with `BUILD_STATIC_PIC`.
+want to link them statically, enable `MAGNUM_BUILD_STATIC` to build the
+libraries as static. If you plan to use them with shared libraries later,
+enable also position-independent code with `MAGNUM_BUILD_STATIC_PIC`.
 
 Libraries built in the `Debug` configuration (e.g. with `CMAKE_BUILD_TYPE` set
 to `Debug`) have a `-d` suffix, similarly to what is done when
@@ -312,21 +312,21 @@ to `Debug`) have a `-d` suffix, similarly to what is done when
 By default no integration libraries are built and you need to select them
 manually:
 
--   `WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
+-   `MAGNUM_WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
     library. Depends on [Bullet Physics](http://bulletphysics.org/) (or,
     in case of Emscripten, @ref building-integration-features-emscripten-ports "see below")
--   `WITH_DART` --- Build the @ref DartIntegration "DartIntegration" library.
-    Depends on [DART](http://dartsim.github.io/).
--   `WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"
+-   `MAGNUM_WITH_DART` --- Build the @ref DartIntegration "DartIntegration"
+    library. Depends on [DART](http://dartsim.github.io/).
+-   `MAGNUM_WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"
     library. Depends on [Eigen](http://eigen.tuxfamily.org/).
--   `WITH_GLM` --- Build the @ref GlmIntegration "GlmIntegration" library.
-    Depends on [GLM](https://glm.g-truc.net/).
--   `WITH_IMGUI` --- Build the @ref ImGuiIntegration "ImGuiIntegration" library.
-    Depends on [Dear ImGui](https://github.com/ocornut/imgui) --- if you are on
-    Vcpkg, it will "just work", otherwise you need to download the sources and
-    point `IMGUI_DIR` to their directory so CMake can find them.
--   `WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration" library.
-    Depends on the [Oculus SDK](http://developer.oculus.com/).
+-   `MAGNUM_WITH_GLM` --- Build the @ref GlmIntegration "GlmIntegration"
+    library. Depends on [GLM](https://glm.g-truc.net/).
+-   `MAGNUM_WITH_IMGUI` --- Build the @ref ImGuiIntegration "ImGuiIntegration"
+    library. Depends on [Dear ImGui](https://github.com/ocornut/imgui) --- if
+    you are on Vcpkg, it will "just work", otherwise you need to download the
+    sources and point `IMGUI_DIR` to their directory so CMake can find them.
+-   `MAGNUM_WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration"
+    library. Depends on the [Oculus SDK](http://developer.oculus.com/).
 
 Note that each [*Integration namespace](namespaces.html) documentation contains
 more detailed information about its dependencies, availability on particular
@@ -338,8 +338,8 @@ use it with CMake.
 When building for Emscripten, by enabling the following options you can use
 dependencies from [Emscripten Ports](https://github.com/emscripten-ports):
 
--   `USE_EMSCRIPTEN_PORTS_BULLET` --- Build @ref BulletIntegration using the
-    version from Emscripten Ports. Requires CMake 3.13 and newer and is
+-   `MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET` --- Build @ref BulletIntegration using
+    the version from Emscripten Ports. Requires CMake 3.13 and newer and is
     equivalent to passing `-s USE_BULLET=1` to the compiler. Please note that
     currently (September 2019), the version there is still the old 2.82 from
     2013.

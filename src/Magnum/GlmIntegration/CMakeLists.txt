@@ -30,7 +30,7 @@ set(CMAKE_FOLDER "Magnum/GlmIntegration")
 
 find_package(GLM REQUIRED)
 
-if(BUILD_STATIC)
+if(MAGNUM_BUILD_STATIC)
     set(MAGNUM_GLMINTEGRATION_BUILD_STATIC 1)
 endif()
 
@@ -55,9 +55,9 @@ target_include_directories(MagnumGlmIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
 set_target_properties(MagnumGlmIntegration PROPERTIES DEBUG_POSTFIX "-d")
-if(NOT BUILD_STATIC)
+if(NOT MAGNUM_BUILD_STATIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
-elseif(BUILD_STATIC_PIC)
+elseif(MAGNUM_BUILD_STATIC_PIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumGlmIntegration PUBLIC Magnum::Magnum GLM::GLM)
@@ -69,7 +69,7 @@ install(TARGETS MagnumGlmIntegration
 install(FILES ${MagnumGlmIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/GlmIntegration)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/GlmIntegration)
 
-if(BUILD_TESTS)
+if(MAGNUM_BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 

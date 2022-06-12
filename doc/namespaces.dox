@@ -37,8 +37,8 @@
 Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
 This library depends on the [Bullet Physics](http://bulletphysics.org/) library
-and is built if `WITH_BULLET` is enabled when building Magnum Integration. To
-use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+and is built if `MAGNUM_WITH_BULLET` is enabled when building Magnum
+Integration. To use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 and [FindBullet.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindBullet.cmake)
 into your `modules/` directory, request the `Bullet` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Bullet` target:
@@ -81,7 +81,7 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 #set(USE_DOUBLE_PRECISION ON CACHE BOOL "" FORCE)
 add_subdirectory(bullet3 EXCLUDE_FROM_ALL)
 
-set(WITH_BULLET ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_BULLET ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
@@ -119,8 +119,8 @@ example, @ref building-integration and @ref cmake-integration.
 Conversion of nodes and shapes for visualizing physics simulation.
 
 This library depends on the [DART](https://dartsim.github.io/) library
-and is built if `WITH_DART` is enabled when building Magnum Integration. To
-use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+and is built if `MAGNUM_WITH_DART` is enabled when building Magnum Integration.
+To use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 into your `modules/` directory, request the `Dart` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Dart` target:
 
@@ -139,7 +139,7 @@ it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
 if necessary.
 
 @code{.cmake}
-set(WITH_DART ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_DART ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
@@ -174,8 +174,8 @@ Conversion of math types from and to the Eigen library.
 @section EigenIntegration-usage Usage
 
 This library depends on the [Eigen](http://eigen.tuxfamily.org/) library and is
-built if `WITH_EIGEN` is enabled when building Magnum Integration. To use this
-library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+built if `MAGNUM_WITH_EIGEN` is enabled when building Magnum Integration. To
+use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 into your `modules/` directory, request the `Eigen` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Eigen` target:
 
@@ -197,7 +197,7 @@ its installation dir if necessary.
 set(EIGEN3_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/eigen)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/eigen/cmake)
 
-set(WITH_EIGEN ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_EIGEN ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
@@ -262,7 +262,7 @@ Conversion of math types from and to the GLM library, debug output.
 @section GlmIntegration-usage Usage
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
-if `WITH_GLM` is enabled when building Magnum Integration. To use this
+if `MAGNUM_WITH_GLM` is enabled when building Magnum Integration. To use this
 library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 and [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
 into your `modules/` directory, request the `Glm` component of the
@@ -283,7 +283,7 @@ it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
 if necessary.
 
 @code{.cmake}
-set(WITH_GLM ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_GLM ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
@@ -328,7 +328,7 @@ for more information. See also @ref building-integration and
 Extensions to the [GLM](https://glm.g-truc.net/) library.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
-if `WITH_GLM` is enabled when building Magnum Integration. To use this
+if `MAGNUM_WITH_GLM` is enabled when building Magnum Integration. To use this
 library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 and [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
 into your `modules/` directory, request the `Glm` component of the
@@ -349,7 +349,7 @@ it as a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir
 if necessary.
 
 @code{.cmake}
-set(WITH_GLM ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_GLM ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
@@ -368,8 +368,8 @@ Conversion of math classes and rendering of Dear ImGui using Magnum.
 @section ImGuiIntegration-usage Usage
 
 This library depends on [Dear ImGui](https://github.com/ocornut/imgui) and is
-built if `WITH_IMGUI` is enabled when building Magnum Integration. To use this
-library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+built if `MAGNUM_WITH_IMGUI` is enabled when building Magnum Integration. To
+use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 and [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)
 into your `modules/` directory, request the `ImGui` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::ImGui` target:
@@ -388,7 +388,7 @@ Additionally, if you're using Magnum as a CMake subproject, bundle the
 
 @code{.cmake}
 set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
-set(WITH_IMGUI ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_IMGUI ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
@@ -428,8 +428,8 @@ also the @ref examples-imgui example, @ref building-integration and
 Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 
 This library depends on the [Oculus SDK](https://developer.oculus.com/) and is
-built if `WITH_OVR` is enabled when building Magnum Integration. To use this
-library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
+built if `MAGNUM_WITH_OVR` is enabled when building Magnum Integration. To use
+this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 and [FindOVR.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindOVR.cmake)
 into your `modules/` directory, request the `Ovr` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Ovr` target:
@@ -449,7 +449,7 @@ a system dependency and point `CMAKE_PREFIX_PATH` to its installation dir if
 necessary.
 
 @code{.cmake}
-set(WITH_OVR ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_OVR ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 

@@ -31,11 +31,11 @@ set(CMAKE_FOLDER "Magnum/BulletIntegration")
 
 find_package(Magnum REQUIRED GL SceneGraph Shaders)
 
-if(NOT USE_EMSCRIPTEN_PORTS_BULLET)
+if(NOT MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET)
     find_package(Bullet REQUIRED)
 endif()
 
-if(BUILD_STATIC)
+if(MAGNUM_BUILD_STATIC)
     set(MAGNUM_BULLETINTEGRATION_BUILD_STATIC 1)
 endif()
 
@@ -61,9 +61,9 @@ target_include_directories(MagnumBulletIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
 set_target_properties(MagnumBulletIntegration PROPERTIES DEBUG_POSTFIX "-d")
-if(NOT BUILD_STATIC)
+if(NOT MAGNUM_BUILD_STATIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
-elseif(BUILD_STATIC_PIC)
+elseif(MAGNUM_BUILD_STATIC_PIC)
     set_target_properties(MagnumBulletIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_link_libraries(MagnumBulletIntegration PUBLIC
@@ -74,7 +74,7 @@ target_link_libraries(MagnumBulletIntegration PUBLIC
 
 # If we use the Emscripten port, no find_package() was called and the targets
 # are not defined.
-if(USE_EMSCRIPTEN_PORTS_BULLET)
+if(MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET)
     target_compile_options(MagnumBulletIntegration PUBLIC "SHELL:-s USE_BULLET=1")
     target_link_options(MagnumBulletIntegration PUBLIC "SHELL:-s USE_BULLET=1")
 else()
@@ -89,7 +89,7 @@ install(TARGETS MagnumBulletIntegration
 install(FILES ${MagnumBulletIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/BulletIntegration)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/BulletIntegration)
 
-if(BUILD_TESTS)
+if(MAGNUM_BUILD_TESTS)
     add_subdirectory(Test)
 endif()
 
