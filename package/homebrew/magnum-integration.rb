@@ -21,6 +21,10 @@ class MagnumIntegration < Formula
       system "tar", "xzvf", "imgui.tar.gz", "-C", "ImGui", "--strip-components=1"
     end
 
+    # 2020.06 has the options unprefixed, current master has them prefixed.
+    # Options not present in 2020.06 are prefixed always.
+    option_prefix = build.head? ? 'MAGNUM_' : ''
+
     system "mkdir build"
     cd "build" do
       system "cmake",
@@ -30,11 +34,11 @@ class MagnumIntegration < Formula
         # of /opt/homebrew/lib which is dedicated for ARM binaries. Please
         # complain to Homebrew about this insane non-obvious filesystem layout.
         "-DCMAKE_INSTALL_NAME_DIR:STRING=#{lib}",
-        "-DWITH_BULLET=#{(build.with? 'bullet') ? 'ON' : 'OFF'}",
-        "-DWITH_DART=#{(build.with? 'dartsim') ? 'ON' : 'OFF'}",
-        "-DWITH_EIGEN=#{(build.with? 'eigen') ? 'ON' : 'OFF'}",
-        "-DWITH_GLM=#{(build.with? 'glm') ? 'ON' : 'OFF'}",
-        "-DWITH_IMGUI=ON",
+        "-D#{option_prefix}WITH_BULLET=#{(build.with? 'bullet') ? 'ON' : 'OFF'}",
+        "-D#{option_prefix}WITH_DART=#{(build.with? 'dartsim') ? 'ON' : 'OFF'}",
+        "-D#{option_prefix}WITH_EIGEN=#{(build.with? 'eigen') ? 'ON' : 'OFF'}",
+        "-D#{option_prefix}WITH_GLM=#{(build.with? 'glm') ? 'ON' : 'OFF'}",
+        "-D#{option_prefix}WITH_IMGUI=ON",
         ".."
       system "cmake", "--build", "."
       system "cmake", "--build", ".", "--target", "install"

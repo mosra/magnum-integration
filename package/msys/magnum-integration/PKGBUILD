@@ -37,9 +37,9 @@ build() {
         ${MINGW_PREFIX}/bin/cmake \
             -G'Ninja' \
             -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
-            -DWITH_BULLET=ON \
-            -DWITH_EIGEN=ON \
-            -DWITH_GLM=ON \
+            -DMAGNUM_WITH_BULLET=ON \
+            -DMAGNUM_WITH_EIGEN=ON \
+            -DMAGNUM_WITH_GLM=ON \
             "${extra_config[@]}" \
             ../${_realname}-${pkgver}
     ninja

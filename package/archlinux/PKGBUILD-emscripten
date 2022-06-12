@@ -29,11 +29,11 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr/lib/emscripten/system \
         -DMAGNUM_DEPLOY_PREFIX=/srv/http/emscripten \
         -DIMGUI_DIR=/opt/imgui \
-        -DWITH_BULLET=ON \
-        -DWITH_DART=OFF \
-        -DWITH_GLM=OFF \
-        -DWITH_IMGUI=ON \
-        -DBUILD_TESTS=OFF
+        -DMAGNUM_WITH_BULLET=ON \
+        -DMAGNUM_WITH_DART=OFF \
+        -DMAGNUM_WITH_GLM=OFF \
+        -DMAGNUM_WITH_IMGUI=ON \
+        -DMAGNUM_BUILD_TESTS=OFF
     ninja
 }
 
@@ -41,7 +41,7 @@ check() {
     cd "$_rootdir/build-emscripten"
 
     # So tests are not even built (takes AGES) when the user doesn't want to
-    cmake . -DBUILD_TESTS=ON
+    cmake . -DMAGNUM_BUILD_TESTS=ON
     ninja
 
     CORRADE_TEST_COLOR=ON ctest --output-on-failure

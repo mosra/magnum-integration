@@ -27,13 +27,13 @@ build() {
         -DCMAKE_BUILD_TYPE=Debug \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DIMGUI_DIR=/opt/imgui \
-        -DWITH_BULLET=ON \
-        -DWITH_DART=ON \
-        -DWITH_EIGEN=ON \
-        -DWITH_GLM=ON \
-        -DWITH_IMGUI=ON \
-        -DBUILD_TESTS=ON \
-        -DBUILD_GL_TESTS=ON \
+        -DMAGNUM_WITH_BULLET=ON \
+        -DMAGNUM_WITH_DART=ON \
+        -DMAGNUM_WITH_EIGEN=ON \
+        -DMAGNUM_WITH_GLM=ON \
+        -DMAGNUM_WITH_IMGUI=ON \
+        -DMAGNUM_BUILD_TESTS=ON \
+        -DMAGNUM_BUILD_GL_TESTS=ON \
         -G Ninja
     ninja
 }

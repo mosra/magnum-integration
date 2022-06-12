@@ -96,15 +96,15 @@ cmake .. \
     -DGLM_INCLUDE_DIR=$HOME/glm \
     -DIMGUI_DIR=$HOME/imgui \
     -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
-    -DWITH_BULLET=OFF \
-    -DWITH_DART=OFF \
-    -DWITH_EIGEN=ON \
-    -DWITH_GLM=ON \
-    -DWITH_IMGUI=ON \
-    -DWITH_OVR=OFF \
-    -DBUILD_STATIC=ON \
-    -DBUILD_TESTS=ON \
-    -DBUILD_GL_TESTS=ON \
+    -DMAGNUM_WITH_BULLET=OFF \
+    -DMAGNUM_WITH_DART=OFF \
+    -DMAGNUM_WITH_EIGEN=ON \
+    -DMAGNUM_WITH_GLM=ON \
+    -DMAGNUM_WITH_IMGUI=ON \
+    -DMAGNUM_WITH_OVR=OFF \
+    -DMAGNUM_BUILD_STATIC=ON \
+    -DMAGNUM_BUILD_TESTS=ON \
+    -DMAGNUM_BUILD_GL_TESTS=ON \
     -G Xcode
 set -o pipefail && cmake --build . --config Release | xcbeautify
 # TODO: find a better way to avoid
