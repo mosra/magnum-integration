@@ -11,10 +11,10 @@ mkdir build && cd build || exit /b
 cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps-native \
-    -DWITH_INTERCONNECT=OFF \
-    -DWITH_PLUGINMANAGER=OFF \
-    -DWITH_TESTSUITE=OFF \
-    -DWITH_UTILITY=OFF \
+    -DCORRADE_WITH_INTERCONNECT=OFF \
+    -DCORRADE_WITH_PLUGINMANAGER=OFF \
+    -DCORRADE_WITH_TESTSUITE=OFF \
+    -DCORRADE_WITH_UTILITY=OFF \
     -G Ninja
 ninja install
 cd ..
@@ -22,13 +22,13 @@ cd ..
 # Crosscompile Corrade
 mkdir build-emscripten && cd build-emscripten
 cmake .. \
-    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten.cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
     -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DWITH_INTERCONNECT=OFF \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
+    -DCORRADE_WITH_INTERCONNECT=OFF \
     -G Ninja
 ninja install
 cd ../..
@@ -66,26 +66,26 @@ git clone --depth 1 https://github.com/mosra/magnum.git
 cd magnum
 mkdir build-emscripten && cd build-emscripten
 cmake .. \
-    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten.cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
     -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
-    -DWITH_AUDIO=OFF \
-    -DWITH_DEBUGTOOLS=ON \
-    -DWITH_MESHTOOLS=ON \
-    -DWITH_PRIMITIVES=ON \
-    -DWITH_SCENEGRAPH=ON \
-    -DWITH_SCENETOOLS=OFF \
-    -DWITH_SHADERS=ON \
-    -DWITH_TEXT=OFF \
-    -DWITH_TEXTURETOOLS=OFF \
-    -DWITH_OPENGLTESTER=ON \
-    -DWITH_EMSCRIPTENAPPLICATION=ON \
-    -DWITH_WINDOWLESSEGLAPPLICATION=ON \
-    -DTARGET_GLES2=$TARGET_GLES2 \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
+    -DMAGNUM_WITH_AUDIO=OFF \
+    -DMAGNUM_WITH_DEBUGTOOLS=ON \
+    -DMAGNUM_WITH_MESHTOOLS=ON \
+    -DMAGNUM_WITH_PRIMITIVES=ON \
+    -DMAGNUM_WITH_SCENEGRAPH=ON \
+    -DMAGNUM_WITH_SCENETOOLS=OFF \
+    -DMAGNUM_WITH_SHADERS=ON \
+    -DMAGNUM_WITH_TEXT=OFF \
+    -DMAGNUM_WITH_TEXTURETOOLS=OFF \
+    -DMAGNUM_WITH_OPENGLTESTER=ON \
+    -DMAGNUM_WITH_EMSCRIPTENAPPLICATION=ON \
+    -DMAGNUM_WITH_WINDOWLESSEGLAPPLICATION=ON \
+    -DMAGNUM_TARGET_GLES2=$TARGET_GLES2 \
     -G Ninja
 ninja install
 cd ../..
@@ -104,17 +104,17 @@ cd ../..
 # it.
 mkdir build-emscripten && cd build-emscripten
 cmake .. \
-    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DCMAKE_TOOLCHAIN_FILE="../toolchains/generic/Emscripten.cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
     -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_MODULE_PATH=$HOME/eigen/cmake/ \
-    -DEIGEN3_INCLUDE_DIR=$HOME/eigen/ \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
+    -DEIGEN3_INCLUDE_DIR=$HOME/eigen/ \
     -DGLM_INCLUDE_DIR=$HOME/glm \
     -DIMGUI_DIR=$HOME/imgui \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DWITH_BULLET=ON \
     -DWITH_DART=OFF \
     -DWITH_EIGEN=ON \

@@ -20,10 +20,10 @@ mkdir build && cd build || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps-native ^
-    -DWITH_INTERCONNECT=OFF ^
-    -DWITH_PLUGINMANAGER=OFF ^
-    -DWITH_TESTSUITE=OFF ^
-    -DWITH_UTILITY=OFF ^
+    -DCORRADE_WITH_INTERCONNECT=OFF ^
+    -DCORRADE_WITH_PLUGINMANAGER=OFF ^
+    -DCORRADE_WITH_TESTSUITE=OFF ^
+    -DCORRADE_WITH_UTILITY=OFF ^
     -G Ninja || exit /b
 cmake --build . --target install || exit /b
 cd .. || exit /b
@@ -33,10 +33,10 @@ mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
     -DCMAKE_SYSTEM_NAME=WindowsStore ^
     -DCMAKE_SYSTEM_VERSION=10.0 ^
-    -DCORRADE_RC_EXECUTABLE=%APPVEYOR_BUILD_FOLDER%/deps-native/bin/corrade-rc.exe ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
-    -DWITH_INTERCONNECT=OFF ^
-    -DBUILD_STATIC=ON ^
+    -DCORRADE_RC_EXECUTABLE=%APPVEYOR_BUILD_FOLDER%/deps-native/bin/corrade-rc.exe ^
+    -DCORRADE_WITH_INTERCONNECT=OFF ^
+    -DCORRADE_BUILD_STATIC=ON ^
     -G "%GENERATOR%" -A x64 || exit /b
 cmake --build . --config Release --target install -- /m /v:m || exit /b
 cd .. && cd ..
@@ -48,25 +48,25 @@ mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
     -DCMAKE_SYSTEM_NAME=WindowsStore ^
     -DCMAKE_SYSTEM_VERSION=10.0 ^
-    -DCORRADE_RC_EXECUTABLE=%APPVEYOR_BUILD_FOLDER%/deps-native/bin/corrade-rc.exe ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DOPENGLES2_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
-    -DWITH_AUDIO=OFF ^
-    -DWITH_DEBUGTOOLS=ON ^
-    -DWITH_MESHTOOLS=ON ^
-    -DWITH_PRIMITIVES=ON ^
-    -DWITH_SCENEGRAPH=OFF ^
-    -DWITH_SCENETOOLS=OFF ^
-    -DWITH_SHADERS=ON ^
-    -DWITH_SHADERTOOLS=OFF ^
-    -DWITH_TEXT=OFF ^
-    -DWITH_TEXTURETOOLS=OFF ^
-    -DTARGET_GLES2=%TARGET_GLES2% ^
-    -DBUILD_STATIC=ON ^
+    -DCORRADE_RC_EXECUTABLE=%APPVEYOR_BUILD_FOLDER%/deps-native/bin/corrade-rc.exe ^
+    -DMAGNUM_WITH_AUDIO=OFF ^
+    -DMAGNUM_WITH_DEBUGTOOLS=ON ^
+    -DMAGNUM_WITH_MESHTOOLS=ON ^
+    -DMAGNUM_WITH_PRIMITIVES=ON ^
+    -DMAGNUM_WITH_SCENEGRAPH=OFF ^
+    -DMAGNUM_WITH_SCENETOOLS=OFF ^
+    -DMAGNUM_WITH_SHADERS=ON ^
+    -DMAGNUM_WITH_SHADERTOOLS=OFF ^
+    -DMAGNUM_WITH_TEXT=OFF ^
+    -DMAGNUM_WITH_TEXTURETOOLS=OFF ^
+    -DMAGNUM_TARGET_GLES2=%TARGET_GLES2% ^
+    -DMAGNUM_BUILD_STATIC=ON ^
     -G "%GENERATOR%" -A x64 || exit /b
 cmake --build . --config Release --target install -- /m /v:m || exit /b
 cd .. && cd ..
@@ -80,13 +80,13 @@ mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/deps ^
+    -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
     -DOPENGLES2_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
-    -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
     -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DWITH_BULLET=OFF ^
     -DWITH_DART=OFF ^
