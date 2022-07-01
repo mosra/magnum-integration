@@ -36,7 +36,7 @@ types.
 
 | Magnum vector type                             | Equivalent GLM type      |
 | ---------------------------------------------- | ------------------------ |
-| @ref Magnum::Math::BoolVector "Math::BoolVector<2>", @ref Magnum::Math::BoolVector "Math::BoolVector<3>", @ref Magnum::Math::BoolVector "Math::BoolVector<4>" | `glm::bvec2`, `glm::bvec3`, `glm::bvec4` |
+| @ref Magnum::Math::BitVector "Math::BitVector<2>", @ref Magnum::Math::BitVector "Math::BitVector<3>", @ref Magnum::Math::BitVector "Math::BitVector<4>" | `glm::bvec2`, `glm::bvec3`, `glm::bvec4` |
 | @ref Magnum::Vector2 "Vector2", @ref Magnum::Vector3 "Vector3", @ref Magnum::Color3 "Color3", @ref Magnum::Vector4 "Vector4", @ref Magnum::Color4 "Color4" | `glm::vec2`, `glm::vec3`, `glm::vec4` |
 | @ref Magnum::Vector2ui "Vector2ui", @ref Magnum::Vector3ui "Vector3ui", @ref Magnum::Vector4ui "Vector4ui" | `glm::uvec2`, `glm::uvec3`, `glm::uvec4` |
 | @ref Magnum::Vector2i "Vector2i", @ref Magnum::Vector3i "Vector3i", @ref Magnum::Vector4i "Vector4i" | `glm::ivec2`, `glm::ivec3`, `glm::ivec4` |
@@ -101,12 +101,12 @@ template<
     #else
     glm::qualifier /* thanks, GLM */
     #endif
-q> struct BoolVectorConverter<2, glm::tvec2<bool, q>> {
-    static BoolVector<2> from(const glm::tvec2<bool, q>& other) {
+q> struct BitVectorConverter<2, glm::tvec2<bool, q>> {
+    static BitVector<2> from(const glm::tvec2<bool, q>& other) {
         return (other.x << 0)|(other.y << 1);
     }
 
-    static glm::tvec2<bool, q> to(const BoolVector<2>& other) {
+    static glm::tvec2<bool, q> to(const BitVector<2>& other) {
         return {other[0], other[1]};
     }
 };
@@ -117,12 +117,12 @@ template<
     #else
     glm::qualifier /* thanks, GLM */
     #endif
-q> struct BoolVectorConverter<3, glm::tvec3<bool, q>> {
-    static BoolVector<3> from(const glm::tvec3<bool, q>& other) {
+q> struct BitVectorConverter<3, glm::tvec3<bool, q>> {
+    static BitVector<3> from(const glm::tvec3<bool, q>& other) {
         return (other.x << 0)|(other.y << 1)|(other.z << 2);
     }
 
-    static glm::tvec3<bool, q> to(const BoolVector<3>& other) {
+    static glm::tvec3<bool, q> to(const BitVector<3>& other) {
         return {other[0], other[1], other[2]};
     }
 };
@@ -133,12 +133,12 @@ template<
     #else
     glm::qualifier /* thanks, GLM */
     #endif
-q> struct BoolVectorConverter<4, glm::tvec4<bool, q>> {
-    static BoolVector<4> from(const glm::tvec4<bool, q>& other) {
+q> struct BitVectorConverter<4, glm::tvec4<bool, q>> {
+    static BitVector<4> from(const glm::tvec4<bool, q>& other) {
         return (other.x << 0)|(other.y << 1)|(other.z << 2)|(other.w << 3);
     }
 
-    static glm::tvec4<bool, q> to(const BoolVector<4>& other) {
+    static glm::tvec4<bool, q> to(const BitVector<4>& other) {
         return {other[0], other[1], other[2], other[3]};
     }
 };

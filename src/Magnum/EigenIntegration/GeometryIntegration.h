@@ -147,7 +147,7 @@ namespace EigenIntegration {
 
 Provided only for consistency with
 @ref cast(const Math::RectangularMatrix<cols, rows, T>&),
-@ref cast(const Math::BoolVector<size>&) and
+@ref cast(const Math::BitVector<size>&) and
 @ref cast(const Math::Vector<size, T>&) --- conversion from
 @ref Math::Quaternion to @m_class{m-doc-external} [Eigen::Quaternion<T>](https://eigen.tuxfamily.org/dox/classEigen_1_1Quaternion.html)
 can be done directly via an explicit conversion, unlike with matrices and

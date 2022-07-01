@@ -39,7 +39,7 @@ dynamically sized types.
 
 | Magnum vector type                             | Equivalent Eigen type    |
 | ---------------------------------------------- | ------------------------ |
-| @ref Magnum::Math::BoolVector "Math::BoolVector<size>" | @m_class{m-doc-external} [Eigen::Array<bool, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
+| @ref Magnum::Math::BitVector "Math::BitVector<size>" | @m_class{m-doc-external} [Eigen::Array<bool, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
 | @ref Magnum::Math::Vector "Math::Vector<size, T>" and derived classes | @m_class{m-doc-external} [Eigen::Array<T, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Array.html) |
 | @ref Magnum::Math::Vector "Math::Vector<size, T>" and derived classes | @m_class{m-doc-external} [Eigen::Matrix<T, size, 1>](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html) |
 
@@ -104,41 +104,41 @@ namespace Math { namespace Implementation {
    Eigen::Ref<T> for all types, further made worse by workarounds for MSVC and
    GCC. Sorry for your bleeding eyes. Take a shower after. */
 
-template<std::size_t size> struct BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
+template<std::size_t size> struct BitVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
     /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
        will be? */
     #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
     , 0, int(size), 1
     #endif
 >>> {
-    static BoolVector<size> from(const Eigen::Ref<const Eigen::Array<bool, size, 1>>& other) {
-        BoolVector<size> out; /* NoInit prints a warning on GCC 9, don't */
+    static BitVector<size> from(const Eigen::Ref<const Eigen::Array<bool, size, 1>>& other) {
+        BitVector<size> out; /* NoInit prints a warning on GCC 9, don't */
         for(std::size_t i = 0; i != size; ++i)
             out.set(i, other(i, 0));
         return out;
     }
 };
-template<std::size_t size> struct BoolVectorConverter<size, Eigen::Ref<Eigen::Array<bool, int(size), 1
+template<std::size_t size> struct BitVectorConverter<size, Eigen::Ref<Eigen::Array<bool, int(size), 1
     /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
        will be? */
     #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
     , 0, int(size), 1
     #endif
->>>: BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
+>>>: BitVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
     /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
        will be? */
     #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
     , 0, int(size), 1
     #endif
 >>> {};
-template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, int(size), 1
+template<std::size_t size> struct BitVectorConverter<size, Eigen::Array<bool, int(size), 1
     /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
        will be? */
     #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
     , 0, int(size), 1
     #endif
 >> {
-    static BoolVector<size> from(const Eigen::Array<bool, size, 1>& other) {
+    static BitVector<size> from(const Eigen::Array<bool, size, 1>& other) {
         #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
            here. We don't care one bit, so silence that. Clang doesn't have
@@ -146,13 +146,13 @@ template<std::size_t size> struct BoolVectorConverter<size, Eigen::Array<bool, i
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
         #endif
-        return BoolVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1>>>::from(other);
+        return BitVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1>>>::from(other);
         #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
         #pragma GCC diagnostic pop
         #endif
     }
 
-    static Eigen::Array<bool, size, 1> to(const BoolVector<size>& other) {
+    static Eigen::Array<bool, size, 1> to(const BitVector<size>& other) {
         /** @todo is there a NoInit tag or something? */
         Eigen::Array<bool, size, 1> out;
         for(std::size_t i = 0; i != size; ++i)
@@ -382,8 +382,8 @@ template<class To, std::size_t cols, std::size_t rows, class T> inline To cast(c
 @overload
 @m_since_{integration,2019,10}
 */
-template<class To, std::size_t size> inline To cast(const Math::BoolVector<size>& from) {
-    return Math::Implementation::BoolVectorConverter<size, To>::to(from);
+template<class To, std::size_t size> inline To cast(const Math::BitVector<size>& from) {
+    return Math::Implementation::BitVectorConverter<size, To>::to(from);
 }
 
 /**

@@ -106,10 +106,10 @@ IntegrationTest::IntegrationTest() {
 
 void IntegrationTest::boolVector() {
     /** @todo does Eigen have typedefs for this? */
-    Math::BoolVector<4> a{0xa};
+    Math::BitVector<4> a{0xa};
     Eigen::Array<bool, 4, 1> b;
     b << false, true, false, true;
-    CORRADE_COMPARE(Math::BoolVector<4>{b}, a);
+    CORRADE_COMPARE(Math::BitVector<4>{b}, a);
 
     #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
@@ -123,8 +123,8 @@ void IntegrationTest::boolVector() {
     #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
-    CORRADE_COMPARE(Math::BoolVector<4>{bref}, a);
-    CORRADE_COMPARE(Math::BoolVector<4>{cbref}, a);
+    CORRADE_COMPARE(Math::BitVector<4>{bref}, a);
+    CORRADE_COMPARE(Math::BitVector<4>{cbref}, a);
 
     CORRADE_COMPARE_AS((cast<Eigen::Array<bool, 4, 1>>(a)), b, EigenType);
 }

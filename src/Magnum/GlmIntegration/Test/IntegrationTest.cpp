@@ -99,22 +99,22 @@ IntegrationTest::IntegrationTest() {
 
 void IntegrationTest::bvec() {
     {
-        Math::BoolVector<2> a{0x6};
+        Math::BitVector<2> a{0x6};
         glm::bvec2 b{false, true};
 
-        CORRADE_COMPARE(Math::BoolVector<2>{b}, a);
+        CORRADE_COMPARE(Math::BitVector<2>{b}, a);
         CORRADE_COMPARE(glm::bvec2(a), b);
     } {
-        Math::BoolVector<3> a{0x6};
+        Math::BitVector<3> a{0x6};
         glm::bvec3 b{false, true, true};
 
-        CORRADE_COMPARE(Math::BoolVector<3>{b}, a);
+        CORRADE_COMPARE(Math::BitVector<3>{b}, a);
         CORRADE_COMPARE(glm::bvec3(a), b);
     } {
-        Math::BoolVector<4> a{0xa};
+        Math::BitVector<4> a{0xa};
         glm::bvec4 b{false, true, false, true};
 
-        CORRADE_COMPARE(Math::BoolVector<4>{b}, a);
+        CORRADE_COMPARE(Math::BitVector<4>{b}, a);
         CORRADE_COMPARE(glm::bvec4(a), b);
     }
 }
