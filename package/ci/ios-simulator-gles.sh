@@ -33,7 +33,7 @@ cmake .. \
     -DCORRADE_WITH_INTERCONNECT=OFF \
     -DCORRADE_BUILD_STATIC=ON \
     -G Xcode
-set -o pipefail && cmake --build . --config Release --target install | xcbeautify
+set -o pipefail && cmake --build . --config Release --target install -j$XCODE_JOBS | xcbeautify
 cd ../..
 
 # Crosscompile SDL. On 2022-14-02 curl says the certificate is expired, so
@@ -42,7 +42,7 @@ cd ../..
 curl --insecure -O https://www.libsdl.org/release/SDL2-2.0.10.tar.gz
 tar -xzvf SDL2-2.0.10.tar.gz
 cd SDL2-2.0.10/Xcode-iOS/SDL
-set -o pipefail && xcodebuild -sdk iphonesimulator13.7 | xcbeautify
+set -o pipefail && xcodebuild -sdk iphonesimulator13.7 -jobs $XCODE_JOBS -parallelizeTargets | xcbeautify
 cp build/Release-iphonesimulator/libSDL2.a $HOME/deps/lib
 mkdir -p $HOME/deps/include/SDL2
 cp -R ../../include/* $HOME/deps/include/SDL2
@@ -73,7 +73,7 @@ cmake .. \
     -DMAGNUM_TARGET_GLES2=$TARGET_GLES2 \
     -DMAGNUM_BUILD_STATIC=ON \
     -G Xcode
-set -o pipefail && cmake --build . --config Release --target install | xcbeautify
+set -o pipefail && cmake --build . --config Release --target install -j$XCODE_JOBS | xcbeautify
 cd ../..
 
 # Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
@@ -106,11 +106,11 @@ cmake .. \
     -DMAGNUM_BUILD_TESTS=ON \
     -DMAGNUM_BUILD_GL_TESTS=ON \
     -G Xcode
-set -o pipefail && cmake --build . --config Release | xcbeautify
+set -o pipefail && cmake --build . --config Release -j$XCODE_JOBS | xcbeautify
 # TODO: find a better way to avoid
 # Library not loaded: /System/Library/Frameworks/OpenGLES.framework/OpenGLES
 # error
 DYLD_FALLBACK_LIBRARY_PATH="/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 12.4.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/OpenGLES.framework" DYLD_FALLBACK_FRAMEWORK_PATH="/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 12.4.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks" CORRADE_TEST_COLOR=ON ctest -V -C Release -E GLTest
 
 # Test install, after running the tests as for them it shouldn't be needed
-set -o pipefail && cmake --build . --config Release --target install | xcbeautify
+set -o pipefail && cmake --build . --config Release --target install -j$XCODE_JOBS | xcbeautify
