@@ -55,6 +55,7 @@ namespace Magnum {
     to the @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
+-   **[\@lacyyy](https://github.com/lacyyy)** -- MSYS package fixes
 -   **Marco Melorio** ([\@Melix19](https://github.com/Melix19)) ---
     cursor support and other improvements to the @ref ImGuiIntegration library
 -   **Max Schwarz** ([\@xqms](https://github.com/xqms)) --- fixes and

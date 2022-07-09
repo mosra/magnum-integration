@@ -90,6 +90,8 @@ namespace Magnum {
 -   Updated Debian build instructions to pass `--no-sign` to
     `dpkg-buildpackage`, avoiding a confusing error message that might lead
     people to think the packaging failed (see [mosra/magnum-plugins#105](https://github.com/mosra/magnum-plugins/issues/105))
+-   Fixed wrong `.gitattributes` option for LF line endings in MSYS PKGBUILDs
+    (see [mosra/magnum-integration#97](https://github.com/mosra/magnum-integration/issues/97))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
