@@ -354,11 +354,9 @@ template<class Application> void Context::updateApplicationCursor(Application& a
         case ImGuiMouseCursor_Hand:
             application.setCursor(Application::Cursor::Hand);
             return;
-        #if IMGUI_VERSION_NUM >= 17500
         case ImGuiMouseCursor_NotAllowed:
             application.setCursor(Implementation::OptionalNoCursor<Application>::Cursor);
             return;
-        #endif
         case ImGuiMouseCursor_None:
             application.setCursor(Application::Cursor::Hidden);
             return;
