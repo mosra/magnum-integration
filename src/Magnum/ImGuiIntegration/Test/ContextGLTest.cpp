@@ -651,6 +651,14 @@ void ContextGLTest::mouseInput() {
     MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, {}};
     c.handleMouseScrollEvent(scroll);
     Utility::System::sleep(1);
+    /* https://github.com/ocornut/imgui/commit/e346059eef140c5a8611581f3e6c8b8816d6998e
+       This commit changed input trickling to also apply to mouse wheel events.
+       Since we always set the mouse position in handleMouseScrollEvent(), the
+       mouse wheel event happens one frame later now. */
+    #if IMGUI_VERSION_NUM >= 18722
+    c.newFrame();
+    c.drawFrame();
+    #endif
     c.newFrame();
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{17.0f, 23.0f}));
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
