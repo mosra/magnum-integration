@@ -61,6 +61,10 @@ namespace Magnum {
     [mosra/magnum-integration#87](https://github.com/mosra/magnum-integration/issues/87),
     [mosra/magnum-integration#91](https://github.com/mosra/magnum-integration/issues/91)
     and [mosra/magnum-integration#93](https://github.com/mosra/magnum-integration/pull/93))
+-   Added support for draw list user callbacks to @ref ImGuiIntegration
+    (see [mosra/magnum-integration#83](https://github.com/mosra/magnum-integration/issues/83),
+    [mosra/magnum-integration#84](https://github.com/mosra/magnum-integration/pull/84)
+    and [mosra/magnum-integration#98](https://github.com/mosra/magnum-integration/pull/98))
 
 @subsection changelog-integration-latest-buildsystem Build system
 

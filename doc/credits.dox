@@ -53,6 +53,8 @@ namespace Magnum {
     and the migration of magnum-imgui to @ref ImGuiIntegration library
 -   **Jordan Peck** ([\@Auburns](https://github.com/Auburns)) --- improvements
     to the @ref ImGuiIntegration library
+-   **Juanpe Bolívar** ([\@arximboldi](https://github.com/arximboldi)) ---
+    draw list user callbacks in the @ref ImGuiIntegration library
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
 -   **[\@lacyyy](https://github.com/lacyyy)** -- MSYS package fixes
@@ -67,7 +69,8 @@ namespace Magnum {
 -   **Olga Turanksaya** ([\@olga-python](https://github.com/olga-python)) ---
     Gentoo ebuild
 -   **Pablo Escobar** ([\@pezcode](https://github.com/pezcode)) ---
-    improvements and fixes in the @ref ImGuiIntegration library
+    improvements, rendering tests and fixes in the @ref ImGuiIntegration
+    library
 -   **Pierre Gergondet** ([\@gergondet](https://github.com/gergondet)) ---
     improvements to the @ref ImGuiIntegration library
 -   **[\@ShaddyDC](https://github.com/ShaddyDC)** --- base of the
