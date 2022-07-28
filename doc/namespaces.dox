@@ -402,7 +402,8 @@ you can instead define `MAGNUM_IMGUIINTEGRATION_USER_CONFIG` and this file will
 be included correctly:
 
 @code{.cmake}
-target_compile_definitions(your-app PRIVATE -DMAGNUM_IMGUIINTEGRATION_USER_CONFIG="my_imconfig.h")
+target_compile_definitions(your-app PRIVATE
+    MAGNUM_IMGUIINTEGRATION_USER_CONFIG="my_imconfig.h")
 @endcode
 
 Routines for math type conversion are provided in @ref Magnum/ImGuiIntegration/Integration.h,
