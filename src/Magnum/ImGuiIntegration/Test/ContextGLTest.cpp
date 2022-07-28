@@ -943,7 +943,7 @@ void ContextGLTest::drawCallback() {
     data.list = drawList;
     data.callback = [](const ImDrawList* list, const ImDrawCmd* cmd) {
         CORRADE_VERIFY(cmd->UserCallbackData);
-        CallbackData* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
+        auto* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
         CORRADE_COMPARE(list, callbackData->list);
         CORRADE_COMPARE(cmd->UserCallback, callbackData->callback);
         CORRADE_COMPARE((Vector2{cmd->ClipRect.z, cmd->ClipRect.w}),
@@ -959,7 +959,7 @@ void ContextGLTest::drawCallback() {
     drawList->AddCallback(ImDrawCallback_ResetRenderState, &data);
     /* Different callbacks should work */
     drawList->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
-        CallbackData* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
+        auto* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
         CORRADE_COMPARE(callbackData->counter, 2);
     }, &data);
     drawList->PushClipRect({}, data.rectSizes[2]);
