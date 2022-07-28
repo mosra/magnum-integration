@@ -958,7 +958,7 @@ void ContextGLTest::drawCallback() {
     /* Special reset state callback should be handled (and not called) */
     drawList->AddCallback(ImDrawCallback_ResetRenderState, &data);
     /* Different callbacks should work */
-    drawList->AddCallback([](const ImDrawList* list, const ImDrawCmd* cmd) {
+    drawList->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
         CallbackData* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
         CORRADE_COMPARE(callbackData->counter, 2);
     }, &data);
