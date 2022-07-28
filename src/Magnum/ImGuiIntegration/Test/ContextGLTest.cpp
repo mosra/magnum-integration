@@ -192,6 +192,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void drawTeardown();
 
     void draw();
+    void drawCallback();
     void drawTexture();
     void drawScissor();
     void drawVertexOffset();
@@ -231,6 +232,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::multipleContexts});
 
     addTests({&ContextGLTest::draw,
+              &ContextGLTest::drawCallback,
               &ContextGLTest::drawTexture,
               &ContextGLTest::drawScissor,
               &ContextGLTest::drawVertexOffset,
@@ -901,6 +903,68 @@ void ContextGLTest::draw() {
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
+}
+
+void ContextGLTest::drawCallback() {
+    Context c{{200, 200}, {70, 70}, _framebuffer.viewport().size()};
+
+    /* ImGui doesn't draw anything the first frame */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    Utility::System::sleep(1);
+
+    c.newFrame();
+
+    /* Last drawlist that gets rendered, covers the entire display */
+    ImDrawList* drawList = ImGui::GetForegroundDrawList();
+
+    struct CallbackData {
+        const ImDrawList* list = nullptr;
+        ImDrawCallback callback = nullptr;
+        UnsignedInt counter = 0;
+        const ImVec2 rectSizes[3] = {
+            {0.25f, 0.25f},
+            {0.5f, 0.5f},
+            {0.75f, 0.75f}
+        };
+    } data;
+
+    data.list = drawList;
+    data.callback = [](const ImDrawList* list, const ImDrawCmd* cmd) {
+        CORRADE_VERIFY(cmd->UserCallbackData);
+        CallbackData* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
+        CORRADE_COMPARE(list, callbackData->list);
+        CORRADE_COMPARE(cmd->UserCallback, callbackData->callback);
+        CORRADE_COMPARE((Vector2{cmd->ClipRect.z, cmd->ClipRect.w}),
+            Vector2{callbackData->rectSizes[callbackData->counter]});
+        ++callbackData->counter;
+    };
+
+    drawList->PushClipRect({}, data.rectSizes[0]);
+    drawList->AddCallback(data.callback, &data);
+    drawList->PushClipRect({}, data.rectSizes[1]);
+    drawList->AddCallback(data.callback, &data);
+    /* Special reset state callback should be handled (and not called) */
+    drawList->AddCallback(ImDrawCallback_ResetRenderState, &data);
+    /* Different callbacks should work */
+    drawList->AddCallback([](const ImDrawList* list, const ImDrawCmd* cmd) {
+        CallbackData* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);
+        CORRADE_COMPARE(callbackData->counter, 2);
+    }, &data);
+    drawList->PushClipRect({}, data.rectSizes[2]);
+    drawList->AddCallback(data.callback, &data);
+    /* ImGui 1.80 and older seem to discard the entire drawlist if there's no
+       geometry */
+    drawList->AddCircle({0.0f, 0.0f}, 1.0f, IM_COL32(0, 0, 0, 255));
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    CORRADE_COMPARE(data.counter, 3);
 }
 
 void ContextGLTest::drawTexture() {
