@@ -8,7 +8,7 @@ url="https://magnum.graphics"
 license=('MIT')
 depends=('magnum' 'bullet' 'eigen' 'glm' 'libdart' 'imgui-src')
 makedepends=('cmake' 'ninja')
-options=(!strip)
+options=('!strip' '!buildflags')
 provides=('magnum-integration-git')
 
 _rootdir=$startdir/../../
@@ -18,7 +18,8 @@ build() {
     cd "$_rootdir/build"
 
     cmake .. \
-        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_CONFIGURATION_TYPES="Debug;Release" \
+        -DCMAKE_CROSS_CONFIGS=all \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DIMGUI_DIR=/opt/imgui \
         -DMAGNUM_WITH_BULLET=ON \
@@ -28,17 +29,22 @@ build() {
         -DMAGNUM_WITH_IMGUI=ON \
         -DMAGNUM_BUILD_TESTS=ON \
         -DMAGNUM_BUILD_GL_TESTS=ON \
-        -G Ninja
-    ninja
+        -G "Ninja Multi-Config"
+    ninja all:all
 }
 
 check() {
     cd "$_rootdir/build"
-    CORRADE_TEST_COLOR=ON ctest --output-on-failure -j5
-    MAGNUM_DISABLE_EXTENSIONS="GL_ARB_draw_elements_base_vertex" ctest --output-on-failure -j5 -R GLTest
+    export CORRADE_TEST_SKIP_BENCHMARKS=ON
+    export CORRADE_TEST_COLOR=ON
+
+    for config in Debug Release; do
+        ctest -C $config --output-on-failure -j
+        MAGNUM_DISABLE_EXTENSIONS="GL_ARB_draw_elements_base_vertex" ctest -C $config --output-on-failure -j -R GLTest
+    done
 }
 
 package() {
     cd "$_rootdir/build"
-    DESTDIR="$pkgdir/" ninja install
+    DESTDIR="$pkgdir/" ninja install:Debug install/strip:Release
 }
