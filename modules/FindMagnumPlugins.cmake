@@ -25,6 +25,7 @@
 #  FreeTypeFont                 - FreeType font
 #  GlslangShaderConverter       - Glslang shader converter
 #  GltfImporter                 - glTF importer
+#  GltfSceneConverter           - glTF converter
 #  HarfBuzzFont                 - HarfBuzz font
 #  IcoImporter                  - ICO importer
 #  JpegImageConverter           - JPEG image converter
@@ -43,6 +44,7 @@
 #  StbDxtImageConverter         - BC1/BC3 image compressor using stb_dxt
 #  StbImageConverter            - Image converter using stb_image_write
 #  StbImageImporter             - Image importer using stb_image
+#  StbResizeImageConverter      - Image resizing using stb_image_resize
 #  StbTrueTypeFont              - TrueType font using stb_truetype
 #  StbVorbisAudioImporter       - OGG audio importer using stb_vorbis
 #  StlImporter                  - STL importer
@@ -159,13 +161,14 @@ set(_MAGNUMPLUGINS_PLUGIN_COMPONENTS
     AssimpImporter AstcImporter BasisImageConverter BasisImporter DdsImporter
     DevIlImageImporter DrFlacAudioImporter DrMp3AudioImporter
     DrWavAudioImporter Faad2AudioImporter FreeTypeFont GlslangShaderConverter
-    GltfImporter HarfBuzzFont IcoImporter JpegImageConverter JpegImporter
-    KtxImageConverter KtxImporter MeshOptimizerSceneConverter
+    GltfImporter GltfSceneConverter HarfBuzzFont IcoImporter JpegImageConverter
+    JpegImporter KtxImageConverter KtxImporter MeshOptimizerSceneConverter
     MiniExrImageConverter OpenExrImageConverter OpenExrImporter
     OpenGexImporter PngImageConverter PngImporter PrimitiveImporter
     SpirvToolsShaderConverter StanfordImporter StanfordSceneConverter
     StbDxtImageConverter StbImageConverter StbImageImporter
-    StbTrueTypeFont StbVorbisAudioImporter StlImporter WebPImporter)
+    StbResizeImageConverter StbTrueTypeFont StbVorbisAudioImporter StlImporter
+    WebPImporter)
 # Nothing is enabled by default right now
 set(_MAGNUMPLUGINS_IMPLICITLY_ENABLED_COMPONENTS )
 
@@ -377,6 +380,7 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
                 INTERFACE_LINK_LIBRARIES Glslang::Glslang)
 
         # GltfImporter has no dependencies
+        # GltfSceneConverter has no dependencies
 
         # HarfBuzzFont plugin dependencies
         elseif(_component STREQUAL HarfBuzzFont)
@@ -469,6 +473,7 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
         # StbDxtImageConverter has no dependencies
         # StbImageConverter has no dependencies
         # StbImageImporter has no dependencies
+        # StbResizeImageConverter has no dependencies
         # StbTrueTypeFont has no dependencies
         # StbVorbisAudioImporter has no dependencies
         # StlImporter has no dependencies
@@ -490,8 +495,14 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
             mark_as_advanced(_MAGNUMPLUGINS_${_COMPONENT}_INCLUDE_DIR)
         endif()
 
-        # Automatic import of static plugins
-        if(_component IN_LIST _MAGNUMPLUGINS_PLUGIN_COMPONENTS AND _MAGNUMPLUGINS_${_COMPONENT}_INCLUDE_DIR)
+        # Automatic import of static plugins. Skip in case the include dir was
+        # not found -- that'll fail later with a proper message. Skip it also
+        # if the include dir doesn't contain the generated configure.h, which
+        # is the case with Magnum as a subproject and given plugin not enabled
+        # -- there it finds just the sources, where's just configure.h.cmake,
+        # and that's not useful for anything. The assumption here is that it
+        # will fail later anyway on the binary not being found.
+        if(_component IN_LIST _MAGNUMPLUGINS_PLUGIN_COMPONENTS AND _MAGNUMPLUGINS_${_COMPONENT}_INCLUDE_DIR AND EXISTS ${_MAGNUMPLUGINS_${_COMPONENT}_INCLUDE_DIR}/configure.h)
             file(READ ${_MAGNUMPLUGINS_${_COMPONENT}_INCLUDE_DIR}/configure.h _magnumPlugins${_component}Configure)
             string(FIND "${_magnumPlugins${_component}Configure}" "#define MAGNUM_${_COMPONENT}_BUILD_STATIC" _magnumPlugins${_component}_BUILD_STATIC)
             if(NOT _magnumPlugins${_component}_BUILD_STATIC EQUAL -1)
