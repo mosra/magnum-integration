@@ -50,10 +50,17 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     const typename KeyEvent::Modifiers modifiers = event.modifiers();
 
     #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
+    #if IMGUI_VERSION_NUM >= 18823
+    io.AddKeyEvent(ImGuiMod_Ctrl, modifiers >= KeyEvent::Modifier::Ctrl);
+    io.AddKeyEvent(ImGuiMod_Shift, modifiers >= KeyEvent::Modifier::Shift);
+    io.AddKeyEvent(ImGuiMod_Alt, modifiers >= KeyEvent::Modifier::Alt);
+    io.AddKeyEvent(ImGuiMod_Super, modifiers >= KeyEvent::Modifier::Super);
+    #else
     io.AddKeyEvent(ImGuiKey_ModCtrl, modifiers >= KeyEvent::Modifier::Ctrl);
     io.AddKeyEvent(ImGuiKey_ModShift, modifiers >= KeyEvent::Modifier::Shift);
     io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= KeyEvent::Modifier::Alt);
     io.AddKeyEvent(ImGuiKey_ModSuper, modifiers >= KeyEvent::Modifier::Super);
+    #endif
     #else
     io.KeyCtrl  = modifiers >= KeyEvent::Modifier::Ctrl;
     io.KeyShift = modifiers >= KeyEvent::Modifier::Shift;
