@@ -78,7 +78,7 @@ namespace Magnum {
 -   **[\@sigman78](https://github.com/sigman78)** --- initial implementation of
     the @ref GlmIntegration library
 -   **Stanislaw Halik** ([\@sthalik](https://github.com/sthalik)) --- build
-    fixes
+    fixes, @ref ImGuiIntegration updates
 -   **Tomáš Skřivan** ([\@lecopivo](https://github.com/lecopivo)) --- base of
     the @ref ImGuiIntegration library
 -   **Tracy Ma** ([\@linuxaged](https://github.com/linuxaged)) ---
