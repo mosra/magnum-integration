@@ -59,7 +59,7 @@ add_custom_target(MagnumEigenIntegration-headers SOURCES ${MagnumEigenIntegratio
 install(FILES ${MagnumEigenIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/EigenIntegration)
 
 if(MAGNUM_BUILD_TESTS)
-    add_subdirectory(Test)
+    add_subdirectory(Test ${EXCLUDE_FROM_ALL_IF_TEST_TARGET})
 endif()
 
 # Magnum Eigen integration target alias for superprojects

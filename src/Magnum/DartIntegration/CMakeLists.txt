@@ -80,7 +80,7 @@ install(FILES ${MagnumDartIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INST
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/DartIntegration)
 
 if(MAGNUM_BUILD_TESTS)
-    add_subdirectory(Test)
+    add_subdirectory(Test ${EXCLUDE_FROM_ALL_IF_TEST_TARGET})
 endif()
 
 # Magnum DART integration target alias for superprojects

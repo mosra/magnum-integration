@@ -70,7 +70,7 @@ install(FILES ${MagnumGlmIntegration_HEADERS} DESTINATION ${MAGNUM_INCLUDE_INSTA
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/configure.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR}/GlmIntegration)
 
 if(MAGNUM_BUILD_TESTS)
-    add_subdirectory(Test)
+    add_subdirectory(Test ${EXCLUDE_FROM_ALL_IF_TEST_TARGET})
 endif()
 
 # Magnum GLM integration target alias for superprojects
