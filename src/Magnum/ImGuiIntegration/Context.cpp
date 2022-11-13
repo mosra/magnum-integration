@@ -55,7 +55,11 @@ Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i
 
 Context::Context(const Vector2i& size): Context{Vector2{size}, size, size} {}
 
-Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): _context{&context}, _shader{Shaders::FlatGL2D::Flag::Textured|Shaders::FlatGL2D::Flag::VertexColor} {
+Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize):
+    _context{&context},
+    _shader{Shaders::FlatGL2D::Configuration{}
+        .setFlags(Shaders::FlatGL2D::Flag::Textured|Shaders::FlatGL2D::Flag::VertexColor)}
+{
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
