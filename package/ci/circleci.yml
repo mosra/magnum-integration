@@ -454,19 +454,23 @@ workflows:
     # dependencies especially for the macOS jobs that take the most credits.
     jobs:
     - linux-gl
+    - linux-nondeprecated
     - linux-arm64:
         requires:
         - linux-gl
+        - linux-nondeprecated
     - linux-gles2:
         requires:
         - linux-gl
+        - linux-nondeprecated
     - linux-gles3:
         requires:
         - linux-gl
-    - linux-nondeprecated
+        - linux-nondeprecated
     - linux-sanitizers:
         requires:
         - linux-gl
+        - linux-nondeprecated
     - macos-gl:
         requires:
         - linux-gl
