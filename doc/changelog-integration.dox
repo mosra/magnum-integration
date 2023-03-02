@@ -91,6 +91,9 @@ namespace Magnum {
 -   The Homebrew package now uses `std_cmake_args` instead of hardcoded build
     type and install prefix, which resolves certain build issues (see
     [mosra/homebrew-magnum#6](https://github.com/mosra/homebrew-magnum/pull/6))
+-   It's now possible to use `<PackageName>_ROOT` to point to install locations
+    of dependencies such as Corrade on CMake 3.12+, in addition to putting them
+    all together inside `CMAKE_PREFIX_PATH`. See also [mosra/magnum#614](https://github.com/mosra/magnum/issues/614).
 -   On CMake 3.16 and newer, `FindMagnumIntegration.cmake` can provide
     additional details if some component is not found
 -   Updated Debian build instructions to pass `--no-sign` to
