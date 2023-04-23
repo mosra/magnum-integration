@@ -337,6 +337,12 @@ MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(No)
 #undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR
 #endif
 
+    template<class... T> void callWarpCursor(const T&...) {}
+
+    template<class Application, class = decltype(&Application::warpCursor)>
+    void callWarpCursor(Application& application, const Vector2i& position) {
+        application.warpCursor(position);
+    }
 }
 
 template<class Application> void Context::updateApplicationCursor(Application& application) {
@@ -345,9 +351,8 @@ template<class Application> void Context::updateApplicationCursor(Application& a
 
     ImGuiIO& io = ImGui::GetIO();
 
-    if( io.WantSetMousePos )
-    {
-        application.warpCursor(Vector2i(Vector2(io.MousePos)*_supersamplingRatio));
+    if(io.WantSetMousePos) {
+        Implementation::callWarpCursor(application, Vector2i(Vector2(io.MousePos)/_eventScaling));
     }
 
     switch(ImGui::GetMouseCursor()) {
