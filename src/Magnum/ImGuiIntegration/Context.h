@@ -400,6 +400,36 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         explicit Context(ImGuiContext& context, const Vector2i& size);
 
         /**
+         * @brief Construct using application sizes and features
+         * @param size                  Size of the user interface to which all
+         *      widgets are positioned
+         * @param application           Application instance from which window
+         *      and framebuffer sizes as well as supported features are taken
+         *
+         * Compared to @ref Context(const Vector2&, const Vector2i&, const Vector2i&)
+         * this takes window size and framebuffer size from the application
+         * instance and it enables additional features depending on the given
+         * Application capabilities.
+         */
+        template<class Application> explicit Context(const Vector2& size, const Application& application);
+
+        /**
+         * @brief Construct from an existing context, using application sizes
+         *      and features
+         * @param context               Existing ImGui context
+         * @param size                  Size of the user interface to which all
+         *      widgets are positioned
+         * @param application           Application instance from which window
+         *      and framebuffer sizes as well as supported features are taken
+         *
+         * Compared to @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
+         * this takes window size and framebuffer size from the application
+         * instance and it enables additional features depending on the given
+         * Application capabilities.
+         */
+        template<class Application> explicit Context(ImGuiContext& context, const Vector2& size, const Application& application);
+
+        /**
          * @brief Construct without creating the underlying ImGui context
          *
          * This constructor also doesn't create any internal OpenGL objects,
