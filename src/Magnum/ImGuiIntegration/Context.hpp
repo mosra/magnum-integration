@@ -343,6 +343,13 @@ template<class Application> void Context::updateApplicationCursor(Application& a
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(_context);
 
+    ImGuiIO& io = ImGui::GetIO();
+
+    if( io.WantSetMousePos )
+    {
+        application.warpCursor(Vector2i(Vector2(io.MousePos)*_supersamplingRatio));
+    }
+
     switch(ImGui::GetMouseCursor()) {
         case ImGuiMouseCursor_TextInput:
             application.setCursor(Application::Cursor::TextInput);

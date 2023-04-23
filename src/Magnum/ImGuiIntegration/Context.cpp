@@ -85,6 +85,8 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
 
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+    /* We can honor io.WantSetMousePos requests */
+    io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
     /* Check if we can support base vertex > 0 in draw commands */
     #if !(defined(MAGNUM_TARGET_WEBGL) && defined(MAGNUM_TARGET_GLES2))
