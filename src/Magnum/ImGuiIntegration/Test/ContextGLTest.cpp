@@ -114,8 +114,11 @@ struct Application {
         None = 999
     };
 
-    void setCursor(Cursor cursor) { currentCursor = cursor; }
-    Cursor currentCursor = Cursor::None;
+    Cursor _currentCursor = Cursor::None;
+    Vector2i _mousePos;
+
+    void setCursor(Cursor cursor) { _currentCursor = cursor; }
+    void warpCursor(const Vector2i& pos) { _mousePos = pos; }
 };
 
 struct KeyEvent: public InputEvent {
@@ -752,34 +755,54 @@ void ContextGLTest::textInput() {
 }
 
 void ContextGLTest::updateCursor() {
-    Context c{{}};
+    Context c{{200, 200}, {400, 400}, {300, 300}};
 
     Application app;
 
     /* Default (should be an arrow) */
     c.updateApplicationCursor(app);
-    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+    CORRADE_VERIFY(app._currentCursor == Application::Cursor::Arrow);
 
     /* Change to a cursor that is present in all apps */
     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
     c.updateApplicationCursor(app);
-    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Hand);
+    CORRADE_VERIFY(app._currentCursor == Application::Cursor::Hand);
 
     /* Change to a cursor that is unknown -> fallback to an arrow */
     ImGui::SetMouseCursor(ImGuiMouseCursor_COUNT);
     c.updateApplicationCursor(app);
-    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+    CORRADE_VERIFY(app._currentCursor == Application::Cursor::Arrow);
 
     /* Change to a cursor that is conditional but present in this app */
     ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
     c.updateApplicationCursor(app);
-    CORRADE_VERIFY(app.currentCursor == Application::Cursor::ResizeAll);
+    CORRADE_VERIFY(app._currentCursor == Application::Cursor::ResizeAll);
 
     /* Change to a cursor that is conditional and not present -> fallback to
        an arrow */
     ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNESW);
     c.updateApplicationCursor(app);
-    CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+    CORRADE_VERIFY(app._currentCursor == Application::Cursor::Arrow);
+
+    /* Change to imgui mouse pos and mark it as changed
+       Account for 2x DPI scaling in equality check */
+    ImGuiIO& io = ImGui::GetIO();
+    io.MousePos = ImVec2(10, 10);
+    io.WantSetMousePos = true;
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app._mousePos == Vector2i(20, 20));
+
+    /* Change to imgui mouse pos without marking it as changed */
+    io.MousePos = ImVec2(50, 50);
+    io.WantSetMousePos = false;
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app._mousePos == Vector2i(20, 20));
+
+    /* Mark mouse pos changed */
+    io.WantSetMousePos = true;
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app._mousePos == Vector2i(100, 100));
+    
 }
 
 void ContextGLTest::multipleContexts() {
