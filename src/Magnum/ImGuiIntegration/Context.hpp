@@ -351,7 +351,7 @@ MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(No)
 #undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR
 #endif
 
-    template<class... T> constexpr static void callWarpCursor(const T&...) {}
+    template<class... T> static void callWarpCursor(const T&...) {}
 
     template<class Application, class = decltype(&Application::warpCursor)>
     static void callWarpCursor(Application& application, const Vector2i& position) {
