@@ -379,6 +379,20 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         explicit Context(ImGuiContext& context, const Vector2i& size);
 
         /**
+         * @brief TODO
+         *
+         * Implicitly fetches framebuffer and window size from the application instance
+         * Using this template constructor is preferable as it enables additional features based on given Application capabilities
+         */
+        template<class Application> explicit Context(const Vector2& size, const Application& application);
+
+        /**
+         * @brief TODO
+         *
+         */
+        template<class Application> explicit Context(ImGuiContext& context, const Vector2& size, const Application& application);
+
+        /**
          * @brief Construct without creating the underlying ImGui context
          *
          * This constructor also doesn't create any internal OpenGL objects,
