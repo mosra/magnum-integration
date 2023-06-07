@@ -16,11 +16,13 @@
 #  AstcImporter                 - ASTC importer
 #  BasisImageConverter          - Basis image converter
 #  BasisImporter                - Basis importer
+#  BcDecImageConverter          - BCn image decoder using bcdec
 #  DdsImporter                  - DDS importer
 #  DevIlImageImporter           - Image importer using DevIL
 #  DrFlacAudioImporter          - FLAC audio importer using dr_flac
 #  DrMp3AudioImporter           - MP3 audio importer using dr_mp3
 #  DrWavAudioImporter           - WAV audio importer using dr_wav
+#  EtcDecImageConverter         - ETC/EAC image decoder using etcdec
 #  Faad2AudioImporter           - AAC audio importer using FAAD2
 #  FreeTypeFont                 - FreeType font
 #  GlslangShaderConverter       - Glslang shader converter
@@ -39,6 +41,7 @@
 #  PngImporter                  - PNG importer
 #  PrimitiveImporter            - Primitive importer
 #  SpirvToolsShaderConverter    - SPIR-V Tools shader converter
+#  SpngImporter                 - PNG importer using libspng
 #  StanfordImporter             - Stanford PLY importer
 #  StanfordSceneConverter       - Stanford PLY converter
 #  StbDxtImageConverter         - BC1/BC3 image compressor using stb_dxt
@@ -48,6 +51,7 @@
 #  StbTrueTypeFont              - TrueType font using stb_truetype
 #  StbVorbisAudioImporter       - OGG audio importer using stb_vorbis
 #  StlImporter                  - STL importer
+#  UfbxImporter                 - FBX and OBJ importer using ufbx
 #  WebPImporter                 - WebP importer
 #
 # If Magnum is built with MAGNUM_BUILD_DEPRECATED enabled, these additional
@@ -90,7 +94,7 @@
 #   This file is part of Magnum.
 #
 #   Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
-#               2020, 2021, 2022 Vladimír Vondruš <mosra@centrum.cz>
+#               2020, 2021, 2022, 2023 Vladimír Vondruš <mosra@centrum.cz>
 #   Copyright © 2019 Jonathan Hale <squareys@googlemail.com>
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
@@ -140,6 +144,8 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES MeshTools)
     elseif(_component STREQUAL StanfordSceneConverter)
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES MeshTools)
+    elseif(_component STREQUAL UfbxImporter)
+        list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES AnyImageImporter)
     elseif(_component STREQUAL TinyGltfImporter)
         # TODO remove when the deprecated plugin is gone
         list(APPEND _MAGNUMPLUGINS_${_component}_MAGNUM_DEPENDENCIES AnyImageImporter)
@@ -158,17 +164,18 @@ mark_as_advanced(MAGNUMPLUGINS_INCLUDE_DIR)
 # components from other repositories)
 set(_MAGNUMPLUGINS_LIBRARY_COMPONENTS OpenDdl)
 set(_MAGNUMPLUGINS_PLUGIN_COMPONENTS
-    AssimpImporter AstcImporter BasisImageConverter BasisImporter DdsImporter
-    DevIlImageImporter DrFlacAudioImporter DrMp3AudioImporter
-    DrWavAudioImporter Faad2AudioImporter FreeTypeFont GlslangShaderConverter
-    GltfImporter GltfSceneConverter HarfBuzzFont IcoImporter JpegImageConverter
-    JpegImporter KtxImageConverter KtxImporter MeshOptimizerSceneConverter
+    AssimpImporter AstcImporter BasisImageConverter BasisImporter
+    BcDecImageConverter DdsImporter DevIlImageImporter DrFlacAudioImporter
+    DrMp3AudioImporter DrWavAudioImporter EtcDecImageConverter
+    Faad2AudioImporter FreeTypeFont GlslangShaderConverter GltfImporter
+    GltfSceneConverter HarfBuzzFont IcoImporter JpegImageConverter JpegImporter
+    KtxImageConverter KtxImporter MeshOptimizerSceneConverter
     MiniExrImageConverter OpenExrImageConverter OpenExrImporter
     OpenGexImporter PngImageConverter PngImporter PrimitiveImporter
-    SpirvToolsShaderConverter StanfordImporter StanfordSceneConverter
-    StbDxtImageConverter StbImageConverter StbImageImporter
-    StbResizeImageConverter StbTrueTypeFont StbVorbisAudioImporter StlImporter
-    WebPImporter)
+    SpirvToolsShaderConverter SpngImporter StanfordImporter
+    StanfordSceneConverter StbDxtImageConverter StbImageConverter
+    StbImageImporter StbResizeImageConverter StbTrueTypeFont
+    StbVorbisAudioImporter StlImporter UfbxImporter WebPImporter)
 # Nothing is enabled by default right now
 set(_MAGNUMPLUGINS_IMPLICITLY_ENABLED_COMPONENTS )
 
@@ -340,6 +347,7 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
                     INTERFACE_LINK_LIBRARIES basisu_transcoder)
             endif()
 
+        # BcDecImageConverter has no dependencies
         # CgltfImporter has no dependencies
         # DdsImporter has no dependencies
 
@@ -352,6 +360,7 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
         # DrFlacAudioImporter has no dependencies
         # DrMp3AudioImporter has no dependencies
         # DrWavAudioImporter has no dependencies
+        # EtcDecImageConverter has no dependencies
 
         # Faad2AudioImporter plugin dependencies
         elseif(_component STREQUAL Faad2AudioImporter)
@@ -468,6 +477,12 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
             set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES SpirvTools::SpirvTools SpirvTools::Opt)
 
+        # SpngImporter plugin dependencies
+        elseif(_component STREQUAL SpngImporter)
+            find_package(Spng REQUIRED)
+            set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES Spng::Spng)
+
         # StanfordImporter has no dependencies
         # StanfordSceneConverter has no dependencies
         # StbDxtImageConverter has no dependencies
@@ -477,6 +492,7 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
         # StbTrueTypeFont has no dependencies
         # StbVorbisAudioImporter has no dependencies
         # StlImporter has no dependencies
+        # UfbxImporter has no dependencies
         # TinyGltfImporter has no dependencies
 
         # WebPImporter plugin dependencies
