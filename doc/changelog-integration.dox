@@ -109,6 +109,9 @@ namespace Magnum {
     people to think the packaging failed (see [mosra/magnum-plugins#105](https://github.com/mosra/magnum-plugins/issues/105))
 -   Fixed wrong `.gitattributes` option for LF line endings in MSYS PKGBUILDs
     (see [mosra/magnum-integration#97](https://github.com/mosra/magnum-integration/issues/97))
+-   It's now possible to build dynamic libraries on Android and Emscripten with
+    the usual options. Static libraries are still a default but it isn't
+    enforced anymore. See [mosra/magnum#617](https://github.com/mosra/magnum/pull/617).
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 

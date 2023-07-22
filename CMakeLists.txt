@@ -114,7 +114,14 @@ else()
     endif()
 endif()
 
-option(MAGNUM_BUILD_STATIC "Build static libraries (default are shared)" OFF)
+# It's inconvenient to manually load all shared libs using Android / JNI,
+# similarly on Emscripten, so there default to static.
+if(CORRADE_TARGET_EMSCRIPTEN OR CORRADE_TARGET_ANDROID)
+    set(OFF_EXCEPT_ANDROID_EMSCRIPTEN ON)
+else()
+    set(OFF_EXCEPT_ANDROID_EMSCRIPTEN OFF)
+endif()
+option(MAGNUM_BUILD_STATIC "Build static libraries" ${OFF_EXCEPT_ANDROID_EMSCRIPTEN})
 # Disable PIC on Emscripten by default (but still allow it to be enabled
 # explicitly if one so desires). Currently causes linker errors related to
 # __memory_base etc.: https://github.com/emscripten-core/emscripten/issues/8761
@@ -204,11 +211,6 @@ endif()
 
 if(MAGNUM_BUILD_GL_TESTS)
     find_package(Magnum REQUIRED OpenGLTester)
-endif()
-
-# Dynamic linking is meaningless on Emscripten and too inconvenient on Android
-if(CORRADE_TARGET_EMSCRIPTEN OR CORRADE_TARGET_ANDROID)
-    set(MAGNUM_BUILD_STATIC ON)
 endif()
 
 if(NOT MAGNUM_BUILD_STATIC)
