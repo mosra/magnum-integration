@@ -72,7 +72,7 @@ namespace Magnum { namespace EigenIntegration { namespace Test { namespace {
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
-    void boolVector();
+    void bitVector();
 
     void vectorArray();
     void vectorMatrix();
@@ -90,7 +90,7 @@ using Map2Df = Eigen::Map<Eigen::MatrixXf, Eigen::Unaligned, Eigen::Stride<Eigen
 using Map1Df = Eigen::Map<Eigen::VectorXf, Eigen::Unaligned, Eigen::InnerStride<>>;
 
 IntegrationTest::IntegrationTest() {
-    addTests({&IntegrationTest::boolVector,
+    addTests({&IntegrationTest::bitVector,
 
               &IntegrationTest::vectorArray,
               &IntegrationTest::vectorMatrix,
@@ -104,12 +104,12 @@ IntegrationTest::IntegrationTest() {
               &IntegrationTest::stridedArrayViewBroadcasted});
 }
 
-void IntegrationTest::boolVector() {
+void IntegrationTest::bitVector() {
     /** @todo does Eigen have typedefs for this? */
-    Math::BitVector<4> a{0xa};
+    BitVector4 a{0xa};
     Eigen::Array<bool, 4, 1> b;
     b << false, true, false, true;
-    CORRADE_COMPARE(Math::BitVector<4>{b}, a);
+    CORRADE_COMPARE(BitVector4{b}, a);
 
     #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     /* There's T* = 0 in Eigen::Ref constructor but GCC insists on warning
@@ -123,8 +123,8 @@ void IntegrationTest::boolVector() {
     #if defined(CORRADE_TARGET_GCC) && !defined(CORRADE_TARGET_CLANG)
     #pragma GCC diagnostic pop
     #endif
-    CORRADE_COMPARE(Math::BitVector<4>{bref}, a);
-    CORRADE_COMPARE(Math::BitVector<4>{cbref}, a);
+    CORRADE_COMPARE(BitVector4{bref}, a);
+    CORRADE_COMPARE(BitVector4{cbref}, a);
 
     CORRADE_COMPARE_AS((cast<Eigen::Array<bool, 4, 1>>(a)), b, EigenType);
 }
