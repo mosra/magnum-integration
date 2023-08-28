@@ -219,7 +219,8 @@ and vice versa:
 @snippet EigenIntegration.cpp namespace-view
 
 The integration routines are provided in the
-@ref Magnum/EigenIntegration/Integration.h and
+@ref Magnum/EigenIntegration/Integration.h,
+@ref Magnum/EigenIntegration/DynamicMatrixIntegration.h and
 @ref Magnum/EigenIntegration/GeometryIntegration.h headers, see their
 documentation for more information.
 

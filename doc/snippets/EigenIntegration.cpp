@@ -28,6 +28,7 @@
 
 #include "Magnum/Magnum.h"
 #include "Magnum/EigenIntegration/GeometryIntegration.h"
+#include "Magnum/EigenIntegration/DynamicMatrixIntegration.h"
 #include "Magnum/Math/Matrix3.h"
 #include "Magnum/Math/Matrix4.h"
 
@@ -53,7 +54,12 @@ static_cast<void>(c);
 }
 
 {
+/* The include is already above, so doing it again here should be harmless */
 /* [namespace-view] */
+#include <Magnum/EigenIntegration/DynamicMatrixIntegration.h>
+
+DOXYGEN_ELLIPSIS()
+
 Eigen::MatrixXd data = DOXYGEN_ELLIPSIS({});
 Containers::StridedArrayView2D<Double> view = EigenIntegration::arrayCast(data);
 /* [namespace-view] */
@@ -83,7 +89,12 @@ static_cast<void>(d);
 }
 
 {
-/* [Integration-arrayCast] */
+/* The include is already above, so doing it again here should be harmless */
+/* [DynamicMatrixIntegration] */
+#include <Magnum/EigenIntegration/DynamicMatrixIntegration.h>
+
+DOXYGEN_ELLIPSIS()
+
 Float data[15];
 Containers::StridedArrayView2D<Float> view{data, {3, 5}};
 
@@ -98,7 +109,7 @@ Eigen::MatrixXf m = EigenIntegration::arrayCast(view);
 /* Get back a StridedArrayView onto the second row */
 Containers::StridedArrayView1D<Float> rowView =
     EigenIntegration::arrayCast(m.row(2));
-/* [Integration-arrayCast] */
+/* [DynamicMatrixIntegration] */
 static_cast<void>(rowView);
 static_cast<void>(map);
 }

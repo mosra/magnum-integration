@@ -34,8 +34,8 @@
 
 Provides conversion for the following fixed-size types. See
 @ref Magnum/EigenIntegration/GeometryIntegration.h for conversion of special
-geometry types and @ref EigenIntegration-stridedarrayview for conversion of
-dynamically sized types.
+geometry types and @ref Magnum/EigenIntegration/DynamicMatrixIntegration.h for
+conversion of dynamically sized types.
 
 | Magnum vector type                             | Equivalent Eigen type    |
 | ---------------------------------------------- | ------------------------ |
@@ -73,24 +73,8 @@ usable with @ref Corrade::Utility::Debug if you include
 
 @snippet EigenIntegration.cpp Integration
 
-@section EigenIntegration-stridedarrayview Multidimensional strided array view conversion
-
-In addition to converting betweem fixed-size types, which always involves a
-copy, it's possible to make @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
-instances point to Eigen types and, conversely, an @m_class{m-doc-external} [Eigen::Map](https://eigen.tuxfamily.org/dox/classEigen_1_1Map.html)
-from any @ref Containers::StridedArrayView1D or @ref Containers::StridedArrayView2D "StridedArrayView2D" using
-@ref EigenIntegration::arrayCast():
-
-@snippet EigenIntegration.cpp Integration-arrayCast
-
 @see @ref types-thirdparty-integration
 */
-
-/* I would usually frown upon unconditionally including this relatively huge
-   header into a widely-used utility header, but it's *Eigen* we're dealing
-   with -- no amount of Magnum's code can compete with Eigen's sky-high compile
-   times. */
-#include <Corrade/Containers/StridedArrayView.h>
 
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/RectangularMatrix.h>
@@ -394,172 +378,13 @@ template<class To, std::size_t size, class T> inline To cast(const Math::Vector<
     return Math::Implementation::VectorConverter<size, T, To>::to(from);
 }
 
-/**
-@brief Convert a @ref Containers::StridedArrayView2D to Eigen's dynamic matrix type
-@m_since_latest
-
-@see @ref EigenIntegration-stridedarrayview
-*/
-template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
-    const Containers::StridedDimensions<2, std::size_t> size = from.size();
-    const Containers::StridedDimensions<2, std::ptrdiff_t> stride = from.stride();
-    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>(
-        reinterpret_cast<T*>(from.data()), size[0], size[1],
-        /* This is strange, but correct -- while the size is (rows, cols), the
-           stride is (inner, outer) where inner is pointer increment between
-           two consecutive entries within a given column of a column-major
-           matrix (so our column stride) and outer is pointer increment between two consecutive columns of a column-major matrix (so our row
-           stride): https://eigen.tuxfamily.org/dox/classEigen_1_1Stride.html
-
-           Alternatively we could define the Matrix as RowMajor and then those
-           two would be swapped, but that would make the output type even
-           longer (right now it's usually "just" something like
-
-            Eigen::Map<Eigen::MatrixXf, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>
-
-           or
-
-            Eigen::Map<Eigen::MatrixXd, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>
-
-           in user code, which isn't *that* bad compared to a fully expanded
-           Eigen::Matrix type. According to https://eigen.tuxfamily.org/dox/group__TutorialMapClass.html#TutorialMapTypes,
-           (see the StrideType example snippet), these two approaches are
-           equivalent. */
-        {Eigen::Index(stride[1]/sizeof(T)),
-         Eigen::Index(stride[0]/sizeof(T))});
-}
-
-/**
-@brief Convert a @ref Containers::StridedArrayView1D to Eigen's dynamic vector type
-@m_since_latest
-
-Since for a one-dimensional @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
-there is no column or row version, we always return an Eigen column vector.
-@see @ref EigenIntegration-stridedarrayview
-*/
-template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::Unaligned, Eigen::InnerStride<>> arrayCast(const Containers::StridedArrayView1D<T>& from) {
-    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::Unaligned, Eigen::InnerStride<>>(reinterpret_cast<T*>(from.data()), from.size(), Eigen::InnerStride<>(from.stride()/sizeof(T)));
-}
-
-/**
-@brief Convert an Eigen expression to @ref Containers::StridedArrayView1D
-@m_since_latest
-
-If it is known at compile time that the Eigen expression has either one column
-or one row, then this function maps the Eigen expression to a
-@ref Containers::StridedArrayView1D. Otherwise the overload below is picked,
-returning a @ref Containers::StridedArrayView2D.
-@see @ref EigenIntegration-stridedarrayview
-*/
-template<class Derived> inline typename std::enable_if<
-    #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1
-    #else
-    ...
-    #endif
-, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
-    return {
-        /* We assume that the memory the Eigen expression is referencing is in
-           bounds, so the view size passed is ~std::size_t{} */
-        {const_cast<typename Derived::Scalar*>(&from(0,0)), ~std::size_t{}},
-        std::size_t(from.size()),
-        std::ptrdiff_t(from.innerStride()*sizeof(typename Derived::Scalar))
-    };
-}
-
-/**
-@brief Convert an Eigen expression to @ref Containers::StridedArrayView2D
-@m_since_latest
-
-Takes care of any Eigen expression that was not handled by the one-dimensional
-overload above.
-@see @ref EigenIntegration-stridedarrayview
-*/
-template<class Derived> inline typename std::enable_if<
-    #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic
-    #else
-    ...
-    #endif
-, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
-    return {
-        /* We assume that the memory the Eigen expression is referencing is in
-           bounds, so the view size passed is ~std::size_t{} */
-        {const_cast<typename Derived::Scalar*>(&from(0,0)), ~std::size_t{}}, {std::size_t(from.rows()),
-         std::size_t(from.cols())},
-        {std::ptrdiff_t(from.rowStride()*sizeof(typename Derived::Scalar)),
-         std::ptrdiff_t(from.colStride()*sizeof(typename Derived::Scalar))}
-    };
-}
-
-/**
-@brief Convert an Eigen reverse expression to @ref Containers::StridedArrayView1D
-@m_since_latest
-
-If it is known at compile time that the Eigen reverse expression has either one
-column or one row, then this function maps the Eigen reverse expression to a
-@ref Containers::StridedArrayView1D. Otherwise the overload below is picked,
-returning a @ref Containers::StridedArrayView2D.
-@see @ref EigenIntegration-stridedarrayview
-*/
-template<class Derived, int Direction> inline typename std::enable_if<
-    #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1
-    #else
-    ...
-    #endif
-, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
-    constexpr bool isColVector =
-        Eigen::internal::traits<Derived>::ColsAtCompileTime == 1;
-    constexpr bool isRowVector =
-        Eigen::internal::traits<Derived>::RowsAtCompileTime == 1;
-    constexpr Int reverse = (Direction == Eigen::BothDirections ||
-        (Direction == Eigen::Vertical && isRowVector) ||
-        (Direction == Eigen::Horizontal && isColVector)) ? -1 : 1;
-
-    const auto& nested = from.nestedExpression();
-    return {
-        /* We assume that the memory the Eigen expression is referencing is in
-           bounds, so the view size passed is ~std::size_t{} */
-        {const_cast<typename Derived::Scalar*>(&from(0,0)), ~std::size_t{}},
-        std::size_t(nested.size()),
-        std::ptrdiff_t(nested.innerStride()*reverse*sizeof(typename Derived::Scalar))
-    };
-}
-
-/**
-@brief Convert an Eigen reverse expression to @ref Containers::StridedArrayView2D
-@m_since_latest
-
-Takes care of any Eigen expression that was not handled by the one-dimensional
-overload above.
-@see @ref EigenIntegration-stridedarrayview
-*/
-template<class Derived, int Direction> inline typename std::enable_if<
-    #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic
-    #else
-    ...
-    #endif
-, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
-    constexpr Int reverseCol = (Direction == Eigen::Vertical ||
-                                Direction == Eigen::BothDirections) ? -1 : 1;
-    constexpr Int reverseRow = (Direction == Eigen::Horizontal ||
-                                Direction == Eigen::BothDirections) ? -1 : 1;
-
-    const auto& nested = from.nestedExpression();
-    return {
-        /* We assume that the memory the Eigen expression is referencing is in
-           bounds, so the view size passed is ~std::size_t{} */
-        {const_cast<typename Derived::Scalar*>(&from(0, 0)), ~std::size_t{}},
-        {std::size_t(nested.rows()), std::size_t(nested.cols())},
-        {std::ptrdiff_t(sizeof(typename Derived::Scalar))*nested.rowStride()*reverseCol,
-         std::ptrdiff_t(sizeof(typename Derived::Scalar))*nested.colStride()*reverseRow}
-    };
 }
 
 }
 
-}
+#ifdef MAGNUM_BUILD_DEPRECATED
+/* Contents of this header used to be directly here before */
+#include "Magnum/EigenIntegration/DynamicMatrixIntegration.h"
+#endif
 
 #endif

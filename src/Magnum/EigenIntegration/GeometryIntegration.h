@@ -31,7 +31,8 @@
 
 Provides conversion for the following types. See
 @ref Magnum/EigenIntegration/Integration.h for conversion of basic matrix and
-vector types.
+vector types and @ref Magnum/EigenIntegration/DynamicMatrixIntegration.h for
+conversion of dynamically sized matrix types.
 
 | Magnum type                           | Equivalent Eigen type             |
 | ------------------------------------- | --------------------------------- |

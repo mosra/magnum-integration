@@ -27,5 +27,6 @@
 # property that would have to be set on each target separately.
 set(CMAKE_FOLDER "Magnum/EigenIntegration/Test")
 
+corrade_add_test(EigenDynamicMatrixIntegrationTest DynamicMatrixIntegrationTest.cpp LIBRARIES MagnumEigenIntegration)
 corrade_add_test(EigenIntegrationTest IntegrationTest.cpp LIBRARIES MagnumEigenIntegration)
 corrade_add_test(EigenGeometryIntegrationTest GeometryIntegrationTest.cpp LIBRARIES MagnumEigenIntegration)

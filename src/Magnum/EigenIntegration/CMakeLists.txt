@@ -44,6 +44,7 @@ if(NOT TARGET Eigen3::Eigen)
 endif()
 
 set(MagnumEigenIntegration_HEADERS
+    DynamicMatrixIntegration.h
     GeometryIntegration.h
     Integration.h)
 
