@@ -26,7 +26,7 @@
 
 #include <Corrade/TestSuite/Tester.h>
 #include <Corrade/TestSuite/Compare/Container.h>
-#include <Corrade/Utility/DebugStl.h>
+#include <Corrade/Utility/DebugStl.h> /* Eigen has STL stream output operators? */
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Vector4.h>
 
@@ -54,7 +54,7 @@ template<class T> class Comparator<EigenType<T>> {
             return ComparisonStatusFlag::Failed;
         }
 
-        void printMessage(ComparisonStatusFlags, Utility::Debug& out, const std::string& actual, const std::string& expected) const {
+        void printMessage(ComparisonStatusFlags, Utility::Debug& out, const char* actual, const char* expected) const {
             CORRADE_INTERNAL_ASSERT(actualValue && expectedValue);
             out << "Values" << actual << "and" << expected << "are not the same, actual is\n       "
             << *actualValue << Utility::Debug::newline << "        but expected\n       " << *expectedValue;
