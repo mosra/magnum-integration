@@ -339,12 +339,30 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
             if(basisu_FOUND AND NOT BASIS_UNIVERSAL_DIR)
                 set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
                     INTERFACE_LINK_LIBRARIES basisu_encoder)
+            else()
+                # Our own build may depend on Zstd, as we replace the bundled
+                # files with an external library. Include it if present,
+                # otherwise assume it's compiled without.
+                find_package(Zstd)
+                if(Zstd_FOUND)
+                    set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
+                        INTERFACE_LINK_LIBRARIES Zstd::Zstd)
+                endif()
             endif()
         elseif(_component STREQUAL BasisImporter)
             find_package(basisu CONFIG QUIET)
             if(basisu_FOUND AND NOT BASIS_UNIVERSAL_DIR)
                 set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
                     INTERFACE_LINK_LIBRARIES basisu_transcoder)
+            else()
+                # Our own build may depend on Zstd, as we replace the bundled
+                # files with an external library. Include it if present,
+                # otherwise assume it's compiled without.
+                find_package(Zstd)
+                if(Zstd_FOUND)
+                    set_property(TARGET MagnumPlugins::${_component} APPEND PROPERTY
+                        INTERFACE_LINK_LIBRARIES Zstd::Zstd)
+                endif()
             endif()
 
         # BcDecImageConverter has no dependencies
@@ -487,10 +505,32 @@ foreach(_component ${MagnumPlugins_FIND_COMPONENTS})
         # StanfordSceneConverter has no dependencies
         # StbDxtImageConverter has no dependencies
         # StbImageConverter has no dependencies
-        # StbImageImporter has no dependencies
+
+        # StbImageImporter plugin dependencies
+        elseif(_component STREQUAL StbImageImporter)
+            # To solve a LTO-specific linker error. See StbImageImporter's
+            # CMakeLists.txt for details.
+            if(CORRADE_TARGET_EMSCRIPTEN AND NOT EMSCRIPTEN_VERSION VERSION_LESS 3.1.42)
+                if(CMAKE_VERSION VERSION_LESS 3.13)
+                    message(FATAL_ERROR "CMake 3.13+ is required in order to specify Emscripten linker options")
+                endif()
+                target_link_options(MagnumPlugins::${_component} INTERFACE $<$<CONFIG:Release>:-Wl,-u,scalbnf>)
+            endif()
+
         # StbResizeImageConverter has no dependencies
         # StbTrueTypeFont has no dependencies
-        # StbVorbisAudioImporter has no dependencies
+
+        # StbVorbisAudioImporter plugin dependencies
+        elseif(_component STREQUAL StbVorbisAudioImporter)
+            # To solve a LTO-specific linker error. See StbVorbisAudioImporter's
+            # CMakeLists.txt for details.
+            if(CORRADE_TARGET_EMSCRIPTEN AND NOT EMSCRIPTEN_VERSION VERSION_LESS 3.1.42)
+                if(CMAKE_VERSION VERSION_LESS 3.13)
+                    message(FATAL_ERROR "CMake 3.13+ is required in order to specify Emscripten linker options")
+                endif()
+                target_link_options(MagnumPlugins::${_component} INTERFACE $<$<CONFIG:Release>:-Wl,-u,scalbnf>)
+            endif()
+
         # StlImporter has no dependencies
         # UfbxImporter has no dependencies
         # TinyGltfImporter has no dependencies
