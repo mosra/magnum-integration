@@ -127,7 +127,7 @@ Context::Context(ImGuiContext& context, const Vector2i& size): Context{context, 
 
 Context::Context(NoCreateT) noexcept: _context{nullptr}, _shader{NoCreate}, _texture{NoCreate}, _vertexBuffer{NoCreate}, _indexBuffer{NoCreate}, _mesh{NoCreate} {}
 
-Context::Context(Context&& other) noexcept: _context{other._context}, _shader{std::move(other._shader)}, _texture{std::move(other._texture)}, _vertexBuffer{std::move(other._vertexBuffer)}, _indexBuffer{std::move(other._indexBuffer)}, _timeline{std::move(other._timeline)}, _mesh{std::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling} {
+Context::Context(Context&& other) noexcept: _context{other._context}, _shader{Utility::move(other._shader)}, _texture{Utility::move(other._texture)}, _vertexBuffer{Utility::move(other._vertexBuffer)}, _indexBuffer{Utility::move(other._indexBuffer)}, _timeline{Utility::move(other._timeline)}, _mesh{Utility::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling} {
     other._context = nullptr;
     /* Update the pointer to _texture */
     ImGuiContext* current = ImGui::GetCurrentContext();
@@ -145,15 +145,16 @@ Context::~Context() {
 }
 
 Context& Context::operator=(Context&& other) noexcept {
-    std::swap(_context, other._context);
-    std::swap(_shader, other._shader);
-    std::swap(_texture, other._texture);
-    std::swap(_vertexBuffer, other._vertexBuffer);
-    std::swap(_indexBuffer, other._indexBuffer);
-    std::swap(_timeline, other._timeline);
-    std::swap(_mesh, other._mesh);
-    std::swap(_supersamplingRatio, other._supersamplingRatio);
-    std::swap(_eventScaling, other._eventScaling);
+    using Utility::swap;
+    swap(_context, other._context);
+    swap(_shader, other._shader);
+    swap(_texture, other._texture);
+    swap(_vertexBuffer, other._vertexBuffer);
+    swap(_indexBuffer, other._indexBuffer);
+    swap(_timeline, other._timeline);
+    swap(_mesh, other._mesh);
+    swap(_supersamplingRatio, other._supersamplingRatio);
+    swap(_eventScaling, other._eventScaling);
 
     /* Update the pointers to _texture */
     ImGuiContext* current = ImGui::GetCurrentContext();

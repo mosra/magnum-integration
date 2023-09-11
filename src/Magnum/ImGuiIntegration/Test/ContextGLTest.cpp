@@ -322,7 +322,7 @@ void ContextGLTest::constructMove() {
     CORRADE_VERIFY(context);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
 
-    Context b{std::move(a)};
+    Context b{Utility::move(a)};
     CORRADE_COMPARE(a.context(), nullptr);
     CORRADE_COMPARE(b.context(), context);
 
@@ -333,7 +333,7 @@ void ContextGLTest::constructMove() {
     ImGuiContext* cContext = c.context();
     CORRADE_COMPARE(ImGui::GetCurrentContext(), cContext);
 
-    c = std::move(b);
+    c = Utility::move(b);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), cContext);
     CORRADE_COMPARE(&b.atlasTexture(), ImGui::GetIO().Fonts->TexID);
     ImGui::SetCurrentContext(c.context());
@@ -363,16 +363,16 @@ void ContextGLTest::moveAssignEmpty() {
     Context b{{}};
 
     /* Move from empty */
-    b = std::move(a);
+    b = Utility::move(a);
     CORRADE_COMPARE(b.context(), nullptr);
 
     /* Move into empty */
-    b = std::move(a);
+    b = Utility::move(a);
     CORRADE_COMPARE(a.context(), nullptr);
 
     /* Move empty into empty */
     Context c{NoCreate};
-    c = std::move(a);
+    c = Utility::move(a);
     CORRADE_COMPARE(a.context(), nullptr);
     CORRADE_COMPARE(c.context(), nullptr);
 }
