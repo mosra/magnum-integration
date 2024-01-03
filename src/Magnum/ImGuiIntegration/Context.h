@@ -322,9 +322,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * The sizes are allowed to be zero in any dimension, but note that
          * specifying a concrete value later in @ref relayout() may trigger an
          * unnecessary rebuild of the font glyph cache due to different
-         * calculated pixel density. On the other hand, if you don't need DPI
-         * awareness, you can use the simpler @ref Context(const Vector2i&)
-         * constructor instead.
+         * calculated pixel density. See @ref ImGuiIntegration-Context-dpi for
+         * more information about the different size arguments. If you don't
+         * need DPI awareness, you can use the simpler
+         * @ref Context(const Vector2i&) constructor instead.
          * @see @ref relayout(const Vector2&, const Vector2i&, const Vector2i&)
          */
         explicit Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize);
@@ -356,12 +357,13 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * glyph cache gets uploaded to the GPU, for example adding custom
          * fonts.
          *
-         * Note that, in order to have the custom fonts crisp also on HiDPI
-         * screens, you have to pre-scale their size by the ratio of @p size
-         * and @p framebufferSize. See @ref ImGuiIntegration-Context-dpi-fonts
-         * for more information. If you don't need DPI awareness, you can use
-         * the simpler @ref Context(ImGuiContext&, const Vector2i&) constructor
-         * instead.
+         * See @ref ImGuiIntegration-Context-dpi for more information about the
+         * different size arguments. If you don't need DPI awareness, you can
+         * use the simpler @ref Context(ImGuiContext&, const Vector2i&)
+         * constructor instead. Note that, in order to have the custom fonts
+         * crisp also on HiDPI screens, you have to pre-scale their size by the
+         * ratio of @p size and @p framebufferSize. See
+         * @ref ImGuiIntegration-Context-dpi-fonts for more information.
          * @see @ref relayout(const Vector2&, const Vector2i&, const Vector2i&)
          */
         explicit Context(ImGuiContext& context, const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize);
@@ -436,6 +438,13 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Relayout the context
+         * @param size                  Size of the user interface to which all
+         *      widgets are positioned
+         * @param windowSize            Size of the window to which all input
+         *      events are related
+         * @param framebufferSize       Size of the window framebuffer. On
+         *      some platforms with HiDPI screens may be different from window
+         *      size.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() and
          * adapts the internal state for a new window size or pixel density. In
@@ -444,7 +453,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          *
          * The sizes are allowed to be zero in any dimension, but note that it
          * may trigger an unwanted rebuild of the font glyph cache due to
-         * different calculated pixel density.
+         * different calculated pixel density. See
+         * @ref ImGuiIntegration-Context-dpi for more information about the
+         * different size arguments. If you don't need DPI awareness, you can
+         * use the simpler @ref relayout(const Vector2i&) function instead.
          */
         void relayout(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize);
 
