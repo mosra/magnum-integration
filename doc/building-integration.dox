@@ -280,8 +280,18 @@ brew upgrade --fetch-HEAD mosra/magnum/magnum-integration
 
 When installing from the `*.rb` files you need to install the
 @ref building-corrade-packages-brew "Corrade"
-and @ref building-packages-brew "Magnum" Homebrew packages first. If you want
-to pass additional flags to CMake or
+and @ref building-packages-brew "Magnum" Homebrew packages first. As the
+integration libs depend on a variety of 3rd party libraries, it's possible to
+control a subset that gets built and installed:
+
+-   `--with-dartsim` enables building of @ref DartIntegration. This library is
+    not built by default.
+-   `--without-eigen`, `--without-glm` and `--without-bullet` disable building
+    of @ref EigenIntegration, @ref GlmIntegration and @ref BulletIntegration,
+    respectively. These libraries are all implicitly built otherwise.
+
+Libraries not listed above not enabled for building. If you want to pass
+additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", edit
 the `*.rb` file.
 
