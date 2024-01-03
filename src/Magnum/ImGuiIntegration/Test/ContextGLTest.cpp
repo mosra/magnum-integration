@@ -57,6 +57,8 @@
 
 namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 
+using namespace Containers::Literals;
+
 struct InputEvent {
     enum class Modifier: Int {
         Shift = 1 << 0,
@@ -256,7 +258,7 @@ void ContextGLTest::construct() {
         CORRADE_VERIFY(c.context());
         CORRADE_COMPARE(c.context(), ImGui::GetCurrentContext());
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
         MAGNUM_VERIFY_NO_GL_ERROR();
@@ -283,7 +285,7 @@ void ContextGLTest::constructExistingContext() {
         /* No user-supplied font even though we used a custom context, add
            the default one  */
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
     }
 
@@ -307,7 +309,7 @@ void ContextGLTest::constructExistingContextAddFont() {
         /* The user-supplied font should not get overriden, even though it's
            the same */
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
     }
 
@@ -446,13 +448,13 @@ void ContextGLTest::relayout() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
     c.relayout({200, 200});
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
     Utility::System::sleep(1);
@@ -475,13 +477,13 @@ void ContextGLTest::relayoutDpiChange() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
     c.relayout({200, 200}, {70, 70}, {400, 400});
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px [SCALED]"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f); /* 2x */
 
     Utility::System::sleep(1);
@@ -502,7 +504,7 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
     Context c{*ImGui::GetCurrentContext(), {400, 400}};
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
 
     /* Again a dummy frame first */
@@ -512,7 +514,7 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), std::string{"ProggyClean.ttf, 13px"});
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f); /*same */
 
     c.relayout({200, 200}, {70, 70}, {400, 400});
