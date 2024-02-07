@@ -290,7 +290,7 @@ control a subset that gets built and installed:
     of @ref EigenIntegration, @ref GlmIntegration and @ref BulletIntegration,
     respectively. These libraries are all implicitly built otherwise.
 
-Libraries not listed above not enabled for building. If you want to pass
+Libraries not listed above are not enabled for building. If you want to pass
 additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", edit
 the `*.rb` file.
