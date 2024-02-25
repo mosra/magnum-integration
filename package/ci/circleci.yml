@@ -206,8 +206,11 @@ commands:
     steps:
     - run:
         name: Install Eigen
+        # Version 3.3.7 doesn't compile with Clang 11+ (such as is used by
+        # Android NDK r22), a fix was made in https://gitlab.com/libeigen/eigen/-/commit/f55a6d051bbc30d37aff6d8f9725cdd5934bffe0
+        # which got released as 3.3.8.
         command: |
-          export EIGEN_VERSION=3.3.7
+          export EIGEN_VERSION=3.3.8
           mkdir -p $HOME/eigen && cd $HOME/eigen
           wget --no-check-certificate https://gitlab.com/libeigen/eigen/-/archive/$EIGEN_VERSION/eigen-$EIGEN_VERSION.tar.gz
           tar --strip-components=1 -xzf eigen-$EIGEN_VERSION.tar.gz
