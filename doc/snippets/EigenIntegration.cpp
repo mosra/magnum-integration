@@ -37,7 +37,11 @@
 using namespace Magnum;
 using namespace Magnum::Math::Literals;
 
-int main() {
+/* Make sure the name doesn't conflict with any other snippets to avoid linker
+   warnings, unlike with `int main()` there now has to be a declaration to
+   avoid -Wmisssing-prototypes */
+void mainEigenIntegration();
+void mainEigenIntegration() {
 {
 /* The include is already above, so doing it again here should be harmless */
 /* [namespace] */

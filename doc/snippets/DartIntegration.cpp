@@ -40,7 +40,11 @@ void addDartSkeletonsToDartWorld();
 template<class T> void deleteObjectsFromScene(T&);
 template<class T> void updateMeshesAndMaterials(T&);
 
-int main() {
+/* Make sure the name doesn't conflict with any other snippets to avoid linker
+   warnings, unlike with `int main()` there now has to be a declaration to
+   avoid -Wmisssing-prototypes */
+void mainDartIntegration();
+void mainDartIntegration() {
 
 {
 /* [Object-bodynode] */
