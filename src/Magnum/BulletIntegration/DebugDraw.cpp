@@ -60,7 +60,7 @@ Debug& operator<<(Debug& debug, const DebugDraw::Mode value) {
         /* LCOV_EXCL_STOP */
     }
 
-    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << reinterpret_cast<void*>(UnsignedInt(Int(value))) << Debug::nospace << ")";
+    return debug << "BulletIntegration::DebugDraw::Mode(" << Debug::nospace << Debug::hex << UnsignedInt(Int(value)) << Debug::nospace << ")";
 }
 
 DebugDraw::DebugDraw(const std::size_t initialBufferCapacity): _mesh{GL::MeshPrimitive::Lines} {
