@@ -224,7 +224,7 @@ struct Buttons: Containers::EnumSet<Button> {
     /* MSVC tries to inherit also the private constructor and dies. Grr. */
     constexpr /*implicit*/ Buttons() = default;
     constexpr /*implicit*/ Buttons(Button value): Containers::EnumSet<Button>(value) {}
-    explicit Buttons(Containers::NoInitT): Containers::EnumSet<Button>(Containers::NoInit) {}
+    explicit Buttons(NoInitT): Containers::EnumSet<Button>{NoInit} {}
     #endif
 };
 
@@ -316,7 +316,7 @@ struct Touches: Containers::EnumSet<Touch> {
     /* MSVC tries to inherit also the private constructor and dies. Grr. */
     constexpr /*implicit*/ Touches() = default;
     constexpr /*implicit*/ Touches(Touch value): Containers::EnumSet<Touch>(value) {}
-    explicit Touches(Containers::NoInitT): Containers::EnumSet<Touch>(Containers::NoInit) {}
+    explicit Touches(NoInitT): Containers::EnumSet<Touch>{NoInit} {}
     #endif
 };
 
