@@ -89,9 +89,9 @@ namespace Math { namespace Implementation {
    GCC. Sorry for your bleeding eyes. Take a shower after. */
 
 template<std::size_t size> struct BitVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
-    /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
-       will be? */
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    /* Otherwise not even MSVC 2022 17.10 is able to match the signature. Maybe
+       2025 will be? */
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1
     #endif
 >>> {
@@ -103,22 +103,22 @@ template<std::size_t size> struct BitVectorConverter<size, Eigen::Ref<const Eige
     }
 };
 template<std::size_t size> struct BitVectorConverter<size, Eigen::Ref<Eigen::Array<bool, int(size), 1
-    /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
-       will be? */
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    /* Otherwise not even MSVC 2022 17.10 is able to match the signature. Maybe
+       2025 will be? */
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1
     #endif
 >>>: BitVectorConverter<size, Eigen::Ref<const Eigen::Array<bool, int(size), 1
-    /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
-       will be? */
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    /* Otherwise not even MSVC 2022 17.10 is able to match the signature. Maybe
+       2025 will be? */
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1
     #endif
 >>> {};
 template<std::size_t size> struct BitVectorConverter<size, Eigen::Array<bool, int(size), 1
-    /* Otherwise not even MSVC 2022 is able to match the signature. Maybe 2025
-       will be? */
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    /* Otherwise not even MSVC 2022 17.10 is able to match the signature. Maybe
+       2025 will be? */
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1
     #endif
 >> {
@@ -146,7 +146,7 @@ template<std::size_t size> struct BitVectorConverter<size, Eigen::Array<bool, in
 };
 
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<const Eigen::Array<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >>> {
@@ -158,16 +158,16 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<c
     }
 };
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<Eigen::Array<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >>>: VectorConverter<size, T, Eigen::Ref<const Eigen::Array<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >>> {};
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >> {
@@ -195,7 +195,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Array
 };
 
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<const Eigen::Matrix<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >>> {
@@ -207,16 +207,16 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<c
     }
 };
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Ref<Eigen::Matrix<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >>>: VectorConverter<size, T, Eigen::Ref<const Eigen::Matrix<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >>> {};
 template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matrix<T, int(size), 1
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(size), 1 /* See above */
     #endif
 >> {
@@ -244,7 +244,7 @@ template<std::size_t size, class T> struct VectorConverter<size, T, Eigen::Matri
 };
 
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Array<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >>> {
@@ -257,16 +257,16 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     }
 };
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<Eigen::Array<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >>>: RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Array<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >>> {};
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Array<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >> {
@@ -295,7 +295,7 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
 };
 
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Matrix<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >>> {
@@ -308,16 +308,16 @@ template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixCo
     }
 };
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Ref<Eigen::Matrix<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >>>: RectangularMatrixConverter<cols, rows, T, Eigen::Ref<const Eigen::Matrix<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >>> {};
 template<std::size_t cols, std::size_t rows, class T> struct RectangularMatrixConverter<cols, rows, T, Eigen::Matrix<T, int(rows), int(cols)
-    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1940
+    #if defined(CORRADE_TARGET_MSVC) && !defined(CORRADE_TARGET_CLANG_CL) && _MSC_VER < 1950
     , 0, int(rows), int(cols) /* See above */
     #endif
 >> {
