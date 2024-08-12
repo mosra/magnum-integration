@@ -96,6 +96,7 @@ cmake .. \
     -DEIGEN3_INCLUDE_DIR=$HOME/eigen/ \
     -DGLM_INCLUDE_DIR=$HOME/glm \
     -DIMGUI_DIR=$HOME/imgui \
+    -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
     -DMAGNUM_WITH_BULLET=OFF \
     -DMAGNUM_WITH_DART=OFF \
