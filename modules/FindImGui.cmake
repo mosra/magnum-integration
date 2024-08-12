@@ -92,6 +92,24 @@ if(NOT IMGUI_DIR AND TARGET imgui::imgui)
         add_library(ImGui::Sources INTERFACE IMPORTED)
         set_property(TARGET ImGui::Sources APPEND PROPERTY
             INTERFACE_LINK_LIBRARIES ImGui::ImGui)
+
+        # Vcpkg also always builds imgui as static, to "fix" users that don't
+        # properly define IMGUI_API on Windows to dllimport the symbols. Magnum
+        # implicitly assumes that ImGui is dynamic if ImGuiIntegration is
+        # dynamic, so here we need to define IMGUI_API to empty if it's static
+        # to not have the library try to dllimport the symbols.
+        get_target_property(ImGui_LIBRARY_TYPE imgui::imgui TYPE)
+        if(ImGui_LIBRARY_TYPE STREQUAL STATIC_LIBRARY)
+            set_property(TARGET ImGui::ImGui APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS "IMGUI_API=")
+        elseif(ImGui_LIBRARY_TYPE STREQUAL SHARED_LIBRARY)
+            # Not doing anything if imgui is dynamic, as that's handled by the
+            # implicit behavior (i.e., with vcpkg's default shared build both
+            # ImGui and ImGuiIntegration integration would be dynamic).
+            # Moreover, vcpkg seems to hardcode imgui to be static always, so
+            # this should be never taken. Unless someone else creates its own
+            # ImGui CMake config that excercises this other scenario, which is
+            # (I think) rather unlikely.
+        endif()
     endif()
 
 # Otherwise find the source files and compile them as part of the library they

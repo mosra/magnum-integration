@@ -36,16 +36,24 @@
 #ifndef MAGNUM_IMGUIINTEGRATION_BUILD_STATIC
     #if defined(MagnumImGuiIntegration_EXPORTS) || defined(MagnumImGuiIntegrationTestLib_EXPORTS)
         #define MAGNUM_IMGUIINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
-        /* From imconfig.h to export ImGui symbols */
-        #define IMGUI_API CORRADE_VISIBILITY_EXPORT
+        /* From imconfig.h to export ImGui symbols. If already defined (for
+           example by our FindImGui.cmake), use that definition instead, which
+           allows for example a dynamic build with a static ImGui library or
+           vice versa. */
+        #ifndef IMGUI_API
+            #define IMGUI_API CORRADE_VISIBILITY_EXPORT
+        #endif
     #else
         #define MAGNUM_IMGUIINTEGRATION_EXPORT CORRADE_VISIBILITY_IMPORT
-        /* From imconfig.h to import ImGui symbols */
-        #define IMGUI_API CORRADE_VISIBILITY_IMPORT
+        #ifndef IMGUI_API
+            #define IMGUI_API CORRADE_VISIBILITY_IMPORT
+        #endif
     #endif
 #else
     #define MAGNUM_IMGUIINTEGRATION_EXPORT CORRADE_VISIBILITY_STATIC
-    #define IMGUI_API CORRADE_VISIBILITY_STATIC
+    #ifndef IMGUI_API
+        #define IMGUI_API CORRADE_VISIBILITY_STATIC
+    #endif
 #endif
 #else
 #define MAGNUM_IMGUIINTEGRATION_EXPORT
