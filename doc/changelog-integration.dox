@@ -118,6 +118,10 @@ namespace Magnum {
 -   Fixed `FindMagnumIntegration.cmake` to correctly find the Magnum
     Integration include directory when it's installed to a different directory
     than Magnum itself (see [mosra/magnum-integration#105](https://github.com/mosra/magnum-integration/issues/105))
+-   A dynamic build of @ref ImGuiIntegration now correctly links against ImGui
+    that's built as static, fixing a common issue on Vcpkg (see
+    [mosra/magnum-integration#67](https://github.com/mosra/magnum-integration/issues/67)
+    and [mosra/magnum-integration#104](https://github.com/mosra/magnum-integration/issues/104)).
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 
