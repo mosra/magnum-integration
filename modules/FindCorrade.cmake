@@ -474,8 +474,9 @@ foreach(_component ${Corrade_FIND_COMPONENTS})
         # Interconnect library
         if(_component STREQUAL Interconnect)
             # Disable /OPT:ICF on MSVC, which merges functions with identical
-            # contents and thus breaks signal comparison
-            if(CORRADE_TARGET_WINDOWS AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+            # contents and thus breaks signal comparison. Same case is for
+            # clang-cl which uses the MSVC linker by default.
+            if(CORRADE_TARGET_WINDOWS AND (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
                 if(CMAKE_VERSION VERSION_LESS 3.13)
                     set_property(TARGET Corrade::${_component} PROPERTY
                         INTERFACE_LINK_LIBRARIES "-OPT:NOICF,REF")
@@ -549,6 +550,16 @@ foreach(_component ${Corrade_FIND_COMPONENTS})
                 INTERFACE_CORRADE_CXX_STANDARD 11)
             set_property(TARGET Corrade::${_component} APPEND PROPERTY
                 COMPATIBLE_INTERFACE_NUMBER_MAX CORRADE_CXX_STANDARD)
+
+            # -fno-strict-aliasing is set in UseCorrade.cmake for everyone who
+            # enables CORRADE_USE_PEDANTIC_FLAGS. Not all projects linking to
+            # Corrade enable it (or can't enable it), but this flag is
+            # essential to prevent insane bugs and random breakages, so force
+            # it for anyone linking to Corrade::Utility. Similar code is in
+            # Corrade/Utility/CMakeLists.txt.
+            if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?Clang" AND NOT CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC") OR CORRADE_TARGET_EMSCRIPTEN)
+                set_property(TARGET Corrade::${_component} APPEND PROPERTY INTERFACE_COMPILE_OPTIONS -fno-strict-aliasing)
+            endif()
 
             # Path::libraryLocation() needs this
             if(CORRADE_TARGET_UNIX)
