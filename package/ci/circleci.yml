@@ -15,10 +15,12 @@ executors:
   ubuntu-18_04:
     docker:
     - image: ubuntu:bionic-20220427
-  # Anything below 12.5.1 is deprecated as of August 2023
-  xcode-12_5:
+  # Anything below 13.4.1 (and all x86 variants) are deprecated as of June 28th
+  # 2024
+  xcode-13_4:
     macos:
-      xcode: 12.5.1
+      xcode: 13.4.1
+    resource_class: macos.m1.medium.gen1
   emscripten:
     docker:
     # 1.39.0 is the oldest on Docker. Anything before 1.39.2 is useless as emar
@@ -179,8 +181,8 @@ commands:
         # you could just download the artifacts directly, right? RIGHT?
         command: |
           mkdir -p $HOME/swiftshader && cd $HOME/swiftshader
-          wget https://ci.magnum.graphics/swiftshader-gles-r5464.a6940c8e6e-<< parameters.build >>.zip
-          unzip swiftshader-gles-r5464.a6940c8e6e-<< parameters.build >>.zip
+          wget https://ci.magnum.graphics/swiftshader-gles-r5904.14dcbed947-<< parameters.build >>.zip
+          unzip swiftshader-gles-r5904.14dcbed947-<< parameters.build >>.zip
 
   install-imgui:
     steps:
@@ -323,7 +325,7 @@ jobs:
     - install-cmake:
         version: "3.5.2"
     - install-swiftshader-gles:
-        build: ubuntu-16.04
+        build: ubuntu-18.04
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
@@ -348,7 +350,7 @@ jobs:
     - install-cmake:
         version: "3.5.2"
     - install-swiftshader-gles:
-        build: ubuntu-16.04
+        build: ubuntu-18.04
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
@@ -395,7 +397,7 @@ jobs:
         script: unix-desktop.sh
 
   macos-gl:
-    executor: xcode-12_5
+    executor: xcode-13_4
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
@@ -409,7 +411,7 @@ jobs:
     - lcov
 
   macos-gles3:
-    executor: xcode-12_5
+    executor: xcode-13_4
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
@@ -420,7 +422,7 @@ jobs:
     - install-base-macos:
         extra: sdl2 bullet eigen glm wget
     - install-swiftshader-gles:
-        build: macos-10.15
+        build: macos12-arm64
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
@@ -493,7 +495,7 @@ jobs:
         script: android-x86-gles.sh
 
   ios-gles3:
-    executor: xcode-12_5
+    executor: xcode-13_4
     environment:
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_GLES2: "OFF"
