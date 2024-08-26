@@ -62,22 +62,21 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
 
 /**
 @brief ImageButton widget displaying a @ref GL::Texture2D
+@param str_id           string id
 @param texture          Texture to display
 @param size             Widget size
 @param uvRange          UV range on the texture (covers the whole texture by
     default)
-@param framePadding     Frame padding, negative values use the default frame
-    padding
 @param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
 @param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
 @m_since_{integration,2019,10}
 */
-inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
-    const Range2D& uvRange = {{}, Vector2{1.0f}}, Int framePadding = -1,
+inline bool imageButton(const char* str_id, GL::Texture2D& texture, const Vector2& size,
+    const Range2D& uvRange = {{}, Vector2{1.0f}},
     const Color4& backgroundColor = {},
     const Color4& tintColor = Color4{1.0f})
 {
-    return ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
+    return ImGui::ImageButton(str_id, static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(backgroundColor), ImColor(tintColor));
 }
 
 }}
