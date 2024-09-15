@@ -93,19 +93,15 @@ inline bool imageButton(const char* id, GL::Texture2D& texture, const Vector2& s
     #endif
 }
 
+#ifdef MAGNUM_BUILD_DEPRECATED
 /**
 @brief ImageButton widget displaying a @ref GL::Texture2D
-@param texture          Texture to display
-@param size             Widget size
-@param uvRange          UV range on the texture (covers the whole texture by
-    default)
-@param framePadding     Frame padding, negative values use the default frame
-    padding
-@param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
-@param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
-@m_since_{integration,2019,10}
+@m_deprecated_since_latest Using an implicit ID is no longer possible in newer
+    ImGui. Use @ref imageButton(const char*, GL::Texture2D&, const Vector2&, const Range2D&, const Color4&, const Color4&)
+    instead.
 */
-inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
+CORRADE_DEPRECATED("use imageButton(const char*, GL::Texture2D&, const Vector2&, const Range2D&, const Color4&, const Color4&) instead") inline bool imageButton(
+    GL::Texture2D& texture, const Vector2& size,
     const Range2D& uvRange = {{}, Vector2{1.0f}}, Int framePadding = -1,
     const Color4& backgroundColor = {},
     const Color4& tintColor = Color4{1.0f})
@@ -129,6 +125,7 @@ inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
     return ImGui::ImageButton(textureId, ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
     #endif
 }
+#endif
 
 }}
 
