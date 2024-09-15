@@ -110,8 +110,12 @@ void WidgetsGLTest::imageButton() {
     ImGuiIntegration::imageButton("button", texture, {100, 100},
         {{}, Vector2{1.0f}}, Color4::yellow(), Color4::blue());
 
+    #ifdef MAGNUM_BUILD_DEPRECATED
+    CORRADE_IGNORE_DEPRECATED_PUSH
     ImGuiIntegration::imageButton(texture, {100, 100},
         {{}, Vector2{1.0f}}, 5, Color4::yellow(), Color4::blue());
+    CORRADE_IGNORE_DEPRECATED_POP
+    #endif
 
     c.drawFrame();
 
