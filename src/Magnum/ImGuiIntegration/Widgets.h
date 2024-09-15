@@ -62,6 +62,39 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
 
 /**
 @brief ImageButton widget displaying a @ref GL::Texture2D
+@param id               Widget ID
+@param texture          Texture to display
+@param size             Widget size
+@param uvRange          UV range on the texture (covers the whole texture by
+    default)
+@param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
+@param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
+@m_since_latest
+*/
+inline bool imageButton(const char* id, GL::Texture2D& texture, const Vector2& size,
+    const Range2D& uvRange = {{}, Vector2{1.0f}},
+    const Color4& backgroundColor = {},
+    const Color4& tintColor = Color4{1.0f})
+{
+    /* Old function generating an implicit ID and taking frame padding from an
+       explicit variable was deprecated in 1.89 and removed in 1.91.1 */
+    #if IMGUI_VERSION_NUM >= 19110
+    return ImGui::ImageButton(id, static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(backgroundColor), ImColor(tintColor));
+    #else
+    /* This is not exactly the same since the old function pushes another ID
+       based on the texture ID, but we can't disable that. Just a best effort
+       to still use the user-provided widget ID. There is ImageButtonEx()
+       taking an explicit ID, but its signature doesn't seem stable. */
+    ImGui::PushID(id);
+    /* Negative padding uses the FramePadding style */
+    const bool ret = ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), -1, ImColor(backgroundColor), ImColor(tintColor));
+    ImGui::PopID();
+    return ret;
+    #endif
+}
+
+/**
+@brief ImageButton widget displaying a @ref GL::Texture2D
 @param texture          Texture to display
 @param size             Widget size
 @param uvRange          UV range on the texture (covers the whole texture by

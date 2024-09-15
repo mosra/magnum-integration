@@ -107,7 +107,11 @@ void WidgetsGLTest::imageButton() {
 
     c.newFrame();
 
-    ImGuiIntegration::imageButton(texture, {100, 100});
+    ImGuiIntegration::imageButton("button", texture, {100, 100},
+        {{}, Vector2{1.0f}}, Color4::yellow(), Color4::blue());
+
+    ImGuiIntegration::imageButton(texture, {100, 100},
+        {{}, Vector2{1.0f}}, 5, Color4::yellow(), Color4::blue());
 
     c.drawFrame();
 
