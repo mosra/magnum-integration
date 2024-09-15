@@ -77,7 +77,24 @@ inline bool imageButton(GL::Texture2D& texture, const Vector2& size,
     const Color4& backgroundColor = {},
     const Color4& tintColor = Color4{1.0f})
 {
-    return ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
+    const ImTextureID textureId = static_cast<ImTextureID>(&texture);
+    /* Old function generating an implicit ID and taking frame padding from an
+       explicit variable was deprecated in 1.89 and removed in 1.91.1. This is
+       identical to the obsoleted wrapper code still present (but commented
+       out) in 1.91.1. */
+    #if IMGUI_VERSION_NUM >= 19110
+    /* ImTextureID is already void* */
+    ImGui::PushID(textureId);
+    if(framePadding >= 0)
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(framePadding, framePadding));
+    const bool ret = imageButton("", texture, size, uvRange, backgroundColor, tintColor);
+    if(framePadding >= 0)
+        ImGui::PopStyleVar();
+    ImGui::PopID();
+    return ret;
+    #else
+    return ImGui::ImageButton(textureId, ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), framePadding, ImColor(backgroundColor), ImColor(tintColor));
+    #endif
 }
 
 }}
