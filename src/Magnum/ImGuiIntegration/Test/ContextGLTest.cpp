@@ -581,60 +581,57 @@ void ContextGLTest::mouseInput() {
     Context c{{200, 200}};
 
     /* Mouse Button */
-    CORRADE_VERIFY(!ImGui::IsMouseDown(0)); /* left */
-    CORRADE_VERIFY(!ImGui::IsMouseDown(1)); /* right */
-    CORRADE_VERIFY(!ImGui::IsMouseDown(2)); /* middle */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
 
     MouseEvent left{Button::Left, {1, 2}, {}};
     MouseEvent right{Button::Right, {3, 4}, {}};
     MouseEvent middle{Button::Middle, {5, 6}, {}};
 
-    /* The queued IO events in imgui 1.87 and up don't report any data until
-       newFrame() is called. Our workaround for the legacy IO system that keeps
-       imgui from ignoring mouse clicks if both press and release happen in the
-       same frame behaves the same way. Events are propagated to it only during
-       newFrame() -- which means we need to check *after* it gets called. See
+    /* Queued IO events in imgui are propagated to it only during newFrame(),
+       which means we need to check *after* it gets called. See
        mouseInputTooFast() below for more. */
 
     c.handleMousePressEvent(left);
     Utility::System::sleep(1);
     c.newFrame();
-    CORRADE_VERIFY(ImGui::IsMouseDown(0)); /* left */
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
 
     c.handleMousePressEvent(right);
     Utility::System::sleep(1);
     c.newFrame();
-    CORRADE_VERIFY(ImGui::IsMouseDown(1)); /* right */
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Right));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
 
     c.handleMousePressEvent(middle);
     Utility::System::sleep(1);
     c.newFrame();
-    CORRADE_VERIFY(ImGui::IsMouseDown(2)); /* middle */
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
 
     c.handleMouseReleaseEvent(right);
     Utility::System::sleep(1);
     c.newFrame();
-    CORRADE_VERIFY(!ImGui::IsMouseDown(1)); /* right */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
 
     c.handleMouseReleaseEvent(left);
     Utility::System::sleep(1);
     c.newFrame();
-    CORRADE_VERIFY(!ImGui::IsMouseDown(0)); /* left */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
 
     c.handleMouseReleaseEvent(middle);
     Utility::System::sleep(1);
     c.newFrame();
-    CORRADE_VERIFY(!ImGui::IsMouseDown(2)); /* middle */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
 
@@ -653,14 +650,8 @@ void ContextGLTest::mouseInput() {
     MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, {}};
     c.handleMouseScrollEvent(scroll);
     Utility::System::sleep(1);
-    /* https://github.com/ocornut/imgui/commit/e346059eef140c5a8611581f3e6c8b8816d6998e
-       This commit changed input trickling to also apply to mouse wheel events.
-       Since we always set the mouse position in handleMouseScrollEvent(), the
-       mouse wheel event happens one frame later now. */
-    #if IMGUI_VERSION_NUM >= 18722
     c.newFrame();
     c.drawFrame();
-    #endif
     c.newFrame();
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{17.0f, 23.0f}));
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
@@ -676,42 +667,41 @@ void ContextGLTest::mouseInput() {
 void ContextGLTest::mouseInputTooFast() {
     Context c{{200, 200}};
 
-    CORRADE_VERIFY(!ImGui::IsMouseDown(0));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
 
     /* It's not reported immediately */
     MouseEvent left{Button::Left, {1, 2}, {}};
     c.handleMousePressEvent(left);
     c.handleMouseReleaseEvent(left);
-    CORRADE_VERIFY(!ImGui::IsMouseDown(0));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
 
     /* Only during the newFrame call */
     c.newFrame();
-    CORRADE_VERIFY(ImGui::IsMouseDown(0));
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     c.drawFrame();
 
     /* And mouse up is reported in the next one */
     c.newFrame();
-    CORRADE_VERIFY(!ImGui::IsMouseDown(0));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
     c.drawFrame();
 }
 
 void ContextGLTest::keyInput() {
     Context c{{}};
 
-    CORRADE_VERIFY(!ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
+    CORRADE_VERIFY(!ImGui::IsKeyDown(ImGuiKey_Tab));
 
-    /* The queued IO events in imgui 1.87 and up don't report any data until
-       newFrame() is called */
+    /* Queued IO events in imgui are propagated to it only during newFrame() */
 
     KeyEvent keyTab{KeyEvent::Key::Tab, {}};
     c.handleKeyPressEvent(keyTab);
     c.newFrame();
-    CORRADE_VERIFY(ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
+    CORRADE_VERIFY(ImGui::IsKeyDown(ImGuiKey_Tab));
     c.drawFrame();
 
     c.handleKeyReleaseEvent(keyTab);
     c.newFrame();
-    CORRADE_VERIFY(!ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_Tab)));
+    CORRADE_VERIFY(!ImGui::IsKeyDown(ImGuiKey_Tab));
     c.drawFrame();
 
     /* Key presses don't affect imgui modifier key state */
@@ -737,16 +727,12 @@ void ContextGLTest::keyInput() {
 void ContextGLTest::textInput() {
     Context c{{}};
 
-    /* The queued IO events in imgui 1.87 and up don't report any data until
-       newFrame() is called */
+    /* Queued IO events in imgui are propagated to it only during newFrame() */
 
     TextInputEvent textEvent{{"abc"}};
     c.handleTextInputEvent(textEvent);
     c.newFrame();
     ImWchar expected[3]{'a', 'b', 'c'};
-    /* This changed from InputCharacters to InputQueueCharacters in 1.67. Yes,
-       it's a private API, but there's no other way to test if the event works
-       correctly. It's used only in a test so I think that's acceptable. */
     CORRADE_COMPARE_AS(Containers::arrayView(ImGui::GetIO().InputQueueCharacters.begin(), ImGui::GetIO().InputQueueCharacters.size()),
         Containers::arrayView(expected),
         TestSuite::Compare::Container);

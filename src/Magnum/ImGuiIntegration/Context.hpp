@@ -53,7 +53,6 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     ImGuiIO &io = ImGui::GetIO();
     const typename KeyEvent::Modifiers modifiers = event.modifiers();
 
-    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     #if IMGUI_VERSION_NUM >= 18823
     io.AddKeyEvent(ImGuiMod_Ctrl, modifiers >= KeyEvent::Modifier::Ctrl);
     io.AddKeyEvent(ImGuiMod_Shift, modifiers >= KeyEvent::Modifier::Shift);
@@ -65,27 +64,14 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= KeyEvent::Modifier::Alt);
     io.AddKeyEvent(ImGuiKey_ModSuper, modifiers >= KeyEvent::Modifier::Super);
     #endif
-    #else
-    io.KeyCtrl  = modifiers >= KeyEvent::Modifier::Ctrl;
-    io.KeyShift = modifiers >= KeyEvent::Modifier::Shift;
-    io.KeyAlt   = modifiers >= KeyEvent::Modifier::Alt;
-    io.KeySuper = modifiers >= KeyEvent::Modifier::Super;
-    #endif
 
     #ifndef DOXYGEN_GENERATING_OUTPUT /* it insists on documenting _c() */
     switch(event.key()) {
         /* LCOV_EXCL_START */
-        #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
         #define _c(key, imgui) \
             case KeyEvent::Key::key: \
                 io.AddKeyEvent(ImGuiKey_ ## imgui, value); \
                 break;
-        #else
-        #define _c(key, imgui) \
-            case KeyEvent::Key::key: \
-                io.KeysDown[ImGuiKey_ ## imgui - ImGuiKey_Tab] = value; \
-                break;
-        #endif
 
         _c(Tab, Tab)
         _c(Left, LeftArrow)
@@ -100,16 +86,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         _c(Backspace, Backspace)
         _c(Space, Space)
         _c(Enter, Enter)
-        /* NumEnter is handled below */
         _c(Esc, Escape)
-        _c(A, A)
-        _c(C, C)
-        _c(V, V)
-        _c(X, X)
-        _c(Y, Y)
-        _c(Z, Z)
-
-        #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
         _c(Insert, Insert)
         _c(Quote, Apostrophe)
         _c(Comma, Comma)
@@ -163,9 +140,9 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         _c(Seven, 7)
         _c(Eight, 8)
         _c(Nine, 9)
-        /* A is handled above */
+        _c(A, A)
         _c(B, B)
-        /* C is handled above */
+        _c(C, C)
         _c(D, D)
         _c(E, E)
         _c(F, F)
@@ -184,9 +161,11 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         _c(S, S)
         _c(T, T)
         _c(U, U)
-        /* V is handled above */
+        _c(V, V)
         _c(W, W)
-        /* X, Y, Z are handled above */
+        _c(X, X)
+        _c(Y, Y)
+        _c(Z, Z)
         _c(F1, F1)
         _c(F2, F2)
         _c(F3, F3)
@@ -199,10 +178,6 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
         _c(F10, F10)
         _c(F11, F11)
         _c(F12, F12)
-        #else
-        /* Older imgui versions had no KeypadEnter, emulate it */
-        _c(NumEnter, Enter)
-        #endif
 
         #undef _c
         /* LCOV_EXCL_STOP */
@@ -222,39 +197,24 @@ template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, boo
     ImGuiIO& io = ImGui::GetIO();
     const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    /* ImGuiMouseButton convenience enum only exists since 1.75, but the values
-       are guaranteed to be 0-2 */
-    Int buttonId;
+    ImGuiMouseButton buttonId;
     switch(event.button()) {
         case MouseEvent::Button::Left:
-            buttonId = 0;
+            buttonId = ImGuiMouseButton_Left;
             break;
         case MouseEvent::Button::Right:
-            buttonId = 1;
+            buttonId = ImGuiMouseButton_Right;
             break;
         case MouseEvent::Button::Middle:
-            buttonId = 2;
+            buttonId = ImGuiMouseButton_Middle;
             break;
 
         /* Unknown button, do nothing */
         default: return false;
     }
 
-    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddMousePosEvent(position.x(), position.y());
     io.AddMouseButtonEvent(buttonId, value);
-    #else
-    io.MousePos = ImVec2(position);
-    /* Workaround to prevent mouse clicks from being ignored when both a press
-       and a release happens in the same frame. Instead of setting io.MouseDown
-       directly, we delay this until the newFrame() call. Apart from this
-       happening when the app can't render fast enough, for some reason it also
-       happens with SDL2 on macOS -- press delayed by a significant amount of
-       time. Not needed for the queued IO events in imgui 1.87 and up where
-       input events are spaced out over multiple frames. */
-    _mousePressed.set(buttonId, value);
-    if(value) _mousePressedInThisFrame.set(buttonId, true);
-    #endif
 
     return io.WantCaptureMouse;
 }
@@ -274,14 +234,8 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
     ImGuiIO& io = ImGui::GetIO();
     const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddMousePosEvent(position.x(), position.y());
     io.AddMouseWheelEvent(event.offset().x(), event.offset().y());
-    #else
-    io.MousePos = ImVec2(position);
-    io.MouseWheelH += event.offset().x();
-    io.MouseWheel += event.offset().y();
-    #endif
 
     return io.WantCaptureMouse;
 }
@@ -293,11 +247,7 @@ template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent
     ImGuiIO& io = ImGui::GetIO();
     const Vector2 position = Vector2(event.position())*_eventScaling;
 
-    #if MAGNUM_IMGUIINTEGRATION_HAS_IMGUI_EVENT_IO
     io.AddMousePosEvent(position.x(), position.y());
-    #else
-    io.MousePos = ImVec2(position);
-    #endif
 
     return io.WantCaptureMouse;
 }

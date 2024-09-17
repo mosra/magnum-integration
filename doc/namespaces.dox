@@ -368,7 +368,7 @@ Conversion of math classes and rendering of Dear ImGui using Magnum.
 
 @section ImGuiIntegration-usage Usage
 
-This library depends on [Dear ImGui](https://github.com/ocornut/imgui) 1.77 and
+This library depends on [Dear ImGui](https://github.com/ocornut/imgui) 1.88 and
 newer and is built if `MAGNUM_WITH_IMGUI` is enabled when building Magnum
 Integration. To use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 and [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)

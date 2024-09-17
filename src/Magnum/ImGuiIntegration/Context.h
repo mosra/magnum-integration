@@ -591,7 +591,6 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         GL::Mesh _mesh;
         Vector2 _supersamplingRatio,
             _eventScaling;
-        BitVector3 _mousePressed, _mousePressedInThisFrame;
 
     private:
         template<class KeyEvent> bool handleKeyEvent(KeyEvent& event, bool value);
