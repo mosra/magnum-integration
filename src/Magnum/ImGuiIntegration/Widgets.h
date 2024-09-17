@@ -8,6 +8,8 @@
     Copyright © 2018 ShaddyAQN <ShaddyAQN@gmail.com>
     Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
+    Copyright © 2024 kolbbond <kolbbond@gmail.com>
+    Copyright © 2024 Pablo Escobar <mail@rvrs.in>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),

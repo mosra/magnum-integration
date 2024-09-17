@@ -55,9 +55,11 @@ namespace Magnum {
     to the @ref ImGuiIntegration library
 -   **Juanpe Bolívar** ([\@arximboldi](https://github.com/arximboldi)) ---
     draw list user callbacks in the @ref ImGuiIntegration library
+-   **[\@kolbbond](https://github.com/kolbbond)** --- @ref ImGuiIntegration
+    compatibility updates
 -   **Konstantinos Chatzilygeroudis** ([\@costashatz](https://github.com/costashatz))
     --- the @ref DartIntegration library, Debian package
--   **[\@lacyyy](https://github.com/lacyyy)** -- MSYS package fixes
+-   **[\@lacyyy](https://github.com/lacyyy)** --- MSYS package fixes
 -   **Marco Melorio** ([\@Melix19](https://github.com/Melix19)) ---
     cursor support and other improvements to the @ref ImGuiIntegration library
 -   **Max Schwarz** ([\@xqms](https://github.com/xqms)) --- fixes and

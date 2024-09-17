@@ -73,8 +73,11 @@ namespace Magnum {
     (see [mosra/magnum-integration#83](https://github.com/mosra/magnum-integration/issues/83),
     [mosra/magnum-integration#84](https://github.com/mosra/magnum-integration/pull/84)
     and [mosra/magnum-integration#98](https://github.com/mosra/magnum-integration/pull/98))
--   Fixed @ref ImGuiIntegration to work with the upcoming ImGui 1.89 and
+-   Fixed @ref ImGuiIntegration to work with ImGui 1.89 and
     `IMGUI_DISABLE_OBSOLETE_FUNCTIONS` set (see [mosra/magnum-integration#100](https://github.com/mosra/magnum-integration/pull/100))
+-   Updated @ref ImGuiIntegration::imageButton() to work with ImGui 1.89+ (see
+    [mosra/magnum-integration#109](https://github.com/mosra/magnum-integration/pull/109)
+    and [mosra/magnum-integration#110](https://github.com/mosra/magnum-integration/pull/110))
 
 @subsection changelog-integration-latest-buildsystem Build system
 
