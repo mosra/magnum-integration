@@ -212,8 +212,8 @@ can be easily cast to Magnum's equivalent @ref Magnum::Vector3 "Vector3":
 
 @snippet EigenIntegration.cpp namespace
 
-Or you can make a @ref Containers::StridedArrayView2D onto a dynamically sized
-@m_class{m-doc-external} [Eigen::MatrixXd](https://eigen.tuxfamily.org/dox/group__matrixtypedefs.html#ga5ec9ce2d8adbcd6888f3fbf2e1c095a4)
+Or you can make a @relativeref{Corrade,Containers::StridedArrayView2D} onto a
+dynamically sized @m_class{m-doc-external} [Eigen::MatrixXd](https://eigen.tuxfamily.org/dox/group__matrixtypedefs.html#ga5ec9ce2d8adbcd6888f3fbf2e1c095a4)
 and vice versa:
 
 @snippet EigenIntegration.cpp namespace-view

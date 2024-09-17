@@ -34,8 +34,8 @@ In addition to converting betweem fixed-size types provided by
 @ref Magnum/EigenIntegration/Integration.h, which always involves a copy, it's
 possible to make @relativeref{Corrade,Containers::StridedArrayView}
 instances point to Eigen types and, conversely, an @m_class{m-doc-external} [Eigen::Map](https://eigen.tuxfamily.org/dox/classEigen_1_1Map.html)
-from any @ref Containers::StridedArrayView1D or
-@relativeref{Containers,StridedArrayView2D} using
+from any @relativeref{Corrade,Containers::StridedArrayView1D} or
+@relativeref{Corrade::Containers,StridedArrayView2D} using
 @ref EigenIntegration::arrayCast():
 
 @snippet EigenIntegration.cpp DynamicMatrixIntegration
@@ -51,7 +51,7 @@ from any @ref Containers::StridedArrayView1D or
 namespace Magnum { namespace EigenIntegration {
 
 /**
-@brief Convert a @ref Containers::StridedArrayView2D to Eigen's dynamic matrix type
+@brief Convert a @relativeref{Corrade,Containers::StridedArrayView2D} to Eigen's dynamic matrix type
 @m_since_latest
 */
 template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
@@ -84,10 +84,10 @@ template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dyna
 }
 
 /**
-@brief Convert a @ref Containers::StridedArrayView1D to Eigen's dynamic vector type
+@brief Convert a @relativeref{Corrade,Containers::StridedArrayView1D} to Eigen's dynamic vector type
 @m_since_latest
 
-Since for a one-dimensional @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
+Since for a one-dimensional @relativeref{Corrade,Containers::StridedArrayView}
 there is no column or row version, we always return an Eigen column vector.
 */
 template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::Unaligned, Eigen::InnerStride<>> arrayCast(const Containers::StridedArrayView1D<T>& from) {
@@ -95,13 +95,13 @@ template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::
 }
 
 /**
-@brief Convert an Eigen expression to @ref Containers::StridedArrayView1D
+@brief Convert an Eigen expression to @relativeref{Corrade,Containers::StridedArrayView1D}
 @m_since_latest
 
 If it is known at compile time that the Eigen expression has either one column
 or one row, then this function maps the Eigen expression to a
-@ref Containers::StridedArrayView1D. Otherwise the overload below is picked,
-returning a @ref Containers::StridedArrayView2D.
+@relativeref{Corrade,Containers::StridedArrayView1D}. Otherwise the overload
+below is picked, returning a @relativeref{Corrade,Containers::StridedArrayView2D}.
 */
 template<class Derived> inline typename std::enable_if<
     #ifndef DOXYGEN_GENERATING_OUTPUT
@@ -120,7 +120,7 @@ template<class Derived> inline typename std::enable_if<
 }
 
 /**
-@brief Convert an Eigen expression to @ref Containers::StridedArrayView2D
+@brief Convert an Eigen expression to @relativeref{Corrade,Containers::StridedArrayView2D}
 @m_since_latest
 
 Takes care of any Eigen expression that was not handled by the one-dimensional
@@ -144,13 +144,13 @@ template<class Derived> inline typename std::enable_if<
 }
 
 /**
-@brief Convert an Eigen reverse expression to @ref Containers::StridedArrayView1D
+@brief Convert an Eigen reverse expression to @relativeref{Corrade,Containers::StridedArrayView1D}
 @m_since_latest
 
 If it is known at compile time that the Eigen reverse expression has either one
 column or one row, then this function maps the Eigen reverse expression to a
-@ref Containers::StridedArrayView1D. Otherwise the overload below is picked,
-returning a @ref Containers::StridedArrayView2D.
+@relativeref{Corrade,Containers::StridedArrayView1D}. Otherwise the overload
+below is picked, returning a @relativeref{Corrade,Containers::StridedArrayView2D}.
 */
 template<class Derived, int Direction> inline typename std::enable_if<
     #ifndef DOXYGEN_GENERATING_OUTPUT
@@ -178,7 +178,7 @@ template<class Derived, int Direction> inline typename std::enable_if<
 }
 
 /**
-@brief Convert an Eigen reverse expression to @ref Containers::StridedArrayView2D
+@brief Convert an Eigen reverse expression to @relativeref{Corrade,Containers::StridedArrayView2D}
 @m_since_latest
 
 Takes care of any Eigen expression that was not handled by the one-dimensional
