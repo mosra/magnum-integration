@@ -412,6 +412,13 @@ Magnum-based rendering backend for Dear ImGui is in the @ref Context class. See
 also the @ref examples-imgui example, @ref building-integration and
 @ref cmake-integration.
 
+@section ImGuiIntegration-version-support-policy ImGui version support policy
+
+The oldest supported ImGui version is regularly bumped to one that was released
+roughly two years ago (so for example in September 2024 it's version 1.88,
+released in June 2022). This matches deprecation policy of the ImGui project
+itself, where APIs get removed in two years after they were marked as obsolete.
+
 @m_class{m-block m-success}
 
 @thirdparty This library makes use of [Dear ImGui](https://github.com/ocornut/imgui),

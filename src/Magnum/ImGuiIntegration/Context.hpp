@@ -10,7 +10,7 @@
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2019 Guillaume Jacquemin <williamjcm@users.noreply.github.com>
     Copyright © 2019 Marco Melorio <m.melorio@icloud.com>
-    Copyright © 2022 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2022, 2024 Pablo Escobar <mail@rvrs.in>
     Copyright © 2022 Stanislaw Halik <sthalik@misaki.pl>
 
     Permission is hereby granted, free of charge, to any person obtaining a

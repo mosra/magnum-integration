@@ -39,6 +39,8 @@ namespace Magnum {
     versions are not supported anymore and all workarounds for them were
     removed. This is a conservative change, as there are no known supported
     distributions which would have anything older than 3.5.
+-   Minimal supported ImGui version is now 1.88 from June 2022 (see
+    [mosra/magnum-integration#111](https://github.com/mosra/magnum-integration/pull/111)). The @ref ImGuiIntegration-version-support-policy "version support policy is now also explicitly adocumented".
 
 @subsection changelog-integration-latest-new New features
 
