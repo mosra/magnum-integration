@@ -40,9 +40,13 @@ using namespace Magnum;
 void mainBulletIntegration();
 void mainBulletIntegration() {
 {
+/* -Wnonnull in GCC 11+  "helpfully" says "this is null" if I don't initialize
+   the btWorld pointer. I don't care, I just want you to check compilation
+   errors, not more! */
+btDiscreteDynamicsWorld btDDWorld{nullptr, nullptr, nullptr, nullptr};
 Matrix4 projection, transformation;
 /* [DebugDraw-usage] */
-btDynamicsWorld* btWorld = DOXYGEN_ELLIPSIS({});
+btDynamicsWorld* btWorld = DOXYGEN_ELLIPSIS(&btDDWorld);
 BulletIntegration::DebugDraw debugDraw;
 
 debugDraw.setMode(BulletIntegration::DebugDraw::Mode::DrawWireframe|
@@ -77,8 +81,12 @@ static_cast<void>(c);
 
 #ifndef BT_USE_DOUBLE_PRECISION
 {
+/* -Wnonnull in GCC 11+  "helpfully" says "this is null" if I don't initialize
+   the btWorld pointer. I don't care, I just want you to check compilation
+   errors, not more! */
+btDiscreteDynamicsWorld btDDWorld{nullptr, nullptr, nullptr, nullptr};
 /* [MotionState-usage] */
-btDynamicsWorld* btWorld = DOXYGEN_ELLIPSIS({});
+btDynamicsWorld* btWorld = DOXYGEN_ELLIPSIS(&btDDWorld);
 SceneGraph::Object<SceneGraph::MatrixTransformation3D> object;
 
 auto motionState = new BulletIntegration::MotionState{object};
