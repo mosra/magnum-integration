@@ -183,7 +183,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
 
             # Include path names to find, unless specified above
             if(NOT _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES)
-                set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES ${_component}.h)
+                set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES ${_component}Integration.h)
             endif()
 
             # Try to find both debug and release version
