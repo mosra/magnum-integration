@@ -101,6 +101,30 @@ find_path(MAGNUMINTEGRATION_INCLUDE_DIR Magnum/versionIntegration.h
     HINTS ${MAGNUM_INCLUDE_DIR})
 mark_as_advanced(MAGNUMINTEGRATION_INCLUDE_DIR)
 
+# CMake module dir for dependencies. It might not be present at all if no
+# feature that needs them is enabled, in which case it'll be left at NOTFOUND.
+# But in that case it should also not be subsequently needed for any
+# find_package(). If this is called from a superproject, the
+# _MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR is already set by
+# modules/CMakeLists.txt.
+find_path(_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR
+    NAMES
+        FindBullet.cmake FindGLM.cmake FindImGui.cmake FindOVR.cmake
+    PATH_SUFFIXES share/cmake/MagnumIntegration/dependencies)
+mark_as_advanced(_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR)
+
+# If the module dir is found and is not present in CMAKE_MODULE_PATH already
+# (such as when someone explicitly added it, or if it's the Magnum's modules/
+# dir in case of a superproject), add it as the first before all other. Set a
+# flag to remove it again at the end, so the modules don't clash with Find
+# modules of the same name from other projects.
+if(_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR AND NOT _MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR IN_LIST CMAKE_MODULE_PATH)
+    set(CMAKE_MODULE_PATH ${_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR} ${CMAKE_MODULE_PATH})
+    set(_MAGNUMINTEGRATION_REMOVE_DEPENDENCY_MODULE_DIR_FROM_CMAKE_PATH ON)
+else()
+    unset(_MAGNUMINTEGRATION_REMOVE_DEPENDENCY_MODULE_DIR_FROM_CMAKE_PATH)
+endif()
+
 # Component distinction (listing them explicitly to avoid mistakes with finding
 # components from other repositories)
 set(_MAGNUMINTEGRATION_LIBRARY_COMPONENTS Bullet Dart Eigen ImGui Glm)
@@ -187,6 +211,10 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
 
         # Decide if the library was found. If not, skip the rest, which
         # populates the target properties and finds additional dependencies.
+        # This means that the rest can also rely on that e.g. FindGLM.cmake is
+        # present in _MAGNUMPLUGINS_DEPENDENCY_MODULE_DIR -- given that the
+        # library needing GLM was found, it likely also installed FindGLM for
+        # itself.
         if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR AND (_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE))
             set(MagnumIntegration_${_component}_FOUND TRUE)
         else()
@@ -335,6 +363,13 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.16)
 
     string(REPLACE ";" " " _MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE "${_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE}")
     set(_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE REASON_FAILURE_MESSAGE "${_MAGNUMINTEGRATION_REASON_FAILURE_MESSAGE}")
+endif()
+
+# Remove Magnum Integration dependency module dir from CMAKE_MODULE_PATH again.
+# Do it before the FPHSA call which may exit early in case of a failure.
+if(_MAGNUMINTEGRATION_REMOVE_DEPENDENCY_MODULE_DIR_FROM_CMAKE_PATH)
+    list(REMOVE_ITEM CMAKE_MODULE_PATH ${_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR})
+    unset(_MAGNUMINTEGRATION_REMOVE_DEPENDENCY_MODULE_DIR_FROM_CMAKE_PATH)
 endif()
 
 include(FindPackageHandleStandardArgs)

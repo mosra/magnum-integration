@@ -128,6 +128,10 @@ namespace Magnum {
     that's built as static, fixing a common issue on Vcpkg (see
     [mosra/magnum-integration#67](https://github.com/mosra/magnum-integration/issues/67)
     and [mosra/magnum-integration#104](https://github.com/mosra/magnum-integration/issues/104)).
+-   Magnum Plugins now automatically install and use Find modules for their
+    dependencies in a way that doesn't clash with modules of the same name
+    potentially installed by other software, meaning the user doesn't need to
+    copy and carry them along anymore (see [mosra/magnum#436](https://github.com/mosra/magnum/issues/436))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 

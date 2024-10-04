@@ -39,10 +39,9 @@ Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
 This library depends on the [Bullet Physics](http://bulletphysics.org/) library
 and is built if `MAGNUM_WITH_BULLET` is enabled when building Magnum
-Integration. To use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
-and [FindBullet.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindBullet.cmake)
-into your `modules/` directory, request the `Bullet` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Bullet` target:
+Integration. To use this library with CMake, request the `Bullet` component of
+the `MagnumIntegration` package and link to the `MagnumIntegration::Bullet`
+target:
 
 @code{.cmake}
 find_package(MagnumIntegration REQUIRED Bullet)
@@ -265,10 +264,8 @@ Conversion of math types from and to the GLM library, debug output.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
 if `MAGNUM_WITH_GLM` is enabled when building Magnum Integration. To use this
-library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
-and [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
-into your `modules/` directory, request the `Glm` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
+library with CMake, request the `Glm` component of the `MagnumIntegration`
+package and link to the `MagnumIntegration::Glm` target:
 
 @code{.cmake}
 find_package(MagnumIntegration REQUIRED Glm)
@@ -331,10 +328,8 @@ Extensions to the [GLM](https://glm.g-truc.net/) library.
 
 This library depends on the [GLM](https://glm.g-truc.net/) library and is built
 if `MAGNUM_WITH_GLM` is enabled when building Magnum Integration. To use this
-library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
-and [FindGLM.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindGLM.cmake)
-into your `modules/` directory, request the `Glm` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Glm` target:
+library with CMake, request the `Glm` component of the `MagnumIntegration`
+package and link to the `MagnumIntegration::Glm` target:
 
 @code{.cmake}
 find_package(MagnumIntegration REQUIRED Glm)
@@ -371,10 +366,9 @@ Conversion of math classes and rendering of Dear ImGui using Magnum.
 
 This library depends on [Dear ImGui](https://github.com/ocornut/imgui) 1.88 and
 newer and is built if `MAGNUM_WITH_IMGUI` is enabled when building Magnum
-Integration. To use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
-and [FindImGui.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindImGui.cmake)
-into your `modules/` directory, request the `ImGui` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::ImGui` target:
+Integration. To use this library with CMake, request the `ImGui` component of
+the `MagnumIntegration` package and link to the `MagnumIntegration::ImGui`
+target:
 
 @code{.cmake}
 find_package(MagnumIntegration REQUIRED ImGui)
@@ -439,10 +433,8 @@ Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 
 This library depends on the [Oculus SDK](https://developer.oculus.com/) and is
 built if `MAGNUM_WITH_OVR` is enabled when building Magnum Integration. To use
-this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
-and [FindOVR.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindOVR.cmake)
-into your `modules/` directory, request the `Ovr` component of the
-`MagnumIntegration` package and link to the `MagnumIntegration::Ovr` target:
+this library with CMake, request the `Ovr` component of the `MagnumIntegration`
+package and link to the `MagnumIntegration::Ovr` target:
 
 @code{.cmake}
 find_package(MagnumIntegration REQUIRED Ovr)

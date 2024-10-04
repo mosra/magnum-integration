@@ -28,4 +28,32 @@ set(MagnumIntegration_MODULES
     FindMagnumIntegration.cmake
     MagnumIntegrationConfig.cmake)
 
+# IMPORTANT: When adding a new module here, be sure to update the
+# find_path(_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR ...) list in
+# FindMagnumIntegration.cmake to avoid breakages when the directory contains
+# only that new module.
+set(MagnumIntegration_DEPENDENCY_MODULES )
+if(MAGNUM_WITH_BULLET)
+    list(APPEND MagnumIntegration_DEPENDENCY_MODULES
+        FindBullet.cmake)
+endif()
+if(MAGNUM_WITH_GLM)
+    list(APPEND MagnumIntegration_DEPENDENCY_MODULES
+        FindGLM.cmake)
+endif()
+if(MAGNUM_WITH_IMGUI)
+    list(APPEND MagnumIntegration_DEPENDENCY_MODULES
+        FindImGui.cmake)
+endif()
+if(MAGNUM_WITH_OVR)
+    list(APPEND MagnumIntegration_DEPENDENCY_MODULES
+        FindOVR.cmake)
+endif()
+
 install(FILES ${MagnumIntegration_MODULES} DESTINATION ${MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR})
+if(MagnumIntegration_DEPENDENCY_MODULES)
+    install(FILES ${MagnumIntegration_DEPENDENCY_MODULES} DESTINATION ${MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR}/dependencies)
+endif()
+
+# Magnum Integration dependency module dir for superprojects
+set(_MAGNUMINTEGRATION_DEPENDENCY_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "")
