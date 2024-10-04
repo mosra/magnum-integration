@@ -136,6 +136,13 @@ if(MagnumIntegration_FIND_COMPONENTS)
     list(REMOVE_DUPLICATES MagnumIntegration_FIND_COMPONENTS)
 endif()
 
+# Special cases of include paths. Libraries not listed here have a path suffix
+# and include name derived from the library name in the loop below.
+set(_MAGNUMINTEGRATION_BULLET_INCLUDE_PATH_NAMES MotionState.h)
+set(_MAGNUMINTEGRATION_EIGEN_INCLUDE_PATH_NAMES GeometryIntegration.h)
+set(_MAGNUMINTEGRATION_GLM_INCLUDE_PATH_NAMES GtxIntegration.h)
+set(_MAGNUMINTEGRATION_IMGUI_INCLUDE_PATH_NAMES Widgets.h)
+
 # Find all components
 foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
     string(TOUPPER ${_component} _COMPONENT)
@@ -150,12 +157,45 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND NOT _component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
             add_library(MagnumIntegration::${_component} UNKNOWN IMPORTED)
 
+            # Include path names to find, unless specified above
+            if(NOT _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES)
+                set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES ${_component}.h)
+            endif()
+
             # Try to find both debug and release version
             find_library(MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG Magnum${_component}Integration-d)
             find_library(MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE Magnum${_component}Integration)
             mark_as_advanced(MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG
                 MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE)
 
+        # Header-only library components
+        elseif(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
+            add_library(MagnumIntegration::${_component} INTERFACE IMPORTED)
+
+        # Something unknown, skip. FPHSA will take care of handling this below.
+        else()
+            continue()
+        endif()
+
+        # Find library includes
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
+            find_path(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR
+                NAMES ${_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES}
+                HINTS ${MAGNUMINTEGRATION_INCLUDE_DIR}/Magnum/${_component}Integration)
+            mark_as_advanced(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR)
+        endif()
+
+        # Decide if the library was found. If not, skip the rest, which
+        # populates the target properties and finds additional dependencies.
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR AND (_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE))
+            set(MagnumIntegration_${_component}_FOUND TRUE)
+        else()
+            set(MagnumIntegration_${_component}_FOUND FALSE)
+            continue()
+        endif()
+
+        # Library location
+        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND NOT _component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
             if(MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE)
                 set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                     IMPORTED_CONFIGURATIONS RELEASE)
@@ -169,14 +209,6 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
                 set_property(TARGET MagnumIntegration::${_component} PROPERTY
                     IMPORTED_LOCATION_DEBUG ${MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG})
             endif()
-
-        # Header-only library components
-        elseif(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
-            add_library(MagnumIntegration::${_component} INTERFACE IMPORTED)
-
-        # Something unknown, skip. FPHSA will take care of handling this below.
-        else()
-            continue()
         endif()
 
         # Bullet integration library
@@ -207,8 +239,6 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
                     INTERFACE_LINK_LIBRARIES Bullet::LinearMath)
             endif()
 
-            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES MotionState.h)
-
         # Eigen integration library
         elseif(_component STREQUAL Eigen)
             find_package(Eigen3)
@@ -224,15 +254,11 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})
 
-            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES Integration.h)
-
         # ImGui integration library
         elseif(_component STREQUAL ImGui)
             find_package(ImGui)
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES ImGui::ImGui)
-
-            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES Integration.h)
 
         # GLM integration library
         elseif(_component STREQUAL Glm)
@@ -240,31 +266,17 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES GLM::GLM)
 
-            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES Integration.h)
-
         # Dart integration library
         elseif(_component STREQUAL Dart)
             find_package(DART 6.0.0 CONFIG REQUIRED)
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES dart)
 
-            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES ConvertShapeNode.h)
-
         # Oculus SDK integration library
         elseif(_component STREQUAL Ovr)
             find_package(OVR)
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES OVR::OVR)
-
-            set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES OvrIntegration.h)
-        endif()
-
-        # Find library includes
-        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
-            find_path(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR
-                NAMES ${_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES}
-                HINTS ${MAGNUMINTEGRATION_INCLUDE_DIR}/Magnum/${_component}Integration)
-            mark_as_advanced(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR)
         endif()
 
         if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
@@ -288,13 +300,6 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
                 set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                     INTERFACE_LINK_LIBRARIES MagnumIntegration::${_dependency})
             endforeach()
-        endif()
-
-        # Decide if the library was found
-        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_DIR AND (_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG OR MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE))
-            set(MagnumIntegration_${_component}_FOUND TRUE)
-        else()
-            set(MagnumIntegration_${_component}_FOUND FALSE)
         endif()
     endif()
 endforeach()
