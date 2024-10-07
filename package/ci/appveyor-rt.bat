@@ -1,5 +1,10 @@
 if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" call "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/Build/vcvarsall.bat" x64 || exit /b
 if "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set GENERATOR=Visual Studio 15 2017
+rem This is what should make the *native* corrade-rc getting found. Corrade
+rem should not cross-compile it on this platform, because then it'd get found
+rem instead of the native version with no way to distinguish the two, and all
+rem hell breaks loose. Thus also not passing CORRADE_RC_EXECUTABLE anywhere
+rem below to ensure this doesn't regress.
 set PATH=%APPVEYOR_BUILD_FOLDER%\deps-native\bin;%PATH%
 
 rem Build ANGLE. The repo is now just a README redirecting to googlesource.
@@ -34,7 +39,6 @@ cmake .. ^
     -DCMAKE_SYSTEM_NAME=WindowsStore ^
     -DCMAKE_SYSTEM_VERSION=10.0 ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
-    -DCORRADE_RC_EXECUTABLE=%APPVEYOR_BUILD_FOLDER%/deps-native/bin/corrade-rc.exe ^
     -DCORRADE_WITH_INTERCONNECT=OFF ^
     -DCORRADE_BUILD_STATIC=ON ^
     -G "%GENERATOR%" -A x64 || exit /b
@@ -54,7 +58,6 @@ cmake .. ^
     -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
     -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
-    -DCORRADE_RC_EXECUTABLE=%APPVEYOR_BUILD_FOLDER%/deps-native/bin/corrade-rc.exe ^
     -DMAGNUM_WITH_AUDIO=OFF ^
     -DMAGNUM_WITH_DEBUGTOOLS=ON ^
     -DMAGNUM_WITH_MATERIALTOOLS=OFF ^
@@ -76,7 +79,9 @@ rem Unlike ALL OTHER VARIABLES, CMAKE_MODULE_PATH chokes on backwards slashes.
 rem What the hell. This insane snippet converts them.
 set "APPVEYOR_BUILD_FOLDER_FWD=%APPVEYOR_BUILD_FOLDER:\=/%"
 
-rem Crosscompile. For a detailed Eigen rant, see appveyor-desktop.bat.
+rem Crosscompile. For a detailed Eigen rant, see appveyor-desktop.bat. Also no
+rem tests because they take ages to build, each executable is a msix file, and
+rem they can't be reasonably run either. F this platform.
 mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
     -DCMAKE_BUILD_TYPE=Release ^
