@@ -156,6 +156,13 @@ namespace Magnum {
     @ref BulletIntegration::DebugDraw::Modes "Modes",
     @ref BulletIntegration::DebugDraw::mode() "mode()" and
     @ref BulletIntegration::DebugDraw::setMode() "setMode()" instead
+-   @ref ImGuiIntegration now stores OpenGL texture ID inside `ImTextureID`
+    instead of a pointer to a live @ref GL::Texture2D instance. This is done in
+    order to prevent crashes in case of accidental misuse, and to make the
+    internals simpler as well. You're encouraged to use the new
+    @ref ImGuiIntegration::textureId() helper instead of a manual cast in your
+    code. See also [mosra/magnum#476](https://github.com/mosra/magnum/issues/476)
+    and [mosra/magnum-integration#108](https://github.com/mosra/magnum-integration/issues/108).
 
 @subsection changelog-integration-latest-documentation Documentation
 

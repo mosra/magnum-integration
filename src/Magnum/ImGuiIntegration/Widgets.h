@@ -32,7 +32,7 @@
 */
 
 /** @file
- * @brief Function @ref Magnum::ImGuiIntegration::image(), @ref Magnum::ImGuiIntegration::imageButton()
+ * @brief Function @ref Magnum::ImGuiIntegration::textureId(), @ref Magnum::ImGuiIntegration::image(), @ref Magnum::ImGuiIntegration::imageButton()
  */
 
 #include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
@@ -40,11 +40,23 @@
 #include <imgui.h>
 #include <Magnum/Math/Range.h>
 #include <Magnum/Math/Color.h>
-#include <Magnum/GL/GL.h>
+#include <Magnum/GL/Texture.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 
 namespace Magnum { namespace ImGuiIntegration {
+
+/**
+@brief Create an `ImTextureID` for a @ref GL::Texture2D
+@m_since_latest
+
+Internally, the `ImTextureID` is the underlying OpenGL texture ID, but that's
+an implementation detail that might change in the future.
+@see @ref image(), @ref imageButton()
+*/
+inline ImTextureID textureId(GL::Texture2D& texture) {
+    return reinterpret_cast<ImTextureID>(texture.id());
+}
 
 /**
 @brief Image widget displaying a @ref GL::Texture2D
@@ -54,13 +66,15 @@ namespace Magnum { namespace ImGuiIntegration {
     default)
 @param tintColor    Tint color, default @cpp 0xffffffff_rgbaf @ce
 @param borderColor  Border color, default @cpp 0x00000000_rgbaf @ce
+
+@see @ref textureId()
 */
 inline void image(GL::Texture2D& texture, const Vector2& size,
     const Range2D& uvRange = {{}, Vector2{1.0f}},
     const Color4& tintColor = Color4{1.0f},
     const Color4& borderColor = {})
 {
-    ImGui::Image(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(tintColor), ImColor(borderColor));
+    ImGui::Image(textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(tintColor), ImColor(borderColor));
 }
 
 /**
@@ -73,6 +87,8 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
 @param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
 @param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
 @m_since_latest
+
+@see @ref textureId()
 */
 inline bool imageButton(const char* id, GL::Texture2D& texture, const Vector2& size,
     const Range2D& uvRange = {{}, Vector2{1.0f}},
@@ -82,7 +98,7 @@ inline bool imageButton(const char* id, GL::Texture2D& texture, const Vector2& s
     /* Old function generating an implicit ID and taking frame padding from an
        explicit variable was deprecated in 1.89 and removed in 1.91.1 */
     #if IMGUI_VERSION_NUM >= 19110
-    return ImGui::ImageButton(id, static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(backgroundColor), ImColor(tintColor));
+    return ImGui::ImageButton(id, textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(backgroundColor), ImColor(tintColor));
     #else
     /* This is not exactly the same since the old function pushes another ID
        based on the texture ID, but we can't disable that. Just a best effort
@@ -90,7 +106,7 @@ inline bool imageButton(const char* id, GL::Texture2D& texture, const Vector2& s
        taking an explicit ID, but its signature doesn't seem stable. */
     ImGui::PushID(id);
     /* Negative padding uses the FramePadding style */
-    const bool ret = ImGui::ImageButton(static_cast<ImTextureID>(&texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), -1, ImColor(backgroundColor), ImColor(tintColor));
+    const bool ret = ImGui::ImageButton(textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), -1, ImColor(backgroundColor), ImColor(tintColor));
     ImGui::PopID();
     return ret;
     #endif
@@ -109,7 +125,7 @@ CORRADE_DEPRECATED("use imageButton(const char*, GL::Texture2D&, const Vector2&,
     const Color4& backgroundColor = {},
     const Color4& tintColor = Color4{1.0f})
 {
-    const ImTextureID textureId = static_cast<ImTextureID>(&texture);
+    const ImTextureID textureId = ImGuiIntegration::textureId(texture);
     /* Old function generating an implicit ID and taking frame padding from an
        explicit variable was deprecated in 1.89 and removed in 1.91.1. This is
        identical to the obsoleted wrapper code still present (but commented

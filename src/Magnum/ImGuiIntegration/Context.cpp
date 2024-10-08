@@ -49,6 +49,7 @@
 #include <Magnum/Math/Matrix3.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
+#include "Magnum/ImGuiIntegration/Widgets.h"
 
 namespace Magnum { namespace ImGuiIntegration {
 
@@ -112,11 +113,6 @@ Context::Context(NoCreateT) noexcept: _context{nullptr}, _shader{NoCreate}, _tex
 
 Context::Context(Context&& other) noexcept: _context{other._context}, _shader{Utility::move(other._shader)}, _texture{Utility::move(other._texture)}, _vertexBuffer{Utility::move(other._vertexBuffer)}, _indexBuffer{Utility::move(other._indexBuffer)}, _timeline{Utility::move(other._timeline)}, _mesh{Utility::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling} {
     other._context = nullptr;
-    /* Update the pointer to _texture */
-    ImGuiContext* current = ImGui::GetCurrentContext();
-    ImGui::SetCurrentContext(_context);
-    ImGui::GetIO().Fonts->SetTexID(static_cast<ImTextureID>(&_texture));
-    ImGui::SetCurrentContext(current);
 }
 
 Context::~Context() {
@@ -138,19 +134,6 @@ Context& Context::operator=(Context&& other) noexcept {
     swap(_mesh, other._mesh);
     swap(_supersamplingRatio, other._supersamplingRatio);
     swap(_eventScaling, other._eventScaling);
-
-    /* Update the pointers to _texture */
-    ImGuiContext* current = ImGui::GetCurrentContext();
-    if(_context) {
-        ImGui::SetCurrentContext(_context);
-        ImGui::GetIO().Fonts->SetTexID(static_cast<ImTextureID>(&_texture));
-    }
-    if(other._context) {
-        ImGui::SetCurrentContext(other._context);
-        ImGui::GetIO().Fonts->SetTexID(static_cast<ImTextureID>(&other._texture));
-    }
-    ImGui::SetCurrentContext(current);
-
     return *this;
 }
 
@@ -237,7 +220,7 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
         io.Fonts->ClearTexData();
 
         /* Make the texture available through the ImFontAtlas */
-        io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture));
+        io.Fonts->SetTexID(textureId(_texture));
     }
 
     /* Display size is the window size. Scaling of this to the actual window
@@ -331,8 +314,11 @@ void Context::drawFrame() {
                 ? GL::MeshIndexType::UnsignedShort
                 : GL::MeshIndexType::UnsignedInt);
 
+            /* We're storing just texture IDs, so make a non-owning instance
+               around it, and assume it's already created */
+            GL::Texture2D texture = GL::Texture2D::wrap(reinterpret_cast<std::uintptr_t>(pcmd->TextureId), GL::ObjectFlag::Created);
             _shader
-                .bindTexture(*static_cast<GL::Texture2D*>(pcmd->TextureId))
+                .bindTexture(texture)
                 .draw(_mesh);
         }
     }

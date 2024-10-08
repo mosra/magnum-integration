@@ -283,6 +283,14 @@ change ImGui's index type to 32-bit by adding the following line to the
 This doubles the size of the index buffer, resulting in potentially reduced
 draw performance, but is guaranteed to work on all GL versions.
 
+@section ImGuiIntegration-Context-custom-textures Drawing custom textures
+
+In order to draw a @ref GL::Texture2D instance, use the
+@ref image() and @ref imageButton() utilities in
+@ref Magnum/ImGuiIntegration/Widgets.h. For low-level texture drawing with
+ImGui APIs that accept a `ImTextureID`, use the @ref textureId() helper to
+create an ImGui texture ID from a @ref GL::Texture2D reference.
+
 @section ImGuiIntegration-Context-multiple-contexts Multiple contexts
 
 Each instance of @ref Context creates a new ImGui context. You can also pass an

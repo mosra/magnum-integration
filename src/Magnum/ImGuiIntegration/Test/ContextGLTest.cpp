@@ -53,6 +53,7 @@
 #include <Magnum/PixelFormat.h>
 
 #include "Magnum/ImGuiIntegration/Context.hpp"
+#include "Magnum/ImGuiIntegration/Widgets.h"
 
 #include "configure.h"
 
@@ -329,7 +330,10 @@ void ContextGLTest::constructMove() {
     CORRADE_COMPARE(a.context(), nullptr);
     CORRADE_COMPARE(b.context(), context);
 
-    CORRADE_COMPARE(&b.atlasTexture(), ImGui::GetIO().Fonts->TexID);
+    /* The texture ID used to be a pointer that had to be relocated. Now it's
+       just the underlying OpenGL ID that doesn't need to be, nevertheless
+       let's still check that it's what is expected. */
+    CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexID);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
 
     Context c{{}};
@@ -338,9 +342,12 @@ void ContextGLTest::constructMove() {
 
     c = Utility::move(b);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), cContext);
-    CORRADE_COMPARE(&b.atlasTexture(), ImGui::GetIO().Fonts->TexID);
+    /* The texture ID used to be a pointer that had to be relocated. Now it's
+       just the underlying OpenGL ID that doesn't need to be, nevertheless
+       let's still check that it's what is expected. */
+    CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexID);
     ImGui::SetCurrentContext(c.context());
-    CORRADE_COMPARE(&c.atlasTexture(), ImGui::GetIO().Fonts->TexID);
+    CORRADE_COMPARE(textureId(c.atlasTexture()), ImGui::GetIO().Fonts->TexID);
 
     /* This should not blow up */
     ImGui::SetCurrentContext(cContext);
@@ -1003,9 +1010,9 @@ void ContextGLTest::drawTexture() {
     const ImVec2& size = ImGui::GetIO().DisplaySize;
 
     /* Full UV range */
-    drawList->AddImage(static_cast<ImTextureID>(&texture1), {0.0f, 0.0f}, {size.x, size.y*0.5f});
+    drawList->AddImage(textureId(texture1), {0.0f, 0.0f}, {size.x, size.y*0.5f});
     /* Custom UV rect */
-    drawList->AddImage(static_cast<ImTextureID>(&texture2), {0.0f, size.y*0.5f}, size,
+    drawList->AddImage(textureId(texture2), {0.0f, size.y*0.5f}, size,
         {0.25f, 0.25f}, {1.0f, 0.75f});
 
     c.drawFrame();
