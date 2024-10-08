@@ -28,6 +28,7 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <Magnum/Math/Time.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/ImGuiIntegration/Context.hpp>
@@ -89,7 +90,7 @@ ApplicationTest::ApplicationTest(const Arguments& arguments):
 
     #if !defined(MAGNUM_TARGET_WEBGL) && !defined(CORRADE_TARGET_ANDROID)
     /* Have some sane speed, please */
-    setMinimalLoopPeriod(16);
+    setMinimalLoopPeriod(16.0_msec);
     #endif
 }
 
