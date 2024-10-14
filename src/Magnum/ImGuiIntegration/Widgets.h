@@ -55,7 +55,11 @@ an implementation detail that might change in the future.
 @see @ref image(), @ref imageButton()
 */
 inline ImTextureID textureId(GL::Texture2D& texture) {
+    #if IMGUI_VERSION_NUM >= 19131
+    return texture.id();
+    #else
     return reinterpret_cast<ImTextureID>(texture.id());
+    #endif
 }
 
 /**
