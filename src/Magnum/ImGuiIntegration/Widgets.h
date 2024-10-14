@@ -55,7 +55,7 @@ an implementation detail that might change in the future.
 @see @ref image(), @ref imageButton()
 */
 inline ImTextureID textureId(GL::Texture2D& texture) {
-    return reinterpret_cast<ImTextureID>(texture.id());
+    return static_cast<ImTextureID>(texture.id());
 }
 
 /**
