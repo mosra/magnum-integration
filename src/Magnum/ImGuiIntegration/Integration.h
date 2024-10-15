@@ -58,11 +58,27 @@ Example usage:
 #include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
 
 #include <imgui.h>
+#include <Corrade/Containers/StringView.h>
 #include <Magnum/Types.h>
 #include <Magnum/Math/Vector.h>
 
-/* Don't list (useless) Magnum and Math namespaces without anything else */
+/* Don't list (useless) Corrade and Magnum and Math namespaces without anything else */
 #ifndef DOXYGEN_GENERATING_OUTPUT
+
+/* Currently present only in the features/string_view branch of ImGui */
+#ifdef IMGUI_HAS_IMSTR
+namespace Corrade { namespace Containers { namespace Implementation {
+
+template<> struct StringViewConverter<const char, ImStrv> {
+    static StringView from(const ImStrv& other) {
+        return StringView{other.Begin, other.length()};
+    }
+    static ImStrv to(StringView other) { return ImStrv{other.begin(), other.end()}; }
+};
+
+}}}
+#endif
+
 namespace Magnum { namespace Math { namespace Implementation {
 
 /* ImVec2 */
