@@ -316,7 +316,14 @@ void Context::drawFrame() {
 
             /* We're storing just texture IDs, so make a non-owning instance
                around it, and assume it's already created */
-            GL::Texture2D texture = GL::Texture2D::wrap(static_cast<std::uintptr_t>(pcmd->TextureId), GL::ObjectFlag::Created);
+            GL::Texture2D texture = GL::Texture2D::wrap(
+                #if IMGUI_VERSION_NUM >= 19131
+                    pcmd->TextureId,
+                #else
+                    reinterpret_cast<std::uintptr_t>(pcmd->TextureId),
+                #endif
+                    GL::ObjectFlag::Created);
+
             _shader
                 .bindTexture(texture)
                 .draw(_mesh);
