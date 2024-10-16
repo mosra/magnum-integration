@@ -10,6 +10,7 @@
     Copyright © 2019 bowling-allie <allie.smith.epic@gmail.com>
     Copyright © 2021 Juan Pedro Bolívar Puente <raskolnikov@gnu.org>
     Copyright © 2022, 2024 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2024 kolbbond <kolbbond@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),

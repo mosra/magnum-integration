@@ -161,8 +161,9 @@ namespace Magnum {
     order to prevent crashes in case of accidental misuse, and to make the
     internals simpler as well. You're encouraged to use the new
     @ref ImGuiIntegration::textureId() helper instead of a manual cast in your
-    code. See also [mosra/magnum#476](https://github.com/mosra/magnum/issues/476)
-    and [mosra/magnum-integration#108](https://github.com/mosra/magnum-integration/issues/108).
+    code. See also [mosra/magnum#476](https://github.com/mosra/magnum/issues/476),
+    [mosra/magnum-integration#108](https://github.com/mosra/magnum-integration/issues/108)
+    and [mosra/magnum-integration#112](https://github.com/mosra/magnum-integration/pull/112).
 
 @subsection changelog-integration-latest-documentation Documentation
 
