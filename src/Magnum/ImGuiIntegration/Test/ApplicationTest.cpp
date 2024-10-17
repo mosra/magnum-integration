@@ -54,16 +54,37 @@ class ApplicationTest: public Platform::Application {
         void viewportEvent(ViewportEvent& event) override;
 
         #ifndef CORRADE_TARGET_ANDROID
-        void keyPressEvent(KeyEvent& event) override;
-        void keyReleaseEvent(KeyEvent& event) override;
+        void keyPressEvent(KeyEvent& event) override{
+            if(_imgui.handleKeyPressEvent(event)) return;
+        }
+
+        void keyReleaseEvent(KeyEvent& event) override {
+            if(_imgui.handleKeyReleaseEvent(event)) return;
+        }
         #endif
 
-        void mousePressEvent(MouseEvent& event) override;
-        void mouseReleaseEvent(MouseEvent& event) override;
-        void mouseMoveEvent(MouseMoveEvent& event) override;
+        void mousePressEvent(MouseEvent& event) override {
+            if(_imgui.handleMousePressEvent(event)) return;
+        }
+        void mouseReleaseEvent(MouseEvent& event) override {
+            if(_imgui.handleMouseReleaseEvent(event)) return;
+        }
+        void mouseMoveEvent(MouseMoveEvent& event) override {
+            if(_imgui.handleMouseMoveEvent(event)) return;
+        }
+
         #ifndef CORRADE_TARGET_ANDROID
-        void mouseScrollEvent(MouseScrollEvent& event) override;
-        void textInputEvent(TextInputEvent& event) override;
+        void mouseScrollEvent(MouseScrollEvent& event) override {
+            if(_imgui.handleMouseScrollEvent(event)) {
+                /* Prevent scrolling the page */
+                event.setAccepted();
+                return;
+            }
+        }
+
+        void textInputEvent(TextInputEvent& event) override {
+            if(_imgui.handleTextInputEvent(event)) return;
+        }
         #endif
 
     private:
@@ -126,42 +147,6 @@ void ApplicationTest::viewportEvent(ViewportEvent& event) {
     _imgui.relayout(Vector2{event.windowSize()}/event.dpiScaling(),
         event.windowSize(), event.framebufferSize());
 }
-
-#ifndef CORRADE_TARGET_ANDROID
-void ApplicationTest::keyPressEvent(KeyEvent& event) {
-    if(_imgui.handleKeyPressEvent(event)) return;
-}
-
-void ApplicationTest::keyReleaseEvent(KeyEvent& event) {
-    if(_imgui.handleKeyReleaseEvent(event)) return;
-}
-#endif
-
-void ApplicationTest::mousePressEvent(MouseEvent& event) {
-    if(_imgui.handleMousePressEvent(event)) return;
-}
-
-void ApplicationTest::mouseReleaseEvent(MouseEvent& event) {
-    if(_imgui.handleMouseReleaseEvent(event)) return;
-}
-
-void ApplicationTest::mouseMoveEvent(MouseMoveEvent& event) {
-    if(_imgui.handleMouseMoveEvent(event)) return;
-}
-
-#ifndef CORRADE_TARGET_ANDROID
-void ApplicationTest::mouseScrollEvent(MouseScrollEvent& event) {
-    if(_imgui.handleMouseScrollEvent(event)) {
-        /* Prevent scrolling the page */
-        event.setAccepted();
-        return;
-    }
-}
-
-void ApplicationTest::textInputEvent(TextInputEvent& event) {
-    if(_imgui.handleTextInputEvent(event)) return;
-}
-#endif
 
 }}}
 
