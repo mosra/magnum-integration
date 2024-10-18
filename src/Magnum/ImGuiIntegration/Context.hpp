@@ -40,6 +40,7 @@
 #include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
 
 #include <imgui.h>
+#include <Corrade/Containers/Optional.h>
 #include <Corrade/Utility/Resource.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
@@ -191,6 +192,68 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     return io.WantCaptureKeyboard;
 }
 
+/* Not all applications have Finger / Pen pointers, so employing a dirty SFINAE
+   trick with an overload that returns false if given enum value is not
+   available. Similar to a trick for working around missing Cursor enums
+   below. */
+namespace Implementation {
+
+#ifndef DOXYGEN_GENERATING_OUTPUT
+#define MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER(pointer)                   \
+    template<class Pointer> constexpr bool is##pointer##Pointer(Pointer p, decltype(Pointer::pointer)* = nullptr) { \
+        return p == Pointer::pointer;                                       \
+    }                                                                       \
+    constexpr bool is##pointer##Pointer(...) {                              \
+        return false;                                                       \
+    }
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER(Finger)
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER(Pen)
+#undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER
+#endif
+
+}
+
+template<class PointerEvent> bool Context::handlePointerEvent(PointerEvent& event, bool value) {
+    /* Ignore secondary touches, ImGui doesn't support multi-touch */
+    if(!event.isPrimary())
+        return false;
+
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
+    ImGuiIO& io = ImGui::GetIO();
+    const Vector2 position = event.position()*_eventScaling;
+
+    ImGuiMouseButton buttonId;
+    /* Finger and pen still reports as mouse left */
+    if(event.pointer() == decltype(event.pointer())::MouseLeft ||
+       Implementation::isFingerPointer(event.pointer()) ||
+       Implementation::isPenPointer(event.pointer()))
+        buttonId = ImGuiMouseButton_Left;
+    else if(event.pointer() == decltype(event.pointer())::MouseRight)
+        buttonId = ImGuiMouseButton_Right;
+    else if(event.pointer() == decltype(event.pointer())::MouseMiddle)
+        buttonId = ImGuiMouseButton_Middle;
+    else
+        /* Unknown button, do nothing */
+        return false;
+
+    io.AddMousePosEvent(position.x(), position.y());
+    io.AddMouseButtonEvent(buttonId, value);
+
+    return io.WantCaptureMouse;
+}
+
+template<class PointerEvent> bool Context::handlePointerPressEvent(PointerEvent& event) {
+    return handlePointerEvent(event, true);
+}
+
+template<class PointerEvent> bool Context::handlePointerReleaseEvent(PointerEvent& event) {
+    return handlePointerEvent(event, false);
+}
+
+#ifdef MAGNUM_BUILD_DEPRECATED
+CORRADE_IGNORE_DEPRECATED_PUSH
 template<class MouseEvent> bool Context::handleMouseEvent(MouseEvent& event, bool value) {
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(_context);
@@ -227,7 +290,24 @@ template<class MouseEvent> bool Context::handleMousePressEvent(MouseEvent& event
 template<class MouseEvent> bool Context::handleMouseReleaseEvent(MouseEvent& event) {
     return handleMouseEvent(event, false);
 }
+CORRADE_IGNORE_DEPRECATED_POP
+#endif
 
+template<class ScrollEvent> bool Context::handleScrollEvent(ScrollEvent& event) {
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
+    ImGuiIO& io = ImGui::GetIO();
+    const Vector2 position = event.position()*_eventScaling;
+
+    io.AddMousePosEvent(position.x(), position.y());
+    io.AddMouseWheelEvent(event.offset().x(), event.offset().y());
+
+    return io.WantCaptureMouse;
+}
+
+#ifdef MAGNUM_BUILD_DEPRECATED
+CORRADE_IGNORE_DEPRECATED_PUSH
 template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrollEvent& event) {
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(_context);
@@ -240,7 +320,47 @@ template<class MouseScrollEvent> bool Context::handleMouseScrollEvent(MouseScrol
 
     return io.WantCaptureMouse;
 }
+CORRADE_IGNORE_DEPRECATED_POP
+#endif
 
+template<class PointerMoveEvent> bool Context::handlePointerMoveEvent(PointerMoveEvent& event) {
+    /* Ignore secondary touches, ImGui doesn't support multi-touch */
+    if(!event.isPrimary())
+        return false;
+
+    /* Ensure we use the context we're linked to */
+    ImGui::SetCurrentContext(_context);
+
+    ImGuiIO& io = ImGui::GetIO();
+    const Vector2 position = event.position()*_eventScaling;
+
+    /* If the event additionally changes the set of pressed buttons, try to
+       translate that to ImGui as well */
+    Containers::Optional<ImGuiMouseButton> buttonId;
+    if(event.pointer()) {
+        /* Finger and pen still reports as mouse left */
+        if(*event.pointer() == decltype(*event.pointer())::MouseLeft ||
+           Implementation::isFingerPointer(*event.pointer()) ||
+           Implementation::isPenPointer(*event.pointer()))
+            buttonId = ImGuiMouseButton_Left;
+        else if(*event.pointer() == decltype(*event.pointer())::MouseRight)
+            buttonId = ImGuiMouseButton_Right;
+        else if(*event.pointer() == decltype(*event.pointer())::MouseMiddle)
+            buttonId = ImGuiMouseButton_Middle;
+    }
+
+    io.AddMousePosEvent(position.x(), position.y());
+    /* The button is pressed if it's contained in the set of currently
+       pressed pointers. If event.pointer() is a NullOpt, this isn't
+       reached. */
+    if(buttonId)
+        io.AddMouseButtonEvent(*buttonId, *event.pointer() <= event.pointers());
+
+    return io.WantCaptureMouse;
+}
+
+#ifdef MAGNUM_BUILD_DEPRECATED
+CORRADE_IGNORE_DEPRECATED_PUSH
 template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent& event) {
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(_context);
@@ -252,6 +372,8 @@ template<class MouseMoveEvent> bool Context::handleMouseMoveEvent(MouseMoveEvent
 
     return io.WantCaptureMouse;
 }
+CORRADE_IGNORE_DEPRECATED_POP
+#endif
 
 template<class KeyEvent> bool Context::handleKeyPressEvent(KeyEvent& event) {
     return handleKeyEvent(event, true);

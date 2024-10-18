@@ -147,6 +147,15 @@ namespace Magnum {
     @ref MAGNUM_BUILD_DEPRECATED is disabled and unless a prefixed option is
     already set during the initial run, the unprefixed options are still
     recognized with a warning. See also [mosra/corrade#139](https://github.com/mosra/corrade/issues/139).
+-   @cpp ImGuiIntegration::Context::handleMousePressEvent() @ce,
+    @cpp handleMouseReleaseEvent() @ce, @cpp handleMouseMoveEvent() @ce and
+    @cpp handleMouseScrollEvent() @ce that operated with the now-deprecated
+    application mouse events are deprecated in favor of
+    @ref ImGuiIntegration::Context::handlePointerPressEvent(),
+    @relativeref{ImGuiIntegration::Context,handlePointerReleaseEvent()},
+    @relativeref{ImGuiIntegration::Context,handlePointerMoveEvent()} and
+    @relativeref{ImGuiIntegration::Context,handleScrollEvent()} that accept the
+    new pointer and scroll events instead.
 
 @subsection changelog-integration-latest-compatibility Potential compatibility breakages, removed APIs
 

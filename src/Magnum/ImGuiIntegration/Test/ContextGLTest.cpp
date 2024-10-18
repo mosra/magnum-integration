@@ -77,6 +77,56 @@ struct InputEvent {
     Modifiers modifiers() { return _modifiers; }
 };
 
+enum class Pointer: Int {
+    Finger, Pen, MouseLeft, MouseMiddle, MouseRight
+};
+typedef Containers::EnumSet<Pointer> Pointers;
+#ifdef CORRADE_TARGET_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#endif
+CORRADE_ENUMSET_OPERATORS(Pointers)
+#ifdef CORRADE_TARGET_CLANG
+#pragma clang diagnostic pop
+#endif
+
+struct PointerEvent: public InputEvent {
+    explicit PointerEvent(Pointer pointer, const Vector2& position, Modifiers modifiers, bool primary = true): InputEvent{modifiers}, _pointer{pointer}, _position{position}, _primary{primary} {}
+
+    Pointer _pointer;
+    Vector2 _position;
+    bool _primary;
+
+    Pointer pointer() const { return _pointer; }
+    Vector2 position() const { return _position; }
+    bool isPrimary() const { return _primary; }
+};
+
+struct PointerMoveEvent: public InputEvent {
+    explicit PointerMoveEvent(Containers::Optional<Pointer> pointer, Pointers pointers, const Vector2& position, Modifiers modifiers, bool primary = true): InputEvent{modifiers}, _pointer{pointer}, _pointers{pointers}, _position{position}, _primary{primary} {}
+
+    Containers::Optional<Pointer> _pointer;
+    Pointers _pointers;
+    Vector2 _position;
+    bool _primary;
+
+    Containers::Optional<Pointer> pointer() const { return _pointer; }
+    Pointers pointers() const { return _pointers; }
+    Vector2 position() const { return _position; }
+    bool isPrimary() const { return _primary; }
+};
+
+struct ScrollEvent: public InputEvent {
+    explicit ScrollEvent(const Vector2& offset, const Vector2& position, Modifiers modifiers): InputEvent{modifiers}, _offset{offset}, _position{position} {}
+
+    Vector2 _offset;
+    Vector2 _position;
+
+    Vector2 offset() { return _offset; }
+    Vector2 position() { return _position; }
+};
+
+#ifdef MAGNUM_BUILD_DEPRECATED
 enum class Button: Int {
     Left, Middle, Right
 };
@@ -92,7 +142,6 @@ struct MouseEvent: public InputEvent {
 
     Button button() { return _button; }
     Vector2i position() { return _position; }
-
 };
 
 struct MouseScrollEvent: public InputEvent {
@@ -105,6 +154,7 @@ struct MouseScrollEvent: public InputEvent {
     Vector2 offset() { return _offset; }
     Vector2i position() { return _position; }
 };
+#endif
 
 struct Application {
     enum class Cursor {
@@ -184,8 +234,13 @@ struct ContextGLTest: GL::OpenGLTester {
     void relayoutZeroSize();
     void relayoutRefreshFonts();
 
+    void pointerInput();
+    void pointerInputTooFast();
+    void scrollInput();
+    #ifdef MAGNUM_BUILD_DEPRECATED
     void mouseInput();
     void mouseInputTooFast();
+    #endif
     void keyInput();
     void textInput();
     void updateCursor();
@@ -227,8 +282,13 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::relayoutZeroSize,
               &ContextGLTest::relayoutRefreshFonts,
 
+              &ContextGLTest::pointerInput,
+              &ContextGLTest::pointerInputTooFast,
+              &ContextGLTest::scrollInput,
+              #ifdef MAGNUM_BUILD_DEPRECATED
               &ContextGLTest::mouseInput,
               &ContextGLTest::mouseInputTooFast,
+              #endif
               &ContextGLTest::keyInput,
               &ContextGLTest::textInput,
               &ContextGLTest::updateCursor,
@@ -585,6 +645,204 @@ void ContextGLTest::relayoutRefreshFonts() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 }
 
+void ContextGLTest::pointerInput() {
+    Context c{{200, 200}};
+
+    /* Pointer mouse mutton */
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+
+    PointerEvent mouseLeft{Pointer::MouseLeft, {1.5f, 2.25f}, {}};
+    PointerEvent mouseRight{Pointer::MouseRight, {3.75f, 4.5f}, {}};
+    PointerEvent mouseMiddle{Pointer::MouseMiddle, {5.5f, 6.25f}, {}};
+    PointerEvent finger{Pointer::Finger, {5.75f, 3.25f}, {}};
+    PointerEvent pen{Pointer::Pen, {2.75f, 4.5f}, {}};
+
+    /* Queued IO events in imgui are propagated to it only during newFrame(),
+       which means we need to check *after* it gets called. See
+       mouseInputTooFast() below for more. */
+
+    c.handlePointerPressEvent(mouseLeft);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{1.0f, 2.0f}));
+    c.drawFrame();
+
+    c.handlePointerPressEvent(mouseRight);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
+    c.drawFrame();
+
+    c.handlePointerPressEvent(mouseMiddle);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
+    c.drawFrame();
+
+    c.handlePointerReleaseEvent(mouseRight);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
+    c.drawFrame();
+
+    c.handlePointerReleaseEvent(mouseLeft);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+    c.drawFrame();
+
+    c.handlePointerReleaseEvent(mouseMiddle);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
+    c.drawFrame();
+
+    /* Finger and pen should be treated the same as mouse left */
+    c.handlePointerPressEvent(finger);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{5.0f, 3.0f}));
+    c.drawFrame();
+
+    c.handlePointerReleaseEvent(pen);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{2.0f, 4.0f}));
+    c.drawFrame();
+
+    /* Pointer movement */
+    PointerMoveEvent move{{}, {}, {1.125f, 2.625f}, {}};
+    c.handlePointerMoveEvent(move);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
+    c.drawFrame();
+
+    /* Pointer movement where the set of pressed buttons gets larger */
+    PointerMoveEvent movePress{Pointer::MouseMiddle, Pointer::MouseMiddle, {9.5f, 1.25f}, {}};
+    c.handlePointerMoveEvent(movePress);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
+    c.drawFrame();
+
+    /* Pointer movement where the set of pressed buttons gets larger */
+    PointerMoveEvent movePress2{Pointer::Pen, Pointer::MouseMiddle|Pointer::Pen, {8.5f, 0.25f}, {}};
+    c.handlePointerMoveEvent(movePress2);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{8.0f, 0.0f}));
+    c.drawFrame();
+
+    /* Pointer movement where the set of pressed buttons gets smaller */
+    PointerMoveEvent moveRelease{Pointer::MouseMiddle, Pointer::Pen, {9.5f, 1.25f}, {}};
+    c.handlePointerMoveEvent(moveRelease);
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
+    c.drawFrame();
+
+    /* Unknown buttons shouldn't be propagated to imgui */
+    PointerEvent unknownButton{Pointer(666), {1, 2}, {}};
+    CORRADE_VERIFY(!c.handlePointerPressEvent(unknownButton));
+    CORRADE_VERIFY(!c.handlePointerReleaseEvent(unknownButton));
+
+    /* Non-primary events shouldn't be propagated to imgui. Faking it a bit
+       here, as in practice mouse events are always primary. */
+    PointerEvent mouseMiddleSecondary{Pointer::MouseMiddle, {1.0f, 2.0f}, {}, false};
+    CORRADE_VERIFY(!c.handlePointerPressEvent(mouseMiddleSecondary));
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
+    c.drawFrame();
+
+    PointerMoveEvent moveSecondary{{}, {}, {1.0, 2.0f}, {}, false};
+    CORRADE_VERIFY(!c.handlePointerMoveEvent(moveSecondary));
+    Utility::System::sleep(1);
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
+    c.drawFrame();
+}
+
+void ContextGLTest::pointerInputTooFast() {
+    Context c{{200, 200}};
+
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+
+    /* It's not reported immediately */
+    PointerEvent left{Pointer::MouseLeft, {1.0f, 2.0f}, {}};
+    c.handlePointerPressEvent(left);
+    c.handlePointerReleaseEvent(left);
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+
+    /* Only during the newFrame call */
+    c.newFrame();
+    CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    c.drawFrame();
+
+    /* And mouse up is reported in the next one */
+    c.newFrame();
+    CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    c.drawFrame();
+}
+
+void ContextGLTest::scrollInput() {
+    Context c{{200, 200}};
+
+    /* Scrolling / mouse wheel */
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 0.0f, Float);
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, Float);
+
+    ScrollEvent scroll{{1.2f, -1.2f}, {17.2f, 23.5f}, {}};
+    c.handleScrollEvent(scroll);
+    Utility::System::sleep(1);
+    c.newFrame();
+    c.drawFrame();
+    c.newFrame();
+    /* ImGui floors the positions internally, so the fraction gets lost */
+    CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{17.0f, 23.0f}));
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheelH, 1.2f, Float);
+    CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, -1.2f, Float);
+    c.drawFrame();
+}
+
+#ifdef MAGNUM_BUILD_DEPRECATED
 void ContextGLTest::mouseInput() {
     Context c{{200, 200}};
 
@@ -601,42 +859,54 @@ void ContextGLTest::mouseInput() {
        which means we need to check *after* it gets called. See
        mouseInputTooFast() below for more. */
 
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMousePressEvent(left);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
 
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMousePressEvent(right);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Right));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
 
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMousePressEvent(middle);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
 
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMouseReleaseEvent(right);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
 
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMouseReleaseEvent(left);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
 
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMouseReleaseEvent(middle);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
@@ -645,7 +915,9 @@ void ContextGLTest::mouseInput() {
 
     /* Mouse Movement */
     MouseEvent move{Button{}, {1, 2}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMouseMoveEvent(move);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
@@ -656,7 +928,9 @@ void ContextGLTest::mouseInput() {
     CORRADE_COMPARE_AS(ImGui::GetIO().MouseWheel, 0.0f, Float);
 
     MouseScrollEvent scroll{{1.2f, -1.2f}, {17, 23}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMouseScrollEvent(scroll);
+    CORRADE_IGNORE_DEPRECATED_POP
     Utility::System::sleep(1);
     c.newFrame();
     c.drawFrame();
@@ -668,8 +942,10 @@ void ContextGLTest::mouseInput() {
 
     /* Unknown buttons shouldn't be propagated to imgui */
     MouseEvent unknownButton{Button(666), {1, 2}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
     CORRADE_VERIFY(!c.handleMousePressEvent(unknownButton));
     CORRADE_VERIFY(!c.handleMouseReleaseEvent(unknownButton));
+    CORRADE_IGNORE_DEPRECATED_POP
 }
 
 void ContextGLTest::mouseInputTooFast() {
@@ -679,8 +955,10 @@ void ContextGLTest::mouseInputTooFast() {
 
     /* It's not reported immediately */
     MouseEvent left{Button::Left, {1, 2}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
     c.handleMousePressEvent(left);
     c.handleMouseReleaseEvent(left);
+    CORRADE_IGNORE_DEPRECATED_POP
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
 
     /* Only during the newFrame call */
@@ -693,6 +971,7 @@ void ContextGLTest::mouseInputTooFast() {
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
     c.drawFrame();
 }
+#endif
 
 void ContextGLTest::keyInput() {
     Context c{{}};
@@ -812,19 +1091,19 @@ void ContextGLTest::multipleContexts() {
 
     /* Verify that event handlers also switch to proper context */
 
-    MouseEvent left{Button::Left, {1, 2}, {}};
-    a.handleMousePressEvent(left);
+    PointerEvent left{Pointer::MouseLeft, {1, 2}, {}};
+    a.handlePointerPressEvent(left);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 
-    b.handleMouseReleaseEvent(left);
+    b.handlePointerReleaseEvent(left);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
-    MouseScrollEvent scroll{{1.2f, -1.2f}, {}, {}};
-    a.handleMouseScrollEvent(scroll);
+    PointerMoveEvent move{{}, {}, {1, 2}, {}};
+    a.handlePointerMoveEvent(move);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 
-    MouseEvent move{Button{}, {1, 2}, {}};
-    b.handleMouseMoveEvent(move);
+    ScrollEvent scroll{{1.2f, -1.2f}, {}, {}};
+    b.handleScrollEvent(scroll);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
     KeyEvent tab{KeyEvent::Key::Tab, {}};
@@ -837,6 +1116,32 @@ void ContextGLTest::multipleContexts() {
     TextInputEvent text{{"abc"}};
     a.handleTextInputEvent(text);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    /* And the deprecated ones still as well */
+    #ifdef MAGNUM_BUILD_DEPRECATED
+    MouseEvent mouseLeft{Button::Left, {1, 2}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
+    b.handleMousePressEvent(mouseLeft);
+    CORRADE_IGNORE_DEPRECATED_POP
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    CORRADE_IGNORE_DEPRECATED_PUSH
+    a.handleMouseReleaseEvent(mouseLeft);
+    CORRADE_IGNORE_DEPRECATED_POP
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+
+    MouseEvent mouseMove{Button{}, {1, 2}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
+    b.handleMouseMoveEvent(mouseMove);
+    CORRADE_IGNORE_DEPRECATED_POP
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
+
+    MouseScrollEvent mouseScroll{{1.2f, -1.2f}, {}, {}};
+    CORRADE_IGNORE_DEPRECATED_PUSH
+    a.handleMouseScrollEvent(scroll);
+    CORRADE_IGNORE_DEPRECATED_POP
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
+    #endif
 }
 
 constexpr Color4 DrawClearColor{0.5f, 0.5f, 1.0f, 1.0f};

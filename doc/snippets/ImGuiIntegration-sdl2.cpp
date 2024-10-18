@@ -119,8 +119,8 @@ redraw();
 }
 
 void viewportEvent(ViewportEvent& event) override;
-void mousePressEvent(MouseEvent& event) override;
-void mouseReleaseEvent(MouseEvent& event) override;
+void pointerPressEvent(PointerEvent& event) override;
+void pointerReleaseEvent(PointerEvent& event) override;
 
 ImGuiIntegration::Context _imgui{Vector2i{}};
 Float _supersamplingRatio{};
@@ -131,14 +131,14 @@ Float _supersamplingRatio{};
 
 // ...
 
-void MyApp::mousePressEvent(MouseEvent& event) {
-    if(_imgui.handleMousePressEvent(event)) return;
+void MyApp::pointerPressEvent(PointerEvent& event) {
+    if(_imgui.handlePointerPressEvent(event)) return;
 
     // event not handled by ImGui, handle it for the app itself
 }
 
-void MyApp::mouseReleaseEvent(MouseEvent& event) {
-    if(_imgui.handleMouseReleaseEvent(event)) return;
+void MyApp::pointerReleaseEvent(PointerEvent& event) {
+    if(_imgui.handlePointerReleaseEvent(event)) return;
 
     // ...
 }

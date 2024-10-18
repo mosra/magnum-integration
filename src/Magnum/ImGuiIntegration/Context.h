@@ -502,7 +502,28 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         void drawFrame();
 
         /**
+         * @brief Handle pointer press event
+         * @m_since_latest
+         *
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::pointerPressEvent(), to ImGui.
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
+         *
+         * If the event isn't primary (such as a second and following finger
+         * press in a multi-touch scenario), the function does nothing and
+         * returns @cpp false @ce.
+         */
+        template<class PointerEvent> bool handlePointerPressEvent(PointerEvent& event);
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /**
          * @brief Handle mouse press event
+         * @m_deprecated_since_latest Use @ref handlePointerPressEvent() with a
+         *      corresponding @relativeref{Platform::Sdl2Application,PointerEvent}
+         *      instance instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -511,10 +532,32 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * shouldn't be further propagated to the rest of the application),
          * @cpp false @ce otherwise.
          */
-        template<class MouseEvent> bool handleMousePressEvent(MouseEvent& event);
+        template<class MouseEvent> CORRADE_DEPRECATED("use handlePointerPressEvent() with a corresponding PointerEvent instance instead") bool handleMousePressEvent(MouseEvent& event);
+        #endif
 
         /**
+         * @brief Handle pointer release event
+         * @m_since_latest
+         *
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::pointerReleaseEvent(), to ImGui.
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
+         *
+         * If the event isn't primary (such as a second and following finger
+         * press in a multi-touch scenario), the function does nothing and
+         * returns @cpp false @ce.
+         */
+        template<class PointerEvent> bool handlePointerReleaseEvent(PointerEvent& event);
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /**
          * @brief Handle mouse release event
+         * @m_deprecated_since_latest Use @ref handlePointerReleaseEvent() with a
+         *      corresponding @relativeref{Platform::Sdl2Application,PointerEvent}
+         *      instance instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -523,10 +566,28 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * event shouldn't be further propagated to the rest of the
          * application), @cpp false @ce otherwise.
          */
-        template<class MouseEvent> bool handleMouseReleaseEvent(MouseEvent& event);
+        template<class MouseEvent> CORRADE_DEPRECATED("use handlePointerReleaseEvent() with a corresponding PointerEvent instance instead") bool handleMouseReleaseEvent(MouseEvent& event);
+        #endif
 
         /**
+         * @brief Handle scroll event
+         * @m_since_latest
+         *
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::scrollEvent(), to ImGui. Returns
+         * @cpp true @ce if ImGui wants to capture the mouse (so the event
+         * shouldn't be further propagated to the rest of the application),
+         * @cpp false @ce otherwise.
+         */
+        template<class ScrollEvent> bool handleScrollEvent(ScrollEvent& event);
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /**
          * @brief Handle mouse scroll event
+         * @m_deprecated_since_latest Use @ref handleScrollEvent() with a
+         *      corresponding @relativeref{Platform::Sdl2Application,ScrollEvent}
+         *      instance instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -535,10 +596,32 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * event shouldn't be further propagated to the rest of the
          * application), @cpp false @ce otherwise.
          */
-        template<class MouseScrollEvent> bool handleMouseScrollEvent(MouseScrollEvent& event);
+        template<class MouseScrollEvent> CORRADE_DEPRECATED("use handleScrollEvent() with a corresponding ScrollEvent instance instead") bool handleMouseScrollEvent(MouseScrollEvent& event);
+        #endif
 
         /**
+         * @brief Handle pointer move event
+         * @m_since_latest
+         *
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::pointerMoveEvent(), to ImGui.
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
+         *
+         * If the event isn't primary (such as a second and following finger
+         * press in a multi-touch scenario), the function does nothing and
+         * returns @cpp false @ce.
+         */
+        template<class PointerMoveEvent> bool handlePointerMoveEvent(PointerMoveEvent& event);
+
+        #ifdef MAGNUM_BUILD_DEPRECATED
+        /**
          * @brief Handle mouse move event
+         * @m_deprecated_since_latest Use @ref handlePointerMoveEvent() with a
+         *      corresponding @relativeref{Platform::Sdl2Application,PointerMoveEvent}
+         *      instance instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -547,7 +630,8 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * shouldn't be further propagated to the rest of the application),
          * @cpp false @ce otherwise.
          */
-        template<class MouseMoveEvent> bool handleMouseMoveEvent(MouseMoveEvent& event);
+        template<class MouseMoveEvent> CORRADE_DEPRECATED("use handlePointerMoveEvent() with a corresponding PointerMoveEvent instance instead") bool handleMouseMoveEvent(MouseMoveEvent& event);
+        #endif
 
         /**
          * @brief Handle key press event
@@ -610,7 +694,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
     private:
         template<class KeyEvent> bool handleKeyEvent(KeyEvent& event, bool value);
+        template<class PointerEvent> bool handlePointerEvent(PointerEvent& event, bool value);
+        #ifdef MAGNUM_BUILD_DEPRECATED
         template<class MouseEvent> bool handleMouseEvent(MouseEvent& event, bool value);
+        #endif
 };
 
 }}
