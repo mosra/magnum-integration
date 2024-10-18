@@ -63,6 +63,28 @@ class ApplicationTest: public Platform::Application {
         }
         #endif
 
+        /* Set to 0 to test the deprecated mouse events instead */
+        #if 1
+        void pointerPressEvent(PointerEvent& event) override {
+            if(_imgui.handlePointerPressEvent(event)) return;
+        }
+        void pointerReleaseEvent(PointerEvent& event) override {
+            if(_imgui.handlePointerReleaseEvent(event)) return;
+        }
+        void pointerMoveEvent(PointerMoveEvent& event) override {
+            if(_imgui.handlePointerMoveEvent(event)) return;
+        }
+        #ifndef CORRADE_TARGET_ANDROID
+        void scrollEvent(ScrollEvent& event) override {
+            if(_imgui.handleScrollEvent(event)) {
+                /* Prevent scrolling the page */
+                event.setAccepted();
+                return;
+            }
+        }
+        #endif
+        #else
+        CORRADE_IGNORE_DEPRECATED_PUSH
         void mousePressEvent(MouseEvent& event) override {
             if(_imgui.handleMousePressEvent(event)) return;
         }
@@ -72,7 +94,6 @@ class ApplicationTest: public Platform::Application {
         void mouseMoveEvent(MouseMoveEvent& event) override {
             if(_imgui.handleMouseMoveEvent(event)) return;
         }
-
         #ifndef CORRADE_TARGET_ANDROID
         void mouseScrollEvent(MouseScrollEvent& event) override {
             if(_imgui.handleMouseScrollEvent(event)) {
@@ -81,7 +102,11 @@ class ApplicationTest: public Platform::Application {
                 return;
             }
         }
+        #endif
+        CORRADE_IGNORE_DEPRECATED_POP
+        #endif
 
+        #ifndef CORRADE_TARGET_ANDROID
         void textInputEvent(TextInputEvent& event) override {
             if(_imgui.handleTextInputEvent(event)) return;
         }
