@@ -505,10 +505,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle mouse press event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the mouse (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::mousePressEvent(), to ImGui. Returns
+         * @cpp true @ce if ImGui wants to capture the mouse (so the event
+         * shouldn't be further propagated to the rest of the application),
+         * @cpp false @ce otherwise.
          */
         template<class MouseEvent> bool handleMousePressEvent(MouseEvent& event);
 
@@ -516,10 +517,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle mouse release event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the mouse (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::mouseReleaseEvent(), to ImGui.
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class MouseEvent> bool handleMouseReleaseEvent(MouseEvent& event);
 
@@ -527,10 +529,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle mouse scroll event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the mouse (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::mouseScrollEvent(), to ImGui.
+         * Returns @cpp true @ce if ImGui wants to capture the mouse (so the
+         * event shouldn't be further propagated to the rest of the
+         * application), @cpp false @ce otherwise.
          */
         template<class MouseScrollEvent> bool handleMouseScrollEvent(MouseScrollEvent& event);
 
@@ -538,10 +541,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle mouse move event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the mouse (so the event shouldn't be further
-         * propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::mouseMoveEvent(), to ImGui. Returns
+         * @cpp true @ce if ImGui wants to capture the mouse (so the event
+         * shouldn't be further propagated to the rest of the application),
+         * @cpp false @ce otherwise.
          */
         template<class MouseMoveEvent> bool handleMouseMoveEvent(MouseMoveEvent& event);
 
@@ -549,10 +553,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle key press event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the keyboard (so the event shouldn't be
-         * further propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::keyPressEvent(), to ImGui. Returns
+         * @cpp true @ce if ImGui wants to capture the keyboard (so the event
+         * shouldn't be further propagated to the rest of the application),
+         * @cpp false @ce otherwise.
          */
         template<class KeyEvent> bool handleKeyPressEvent(KeyEvent& event);
 
@@ -560,10 +565,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle key release event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the keyboard (so the event shouldn't be
-         * further propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::keyReleaseEvent(), to ImGui. Returns
+         * @cpp true @ce if ImGui wants to capture the keyboard (so the event
+         * shouldn't be further propagated to the rest of the application),
+         * @cpp false @ce otherwise.
          */
         template<class KeyEvent> bool handleKeyReleaseEvent(KeyEvent& event);
 
@@ -571,10 +577,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          * @brief Handle text input event
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
-         * and then propagates the event to ImGui. Returns @cpp true @ce if
-         * ImGui wants to capture the keyboard (so the event shouldn't be
-         * further propagated to the rest of the application), @cpp false @ce
-         * otherwise.
+         * and then propagates the event, such as the one coming from
+         * @ref Platform::Sdl2Application::textInputEvent(), to ImGui. Returns
+         * @cpp true @ce if ImGui wants to capture the keyboard (so the event
+         * shouldn't be further propagated to the rest of the application),
+         * @cpp false @ce otherwise.
          */
         template<class TextInputEvent> bool handleTextInputEvent(TextInputEvent& event);
 
