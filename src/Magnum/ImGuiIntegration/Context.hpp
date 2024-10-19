@@ -192,10 +192,10 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     return io.WantCaptureKeyboard;
 }
 
-/* Not all applications have Finger / Pen pointers, so employing a dirty SFINAE
-   trick with an overload that returns false if given enum value is not
-   available. Similar to a trick for working around missing Cursor enums
-   below. */
+/* Not all applications have Finger / Pen pointers or a Touch / Pen pointer
+   event source, so employing a dirty SFINAE trick with an overload that
+   returns false if given enum value is not available. Similar to a trick for
+   working around missing Cursor enums below. */
 namespace Implementation {
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
@@ -209,6 +209,19 @@ namespace Implementation {
 MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER(Finger)
 MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER(Pen)
 #undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER
+
+#if IMGUI_VERSION_NUM >= 18948
+#define MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER_EVENT_SOURCE(source)       \
+    template<class PointerEventSource> constexpr bool is##source##PointerEventSource(PointerEventSource p, decltype(PointerEventSource::source)* = nullptr) { \
+        return p == PointerEventSource::source;                             \
+    }                                                                       \
+    constexpr bool is##source##PointerEventSource(...) {                   \
+        return false;                                                       \
+    }
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER_EVENT_SOURCE(Touch)
+MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER_EVENT_SOURCE(Pen)
+#undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_POINTER_EVENT_SOURCE
+#endif
 #endif
 
 }
@@ -225,7 +238,8 @@ template<class PointerEvent> bool Context::handlePointerEvent(PointerEvent& even
     const Vector2 position = event.position()*_eventScaling;
 
     ImGuiMouseButton buttonId;
-    /* Finger and pen still reports as mouse left */
+    /* Finger and pen still reports as mouse left, but for ImGui 1.89.5+ it has
+       an additional field distinguishing the actual source */
     if(event.pointer() == decltype(event.pointer())::MouseLeft ||
        Implementation::isFingerPointer(event.pointer()) ||
        Implementation::isPenPointer(event.pointer()))
@@ -238,6 +252,14 @@ template<class PointerEvent> bool Context::handlePointerEvent(PointerEvent& even
         /* Unknown button, do nothing */
         return false;
 
+    #if IMGUI_VERSION_NUM >= 18948
+    if(Implementation::isTouchPointerEventSource(event.source()))
+        io.AddMouseSourceEvent(ImGuiMouseSource_TouchScreen);
+    else if(Implementation::isPenPointerEventSource(event.source()))
+        io.AddMouseSourceEvent(ImGuiMouseSource_Pen);
+    else
+        io.AddMouseSourceEvent(ImGuiMouseSource_Mouse);
+    #endif
     io.AddMousePosEvent(position.x(), position.y());
     io.AddMouseButtonEvent(buttonId, value);
 
@@ -338,7 +360,8 @@ template<class PointerMoveEvent> bool Context::handlePointerMoveEvent(PointerMov
        translate that to ImGui as well */
     Containers::Optional<ImGuiMouseButton> buttonId;
     if(event.pointer()) {
-        /* Finger and pen still reports as mouse left */
+        /* Finger and pen still reports as mouse left, but for ImGui 1.89.5+ it
+           has an additional field distinguishing the actual source */
         if(*event.pointer() == decltype(*event.pointer())::MouseLeft ||
            Implementation::isFingerPointer(*event.pointer()) ||
            Implementation::isPenPointer(*event.pointer()))
@@ -349,6 +372,14 @@ template<class PointerMoveEvent> bool Context::handlePointerMoveEvent(PointerMov
             buttonId = ImGuiMouseButton_Middle;
     }
 
+    #if IMGUI_VERSION_NUM >= 18948
+    if(Implementation::isTouchPointerEventSource(event.source()))
+        io.AddMouseSourceEvent(ImGuiMouseSource_TouchScreen);
+    else if(Implementation::isPenPointerEventSource(event.source()))
+        io.AddMouseSourceEvent(ImGuiMouseSource_Pen);
+    else
+        io.AddMouseSourceEvent(ImGuiMouseSource_Mouse);
+    #endif
     io.AddMousePosEvent(position.x(), position.y());
     /* The button is pressed if it's contained in the set of currently
        pressed pointers. If event.pointer() is a NullOpt, this isn't
