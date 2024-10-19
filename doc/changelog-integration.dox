@@ -81,6 +81,13 @@ namespace Magnum {
 -   Updated @ref ImGuiIntegration::imageButton() to work with ImGui 1.89+ (see
     [mosra/magnum-integration#109](https://github.com/mosra/magnum-integration/pull/109)
     and [mosra/magnum-integration#110](https://github.com/mosra/magnum-integration/pull/110))
+-   The @ref ImGuiIntegration::Context::handlePointerPressEvent(),
+    @relativeref{ImGuiIntegration::Context,handlePointerReleaseEvent()},
+    @relativeref{ImGuiIntegration::Context,handlePointerMoveEvent()} and
+    @relativeref{ImGuiIntegration::Context,handleScrollEvent()} that operate
+    with the new application pointer events now propagate also the event
+    source to ImGui 1.89.5+, describing whether it's a mouse, touch input or a
+    pen
 
 @subsection changelog-integration-latest-buildsystem Build system
 

@@ -77,6 +77,9 @@ struct InputEvent {
     Modifiers modifiers() { return _modifiers; }
 };
 
+enum class PointerEventSource: Int {
+    Mouse, Touch, Pen
+};
 enum class Pointer: Int {
     Finger, Pen, MouseLeft, MouseMiddle, MouseRight
 };
@@ -91,25 +94,37 @@ CORRADE_ENUMSET_OPERATORS(Pointers)
 #endif
 
 struct PointerEvent: public InputEvent {
-    explicit PointerEvent(Pointer pointer, const Vector2& position, Modifiers modifiers, bool primary = true): InputEvent{modifiers}, _pointer{pointer}, _position{position}, _primary{primary} {}
+    explicit PointerEvent(PointerEventSource source, Pointer pointer, const Vector2& position, Modifiers modifiers, bool primary = true): InputEvent{modifiers}, _source{source}, _pointer{pointer}, _position{position}, _primary{primary} {}
 
+    PointerEventSource _source;
     Pointer _pointer;
     Vector2 _position;
     bool _primary;
 
+    /* Used only with ImGui 1.89.5+, compile away on older versions to avoid an
+       unused member warning on Clang */
+    #if IMGUI_VERSION_NUM >= 18948
+    PointerEventSource source() const { return _source; }
+    #endif
     Pointer pointer() const { return _pointer; }
     Vector2 position() const { return _position; }
     bool isPrimary() const { return _primary; }
 };
 
 struct PointerMoveEvent: public InputEvent {
-    explicit PointerMoveEvent(Containers::Optional<Pointer> pointer, Pointers pointers, const Vector2& position, Modifiers modifiers, bool primary = true): InputEvent{modifiers}, _pointer{pointer}, _pointers{pointers}, _position{position}, _primary{primary} {}
+    explicit PointerMoveEvent(PointerEventSource source, Containers::Optional<Pointer> pointer, Pointers pointers, const Vector2& position, Modifiers modifiers, bool primary = true): InputEvent{modifiers}, _source{source}, _pointer{pointer}, _pointers{pointers}, _position{position}, _primary{primary} {}
 
+    PointerEventSource _source;
     Containers::Optional<Pointer> _pointer;
     Pointers _pointers;
     Vector2 _position;
     bool _primary;
 
+    /* Used only with ImGui 1.89.5+, compile away on older versions to avoid an
+       unused member warning on Clang */
+    #if IMGUI_VERSION_NUM >= 18948
+    PointerEventSource source() const { return _source; }
+    #endif
     Containers::Optional<Pointer> pointer() const { return _pointer; }
     Pointers pointers() const { return _pointers; }
     Vector2 position() const { return _position; }
@@ -653,11 +668,11 @@ void ContextGLTest::pointerInput() {
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
 
-    PointerEvent mouseLeft{Pointer::MouseLeft, {1.5f, 2.25f}, {}};
-    PointerEvent mouseRight{Pointer::MouseRight, {3.75f, 4.5f}, {}};
-    PointerEvent mouseMiddle{Pointer::MouseMiddle, {5.5f, 6.25f}, {}};
-    PointerEvent finger{Pointer::Finger, {5.75f, 3.25f}, {}};
-    PointerEvent pen{Pointer::Pen, {2.75f, 4.5f}, {}};
+    PointerEvent mouseLeft{PointerEventSource::Mouse, Pointer::MouseLeft, {1.5f, 2.25f}, {}};
+    PointerEvent mouseRight{PointerEventSource::Mouse, Pointer::MouseRight, {3.75f, 4.5f}, {}};
+    PointerEvent mouseMiddle{PointerEventSource::Mouse, Pointer::MouseMiddle, {5.5f, 6.25f}, {}};
+    PointerEvent finger{PointerEventSource::Touch, Pointer::Finger, {5.75f, 3.25f}, {}};
+    PointerEvent pen{PointerEventSource::Pen, Pointer::Pen, {2.75f, 4.5f}, {}};
 
     /* Queued IO events in imgui are propagated to it only during newFrame(),
        which means we need to check *after* it gets called. See
@@ -667,6 +682,9 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{1.0f, 2.0f}));
     c.drawFrame();
@@ -675,6 +693,9 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
@@ -683,6 +704,9 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
@@ -691,6 +715,9 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
@@ -699,6 +726,9 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
@@ -707,6 +737,9 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
@@ -715,7 +748,16 @@ void ContextGLTest::pointerInput() {
     c.handlePointerPressEvent(finger);
     Utility::System::sleep(1);
     c.newFrame();
+    /** @todo for some reason, if an extra draw isn't done here, the finger
+        press isn't recognized correctly, why?! with the source being a mouse
+        it works, and for the pen below it does as well */
+    c.drawFrame();
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_TouchScreen);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{5.0f, 3.0f}));
     c.drawFrame();
@@ -724,62 +766,83 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Pen);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{2.0f, 4.0f}));
     c.drawFrame();
 
     /* Pointer movement */
-    PointerMoveEvent move{{}, {}, {1.125f, 2.625f}, {}};
+    PointerMoveEvent move{PointerEventSource::Mouse, {}, {}, {1.125f, 2.625f}, {}};
     c.handlePointerMoveEvent(move);
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
 
     /* Pointer movement where the set of pressed buttons gets larger */
-    PointerMoveEvent movePress{Pointer::MouseMiddle, Pointer::MouseMiddle, {9.5f, 1.25f}, {}};
+    PointerMoveEvent movePress{PointerEventSource::Touch, Pointer::MouseMiddle, Pointer::MouseMiddle, {9.5f, 1.25f}, {}};
     c.handlePointerMoveEvent(movePress);
     Utility::System::sleep(1);
     c.newFrame();
+    /** @todo for some reason, if an extra draw isn't done here, the finger
+        press isn't recognized correctly, why?! with the source being a mouse
+        it works, and above/below for the pen it works as well */
+    c.drawFrame();
+    Utility::System::sleep(1);
+    c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_TouchScreen);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
     c.drawFrame();
 
     /* Pointer movement where the set of pressed buttons gets larger */
-    PointerMoveEvent movePress2{Pointer::Pen, Pointer::MouseMiddle|Pointer::Pen, {8.5f, 0.25f}, {}};
+    PointerMoveEvent movePress2{PointerEventSource::Pen, Pointer::Pen, Pointer::MouseMiddle|Pointer::Pen, {8.5f, 0.25f}, {}};
     c.handlePointerMoveEvent(movePress2);
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Pen);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{8.0f, 0.0f}));
     c.drawFrame();
 
     /* Pointer movement where the set of pressed buttons gets smaller */
-    PointerMoveEvent moveRelease{Pointer::MouseMiddle, Pointer::Pen, {9.5f, 1.25f}, {}};
+    PointerMoveEvent moveRelease{PointerEventSource::Mouse, Pointer::MouseMiddle, Pointer::Pen, {9.5f, 1.25f}, {}};
     c.handlePointerMoveEvent(moveRelease);
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
+    #if IMGUI_VERSION_NUM >= 18948
+    CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
+    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
     c.drawFrame();
 
     /* Unknown buttons shouldn't be propagated to imgui */
-    PointerEvent unknownButton{Pointer(666), {1, 2}, {}};
+    PointerEvent unknownButton{{}, Pointer(666), {1, 2}, {}};
     CORRADE_VERIFY(!c.handlePointerPressEvent(unknownButton));
     CORRADE_VERIFY(!c.handlePointerReleaseEvent(unknownButton));
 
     /* Non-primary events shouldn't be propagated to imgui. Faking it a bit
        here, as in practice mouse events are always primary. */
-    PointerEvent mouseMiddleSecondary{Pointer::MouseMiddle, {1.0f, 2.0f}, {}, false};
+    PointerEvent mouseMiddleSecondary{PointerEventSource::Mouse, Pointer::MouseMiddle, {1.0f, 2.0f}, {}, false};
     CORRADE_VERIFY(!c.handlePointerPressEvent(mouseMiddleSecondary));
     Utility::System::sleep(1);
     c.newFrame();
@@ -789,7 +852,7 @@ void ContextGLTest::pointerInput() {
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
     c.drawFrame();
 
-    PointerMoveEvent moveSecondary{{}, {}, {1.0, 2.0f}, {}, false};
+    PointerMoveEvent moveSecondary{PointerEventSource::Mouse, {}, {}, {1.0, 2.0f}, {}, false};
     CORRADE_VERIFY(!c.handlePointerMoveEvent(moveSecondary));
     Utility::System::sleep(1);
     c.newFrame();
@@ -806,7 +869,7 @@ void ContextGLTest::pointerInputTooFast() {
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
 
     /* It's not reported immediately */
-    PointerEvent left{Pointer::MouseLeft, {1.0f, 2.0f}, {}};
+    PointerEvent left{{}, Pointer::MouseLeft, {1.0f, 2.0f}, {}};
     c.handlePointerPressEvent(left);
     c.handlePointerReleaseEvent(left);
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
@@ -1091,14 +1154,14 @@ void ContextGLTest::multipleContexts() {
 
     /* Verify that event handlers also switch to proper context */
 
-    PointerEvent left{Pointer::MouseLeft, {1, 2}, {}};
+    PointerEvent left{{}, Pointer::MouseLeft, {1, 2}, {}};
     a.handlePointerPressEvent(left);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 
     b.handlePointerReleaseEvent(left);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), b.context());
 
-    PointerMoveEvent move{{}, {}, {1, 2}, {}};
+    PointerMoveEvent move{{}, {}, {}, {1, 2}, {}};
     a.handlePointerMoveEvent(move);
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
 
