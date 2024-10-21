@@ -52,26 +52,30 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(_context);
 
+    typedef decltype(event.modifiers()) Modifiers;
+    typedef typename Modifiers::Type Modifier;
+    typedef decltype(event.key()) Key;
+
     ImGuiIO &io = ImGui::GetIO();
-    const typename KeyEvent::Modifiers modifiers = event.modifiers();
+    const Modifiers modifiers = event.modifiers();
 
     #if IMGUI_VERSION_NUM >= 18823
-    io.AddKeyEvent(ImGuiMod_Ctrl, modifiers >= KeyEvent::Modifier::Ctrl);
-    io.AddKeyEvent(ImGuiMod_Shift, modifiers >= KeyEvent::Modifier::Shift);
-    io.AddKeyEvent(ImGuiMod_Alt, modifiers >= KeyEvent::Modifier::Alt);
-    io.AddKeyEvent(ImGuiMod_Super, modifiers >= KeyEvent::Modifier::Super);
+    io.AddKeyEvent(ImGuiMod_Ctrl, modifiers >= Modifier::Ctrl);
+    io.AddKeyEvent(ImGuiMod_Shift, modifiers >= Modifier::Shift);
+    io.AddKeyEvent(ImGuiMod_Alt, modifiers >= Modifier::Alt);
+    io.AddKeyEvent(ImGuiMod_Super, modifiers >= Modifier::Super);
     #else
-    io.AddKeyEvent(ImGuiKey_ModCtrl, modifiers >= KeyEvent::Modifier::Ctrl);
-    io.AddKeyEvent(ImGuiKey_ModShift, modifiers >= KeyEvent::Modifier::Shift);
-    io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= KeyEvent::Modifier::Alt);
-    io.AddKeyEvent(ImGuiKey_ModSuper, modifiers >= KeyEvent::Modifier::Super);
+    io.AddKeyEvent(ImGuiKey_ModCtrl, modifiers >= Modifier::Ctrl);
+    io.AddKeyEvent(ImGuiKey_ModShift, modifiers >= Modifier::Shift);
+    io.AddKeyEvent(ImGuiKey_ModAlt, modifiers >= Modifier::Alt);
+    io.AddKeyEvent(ImGuiKey_ModSuper, modifiers >= Modifier::Super);
     #endif
 
     #ifndef DOXYGEN_GENERATING_OUTPUT /* it insists on documenting _c() */
     switch(event.key()) {
         /* LCOV_EXCL_START */
         #define _c(key, imgui) \
-            case KeyEvent::Key::key: \
+            case Key::key: \
                 io.AddKeyEvent(ImGuiKey_ ## imgui, value); \
                 break;
 
