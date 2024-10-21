@@ -14,6 +14,7 @@ cmake .. \
     -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCORRADE_WITH_INTERCONNECT=OFF \
+    $EXTRA_OPTS \
     -G Ninja
 ninja install
 cd ../..
@@ -42,6 +43,7 @@ cmake .. \
     -DUSE_GLUT=OFF \
     -DUSE_GRAPHICAL_BENCHMARK=OFF \
     -D_FIND_LIB_PYTHON_PY=$TRAVIS_BUILD_DIR/bullet3-2.87/build3/cmake/FindLibPython.py \
+    $EXTRA_OPTS \
     -G Ninja
 ninja install
 cd ../..
@@ -71,6 +73,7 @@ cmake .. \
     -DMAGNUM_WITH_EMSCRIPTENAPPLICATION=ON \
     -DMAGNUM_WITH_WINDOWLESSEGLAPPLICATION=ON \
     -DMAGNUM_TARGET_GLES2=$TARGET_GLES2 \
+    $EXTRA_OPTS \
     -G Ninja
 ninja install
 cd ../..
@@ -107,6 +110,7 @@ cmake .. \
     -DMAGNUM_WITH_OVR=OFF \
     -DMAGNUM_BUILD_TESTS=ON \
     -DMAGNUM_BUILD_GL_TESTS=ON \
+    $EXTRA_OPTS \
     -G Ninja
 ninja $NINJA_JOBS
 

@@ -21,7 +21,7 @@ executors:
     macos:
       xcode: 13.4.1
     resource_class: macos.m1.medium.gen1
-  emscripten:
+  emscripten1:
     docker:
     # 1.39.0 is the oldest on Docker. Anything before 1.39.2 is useless as emar
     # randomly asserts: https://github.com/emscripten-core/emscripten/pull/9742
@@ -30,6 +30,12 @@ executors:
     # https://github.com/mosra/magnum/issues/413,
     # https://github.com/emscripten-core/emscripten/pull/10161
     - image: emscripten/emsdk:1.39.6-upstream
+  emscripten2:
+    docker:
+    # While 1.39.6 supports some WIP variant of SIMD, the finalized support is
+    # only since 2.0.18, and then the first non-broken emsdk is 2.0.26. See
+    # Corrade's package/ci/circleci.yml for more information.
+    - image: emscripten/emsdk:2.0.26
   android-29:
     machine:
       image: android:2021.10.1
@@ -168,6 +174,25 @@ commands:
           source $BASH_ENV
           cmake --version | grep << parameters.version >>
           ctest --version | grep << parameters.version >>
+
+  install-nodejs:
+    parameters:
+      version:
+        type: string
+        default: "18"
+    steps:
+    - run:
+        name: Install Node.js << parameters.version >>
+        # cd'ing to the home directory as otherwise it'd download into
+        # /root/project and a checkout would then fail because it's not empty.
+        # Also emsdk forces the PATH to prefer its own nodejs, so explicitly
+        # call /usr/bin/node.
+        command: |
+          cd ~
+          curl -fsSL https://deb.nodesource.com/setup_<< parameters.version >>.x -o nodesource_setup.sh
+          bash nodesource_setup.sh
+          apt-get install -y nodejs
+          /usr/bin/node -v
 
   install-swiftshader-gles:
     parameters:
@@ -429,7 +454,7 @@ jobs:
     - lcov
 
   emscripten-webgl1:
-    executor: emscripten
+    executor: emscripten1
     environment:
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_GLES2: "ON"
@@ -442,12 +467,18 @@ jobs:
         script: emscripten.sh
 
   emscripten-webgl2:
-    executor: emscripten
+    executor: emscripten2
     environment:
       # STUPID yml interprets unquoted OFF as a boolean
       TARGET_GLES2: "OFF"
+      # emsdk forces the PATH to prefer its own nodejs, so explicitly force
+      # /usr/bin/node to be used by CMake
+      EXTRA_OPTS: >
+        -DNODEJS_EXECUTABLE=/usr/bin/node
     steps:
-    - install-base-linux
+    - install-base-linux:
+        extra: curl
+    - install-nodejs
     - install-imgui
     - install-glm
     - install-eigen
