@@ -80,11 +80,6 @@ struct IntegrationTest: TestSuite::Tester {
 
     void matrixArray();
     void matrixMatrix();
-
-    void stridedArrayViewBlock();
-    void stridedArrayViewTranspose();
-    void stridedArrayViewReverse();
-    void stridedArrayViewBroadcasted();
 };
 
 using Map2Df = Eigen::Map<Eigen::MatrixXf, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>>;
