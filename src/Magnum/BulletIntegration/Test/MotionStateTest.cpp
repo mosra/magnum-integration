@@ -57,10 +57,12 @@ struct MotionStateTest: TestSuite::Tester {
     explicit MotionStateTest();
 
     void test();
+    void testAddFeature();
 };
 
 MotionStateTest::MotionStateTest() {
-    addTests({&MotionStateTest::test});
+    addTests({&MotionStateTest::test,
+              &MotionStateTest::testAddFeature});
 }
 
 void MotionStateTest::test() {
@@ -90,6 +92,35 @@ void MotionStateTest::test() {
     rigidBody.setWorldTransform(btTransform{transformation});
 
     /* Motion state will get updated through btWorld */
+    btWorld.stepSimulation(btScalar(1.0));
+
+    CORRADE_COMPARE(object.transformationMatrix(), transformation);
+}
+
+void MotionStateTest::testAddFeature() {
+    /* Like test(), but using addFeature(). It should compile correctly and
+       work the same way. */
+
+    btDefaultCollisionConfiguration collisionConfig;
+    btCollisionDispatcher dispatcher{&collisionConfig};
+    btDbvtBroadphase broadphase;
+    btDiscreteDynamicsWorld btWorld{&dispatcher, &broadphase, nullptr, &collisionConfig};
+    btWorld.setGravity(btVector3{btScalar(0.0), btScalar(0.0), btScalar(0.0)});
+
+    Scene3D scene;
+    Object3D object{&scene};
+
+    auto transformation = Math::Matrix4<btScalar>::translation({btScalar(1.0), btScalar(2.0), btScalar(3.0)})*Math::Matrix4<btScalar>::rotationX(Math::Deg<btScalar>{btScalar(45.0)});
+
+    MotionState& motionState = object.addFeature<MotionState>();
+    btSphereShape collisionShape{btScalar(0.0)};
+    btRigidBody rigidBody(btScalar(1.0), &motionState.btMotionState(), &collisionShape);
+    btWorld.addRigidBody(&rigidBody);
+
+    CORRADE_COMPARE(Math::Matrix4<btScalar>{rigidBody.getCenterOfMassTransform()}, Math::Matrix4<btScalar>{});
+
+    rigidBody.setWorldTransform(btTransform{transformation});
+
     btWorld.stepSimulation(btScalar(1.0));
 
     CORRADE_COMPARE(object.transformationMatrix(), transformation);
