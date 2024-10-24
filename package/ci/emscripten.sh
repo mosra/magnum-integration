@@ -10,8 +10,6 @@ mkdir build-emscripten && cd build-emscripten
 cmake .. \
     -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten-wasm.cmake" \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
-    -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCORRADE_WITH_INTERCONNECT=OFF \
     $EXTRA_OPTS \
@@ -26,8 +24,6 @@ mkdir build-emscripten && cd build-emscripten
 cmake .. \
     -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten-wasm.cmake" \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
-    -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DBUILD_BULLET2_DEMOS=OFF \
     -DBUILD_BULLET3=OFF \
@@ -55,8 +51,6 @@ mkdir build-emscripten && cd build-emscripten
 cmake .. \
     -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten-wasm.cmake" \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
-    -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
     -DMAGNUM_WITH_AUDIO=OFF \
@@ -94,8 +88,6 @@ mkdir build-emscripten && cd build-emscripten
 cmake .. \
     -DCMAKE_TOOLCHAIN_FILE="../toolchains/generic/Emscripten-wasm.cmake" \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O1" \
-    -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-O1" \
     -DCMAKE_MODULE_PATH=$HOME/eigen/cmake/ \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
