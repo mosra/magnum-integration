@@ -47,65 +47,13 @@ packages for your platform of choice. See @ref building-integration-manual if
 you want to have more control. Cross-compiling is very similar to
 @ref building-cross "cross-compiling of Magnum itself".
 
--   @ref building-integration-packages-vcpkg
 -   @ref building-integration-packages-arch
 -   @ref building-integration-packages-msys
 -   @ref building-integration-packages-deb
 -   @ref building-integration-packages-gentoo
 -   @ref building-integration-packages-rpm
 -   @ref building-integration-packages-brew
-
-@subsection building-integration-packages-vcpkg Vcpkg package
-
-Magnum Integration libraries are available as a [Vcpkg](https://github.com/Microsoft/vcpkg)
-package. See @ref building-packages-vcpkg "the Magnum Vcpkg documentation" for
-a more detailed introduction and a troubleshooting guide. Installing latest
-stable version of Magnum Integration with all its dependencies is done like
-this:
-
-@code{.bat}
-vcpkg install magnum-integration
-@endcode
-
-@m_class{m-block m-success}
-
-@par Installing latest master
-    The `master` is considered stable for production use and often you may want
-    to prefer it over a potentially outdated tagged release. To do so, use
-    the `--head` option on `magnum-plugins` as well as its dependencies:
-@par
-    @code{.bat}
-    vcpkg install --head corrade magnum magnum-integration
-    @endcode
-@par
-    Note that `vcpkg upgrade` doesn't work well with `--head` packages (it will
-    go back to latest tagged version instead of updated master), you have to
-    remove `magnum-integration` as well as their dependencies and install
-    `--head` again:
-@par
-    @code{.bat}
-    vcpkg remove magnum-integration --recurse
-    vcpkg install --head corrade magnum magnum-integration
-    @endcode
-
-Note that just a subset of integration libraries is installed by default. To
-opt-in or opt-out of additional features, you can use the following syntax;
-feature names are simply names of CMake `MAGNUM_WITH_*` options from the
-@ref building-integration-features section but lowercase, e.g.:
-
-@code{.bat}
-vcpkg install magnum-integration[bullet]
-@endcode
-
-To install all features of a package, use `*`, e.g.:
-
-@code{.bat}
-vcpkg install magnum-integration[*]
-@endcode
-
-There are also Vcpkg packages for
-@ref building-plugins-packages-vcpkg "Magnum Plugins" and
-@ref building-extras-packages-vcpkg "Magnum Extras".
+-   @ref building-integration-packages-vcpkg
 
 @subsection building-integration-packages-arch ArchLinux packages
 
@@ -340,6 +288,58 @@ There are also Homebrew packages for
 @ref building-plugins-packages-brew "Magnum Plugins",
 @ref building-extras-packages-brew "Magnum Extras" and
 @ref building-examples-packages-brew "Magnum Examples".
+
+@subsection building-integration-packages-vcpkg Vcpkg package
+
+Magnum Integration libraries are available as a [Vcpkg](https://github.com/Microsoft/vcpkg)
+package. See @ref building-packages-vcpkg "the Magnum Vcpkg documentation" for
+a more detailed introduction and a troubleshooting guide. Installing latest
+stable version of Magnum Integration with all its dependencies is done like
+this:
+
+@code{.bat}
+vcpkg install magnum-integration
+@endcode
+
+@m_class{m-block m-success}
+
+@par Installing latest master
+    The `master` is considered stable for production use and often you may want
+    to prefer it over a potentially outdated tagged release. To do so, use
+    the `--head` option on `magnum-plugins` as well as its dependencies:
+@par
+    @code{.bat}
+    vcpkg install --head corrade magnum magnum-integration
+    @endcode
+@par
+    Note that `vcpkg upgrade` doesn't work well with `--head` packages (it will
+    go back to latest tagged version instead of updated master), you have to
+    remove `magnum-integration` as well as their dependencies and install
+    `--head` again:
+@par
+    @code{.bat}
+    vcpkg remove magnum-integration --recurse
+    vcpkg install --head corrade magnum magnum-integration
+    @endcode
+
+Note that just a subset of integration libraries is installed by default. To
+opt-in or opt-out of additional features, you can use the following syntax;
+feature names are simply names of CMake `MAGNUM_WITH_*` options from the
+@ref building-integration-features section but lowercase, e.g.:
+
+@code{.bat}
+vcpkg install magnum-integration[bullet]
+@endcode
+
+To install all features of a package, use `*`, e.g.:
+
+@code{.bat}
+vcpkg install magnum-integration[*]
+@endcode
+
+There are also Vcpkg packages for
+@ref building-plugins-packages-vcpkg "Magnum Plugins" and
+@ref building-extras-packages-vcpkg "Magnum Extras".
 
 @section building-integration-manual Manual build
 
