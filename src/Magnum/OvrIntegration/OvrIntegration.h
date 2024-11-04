@@ -33,6 +33,7 @@
 
 #include <Magnum/Magnum.h>
 
+#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace OvrIntegration {
 
 class Session;
@@ -69,5 +70,6 @@ typedef Containers::EnumSet<DetectResult> DetectResults;
 typedef Corrade::Containers::EnumSet<MirrorOption> MirrorOptions;
 
 }}
+#endif
 
 #endif
