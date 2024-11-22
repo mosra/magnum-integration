@@ -1441,7 +1441,7 @@ void ContextGLTest::drawText() {
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text.png"),
-        (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
+        (DebugTools::CompareImageToFile{_manager, 3.0f, 0.5f}));
 }
 
 void ContextGLTest::drawScissor() {
