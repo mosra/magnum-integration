@@ -38,6 +38,7 @@
 #include <Corrade/Containers/Reference.h>
 #include <Corrade/Utility/Resource.h>
 #include <Magnum/ImageView.h>
+#include <Magnum/PixelFormat.h>
 #include <Magnum/GL/Context.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Extensions.h>
@@ -199,21 +200,33 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
         unsigned char *pixels;
         int width, height;
         int pixelSize;
+        /* Texture atlas only requires alpha. Use a single-channel format and
+           swizzle, if available, to conserve memory. */
+        #if !defined(MAGNUM_TARGET_GLES2) && !defined(MAGNUM_TARGET_WEBGL)
+        constexpr PixelFormat format = PixelFormat::R8Unorm;
+        io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height, &pixelSize);
+        #else
+        constexpr PixelFormat format = PixelFormat::RGBA8Unorm;
         io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &pixelSize);
-        CORRADE_INTERNAL_ASSERT(width > 0 && height > 0 && pixelSize == 4);
+        #endif
+        CORRADE_INTERNAL_ASSERT(width > 0 && height > 0 && std::size_t(pixelSize) == pixelFormatSize(format));
 
-        ImageView2D image{GL::PixelFormat::RGBA,
-            GL::PixelType::UnsignedByte, {width, height},
+        /* Atlas width is guaranteed to be a power-of-two, so the default
+           PixelStorage works even for the single-channel format */
+        const ImageView2D image{format, {width, height},
             {pixels, std::size_t(pixelSize*width*height)}};
 
         _texture = GL::Texture2D{};
         _texture.setMagnificationFilter(GL::SamplerFilter::Linear)
             .setMinificationFilter(GL::SamplerFilter::Linear)
             #ifndef MAGNUM_TARGET_GLES2
-            .setStorage(1, GL::TextureFormat::RGBA8, image.size())
+            .setStorage(1, GL::textureFormat(format), image.size())
             .setSubImage(0, {}, image)
             #else
-            .setImage(0, GL::TextureFormat::RGBA, image)
+            .setImage(0, GL::textureFormat(format), image)
+            #endif
+            #if !defined(MAGNUM_TARGET_GLES2) && !defined(MAGNUM_TARGET_WEBGL)
+            .setSwizzle<'1', '1', '1', 'r'>()
             #endif
             ;
 
