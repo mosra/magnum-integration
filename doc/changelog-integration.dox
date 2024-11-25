@@ -141,6 +141,7 @@ namespace Magnum {
     to copy and carry them along anymore (see [mosra/magnum#436](https://github.com/mosra/magnum/issues/436))
 -   Created a RPM package with a helper script for building (see
     [mosra/magnum-integration#113](https://github.com/mosra/magnum-integration/pull/113))
+-   Fixed the MSYS development package name (see [mosra/magnum-integration#116](https://github.com/mosra/magnum-integration/issues/116))
 
 @subsection changelog-integration-latest-bugfixes Bug fixes
 

@@ -2,7 +2,7 @@
 # Contributor: mosra <mosra@centrum.cz>
 # Based on the packages/archlinux/PKGBUILD file by mosra <mosra@centrum.cz> and the MSYS2/MinGW PKGBUILD templates
 
-_realname=magnum-plugins
+_realname=magnum-integration
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=dev
