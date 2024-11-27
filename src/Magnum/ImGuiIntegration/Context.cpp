@@ -197,18 +197,22 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
         /* Downscale back the upscaled font to achieve supersampling */
         io.FontGlobalScale = 1.0f/nonZeroSupersamplingRatio;
 
+        PixelFormat format;
         unsigned char *pixels;
         int width, height;
         int pixelSize;
-        /* Texture atlas only requires alpha. Use a single-channel format and
-           swizzle, if available, to conserve memory. */
+        /* If the texture atlas only requires alpha we can use a single-channel
+           format and swizzle, if available, to conserve memory */
         #if !defined(MAGNUM_TARGET_GLES2) && !defined(MAGNUM_TARGET_WEBGL)
-        constexpr PixelFormat format = PixelFormat::R8Unorm;
-        io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height, &pixelSize);
-        #else
-        constexpr PixelFormat format = PixelFormat::RGBA8Unorm;
-        io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &pixelSize);
+        if(!io.Fonts->TexPixelsUseColors) {
+            format = PixelFormat::R8Unorm;
+            io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height, &pixelSize);
+        } else
         #endif
+        {
+            format = PixelFormat::RGBA8Unorm;
+            io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &pixelSize);
+        }
         CORRADE_INTERNAL_ASSERT(width > 0 && height > 0 && std::size_t(pixelSize) == pixelFormatSize(format));
 
         /* Atlas width is guaranteed to be a power-of-two, so the default
@@ -225,10 +229,12 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
             #else
             .setImage(0, GL::textureFormat(format), image)
             #endif
-            #if !defined(MAGNUM_TARGET_GLES2) && !defined(MAGNUM_TARGET_WEBGL)
-            .setSwizzle<'1', '1', '1', 'r'>()
-            #endif
             ;
+
+        #if !defined(MAGNUM_TARGET_GLES2) && !defined(MAGNUM_TARGET_WEBGL)
+        if(!io.Fonts->TexPixelsUseColors)
+            _texture.setSwizzle<'1', '1', '1', 'r'>();
+        #endif
 
         /* Clear texture to save RAM, we have it on the GPU now */
         io.Fonts->ClearTexData();

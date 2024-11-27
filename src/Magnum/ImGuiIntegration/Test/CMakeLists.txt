@@ -64,6 +64,7 @@ if(MAGNUM_BUILD_GL_TESTS)
             ContextTestFiles/draw-scissor.png
             ContextTestFiles/draw-texture.png
             ContextTestFiles/draw-text.png
+            ContextTestFiles/draw-text-color-font.png
             ContextTestFiles/texture.png)
     target_include_directories(ImGuiContextGLTest PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
     if(MAGNUM_IMGUIINTEGRATION_BUILD_STATIC)
