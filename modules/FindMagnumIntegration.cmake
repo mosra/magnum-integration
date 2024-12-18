@@ -179,8 +179,6 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
     else()
         # Library components
         if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND NOT _component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
-            add_library(MagnumIntegration::${_component} UNKNOWN IMPORTED)
-
             # Include path names to find, unless specified above
             if(NOT _MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES)
                 set(_MAGNUMINTEGRATION_${_COMPONENT}_INCLUDE_PATH_NAMES ${_component}Integration.h)
@@ -192,12 +190,9 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             mark_as_advanced(MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_DEBUG
                 MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE)
 
-        # Header-only library components
-        elseif(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
-            add_library(MagnumIntegration::${_component} INTERFACE IMPORTED)
-
-        # Something unknown, skip. FPHSA will take care of handling this below.
-        else()
+        # If not a header-only component it's something unknown, skip. FPHSA
+        # will take care of handling this below.
+        elseif(NOT _component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
             continue()
         endif()
 
@@ -222,8 +217,14 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             continue()
         endif()
 
-        # Library location
-        if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS AND NOT _component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
+        # Target for header-only library components
+        if(_component IN_LIST _MAGNUMINTEGRATION_HEADER_ONLY_COMPONENTS)
+            add_library(MagnumIntegration::${_component} INTERFACE IMPORTED)
+
+        # Target and location for libraries
+        elseif(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
+            add_library(MagnumIntegration::${_component} UNKNOWN IMPORTED)
+
             if(MAGNUMINTEGRATION_${_COMPONENT}_LIBRARY_RELEASE)
                 set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                     IMPORTED_CONFIGURATIONS RELEASE)
