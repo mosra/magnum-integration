@@ -149,6 +149,9 @@ namespace Magnum {
     in 1.71. As of 1.86 it no longer has an implicit value, causing visual
     glitches. See also [mosra/magnum-integration#86](https://github.com/mosra/magnum-integration/issues/86)
     and [mosra/magnum-integration#88](https://github.com/mosra/magnum-integration/pull/88).
+-   Fixed a temporary breakage in Find module logic for @ref EigenIntegration
+    that caused it to rely on a non-existent `configure.h` file (see
+    [mosra/magnum-integration#117](https://github.com/mosra/magnum-integration/issues/117))
 
 @subsection changelog-integration-latest-deprecated Deprecated APIs
 
