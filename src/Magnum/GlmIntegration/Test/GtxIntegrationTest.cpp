@@ -24,9 +24,9 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <sstream>
+#include <Corrade/Containers/String.h>
 #include <Corrade/TestSuite/Tester.h>
-#include <Corrade/Utility/DebugStl.h>
+#include <Corrade/Utility/DebugStl.h> /* GLM has STL stream output operators? */
 
 #include "Magnum/Magnum.h"
 
@@ -120,10 +120,10 @@ void GtxIntegrationTest::debugDualQuat() {
     CORRADE_SKIP("Segfaults in 0.9.9.0 due to a GLM bug.");
     #endif
 
-    std::ostringstream out;
+    Containers::String out;
     Debug{&out} << glm::highp_ddualquat{{4.0, 1.0, 2.0, 3.0},
                                         {8.0, 5.0, 6.0, 7.0}};
-    CORRADE_COMPARE(out.str(), "ddualquat((4.000000, {1.000000, 2.000000, 3.000000}), (8.000000, {5.000000, 6.000000, 7.000000}))\n");
+    CORRADE_COMPARE(out, "ddualquat((4.000000, {1.000000, 2.000000, 3.000000}), (8.000000, {5.000000, 6.000000, 7.000000}))\n");
     #endif
 }
 

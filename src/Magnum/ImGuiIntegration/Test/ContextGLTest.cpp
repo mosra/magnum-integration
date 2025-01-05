@@ -27,13 +27,10 @@
 */
 
 #include <limits>
-#include <sstream>
 #include <Corrade/Containers/StridedArrayView.h>
 #include <Corrade/Containers/String.h>
-#include <Corrade/Containers/StringStl.h> /** @todo remove when AbstractImporter is <string>-free */
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/TestSuite/Compare/Container.h>
-#include <Corrade/Utility/DebugStl.h>
 #include <Corrade/Utility/System.h>
 #include <Corrade/Utility/Path.h>
 #include <Magnum/Magnum.h>

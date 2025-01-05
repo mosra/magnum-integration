@@ -26,7 +26,6 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <sstream>
 #include <Corrade/Utility/System.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/GL/TextureFormat.h>

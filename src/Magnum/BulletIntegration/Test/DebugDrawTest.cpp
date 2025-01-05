@@ -26,9 +26,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <sstream>
+#include <Corrade/Containers/String.h>
 #include <Corrade/TestSuite/Tester.h>
-#include <Corrade/Utility/DebugStl.h>
 
 #include "Magnum/BulletIntegration/DebugDraw.h"
 
@@ -63,10 +62,10 @@ void DebugDrawTest::constructCopy() {
 }
 
 void DebugDrawTest::debugMode() {
-    std::ostringstream out;
+    Containers::String out;
 
     Debug(&out) << DebugDraw::Mode::DrawAabb << DebugDraw::Mode(0xbaadcafe);
-    CORRADE_COMPARE(out.str(), "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
+    CORRADE_COMPARE(out, "BulletIntegration::DebugDraw::Mode::DrawAabb BulletIntegration::DebugDraw::Mode(0xbaadcafe)\n");
 }
 
 }}}}

@@ -27,7 +27,6 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <sstream>
 #include <Corrade/TestSuite/Tester.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Matrix4.h>

@@ -25,9 +25,9 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <sstream>
+#include <Corrade/Containers/String.h>
 #include <Corrade/TestSuite/Tester.h>
-#include <Corrade/Utility/DebugStl.h>
+#include <Corrade/Utility/DebugStl.h> /* GLM has STL stream output operators? */
 
 #include "Magnum/Magnum.h"
 
@@ -111,12 +111,12 @@ void GtcIntegrationTest::debugQuat() {
     #if GLM_VERSION < 97
     CORRADE_SKIP("Not available in GLM < 0.9.7.");
     #else
-    std::ostringstream out;
+    Containers::String out;
     Debug{&out} << glm::mediump_quat{4.0f, 1.0f, 2.0f, 3.0f};
     #if GLM_VERSION < 990
-    CORRADE_COMPARE(out.str(), "quat(1.000000, 2.000000, 3.000000, 4.000000)\n");
+    CORRADE_COMPARE(out, "quat(1.000000, 2.000000, 3.000000, 4.000000)\n");
     #else
-    CORRADE_COMPARE(out.str(), "quat(4.000000, {1.000000, 2.000000, 3.000000})\n");
+    CORRADE_COMPARE(out, "quat(4.000000, {1.000000, 2.000000, 3.000000})\n");
     #endif
     #endif
 }

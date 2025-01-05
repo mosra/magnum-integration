@@ -25,9 +25,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <sstream>
+#include <Corrade/Containers/String.h>
 #include <Corrade/TestSuite/Tester.h>
-#include <Corrade/Utility/DebugStl.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/DualQuaternion.h>
@@ -75,43 +74,43 @@ EnumTest::EnumTest() {
 }
 
 void EnumTest::hmdType() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << HmdType::DK2;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::HmdType::DK2\n");
+    CORRADE_COMPARE(out, "OvrIntegration::HmdType::DK2\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << HmdType(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::HmdType::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::HmdType::(invalid)\n");
 }
 
 void EnumTest::trackingOrigin() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << TrackingOrigin::EyeLevel;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackingOrigin::EyeLevel\n");
+    CORRADE_COMPARE(out, "OvrIntegration::TrackingOrigin::EyeLevel\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << TrackingOrigin(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackingOrigin::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::TrackingOrigin::(invalid)\n");
 }
 
 void EnumTest::trackerFlag() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << TrackerFlag::Connected;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackerFlag::Connected\n");
+    CORRADE_COMPARE(out, "OvrIntegration::TrackerFlag::Connected\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << TrackerFlag(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::TrackerFlag::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::TrackerFlag::(invalid)\n");
 }
 
 void EnumTest::button() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << Button::A;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::Button::A\n");
+    CORRADE_COMPARE(out, "OvrIntegration::Button::A\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << Button(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::Button::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::Button::(invalid)\n");
 
     CORRADE_VERIFY((Buttons{Button::RShoulder} & Buttons::RMask) != Buttons{});
     CORRADE_VERIFY((Buttons{Button::LShoulder} & Buttons::LMask) != Buttons{});
@@ -119,13 +118,13 @@ void EnumTest::button() {
 }
 
 void EnumTest::touch() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << Touch::RIndexPointing;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::RIndexPointing\n");
+    CORRADE_COMPARE(out, "OvrIntegration::Touch::RIndexPointing\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << Touch(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::Touch::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::Touch::(invalid)\n");
 
     CORRADE_VERIFY((Touches{Touch::RThumb} & Touches::RMask) != Touches{});
     CORRADE_VERIFY((Touches{Touch::LThumb} & Touches::LMask) != Touches{});
@@ -134,93 +133,93 @@ void EnumTest::touch() {
 }
 
 void EnumTest::controllerType() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << ControllerType::Remote;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::Remote\n");
+    CORRADE_COMPARE(out, "OvrIntegration::ControllerType::Remote\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << ControllerType(-2);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::ControllerType::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::ControllerType::(invalid)\n");
 }
 
 void EnumTest::statusFlag() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << StatusFlag::OrientationTracked;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::OrientationTracked\n");
+    CORRADE_COMPARE(out, "OvrIntegration::StatusFlag::OrientationTracked\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << StatusFlag(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::StatusFlag::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::StatusFlag::(invalid)\n");
 }
 
 void EnumTest::mirrorOption() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << MirrorOption::IncludeGuardian;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::MirrorOption::IncludeGuardian\n");
+    CORRADE_COMPARE(out, "OvrIntegration::MirrorOption::IncludeGuardian\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << MirrorOption(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::MirrorOption::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::MirrorOption::(invalid)\n");
 }
 
 void EnumTest::performanceHudMode() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << PerformanceHudMode::AppRenderTiming;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::PerformanceHudMode::AppRenderTiming\n");
+    CORRADE_COMPARE(out, "OvrIntegration::PerformanceHudMode::AppRenderTiming\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << PerformanceHudMode(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::PerformanceHudMode::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::PerformanceHudMode::(invalid)\n");
 }
 
 void EnumTest::debugHudStereoMode() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << DebugHudStereoMode::Quad;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::DebugHudStereoMode::Quad\n");
+    CORRADE_COMPARE(out, "OvrIntegration::DebugHudStereoMode::Quad\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << DebugHudStereoMode(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::DebugHudStereoMode::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::DebugHudStereoMode::(invalid)\n");
 }
 
 void EnumTest::layerHudMode() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << LayerHudMode::Off;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::LayerHudMode::Off\n");
+    CORRADE_COMPARE(out, "OvrIntegration::LayerHudMode::Off\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << LayerHudMode(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::LayerHudMode::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::LayerHudMode::(invalid)\n");
 }
 
 void EnumTest::errorType() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << ErrorType::LeakingResources;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::ErrorType::LeakingResources\n");
+    CORRADE_COMPARE(out, "OvrIntegration::ErrorType::LeakingResources\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << ErrorType(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::ErrorType::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::ErrorType::(invalid)\n");
 }
 
 void EnumTest::detectResult() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << DetectResult::HmdConnected;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::DetectResult::HmdConnected\n");
+    CORRADE_COMPARE(out, "OvrIntegration::DetectResult::HmdConnected\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << DetectResult(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::DetectResult::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::DetectResult::(invalid)\n");
 }
 
 void EnumTest::sessionStatusFlag() {
-    std::ostringstream out;
+    Containers::String out;
     Debug(&out) << SessionStatusFlag::HmdPresent;
-    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::HmdPresent\n");
+    CORRADE_COMPARE(out, "OvrIntegration::SessionStatusFlag::HmdPresent\n");
 
-    out.str("");
+    out = {};
     Debug(&out) << SessionStatusFlag(-1);
-    CORRADE_COMPARE(out.str(), "OvrIntegration::SessionStatusFlag::(invalid)\n");
+    CORRADE_COMPARE(out, "OvrIntegration::SessionStatusFlag::(invalid)\n");
 }
 
 }}}}

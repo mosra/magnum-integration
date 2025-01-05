@@ -41,7 +41,7 @@
 #include <dart/simulation/World.hpp>
 #include <Corrade/Containers/String.h>
 #include <Corrade/Containers/StringStl.h>
-#include <Corrade/Utility/DebugStl.h>
+#include <Corrade/Utility/DebugStl.h> /* for std::string */
 #include <Corrade/Utility/Path.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
