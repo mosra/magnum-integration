@@ -30,6 +30,8 @@ cmake .. \
     -DMAGNUM_WITH_AUDIO=OFF \
     -DMAGNUM_WITH_DEBUGTOOLS=ON \
     -DMAGNUM_WITH_MATERIALTOOLS=OFF \
+    `# MeshTools and Primitives are needed for DebugTools if SceneGraph is` \
+    `# enabled as well (which is needed by BulletIntegration)` \
     -DMAGNUM_WITH_MESHTOOLS=ON \
     -DMAGNUM_WITH_PRIMITIVES=ON \
     -DMAGNUM_WITH_SCENEGRAPH=ON \
