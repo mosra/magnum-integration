@@ -17,7 +17,7 @@ cd winrt\10\src || exit /b
 msbuild angle.sln /p:Configuration=Release || exit /b
 cd ..\..\..\.. || exit /b
 
-git clone --depth 1 https://github.com/mosra/corrade.git || exit /b
+git clone --depth 1 --branch next https://github.com/mosra/corrade.git || exit /b
 cd corrade || exit /b
 
 rem Build native corrade-rc
@@ -46,7 +46,7 @@ cmake --build . --config Release --target install -- /m /v:m || exit /b
 cd .. && cd ..
 
 rem Crosscompile Magnum
-git clone --depth 1 https://github.com/mosra/magnum.git || exit /b
+git clone --depth 1 --branch next https://github.com/mosra/magnum.git || exit /b
 cd magnum || exit /b
 mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
