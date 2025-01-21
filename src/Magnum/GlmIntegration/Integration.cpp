@@ -43,7 +43,6 @@
 
 #include <glm/gtx/string_cast.hpp>
 
-#ifndef DOXYGEN_GENERATING_OUTPUT
 namespace glm {
 #if GLM_VERSION < 96
 /* All types were in glm::detail in 0.9.5, wrap the following as well in order
@@ -320,4 +319,3 @@ template MAGNUM_GLMINTEGRATION_EXPORT Corrade::Utility::Debug& operator<<(Corrad
 } /* Close the detail namespace */
 #endif
 }
-#endif
