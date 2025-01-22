@@ -58,7 +58,7 @@ inline ImTextureID textureId(GL::Texture2D& texture) {
     #if IMGUI_VERSION_NUM >= 19131
     return texture.id();
     #else
-    return reinterpret_cast<ImTextureID>(texture.id());
+    return reinterpret_cast<ImTextureID>(std::uintptr_t(texture.id()));
     #endif
 }
 
