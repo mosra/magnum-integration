@@ -50,6 +50,9 @@ commands:
       extra:
         type: string
         default: ""
+      sudo:
+        type: string
+        default: ""
     steps:
     - run:
         # TODO when switching to the new codecov uploader, gpg and git needs to
@@ -57,24 +60,9 @@ commands:
         name: Update apt and install base packages
         # Git is needed always for cloning Corrade and Magnum
         command: |
-          apt update
+          << parameters.sudo >> apt update
           if [[ "$CMAKE_CXX_FLAGS" == *"--coverage"* ]]; then export LCOV_PACKAGES="lcov curl"; fi
-          # libidn11 needed by CMake
-          apt install -y git ninja-build libidn11 $LCOV_PACKAGES << parameters.extra >>
-
-  install-base-linux-arm64:
-    parameters:
-      extra:
-        type: string
-        default: ""
-    steps:
-    - run:
-        name: Update apt and install base packages
-        # Compared to Docker images this needs sudo
-        command: |
-          sudo apt update
-          if [[ "$CMAKE_CXX_FLAGS" == *"--coverage"* ]]; then export LCOV_PACKAGES="lcov curl"; fi
-          sudo apt install -y ninja-build gcc cmake $LCOV_PACKAGES << parameters.extra >>
+          << parameters.sudo >> apt install -y git ninja-build $LCOV_PACKAGES << parameters.extra >>
 
   install-base-macos:
     parameters:
@@ -303,9 +291,9 @@ jobs:
       # TODO: investigate and re-enable on 18.04
       WITH_DART: "OFF"
     steps:
+    # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        # SDL needed for some snippets
-        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -323,9 +311,12 @@ jobs:
       # DART disabled here because it's just way too huge and annoying
       WITH_DART: "OFF"
     steps:
-    - install-base-linux-arm64:
-        # SDL needed for some snippets
-        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+    # Not installing the old GCC 4.8 and CMake 3.5 to speed up. These are
+    # tested more than enough on other jobs. SDL needed for some snippets.
+    # Machine executors need sudo.
+    - install-base-linux:
+        extra: gcc cmake libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        sudo: sudo
     - install-imgui
     - build:
         script: unix-desktop.sh
@@ -343,9 +334,9 @@ jobs:
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
+    # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        # SDL needed for some snippets
-        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -368,9 +359,9 @@ jobs:
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
+    # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        # SDL needed for some snippets
-        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -392,9 +383,9 @@ jobs:
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
+    # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        # SDL needed for some snippets
-        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -411,9 +402,9 @@ jobs:
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
+    # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        # SDL needed for some snippets
-        extra: libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-clang
     - install-cmake:
         version: "3.5.2"
