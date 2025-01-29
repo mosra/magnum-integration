@@ -56,7 +56,7 @@ target_include_directories(MagnumGlmIntegration PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_BINARY_DIR}/src)
 set_target_properties(MagnumGlmIntegration PROPERTIES DEBUG_POSTFIX "-d")
-if(NOT MAGNUM_BUILD_STATIC)
+if(NOT MAGNUM_BULLETINTEGRATION_BUILD_STATIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES VERSION ${MAGNUMINTEGRATION_LIBRARY_VERSION} SOVERSION ${MAGNUMINTEGRATION_LIBRARY_SOVERSION})
 elseif(MAGNUM_BUILD_STATIC_PIC)
     set_target_properties(MagnumGlmIntegration PROPERTIES POSITION_INDEPENDENT_CODE ON)
