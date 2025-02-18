@@ -74,7 +74,7 @@ void WidgetsGLTest::image() {
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
     #else
     texture.setImage(0, GL::TextureFormat::RGB,
-        ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}, nullptr});
+        ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}});
     #endif
 
     Utility::System::sleep(1);
@@ -101,7 +101,7 @@ void WidgetsGLTest::imageButton() {
     texture.setStorage(1, GL::TextureFormat::RGB8, {1, 1});
     #else
     texture.setImage(0, GL::TextureFormat::RGB,
-        ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}, nullptr});
+        ImageView2D{GL::PixelFormat::RGB, GL::PixelType::UnsignedByte, {1, 1}});
     #endif
 
     Utility::System::sleep(1);
