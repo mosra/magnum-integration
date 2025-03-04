@@ -1,6 +1,5 @@
-Here are integration libraries for Magnum C++11/C++14 graphics engine,
-providing integration of various math and physics libraries into the engine
-itself.
+Here are integration libraries for the Magnum C++11 graphics engine, providing
+integration of various math and physics libraries into the engine itself.
 
 [![Join the chat at https://gitter.im/mosra/magnum](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mosra/magnum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://circleci.com/gh/mosra/magnum-integration.svg?style=shield)](https://circleci.com/gh/mosra/magnum-integration)
