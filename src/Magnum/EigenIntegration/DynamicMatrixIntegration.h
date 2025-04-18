@@ -104,13 +104,12 @@ or one row, then this function maps the Eigen expression to a
 @relativeref{Corrade,Containers::StridedArrayView1D}. Otherwise the overload
 below is picked, returning a @relativeref{Corrade,Containers::StridedArrayView2D}.
 */
-template<class Derived> inline typename std::enable_if<
+template<class Derived
     #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1
-    #else
-    ...
+    , typename std::enable_if<
+        Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1, int>::type = 0
     #endif
-, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
+> inline Containers::StridedArrayView1D<typename Derived::Scalar> arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
     return {
         /* We assume that the memory the Eigen expression is referencing is in
            bounds, so the view size passed is ~std::size_t{} */
@@ -127,13 +126,13 @@ template<class Derived> inline typename std::enable_if<
 Takes care of any Eigen expression that was not handled by the one-dimensional
 overload above.
 */
-template<class Derived> inline typename std::enable_if<
+template<class Derived
     #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic
-    #else
-    ...
+    , typename std::enable_if<
+        Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic &&
+        Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic, int>::type = 0
     #endif
-, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
+> inline Containers::StridedArrayView2D<typename Derived::Scalar> arrayCast(const Eigen::DenseCoeffsBase<Derived, Eigen::DirectWriteAccessors>& from) {
     return {
         /* We assume that the memory the Eigen expression is referencing is in
            bounds, so the view size passed is ~std::size_t{} */
@@ -153,13 +152,13 @@ column or one row, then this function maps the Eigen reverse expression to a
 @relativeref{Corrade,Containers::StridedArrayView1D}. Otherwise the overload
 below is picked, returning a @relativeref{Corrade,Containers::StridedArrayView2D}.
 */
-template<class Derived, int Direction> inline typename std::enable_if<
+template<class Derived, int Direction
     #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 || Eigen::internal::traits<Derived>::RowsAtCompileTime == 1
-    #else
-    ...
+    , typename std::enable_if<
+        Eigen::internal::traits<Derived>::ColsAtCompileTime == 1 ||
+        Eigen::internal::traits<Derived>::RowsAtCompileTime == 1, int>::type = 0
     #endif
-, Containers::StridedArrayView1D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
+> inline Containers::StridedArrayView1D<typename Derived::Scalar> arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
     constexpr bool isColVector =
         Eigen::internal::traits<Derived>::ColsAtCompileTime == 1;
     constexpr bool isRowVector =
@@ -185,13 +184,13 @@ template<class Derived, int Direction> inline typename std::enable_if<
 Takes care of any Eigen expression that was not handled by the one-dimensional
 overload above.
 */
-template<class Derived, int Direction> inline typename std::enable_if<
+template<class Derived, int Direction
     #ifndef DOXYGEN_GENERATING_OUTPUT
-    Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic && Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic
-    #else
-    ...
+    , typename std::enable_if<
+        Eigen::internal::traits<Derived>::ColsAtCompileTime == Eigen::Dynamic &&
+        Eigen::internal::traits<Derived>::RowsAtCompileTime == Eigen::Dynamic, int>::type = 0
     #endif
-, Containers::StridedArrayView2D<typename Derived::Scalar>>::type arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
+> inline Containers::StridedArrayView2D<typename Derived::Scalar> arrayCast(const Eigen::Reverse<Derived, Direction>& from) {
     constexpr Int reverseCol = (Direction == Eigen::Vertical ||
                                 Direction == Eigen::BothDirections) ? -1 : 1;
     constexpr Int reverseRow = (Direction == Eigen::Horizontal ||
