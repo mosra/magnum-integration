@@ -30,7 +30,7 @@
 # ImGuiIntegration library and the *.h files will get installed here. The
 # FindImGui.cmake module then will look into include/MagnumExternal/ImGui as
 # a fallback if IMGUI_DIR is not set and no CMake config file is found.
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ImGui)
+if(MAGNUM_WITH_IMGUI AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ImGui)
     install(FILES
         ImGui/imgui.h
         ImGui/imgui_internal.h
