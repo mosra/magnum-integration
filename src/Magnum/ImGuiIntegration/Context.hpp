@@ -490,6 +490,64 @@ template<class Application> void Context::updateApplicationCursor(Application& a
     CORRADE_INTERNAL_ASSERT_UNREACHABLE(); /* LCOV_EXCL_LINE */
 }
 
+namespace Implementation {
+
+/* Default for Application implementations that don't have any clipboard, such
+   as EmscriptenApplication */
+template<class Application, class> struct ClipboardText {
+    constexpr static const char*(*get)(void*) = nullptr;
+    constexpr static void(*set)(void*, const char*) = nullptr;
+    constexpr static void* state(Context&, Application&) {
+        return nullptr;
+    }
+};
+
+/* Application implementations where returned clipboard contents don't have to
+   be freed, such as GlfwApplication */
+template<class Application> struct ClipboardText<Application, typename std::enable_if<std::is_same<decltype(std::declval<Application>().clipboardText()), Containers::StringView>::value>::type> {
+    static const char* get(void* state) {
+        Containers::StringView out = static_cast<Application*>(state)->clipboardText();
+        CORRADE_INTERNAL_ASSERT(out.flags() & Containers::StringViewFlag::NullTerminated);
+        return out.data();
+    }
+    static void set(void* state, const char* text) {
+        static_cast<Application*>(state)->setClipboardText(text);
+    }
+    static void* state(Context&, Application& application) {
+        return &application;
+    }
+};
+
+/* Application implementations where returned clipboard contents have to be
+   freed, such as Sdl2Application. ImGui wants just a char pointer and doesn't
+   give us any indication of when it should be freed, so we just cache it until
+   another clipboard text is queried. */
+template<class Application> struct ClipboardText<Application, typename std::enable_if<std::is_same<decltype(std::declval<Application>().clipboardText()), Containers::String>::value>::type> {
+    static const char* get(void* state) {
+        Context& context = *static_cast<Context*>(state);
+        context._lastClipboardText = static_cast<Application*>(context._application)->clipboardText();
+        /* Containers::String is always null-terminated, so no assert here
+           compared to above */
+        return context._lastClipboardText.data();
+    }
+    static void set(void* state, const char* text) {
+        static_cast<Application*>(state)->setClipboardText(text);
+    }
+    static void* state(Context& context, Application& application) {
+        context._application = &application;
+        return &context;
+    }
+};
+
+}
+
+template<class Application> void Context::connectApplicationClipboard(Application& application) {
+    ImGuiIO& io = ImGui::GetIO();
+    io.GetClipboardTextFn = Implementation::ClipboardText<Application>::get;
+    io.SetClipboardTextFn = Implementation::ClipboardText<Application>::set;
+    io.ClipboardUserData = Implementation::ClipboardText<Application>::state(*this, application);
+}
+
 }}
 
 #endif

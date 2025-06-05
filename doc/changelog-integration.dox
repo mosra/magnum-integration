@@ -48,6 +48,10 @@ namespace Magnum {
 -   Conversion between dynamic Eigen types and
     @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
     using @ref EigenIntegration::arrayCast() (see [mosra/magnum-integration#74](https://github.com/mosra/magnum-integration/pull/74))
+-   Added @ref ImGuiIntegration::connectApplicationClipboard() to expose
+    @ref Platform::Sdl2Application::clipboardText() "Platform::*Application::clipboardText()"
+    and @ref Platform::Sdl2Application::setClipboardText() "Platform::*Application::setClipboardText()"
+    to ImGui
 
 @subsection changelog-integration-latest-changes Changes and improvements
 

@@ -91,8 +91,6 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     }
     #endif
 
-    /** @todo Set clipboard text once Platform supports it */
-
     /* Set up framebuffer sizes, font supersampling etc. and upload the glyph
        cache */
     relayout(size, windowSize, framebufferSize);

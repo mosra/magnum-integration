@@ -125,6 +125,9 @@ ApplicationTest::ApplicationTest(const Arguments& arguments):
 {
     _imgui = ImGuiIntegration::Context(Vector2{windowSize()}/dpiScaling(),
         windowSize(), framebufferSize());
+    #if !defined(CORRADE_TARGET_EMSCRIPTEN) && !defined(CORRADE_TARGET_ANDROID)
+    _imgui.connectApplicationClipboard(*this);
+    #endif
 
     GL::Renderer::enable(GL::Renderer::Feature::Blending);
     GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);

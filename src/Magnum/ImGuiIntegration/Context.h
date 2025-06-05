@@ -35,6 +35,7 @@
  * @brief Class @ref Magnum::ImGuiIntegration::Context
  */
 
+#include <Corrade/Containers/String.h>
 #include <Magnum/Timeline.h>
 #include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/GL/Texture.h>
@@ -50,6 +51,10 @@ struct ImGuiContext;
 
 namespace Magnum { namespace ImGuiIntegration {
 
+namespace Implementation {
+    template<class Application, class = void> struct ClipboardText;
+}
+
 /**
 @brief Dear ImGui context
 
@@ -62,6 +67,10 @@ Creating the @ref Context instance will create the Dear ImGui context and make
 it current. From that point on you can use ImGui calls.
 
 @snippet ImGuiIntegration.cpp Context-usage
+
+After setting up the context you can call @ref connectApplicationClipboard() if
+you want ImGui to access the clipboard. If your application implementation
+doesn't support clipboard access, the function will do nothing.
 
 @subsection ImGuiIntegration-Context-usage-rendering Rendering
 
@@ -685,7 +694,21 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          */
         template<class Application> void updateApplicationCursor(Application& application);
 
+        /**
+         * @brief Connect application clipboard
+         * @m_since_latest_{integration}
+         *
+         * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
+         * and then sets up the clipboard callbacks, connecting them with the
+         * application via @relativeref{Platform::Sdl2Application,clipboardText()}
+         * and @relativeref{Platform::Sdl2Application,setClipboardText()}. If
+         * the application doesn't implement a clipboard, does nothing.
+         */
+        template<class Application> void connectApplicationClipboard(Application& application);
+
     private:
+        template<class Application, class> friend struct Implementation::ClipboardText;
+
         ImGuiContext* _context;
         Shaders::FlatGL2D _shader;
         GL::Texture2D _texture{NoCreate};
@@ -695,6 +718,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         GL::Mesh _mesh;
         Vector2 _supersamplingRatio,
             _eventScaling;
+        /* Optionally used by connectApplicationClipboard() */
+        void* _application;
+        Containers::String _lastClipboardText;
 
     private:
         template<class KeyEvent> bool handleKeyEvent(KeyEvent& event, bool value);
