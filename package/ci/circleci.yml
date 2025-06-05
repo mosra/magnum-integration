@@ -293,7 +293,7 @@ jobs:
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -315,7 +315,7 @@ jobs:
     # tested more than enough on other jobs. SDL needed for some snippets.
     # Machine executors need sudo.
     - install-base-linux:
-        extra: gcc cmake libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: gcc cmake libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
         sudo: sudo
     - install-imgui
     - build:
@@ -336,7 +336,7 @@ jobs:
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -361,7 +361,7 @@ jobs:
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget unzip
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -385,7 +385,7 @@ jobs:
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
@@ -404,7 +404,7 @@ jobs:
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
-        extra: libidn11 libgl1-mesa-dev libsdl2-dev libbullet-dev libeigen3-dev libglm-dev wget
+        extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-clang
     - install-cmake:
         version: "3.5.2"
@@ -420,7 +420,7 @@ jobs:
       PLATFORM_GL_API: CGL
     steps:
     - install-base-macos:
-        extra: sdl2 bullet eigen glm dartsim wget
+        extra: sdl2 glfw bullet eigen glm dartsim wget
     - install-imgui
     - build:
         script: unix-desktop.sh
@@ -436,7 +436,7 @@ jobs:
       TARGET_GLES2: "OFF"
     steps:
     - install-base-macos:
-        extra: sdl2 bullet eigen glm wget
+        extra: sdl2 glfw bullet eigen glm wget
     - install-swiftshader-gles:
         build: macos12-arm64
     - install-imgui

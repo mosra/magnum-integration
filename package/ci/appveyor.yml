@@ -4,38 +4,45 @@ environment:
   matrix:
   - TARGET: desktop
     COMPILER: msvc
+    PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     APPVEYOR_JOB_NAME: windows-msvc2015
     ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
+    PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-msvc2017
     ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
+    PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-msvc2019
     ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
+    PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-msvc2022
     ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc-clang
+    PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-msvc2019-clang
     # 2.86.1 doesn't build on clang-cl
     ENABLE_BULLET: OFF
   - TARGET: desktop
     COMPILER: msvc-clang
+    PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-msvc2022-clang
     # 2.86.1 doesn't build on clang-cl
     ENABLE_BULLET: OFF
   - TARGET: desktop
     COMPILER: msvc
+    PLATFORM: x64
     # Same reasoning as in Corrade for /EHsc
     COMPILER_EXTRA: -DCMAKE_CXX_FLAGS="/permissive- /EHsc" -DCORRADE_MSVC_COMPATIBILITY=OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -43,6 +50,7 @@ environment:
     ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: msvc
+    PLATFORM: x64
     # Not playing with fire and using /EHsc on 2022 as well
     COMPILER_EXTRA: -DCMAKE_CXX_FLAGS="/permissive- /EHsc" -DCORRADE_MSVC_COMPATIBILITY=OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
@@ -50,25 +58,30 @@ environment:
     ENABLE_BULLET: ON
   - TARGET: desktop
     COMPILER: mingw
+    PLATFORM: x64 # Needed for GLFW download
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-mingw
   - TARGET: desktop-gles
     COMPILER: msvc
+    PLATFORM: x64 # Needed for GLFW download
     TARGET_GLES2: ON
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-gles2-msvc2019
   - TARGET: desktop-gles
     COMPILER: msvc
+    PLATFORM: x64 # Needed for GLFW download
     TARGET_GLES2: ON
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-gles2-msvc2022
   - TARGET: desktop-gles
     COMPILER: msvc
+    PLATFORM: x64 # Needed for GLFW download
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-gles3-msvc2019
   - TARGET: desktop-gles
     COMPILER: msvc
+    PLATFORM: x64 # Needed for GLFW download
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-gles3-msvc2022
@@ -77,6 +90,7 @@ environment:
     # expressions cause a "The syntax of the command is incorrect." sometimes
     # but not in all cases. What the fuck, cmd.exe.
     COMPILER: msvc
+    PLATFORM: x64 # Needed for GLFW download
     TARGET_GLES2: OFF
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-rt-gles3-msvc2017
@@ -108,6 +122,14 @@ install:
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" 7z x SDL2-devel-2.0.9-VC.zip && ren SDL2-2.0.9 SDL
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" 7z x SDL2-devel-2.0.9-mingw.tar.gz & 7z x SDL2-devel-2.0.9-mingw.tar & ren SDL2-2.0.9 SDL
+
+# GLFW
+- IF NOT "%TARGET%" == "rt" IF "%PLATFORM%" == "" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\glfw-3.2.1.bin.WIN32.zip appveyor DownloadFile https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.bin.WIN32.zip
+- IF NOT "%TARGET%" == "rt" IF "%PLATFORM%" == "x64" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\glfw-3.2.1.bin.WIN64.zip appveyor DownloadFile https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.bin.WIN64.zip
+- IF NOT "%TARGET%" == "rt" IF "%PLATFORM%" == "" 7z x glfw-3.2.1.bin.WIN32.zip && ren glfw-3.2.1.bin.WIN32 glfw && mkdir deps\lib && mkdir deps\bin && mkdir deps\include && xcopy /e glfw\include\* deps\include\
+- IF NOT "%TARGET%" == "rt" IF "%PLATFORM%" == "x64" 7z x glfw-3.2.1.bin.WIN64.zip && ren glfw-3.2.1.bin.WIN64 glfw && mkdir deps\lib && mkdir deps\bin && mkdir deps\include && xcopy /e glfw\include\* deps\include\
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" copy glfw\lib-vc2015\glfw3.dll deps\bin\ && copy glfw\lib-vc2015\glfw3dll.lib deps\lib\glfw3.lib
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" copy glfw\lib-mingw-w64\glfw3.dll deps\bin\ && copy glfw\lib-mingw-w64\libglfw3dll.a deps\lib\libglfw3.a
 
 # ImGui
 - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\imgui-1.88.zip appveyor DownloadFile https://github.com/ocornut/imgui/archive/v1.88.zip -FileName imgui-1.88.zip

@@ -1,3 +1,5 @@
+#ifndef Magnum_ImGuiIntegration_Test_ApplicationTest_hpp
+#define Magnum_ImGuiIntegration_Test_ApplicationTest_hpp
 /*
     This file is part of Magnum.
 
@@ -33,16 +35,13 @@
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/ImGuiIntegration/Context.hpp>
 
-#ifdef CORRADE_TARGET_ANDROID
-#include <Magnum/Platform/AndroidApplication.h>
-#elif defined(CORRADE_TARGET_EMSCRIPTEN)
-#include <Magnum/Platform/EmscriptenApplication.h>
-#else
-#include <Magnum/Platform/Sdl2Application.h>
-#endif
-
 namespace Magnum { namespace ImGuiIntegration { namespace Test {
 
+/* Assumes some Application header is included before this file, currently
+   tests mainly just that everything compiles. See Sdl2ApplicationTest.cpp etc.
+   for concrete usage. */
+
+#ifdef MAGNUM_APPLICATION_MAIN
 using namespace Math::Literals;
 
 class ApplicationTest: public Platform::Application {
@@ -172,7 +171,8 @@ void ApplicationTest::viewportEvent(ViewportEvent& event) {
     _imgui.relayout(Vector2{event.windowSize()}/event.dpiScaling(),
         event.windowSize(), event.framebufferSize());
 }
+#endif
 
 }}}
 
-MAGNUM_APPLICATION_MAIN(Magnum::ImGuiIntegration::Test::ApplicationTest)
+#endif

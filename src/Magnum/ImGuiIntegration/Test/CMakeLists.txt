@@ -85,51 +85,97 @@ endif()
 # compile examples as well (and to ensure the template APIs don't get out of
 # sync with the apps, as the ContextGLTest has only a mock)
 find_package(Corrade REQUIRED Main)
-if(CORRADE_TARGET_ANDROID)
-    find_package(Magnum REQUIRED AndroidApplication)
-elseif(CORRADE_TARGET_EMSCRIPTEN)
-    find_package(Magnum REQUIRED EmscriptenApplication)
-else()
-    find_package(Magnum REQUIRED Sdl2Application)
-endif()
 
 if(CORRADE_TARGET_ANDROID)
-    add_library(ImGuiApplicationTest SHARED ApplicationTest.cpp)
-    target_link_libraries(ImGuiApplicationTest PRIVATE Magnum::AndroidApplication)
-    if(CMAKE_ANDROID_NDK)
-        include(${PROJECT_SOURCE_DIR}/toolchains/modules/UseAndroid.cmake)
-        android_create_apk(ImGuiApplicationTest AndroidManifest.xml)
+    find_package(Magnum OPTIONAL_COMPONENTS AndroidApplication)
+    if(Magnum_AndroidApplication_FOUND)
+        add_library(ImGuiAndroidApplicationTest SHARED AndroidApplicationTest.cpp)
+        target_link_libraries(ImGuiAndroidApplicationTest PRIVATE
+            MagnumImGuiIntegration
+            Magnum::AndroidApplication
+            Corrade::Main)
+        if(CMAKE_ANDROID_NDK)
+            include(${PROJECT_SOURCE_DIR}/toolchains/modules/UseAndroid.cmake)
+            android_create_apk(ImGuiAndroidApplicationTest AndroidManifest.xml)
+        endif()
     endif()
-else()
-    add_executable(ImGuiApplicationTest WIN32 ApplicationTest.cpp)
-    if(CORRADE_TARGET_EMSCRIPTEN)
-        target_link_libraries(ImGuiApplicationTest PRIVATE Magnum::EmscriptenApplication)
-        add_custom_command(TARGET ImGuiApplicationTest POST_BUILD
+endif()
+
+if(CORRADE_TARGET_EMSCRIPTEN)
+    find_package(Magnum OPTIONAL_COMPONENTS EmscriptenApplication)
+    if(Magnum_EmscriptenApplication_FOUND)
+        add_executable(ImGuiEmscriptenApplicationTest EmscriptenApplicationTest.cpp)
+        target_link_libraries(ImGuiEmscriptenApplicationTest PRIVATE
+            MagnumImGuiIntegration
+            Magnum::EmscriptenApplication
+            Corrade::Main)
+        add_custom_command(TARGET ImGuiEmscriptenApplicationTest POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 ${MAGNUM_EMSCRIPTENAPPLICATION_JS}
                 ${MAGNUM_WEBAPPLICATION_CSS}
-                $<TARGET_FILE_DIR:ImGuiApplicationTest>
+                $<TARGET_FILE_DIR:ImGuiEmscriptenApplicationTest>
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 ${CMAKE_CURRENT_SOURCE_DIR}/ApplicationTest.html
-                $<TARGET_FILE_DIR:ImGuiApplicationTest>/ImGuiApplicationTest.html)
-    else()
-        target_link_libraries(ImGuiApplicationTest PRIVATE Magnum::Sdl2Application)
+                $<TARGET_FILE_DIR:ImGuiEmscriptenApplicationTest>/ImGuiEmscriptenApplicationTest.html)
+    endif()
+endif()
+
+if(NOT CORRADE_TARGET_ANDROID)
+    find_package(Magnum OPTIONAL_COMPONENTS Sdl2Application)
+    if(Magnum_Sdl2Application_FOUND)
+        add_executable(ImGuiSdl2ApplicationTest WIN32 Sdl2ApplicationTest.cpp)
+        target_link_libraries(ImGuiSdl2ApplicationTest PRIVATE
+            MagnumImGuiIntegration
+            Magnum::Sdl2Application
+            Corrade::Main)
         if(CORRADE_TARGET_IOS OR CORRADE_TARGET_APPLE)
             # The plist is needed in order to mark the app as DPI-aware
-            set_target_properties(ImGuiApplicationTest PROPERTIES
+            set_target_properties(ImGuiSdl2ApplicationTest PROPERTIES
                 MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/ApplicationTest.plist
                 MACOSX_BUNDLE ON
                 XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "YES")
         endif()
         if(CORRADE_TARGET_WINDOWS AND NOT CORRADE_TARGET_WINDOWS_RT)
             if(MSVC)
-                target_sources(ImGuiApplicationTest PRIVATE WindowsHiDPI.manifest)
+                target_sources(ImGuiSdl2ApplicationTest PRIVATE WindowsHiDPI.manifest)
             elseif(MINGW)
-                target_sources(ImGuiApplicationTest PRIVATE WindowsHiDPI.rc)
+                target_sources(ImGuiSdl2ApplicationTest PRIVATE WindowsHiDPI.rc)
+            endif()
+        endif()
+        if(CORRADE_TARGET_EMSCRIPTEN)
+            add_custom_command(TARGET ImGuiSdl2ApplicationTest POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    ${MAGNUM_EMSCRIPTENAPPLICATION_JS}
+                    ${MAGNUM_WEBAPPLICATION_CSS}
+                    $<TARGET_FILE_DIR:ImGuiSdl2ApplicationTest>
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    ${CMAKE_CURRENT_SOURCE_DIR}/ApplicationTest.html
+                    $<TARGET_FILE_DIR:ImGuiSdl2ApplicationTest>/ImGuiSdl2ApplicationTest.html)
+        endif()
+    endif()
+endif()
+
+if(NOT CORRADE_TARGET_ANDROID AND NOT CORRADE_TARGET_IOS AND NOT CORRADE_TARGET_EMSCRIPTEN)
+    find_package(Magnum OPTIONAL_COMPONENTS GlfwApplication)
+    if(Magnum_GlfwApplication_FOUND)
+        add_executable(ImGuiGlfwApplicationTest WIN32 GlfwApplicationTest.cpp)
+        target_link_libraries(ImGuiGlfwApplicationTest PRIVATE
+            MagnumImGuiIntegration
+            Magnum::GlfwApplication
+            Corrade::Main)
+        if(CORRADE_TARGET_APPLE)
+            # The plist is needed in order to mark the app as DPI-aware
+            set_target_properties(ImGuiGlfwApplicationTest PROPERTIES
+                MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/ApplicationTest.plist
+                MACOSX_BUNDLE ON
+                XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "YES")
+        endif()
+        if(CORRADE_TARGET_WINDOWS AND NOT CORRADE_TARGET_WINDOWS_RT)
+            if(MSVC)
+                target_sources(ImGuiGlfwApplicationTest PRIVATE WindowsHiDPI.manifest)
+            elseif(MINGW)
+                target_sources(ImGuiGlfwApplicationTest PRIVATE WindowsHiDPI.rc)
             endif()
         endif()
     endif()
 endif()
-target_link_libraries(ImGuiApplicationTest PRIVATE
-    MagnumImGuiIntegration
-    Corrade::Main)
