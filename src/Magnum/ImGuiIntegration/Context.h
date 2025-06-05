@@ -503,7 +503,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Handle pointer press event
-         * @m_since_latest
+         * @m_since_latest_{integration}
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -521,9 +521,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         #ifdef MAGNUM_BUILD_DEPRECATED
         /**
          * @brief Handle mouse press event
-         * @m_deprecated_since_latest Use @ref handlePointerPressEvent() with a
-         *      corresponding @relativeref{Platform::Sdl2Application,PointerEvent}
-         *      instance instead.
+         * @m_deprecated_since_latest_{integration} Use
+         *      @ref handlePointerPressEvent() with a corresponding
+         *      @relativeref{Platform::Sdl2Application,PointerEvent} instance
+         *      instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -537,7 +538,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Handle pointer release event
-         * @m_since_latest
+         * @m_since_latest_{integration}
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -555,9 +556,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         #ifdef MAGNUM_BUILD_DEPRECATED
         /**
          * @brief Handle mouse release event
-         * @m_deprecated_since_latest Use @ref handlePointerReleaseEvent() with a
-         *      corresponding @relativeref{Platform::Sdl2Application,PointerEvent}
-         *      instance instead.
+         * @m_deprecated_since_latest_{integration} Use
+         *      @ref handlePointerReleaseEvent() with a corresponding
+         *      @relativeref{Platform::Sdl2Application,PointerEvent} instance
+         *      instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -571,7 +573,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Handle scroll event
-         * @m_since_latest
+         * @m_since_latest_{integration}
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -585,9 +587,10 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         #ifdef MAGNUM_BUILD_DEPRECATED
         /**
          * @brief Handle mouse scroll event
-         * @m_deprecated_since_latest Use @ref handleScrollEvent() with a
-         *      corresponding @relativeref{Platform::Sdl2Application,ScrollEvent}
-         *      instance instead.
+         * @m_deprecated_since_latest_{integration} Use
+         *      @ref handleScrollEvent() with a corresponding
+         *      @relativeref{Platform::Sdl2Application,ScrollEvent} instance
+         *      instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -601,7 +604,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         /**
          * @brief Handle pointer move event
-         * @m_since_latest
+         * @m_since_latest_{integration}
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first
          * and then propagates the event, such as the one coming from
@@ -619,8 +622,9 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         #ifdef MAGNUM_BUILD_DEPRECATED
         /**
          * @brief Handle mouse move event
-         * @m_deprecated_since_latest Use @ref handlePointerMoveEvent() with a
-         *      corresponding @relativeref{Platform::Sdl2Application,PointerMoveEvent}
+         * @m_deprecated_since_latest_{integration} Use
+         *      @ref handlePointerMoveEvent() with a corresponding
+         *      @relativeref{Platform::Sdl2Application,PointerMoveEvent}
          *      instance instead.
          *
          * Calls @cpp ImGui::SetCurrentContext() @ce on @ref context() first

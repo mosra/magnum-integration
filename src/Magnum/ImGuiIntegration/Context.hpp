@@ -56,7 +56,7 @@ template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool valu
     typedef typename Modifiers::Type Modifier;
     typedef decltype(event.key()) Key;
 
-    ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO& io = ImGui::GetIO();
     const Modifiers modifiers = event.modifiers();
 
     #if IMGUI_VERSION_NUM >= 18823
