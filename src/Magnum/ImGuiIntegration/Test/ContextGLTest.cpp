@@ -261,6 +261,10 @@ struct ContextGLTest: GL::OpenGLTester {
     void textInput();
     void updateCursor();
 
+    void clipboardNoOp();
+    void clipboard();
+    void clipboardOwnedString();
+
     void multipleContexts();
 
     void drawSetup();
@@ -308,6 +312,10 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::keyInput,
               &ContextGLTest::textInput,
               &ContextGLTest::updateCursor,
+
+              &ContextGLTest::clipboardNoOp,
+              &ContextGLTest::clipboard,
+              &ContextGLTest::clipboardOwnedString,
 
               &ContextGLTest::multipleContexts});
 
@@ -1119,6 +1127,70 @@ void ContextGLTest::updateCursor() {
     ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNESW);
     c.updateApplicationCursor(app);
     CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+}
+
+void ContextGLTest::clipboardNoOp() {
+    struct {
+        /* (nothing) */
+    } app;
+
+    Context c{{}};
+
+    /* The clipboard gets stored just within ImGui itself */
+    ImGui::SetClipboardText("hello");
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "hello"_s);
+
+    c.connectApplicationClipboard(app);
+
+    /* The clipboard is still stored just within ImGui itself. Supplying null
+       functions would mean the clipboard doesn't work at all, which isn't
+       desirable. */
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "hello"_s);
+    ImGui::SetClipboardText("yay!");
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "yay!"_s);
+}
+
+void ContextGLTest::clipboard() {
+    struct {
+        Containers::StringView clipboardText() { return clipboard; }
+        void setClipboardText(Containers::StringView text) { clipboard = text; }
+
+        Containers::String clipboard = "yes?!";
+    } app;
+
+    Context c{{}};
+    c.connectApplicationClipboard(app);
+
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "yes?!"_s);
+
+    ImGui::SetClipboardText("hello");
+    CORRADE_COMPARE(app.clipboard, "hello"_s);
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "hello"_s);
+}
+
+void ContextGLTest::clipboardOwnedString() {
+    struct {
+        Containers::String clipboardText() {
+            return clipboard + "!!";
+        }
+        void setClipboardText(Containers::StringView text) { clipboard = text; }
+
+        Containers::String clipboard = "yes?";
+    } app;
+
+    Context c{{}};
+    c.connectApplicationClipboard(app);
+
+    /* This shouldn't point to a temporary string returned by the API, but
+       should be saved and kept until next time instead */
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "yes?!!"_s);
+
+    /* Setting a different clipboard text */
+    ImGui::SetClipboardText("hello");
+    CORRADE_COMPARE(app.clipboard, "hello"_s);
+
+    /* This again returns a temporary string that gets saved */
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "hello!!"_s);
 }
 
 void ContextGLTest::multipleContexts() {
