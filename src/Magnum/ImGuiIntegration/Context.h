@@ -52,7 +52,7 @@ struct ImGuiContext;
 namespace Magnum { namespace ImGuiIntegration {
 
 namespace Implementation {
-    template<class Application, class = void> struct ClipboardText;
+    template<class Application, class = void> struct ApplicationClipboard;
 }
 
 /**
@@ -70,7 +70,8 @@ it current. From that point on you can use ImGui calls.
 
 After setting up the context you can call @ref connectApplicationClipboard() if
 you want ImGui to access the clipboard. If your application implementation
-doesn't support clipboard access, the function will do nothing.
+doesn't support clipboard access, ImGui's default (local) clipboard
+implementation will be used.
 
 @subsection ImGuiIntegration-Context-usage-rendering Rendering
 
@@ -707,7 +708,7 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         template<class Application> void connectApplicationClipboard(Application& application);
 
     private:
-        template<class Application, class> friend struct Implementation::ClipboardText;
+        template<class Application, class> friend struct Implementation::ApplicationClipboard;
 
         ImGuiContext* _context;
         Shaders::FlatGL2D _shader;
