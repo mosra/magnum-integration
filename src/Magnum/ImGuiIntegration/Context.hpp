@@ -531,7 +531,7 @@ template<class Application> struct ClipboardText<Application, typename std::enab
         return context._lastClipboardText.data();
     }
     static void set(void* state, const char* text) {
-        static_cast<Application*>(state)->setClipboardText(text);
+        static_cast<Application*>(static_cast<Context*>(state)->_application)->setClipboardText(text);
     }
     static void* state(Context& context, Application& application) {
         context._application = &application;
