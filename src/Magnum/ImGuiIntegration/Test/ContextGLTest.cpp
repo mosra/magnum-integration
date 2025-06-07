@@ -168,6 +168,10 @@ struct MouseScrollEvent: public InputEvent {
 };
 #endif
 
+/* This is only used in the updateCursor() test, but cannot be a local type
+   there because Implementation::Optional*Cursor defines fallback values for
+   cursor types that don't exist and it doesn't work with local types on GCC,
+   leading to "error: ‘Implementation::OptionalResizeAllCursor<...>::Cursor’, declared using local type ‘Magnum::ImGuiIntegration::Test::{anonymous}::ContextGLTest::updateCursor()::Application’, is used but never defined" */
 struct Application {
     enum class Cursor {
         Arrow,
