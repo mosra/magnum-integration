@@ -101,7 +101,7 @@ inline bool imageButton(const char* id, GL::Texture2D& texture, const Vector2& s
 {
     /* Old function generating an implicit ID and taking frame padding from an
        explicit variable was deprecated in 1.89 and removed in 1.91.1 */
-    #if IMGUI_VERSION_NUM >= 19110
+    #if (IMGUI_VERSION_NUM >= 18900 && defined(IMGUI_DISABLE_OBSOLETE_FUNCTIONS)) || IMGUI_VERSION_NUM >= 19110
     return ImGui::ImageButton(id, textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(backgroundColor), ImColor(tintColor));
     #else
     /* This is not exactly the same since the old function pushes another ID
@@ -134,7 +134,7 @@ CORRADE_DEPRECATED("use imageButton(const char*, GL::Texture2D&, const Vector2&,
        explicit variable was deprecated in 1.89 and removed in 1.91.1. This is
        identical to the obsoleted wrapper code still present (but commented
        out) in 1.91.1. */
-    #if IMGUI_VERSION_NUM >= 19110
+    #if (IMGUI_VERSION_NUM >= 18900 && defined(IMGUI_DISABLE_OBSOLETE_FUNCTIONS)) || IMGUI_VERSION_NUM >= 19110
     /* ImTextureID is already void* */
     ImGui::PushID(textureId);
     if(framePadding >= 0)
