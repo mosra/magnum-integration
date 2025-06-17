@@ -317,7 +317,7 @@ void Context::drawFrame() {
                around it, and assume it's already created */
             GL::Texture2D texture = GL::Texture2D::wrap(
                 #if IMGUI_VERSION_NUM >= 19131
-                pcmd->TextureId,
+                pcmd->GetTexID(),
                 #else
                 reinterpret_cast<std::uintptr_t>(pcmd->GetTexID()),
                 #endif
