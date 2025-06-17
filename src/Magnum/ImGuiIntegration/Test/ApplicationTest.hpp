@@ -30,6 +30,16 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+/* Explicitly disable deprecated functions on non-deprecated builds to catch
+   issues early. Doing this only in tests so the library itself can be used
+   with any newer version, but tests should be always run against the oldest
+   supported which is mentioned in doc/namespaces.dox, and which is downloaded
+   in all CI targets in package/ci/. The oldest supported version is tracked to
+   be roughly two years back. */
+#ifndef MAGNUM_BUILD_DEPRECATED
+#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+#endif
+
 #include <Magnum/Math/Time.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Renderer.h>
