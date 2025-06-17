@@ -319,7 +319,7 @@ void Context::drawFrame() {
                 #if IMGUI_VERSION_NUM >= 19131
                 pcmd->TextureId,
                 #else
-                reinterpret_cast<std::uintptr_t>(pcmd->TextureId),
+                reinterpret_cast<std::uintptr_t>(pcmd->GetTexID()),
                 #endif
                 GL::ObjectFlag::Created);
 
