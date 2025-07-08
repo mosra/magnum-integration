@@ -285,7 +285,6 @@ jobs:
       CMAKE_CXX_FLAGS: --coverage
       LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
-      PLATFORM_GL_API: GLX
       # DART was disabled on Ubuntu 16.04 because of GCC 4 and 5 ABI mismatch
       # on 16.04: https://github.com/dartsim/dart/issues/967#issuecomment-469075835
       # TODO: investigate and re-enable on 18.04
@@ -307,7 +306,6 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
-      PLATFORM_GL_API: GLX
       # DART disabled here because it's just way too huge and annoying
       WITH_DART: "OFF"
     steps:
@@ -328,7 +326,6 @@ jobs:
       CMAKE_CXX_FLAGS: --coverage
       LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
-      PLATFORM_GL_API: EGL
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_GLES2: "ON"
       # Disabled due to GCC 4/5 ABI mismatch, see above
@@ -353,7 +350,6 @@ jobs:
       CMAKE_CXX_FLAGS: --coverage
       LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
-      PLATFORM_GL_API: EGL
       # STUPID yml interprets unquoted OFF as a boolean
       TARGET_GLES2: "OFF"
       # Disabled due to GCC 4/5 ABI mismatch, see above
@@ -379,7 +375,6 @@ jobs:
       BUILD_DEPRECATED: "OFF"
       CMAKE_CXX_FLAGS: -DCORRADE_NO_ASSERT
       CONFIGURATION: Release
-      PLATFORM_GL_API: GLX
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
@@ -398,7 +393,6 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: -fsanitize=address
       CONFIGURATION: Debug
-      PLATFORM_GL_API: GLX
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
@@ -417,7 +411,6 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
-      PLATFORM_GL_API: CGL
     steps:
     - install-base-macos:
         extra: sdl2 glfw bullet eigen glm dartsim wget
@@ -431,7 +424,6 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
-      PLATFORM_GL_API: EGL
       # STUPID yml interprets unquoted OFF as a boolean
       TARGET_GLES2: "OFF"
     steps:
