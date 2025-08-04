@@ -283,6 +283,8 @@ struct ContextGLTest: GL::OpenGLTester {
     void draw();
     void drawCallback();
     void drawTexture();
+    void drawText();
+    void drawTextColorFont();
     void drawScissor();
     void drawVertexOffset();
     void drawIndexOffset();
@@ -332,6 +334,8 @@ ContextGLTest::ContextGLTest() {
     addTests({&ContextGLTest::draw,
               &ContextGLTest::drawCallback,
               &ContextGLTest::drawTexture,
+              &ContextGLTest::drawText,
+              &ContextGLTest::drawTextColorFont,
               &ContextGLTest::drawScissor,
               &ContextGLTest::drawVertexOffset,
               &ContextGLTest::drawIndexOffset},
@@ -1478,6 +1482,127 @@ void ContextGLTest::drawTexture() {
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-texture.png"),
         (DebugTools::CompareImageToFile{_manager, 1.0f, 0.5f}));
+}
+
+void ContextGLTest::drawText() {
+    Context c{{200, 200}};
+
+    /* Scale up default font so large text output is not a complete blurry mess */
+    ImGui::GetIO().Fonts->Clear();
+    auto* font = ImGui::GetIO().Fonts->AddFontDefault();
+    font->Scale = 8.0f;
+
+    c.relayout({200, 200}, {70, 70}, _framebuffer.viewport().size());
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    /* ImGui doesn't draw anything the first frame */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    Utility::System::sleep(1);
+
+    c.newFrame();
+
+    /* Last drawlist that gets rendered, covers the entire display */
+    ImDrawList* drawList = ImGui::GetForegroundDrawList();
+    const ImVec2& size = ImGui::GetIO().DisplaySize;
+
+    drawList->AddRectFilled({size.x*0.1f, size.y*0.2f}, {size.x*0.9f, size.y*0.8f},
+        IM_COL32(255, 128, 128, 255));
+    drawList->AddText(nullptr, font->FontSize*font->Scale,
+        {size.x*0.3f, size.y*0.3f}, IM_COL32(255, 255, 0, 200), "ABC");
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    /* Catch also ABI and interface mismatch errors */
+    if(!(_manager.load("AnyImageImporter") & PluginManager::LoadState::Loaded) ||
+       !(_manager.load("PngImporter") & PluginManager::LoadState::Loaded))
+        CORRADE_SKIP("AnyImageImporter / PngImporter plugin can't be loaded.");
+
+    CORRADE_COMPARE_WITH(
+        /* Dropping the alpha channel, as it's always 1.0 */
+        Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text.png"),
+        (DebugTools::CompareImageToFile{_manager, 3.0f, 0.5f}));
+}
+
+void ContextGLTest::drawTextColorFont() {
+    Context c{{200, 200}};
+
+    /* Scale up default font so large text output is not a complete blurry mess */
+    ImGui::GetIO().Fonts->Clear();
+    auto* font = ImGui::GetIO().Fonts->AddFontDefault();
+    font->Scale = 8.0f;
+
+    /* Add a custom glyph rect for Unicode black square (U+25A0) and color it */
+
+    /* In ImGui < 1.90, font->ConfigData is not set until calling Build() */
+    const float glyphSize = ImGui::GetIO().Fonts->ConfigData[0].SizePixels;
+    const int rectIndex = ImGui::GetIO().Fonts->AddCustomRectFontGlyph(font, L'\u25A0',
+        glyphSize*0.5f, glyphSize*0.5f, glyphSize, {glyphSize*0.25f, glyphSize*0.25f});
+    ImFontAtlasCustomRect* rect = ImGui::GetIO().Fonts->GetCustomRectByIndex(rectIndex);
+    /* Build the atlas manually so we get the offsets to draw to. drawText()
+       already checked that Build() is correctly called by relayout(). */
+    ImGui::GetIO().Fonts->Build();
+
+    unsigned char* pixelData;
+    int width;
+    int height;
+    ImGui::GetIO().Fonts->GetTexDataAsRGBA32(&pixelData, &width, &height);
+    Color4ub* pixels = reinterpret_cast<Color4ub*>(pixelData);
+    for(UnsignedShort y = rect->Y; y < rect->Y + rect->Height; ++y)
+        for(UnsignedShort x = rect->X; x < rect->X + rect->Width; ++x)
+            pixels[(y*width) + x] = Color4ub{128, 255, 128, 128};
+
+    /* Tell the backend that the font atlas contains colored glyphs so it
+       always creates an RGBA texture */
+    ImGui::GetIO().Fonts->TexPixelsUseColors = true;
+
+    c.relayout({200, 200}, {70, 70}, _framebuffer.viewport().size());
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    /* ImGui doesn't draw anything the first frame */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    Utility::System::sleep(1);
+
+    c.newFrame();
+
+    /* Last drawlist that gets rendered, covers the entire display */
+    ImDrawList* drawList = ImGui::GetForegroundDrawList();
+    const ImVec2& size = ImGui::GetIO().DisplaySize;
+
+    drawList->AddRectFilled({size.x*0.1f, size.y*0.2f}, {size.x*0.9f, size.y*0.8f},
+        IM_COL32(255, 128, 128, 255));
+    /* White, gets multiplied with the glyph color */
+    drawList->AddText(nullptr, font->FontSize*font->Scale,
+        {size.x*0.0f, size.y*0.0f}, IM_COL32(255, 255, 255, 255), u8"A\u25A0B");
+    drawList->AddText(nullptr, font->FontSize*font->Scale,
+        {size.x*0.0f, size.y*0.5f}, IM_COL32(255, 255, 255, 255), u8"\u25A0\u25A0");
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    /* Catch also ABI and interface mismatch errors */
+    if(!(_manager.load("AnyImageImporter") & PluginManager::LoadState::Loaded) ||
+       !(_manager.load("PngImporter") & PluginManager::LoadState::Loaded))
+        CORRADE_SKIP("AnyImageImporter / PngImporter plugin can't be loaded.");
+
+    CORRADE_COMPARE_WITH(
+        /* Dropping the alpha channel, as it's always 1.0 */
+        Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text-color-font.png"),
+        (DebugTools::CompareImageToFile{_manager, 3.0f, 0.5f}));
 }
 
 void ContextGLTest::drawScissor() {
