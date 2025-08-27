@@ -1,5 +1,5 @@
 class MagnumIntegration < Formula
-  desc "Integration libraries for the Magnum C++11/C++14 graphics engine"
+  desc "Integration libraries for the Magnum C++11 graphics engine"
   homepage "https://magnum.graphics"
   # git describe origin/master, except the `v` prefix
   version "2020.06-306-g30d179f3"
