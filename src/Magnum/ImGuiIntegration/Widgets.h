@@ -58,7 +58,11 @@ inline ImTextureID textureId(GL::Texture2D& texture) {
     #if IMGUI_VERSION_NUM >= 19131
     return texture.id();
     #else
-    return reinterpret_cast<ImTextureID>(texture.id());
+    /* On MSVC this produces "conversion from 'GLuint' to
+       'ImTextureID' of greater size" warning (C4312), because the ImTextureID
+       is a void*, which is larger than UnsignedInt on 64-bit platforms.
+       Casting to a 64-bit integer type first to suppress that. */
+    return reinterpret_cast<ImTextureID>(std::uintptr_t(texture.id()));
     #endif
 }
 
