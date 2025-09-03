@@ -10,7 +10,7 @@
     Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2024 kolbbond <kolbbond@gmail.com>
-    Copyright © 2024 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2024, 2025 Pablo Escobar <mail@rvrs.in>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -72,18 +72,40 @@ inline ImTextureID textureId(GL::Texture2D& texture) {
 @param size         Widget size
 @param uvRange      UV range on the texture (covers the whole texture by
     default)
-@param tintColor    Tint color, default @cpp 0xffffffff_rgbaf @ce
-@param borderColor  Border color, default @cpp 0x00000000_rgbaf @ce
 
 @see @ref textureId()
 */
 inline void image(GL::Texture2D& texture, const Vector2& size,
-    const Range2D& uvRange = {{}, Vector2{1.0f}},
-    const Color4& tintColor = Color4{1.0f},
+    const Range2D& uvRange = {{}, Vector2{1.0f}})
+{
+    ImGui::Image(textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()));
+}
+
+#ifdef MAGNUM_BUILD_DEPRECATED
+/**
+@brief Image widget displaying a @ref GL::Texture2D
+@m_deprecated_since_latest Using explicit tint and border color is no longer
+    possible in newer ImGui. Use @ref image(GL::Texture2D&, const Vector2&, const Range2D&)
+    instead.
+*/
+CORRADE_DEPRECATED("use image(GL::Texture2D&, const Vector2&, const Range2D&) instead") inline void image(GL::Texture2D& texture, const Vector2& size,
+    const Range2D& uvRange,
+    const Color4& tintColor,
     const Color4& borderColor = {})
 {
+    #if IMGUI_VERSION_NUM >= 19190
+    /* This is identical to the obsoleted wrapper code still present in 1.91.9. */
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImGui::PushStyleVar(ImGuiStyleVar_ImageBorderSize, borderColor.w() > 0.0f ? Math::max(1.0f, style.ImageBorderSize) : 0.0f);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(borderColor));
+    ImGui::ImageWithBg(textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImVec4(0, 0, 0, 0), ImColor(tintColor));
+    ImGui::PopStyleColor();
+    ImGui::PopStyleVar();
+    #else
     ImGui::Image(textureId(texture), ImVec2(size), ImVec2(uvRange.topLeft()), ImVec2(uvRange.bottomRight()), ImColor(tintColor), ImColor(borderColor));
+    #endif
 }
+#endif
 
 /**
 @brief ImageButton widget displaying a @ref GL::Texture2D
