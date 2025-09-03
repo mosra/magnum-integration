@@ -42,6 +42,7 @@
 #include <Corrade/Containers/String.h>
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/TestSuite/Compare/Container.h>
+#include <Corrade/TestSuite/Compare/String.h>
 #include <Corrade/Utility/System.h>
 #include <Corrade/Utility/Path.h>
 #include <Magnum/Magnum.h>
@@ -358,7 +359,11 @@ void ContextGLTest::construct() {
         CORRADE_COMPARE(c.context(), ImGui::GetCurrentContext());
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
+        #if IMGUI_VERSION_NUM >= 19200
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+        #else
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+        #endif
 
         MAGNUM_VERIFY_NO_GL_ERROR();
     }
@@ -385,7 +390,11 @@ void ContextGLTest::constructExistingContext() {
            the default one  */
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
+        #if IMGUI_VERSION_NUM >= 19200
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+        #else
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+        #endif
     }
 
     MAGNUM_VERIFY_NO_GL_ERROR();
@@ -408,8 +417,13 @@ void ContextGLTest::constructExistingContextAddFont() {
         /* The user-supplied font should not get overriden, even though it's
            the same */
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px"_s);
+        /* ImGui < 1.92 adds a ", 13px" suffix */
+        CORRADE_COMPARE_AS(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s, TestSuite::Compare::StringHasPrefix);
+        #if IMGUI_VERSION_NUM >= 19200
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+        #else
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+        #endif
     }
 
     MAGNUM_VERIFY_NO_GL_ERROR();
@@ -430,7 +444,11 @@ void ContextGLTest::constructMove() {
     /* The texture ID used to be a pointer that had to be relocated. Now it's
        just the underlying OpenGL ID that doesn't need to be, nevertheless
        let's still check that it's what is expected. */
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexRef.GetTexID());
+    #else
     CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexID);
+    #endif
     CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
 
     Context c{{}};
@@ -442,9 +460,17 @@ void ContextGLTest::constructMove() {
     /* The texture ID used to be a pointer that had to be relocated. Now it's
        just the underlying OpenGL ID that doesn't need to be, nevertheless
        let's still check that it's what is expected. */
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexRef.GetTexID());
+    #else
     CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexID);
+    #endif
     ImGui::SetCurrentContext(c.context());
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(textureId(c.atlasTexture()), ImGui::GetIO().Fonts->TexRef.GetTexID());
+    #else
     CORRADE_COMPARE(textureId(c.atlasTexture()), ImGui::GetIO().Fonts->TexID);
+    #endif
 
     /* This should not blow up */
     ImGui::SetCurrentContext(cContext);
@@ -554,13 +580,21 @@ void ContextGLTest::relayout() {
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+    #else
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    #endif
 
     c.relayout({200, 200});
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+    #else
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    #endif
 
     Utility::System::sleep(1);
 
@@ -583,13 +617,21 @@ void ContextGLTest::relayoutDpiChange() {
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+    #else
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    #endif
 
     c.relayout({200, 200}, {70, 70}, {400, 400});
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f); /* 2x */
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 26.0f); /* 2x */
+    #else
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f);
+    #endif
 
     Utility::System::sleep(1);
 
@@ -609,8 +651,13 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
     Context c{*ImGui::GetCurrentContext(), {400, 400}};
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px"_s);
+    /* ImGui < 1.92 adds a ", 13px" suffix */
+    CORRADE_COMPARE_AS(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s, TestSuite::Compare::StringHasPrefix);
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
+    #else
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    #endif
 
     /* Again a dummy frame first */
     c.newFrame();
@@ -619,8 +666,13 @@ void ContextGLTest::relayoutDpiChangeCustomFont() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px"_s);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f); /*same */
+    /* ImGui < 1.92 adds a ", 13px" suffix */
+    CORRADE_COMPARE_AS(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s, TestSuite::Compare::StringHasPrefix);
+    #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f); /* same */
+    #else
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
+    #endif
 
     c.relayout({200, 200}, {70, 70}, {400, 400});
 
@@ -1486,14 +1538,20 @@ void ContextGLTest::drawTexture() {
 void ContextGLTest::drawText() {
     Context c{{200, 200}};
 
-    /* Scale up default font so large text output is not a complete blurry mess */
+    /* Scale up default font so large text output is not a complete blurry
+       mess. On 1.92 and up rasterization happens dynamically, so no scaling
+       needed, and the output is sharper. */
     constexpr float FontScale = 8.0f;
     constexpr float FontDrawSize = FontScale*13.0f;
 
     ImGui::GetIO().Fonts->Clear();
     ImFontConfig cfg;
     std::strcpy(cfg.Name, "ProggyClean.ttf, custom scale");
+    #if IMGUI_VERSION_NUM < 19200
     cfg.SizePixels = FontScale*13.0f;
+    #else
+    cfg.SizePixels = 13.0f;
+    #endif
     ImGui::GetIO().Fonts->AddFontDefault(&cfg);
 
     c.relayout({200, 200}, {70, 70}, _framebuffer.viewport().size());
