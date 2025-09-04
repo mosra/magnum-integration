@@ -40,6 +40,7 @@
 #include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
 
 #include <imgui.h>
+#include <imgui_internal.h> /* ImGuiContext, GetPlatformIO(ImGuiContext*) */
 #include <Corrade/Containers/Optional.h>
 #include <Corrade/Utility/Resource.h>
 
@@ -504,22 +505,22 @@ template<class Application, class> struct ApplicationClipboard {
 /* Application implementations where returned clipboard contents don't have to
    be freed, such as GlfwApplication */
 template<class Application> struct ApplicationClipboard<Application, typename std::enable_if<std::is_same<decltype(std::declval<Application>().clipboardText()), Containers::StringView>::value>::type> {
-    static void connect(Context&, Application& application) {
+    static void connect(Context& context, Application& application) {
         #if IMGUI_VERSION_NUM >= 19110
-        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
-        platformIO.Platform_GetClipboardTextFn = [](ImGuiContext*) {
-            void* state = ImGui::GetPlatformIO().Platform_ClipboardUserData;
+        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO(context.context());
+        platformIO.Platform_GetClipboardTextFn = [](ImGuiContext* ctx) {
+            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
             Containers::StringView out = static_cast<Application*>(state)->clipboardText();
             CORRADE_INTERNAL_ASSERT(out.flags() & Containers::StringViewFlag::NullTerminated);
             return out.data();
         };
-        platformIO.Platform_SetClipboardTextFn = [](ImGuiContext*, const char* text) {
-            void* state = ImGui::GetPlatformIO().Platform_ClipboardUserData;
+        platformIO.Platform_SetClipboardTextFn = [](ImGuiContext* ctx, const char* text) {
+            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
             static_cast<Application*>(state)->setClipboardText(text);
         };
         platformIO.Platform_ClipboardUserData = &application;
         #else
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO& io = context.context()->IO;
         io.GetClipboardTextFn = [](void* state) {
             Containers::StringView out = static_cast<Application*>(state)->clipboardText();
             CORRADE_INTERNAL_ASSERT(out.flags() & Containers::StringViewFlag::NullTerminated);
@@ -540,22 +541,22 @@ template<class Application> struct ApplicationClipboard<Application, typename st
 template<class Application> struct ApplicationClipboard<Application, typename std::enable_if<std::is_same<decltype(std::declval<Application>().clipboardText()), Containers::String>::value>::type> {
     static void connect(Context& context, Application& application) {
         #if IMGUI_VERSION_NUM >= 19110
-        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
-        platformIO.Platform_GetClipboardTextFn = [](ImGuiContext*) -> const char* {
-            void* state = ImGui::GetPlatformIO().Platform_ClipboardUserData;
+        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO(context.context());
+        platformIO.Platform_GetClipboardTextFn = [](ImGuiContext* ctx) -> const char* {
+            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
             Context& context = *static_cast<Context*>(state);
             context._lastClipboardText = static_cast<Application*>(context._application)->clipboardText();
             /* Containers::String is always null-terminated, so no assert here
                compared to above */
             return context._lastClipboardText.data();
         };
-        platformIO.Platform_SetClipboardTextFn = [](ImGuiContext*, const char* text) {
-            void* state = ImGui::GetPlatformIO().Platform_ClipboardUserData;
+        platformIO.Platform_SetClipboardTextFn = [](ImGuiContext* ctx, const char* text) {
+            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
             static_cast<Application*>(static_cast<Context*>(state)->_application)->setClipboardText(text);
         };
         platformIO.Platform_ClipboardUserData = &context;
         #else
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO& io = context.context()->IO;
         io.GetClipboardTextFn = [](void* state) -> const char* {
             Context& context = *static_cast<Context*>(state);
             context._lastClipboardText = static_cast<Application*>(context._application)->clipboardText();

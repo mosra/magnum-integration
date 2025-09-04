@@ -276,6 +276,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void clipboardNoOp();
     void clipboard();
     void clipboardOwnedString();
+    void clipboardMultipleContexts();
 
     void multipleContexts();
 
@@ -329,6 +330,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::clipboardNoOp,
               &ContextGLTest::clipboard,
               &ContextGLTest::clipboardOwnedString,
+              &ContextGLTest::clipboardMultipleContexts,
 
               &ContextGLTest::multipleContexts});
 
@@ -1256,6 +1258,32 @@ void ContextGLTest::clipboardOwnedString() {
 
     /* This again returns a temporary string that gets saved */
     CORRADE_COMPARE(ImGui::GetClipboardText(), "hello!!"_s);
+}
+
+void ContextGLTest::clipboardMultipleContexts() {
+    struct {
+        Containers::StringView clipboardText() { return clipboard; }
+        void setClipboardText(Containers::StringView text) { clipboard = text; }
+
+        Containers::String clipboard;
+    } app1, app2;
+
+    Context c1{{}};
+    Context c2{{}};
+    c1.connectApplicationClipboard(app1);
+    c2.connectApplicationClipboard(app2);
+
+    ImGui::SetCurrentContext(c1.context());
+    ImGui::SetClipboardText("hello");
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "hello"_s);
+    CORRADE_COMPARE(app1.clipboard, "hello"_s);
+    CORRADE_COMPARE(app2.clipboard, ""_s);
+
+    ImGui::SetCurrentContext(c2.context());
+    ImGui::SetClipboardText("goodbye");
+    CORRADE_COMPARE(ImGui::GetClipboardText(), "goodbye"_s);
+    CORRADE_COMPARE(app1.clipboard, "hello"_s);
+    CORRADE_COMPARE(app2.clipboard, "goodbye"_s);
 }
 
 void ContextGLTest::multipleContexts() {
