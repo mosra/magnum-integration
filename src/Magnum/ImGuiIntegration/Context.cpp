@@ -65,6 +65,29 @@ namespace Magnum { namespace ImGuiIntegration {
 namespace {
 
 #if IMGUI_HAS_DYNAMIC_TEXTURES
+void createTexture(ImTextureData& texture);
+void updateTexture(ImTextureData& texture, const Range2Di& rect);
+void destroyTexture(ImTextureData& texture);
+
+void createTexture(ImTextureData& texture) {
+    /* There's a single-channel format, but most official backends don't
+       support it either */
+    CORRADE_INTERNAL_ASSERT(texture.Format == ImTextureFormat_RGBA32);
+    CORRADE_INTERNAL_ASSERT(texture.GetTexID() == ImTextureID_Invalid);
+    const Vector2i size{texture.Width, texture.Height};
+    GL::Texture2D glTexture;
+    glTexture
+        .setMinificationFilter(SamplerFilter::Linear)
+        .setMagnificationFilter(SamplerFilter::Linear)
+        .setWrapping(GL::SamplerWrapping::ClampToEdge)
+        .setStorage(1, GL::TextureFormat::RGBA8, size);
+    const ImTextureID id = ImTextureID(glTexture.release());
+    texture.SetTexID(id);
+
+    updateTexture(texture, Range2Di::fromSize({}, size));
+    texture.SetStatus(ImTextureStatus_OK);
+}
+
 void updateTexture(ImTextureData& texture, const Range2Di& rect) {
     const Vector2i offset = rect.min();
     PixelStorage storage;
@@ -77,6 +100,7 @@ void updateTexture(ImTextureData& texture, const Range2Di& rect) {
 
     GL::Texture2D glTexture = GL::Texture2D::wrap(GLuint(texture.GetTexID()), GL::ObjectFlag::Created);
     glTexture.setSubImage(0, offset, imageView);
+    texture.SetStatus(ImTextureStatus_OK);
 }
 
 void destroyTexture(ImTextureData& texture) {
@@ -329,37 +353,16 @@ void Context::drawFrame() {
     if(drawData->Textures) {
         for(ImTextureData* tex : *drawData->Textures) {
             switch(tex->Status) {
-                case ImTextureStatus_WantCreate: {
-                    /* There's a single-channel format, but most official
-                       backends don't support it either */
-                    CORRADE_INTERNAL_ASSERT(tex->Format == ImTextureFormat_RGBA32);
-                    CORRADE_INTERNAL_ASSERT(tex->GetTexID() == ImTextureID_Invalid);
-                    const Vector2i size{tex->Width, tex->Height};
-                    GL::Texture2D glTexture;
-                    glTexture
-                        .setMinificationFilter(SamplerFilter::Linear)
-                        .setMagnificationFilter(SamplerFilter::Linear)
-                        .setWrapping(GL::SamplerWrapping::ClampToEdge)
-                        .setStorage(1, GL::TextureFormat::RGBA8, size);
-                    const ImTextureID id = ImTextureID(glTexture.release());
-                    tex->SetTexID(id);
-                    updateTexture(*tex, Range2Di::fromSize({}, size));
-                    tex->SetStatus(ImTextureStatus_OK);
+                case ImTextureStatus_WantCreate:
+                    createTexture(*tex);
+                    break;
+                case ImTextureStatus_WantUpdates: {
+                    const ImTextureRect& rect = tex->UpdateRect;
+                    updateTexture(*tex, Range2Di::fromSize({rect.x, rect.y}, {rect.w, rect.h}));
                     break;
                 }
                 case ImTextureStatus_WantDestroy:
                     destroyTexture(*tex);
-                    /* destroyTexture() sets status and invalid ID */
-                    break;
-                case ImTextureStatus_WantUpdates:
-                    /* There's also the combined rect of all updates in
-                       tex->UpdateRect but the official GL backend doesn't use
-                       it either */
-                    for(const ImTextureRect& rect : tex->Updates) {
-                        const Range2Di updateRect = Range2Di::fromSize({rect.x, rect.y}, {rect.w, rect.h});
-                        updateTexture(*tex, updateRect);
-                    }
-                    tex->SetStatus(ImTextureStatus_OK);
                     break;
                 case ImTextureStatus_OK:
                 case ImTextureStatus_Destroyed:
