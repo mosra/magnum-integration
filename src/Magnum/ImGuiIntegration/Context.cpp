@@ -89,14 +89,37 @@ void createTexture(ImTextureData& texture) {
 }
 
 void updateTexture(ImTextureData& texture, const Range2Di& rect) {
-    const Vector2i offset = rect.min();
+    /* On ES2 without EXT_unpack_subimage and on WebGL 1 there's no possibility
+       to upload just a slice of the input, upload the whole image instead */
+    Vector2i offset{NoInit};
+    Vector2i size{NoInit};
     PixelStorage storage;
-    /* Data is tightly packed and rect can have any size */
+    /* Data is tightly packed */
     storage.setAlignment(1);
-    storage.setRowLength(texture.Width);
-    storage.setSkip({offset.x(), offset.y(), 0});
+    #ifdef MAGNUM_TARGET_GLES2
+    #ifndef MAGNUM_TARGET_WEBGL
+    if(!GL::Context::current().isExtensionSupported<GL::Extensions::EXT::unpack_subimage>())
+    #endif
+    {
+        offset = {};
+        size = {texture.Width, texture.Height};
+        static_cast<void>(rect);
+    }
+    #ifndef MAGNUM_TARGET_WEBGL
+    else
+    #endif
+    #endif
+    #if !(defined(MAGNUM_TARGET_GLES2) && defined(MAGNUM_TARGET_WEBGL))
+    {
+        offset = rect.min();
+        size = rect.size();
+        storage.setRowLength(texture.Width);
+        storage.setSkip({offset.x(), offset.y(), 0});
+    }
+    #endif
+
     const auto data = Containers::arrayView(texture.GetPixels(), texture.GetSizeInBytes());
-    const ImageView2D imageView{storage, PixelFormat::RGBA8Unorm, rect.size(), data};
+    const ImageView2D imageView{storage, PixelFormat::RGBA8Unorm, size, data};
 
     GL::Texture2D glTexture = GL::Texture2D::wrap(GLuint(texture.GetTexID()), GL::ObjectFlag::Created);
     glTexture.setSubImage(0, offset, imageView);
