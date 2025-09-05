@@ -372,7 +372,7 @@ void Context::drawFrame() {
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
     drawData->ScaleClipRects(io.DisplayFramebufferScale);
 
-    #if IMGUI_VERSION_NUM >= 19200
+    #if IMGUI_HAS_DYNAMIC_TEXTURES
     if(drawData->Textures) {
         for(ImTextureData* tex : *drawData->Textures) {
             switch(tex->Status) {
