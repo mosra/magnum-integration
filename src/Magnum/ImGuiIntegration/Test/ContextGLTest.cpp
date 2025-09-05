@@ -1568,8 +1568,11 @@ void ContextGLTest::drawText() {
 
     /* Scale up default font so large text output is not a complete blurry
        mess. On 1.92 and up rasterization happens dynamically, so no scaling
-       needed, and the output is sharper. */
-    constexpr float FontScale = 8.0f;
+       needed, and the output is sharper.
+
+       A scale of 7 here works around potentially different output on < 1.90.5:
+       https://github.com/ocornut/imgui/pull/7404 */
+    constexpr float FontScale = 7.0f;
     constexpr float FontDrawSize = FontScale*13.0f;
 
     ImGui::GetIO().Fonts->Clear();
@@ -1612,11 +1615,19 @@ void ContextGLTest::drawText() {
        !(_manager.load("PngImporter") & PluginManager::LoadState::Loaded))
         CORRADE_SKIP("AnyImageImporter / PngImporter plugin can't be loaded.");
 
+    /* There are a few (< 10) pixels with higher delta on older ImGui versions
+       due to slight differences in font rasterization/atlassing. */
+    #if IMGUI_VERSION_NUM < 19200
+    constexpr Float MaxDelta = 30.0f;
+    #else
+    constexpr Float MaxDelta = 3.0f;
+    #endif
+
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text.png"),
-        (DebugTools::CompareImageToFile{_manager, 3.0f, 0.5f}));
+        (DebugTools::CompareImageToFile{_manager, MaxDelta, 0.1f}));
 }
 
 void ContextGLTest::drawScissor() {
