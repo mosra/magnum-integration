@@ -76,15 +76,20 @@ namespace Magnum {
     [mosra/magnum-integration#87](https://github.com/mosra/magnum-integration/issues/87),
     [mosra/magnum-integration#91](https://github.com/mosra/magnum-integration/issues/91)
     and [mosra/magnum-integration#93](https://github.com/mosra/magnum-integration/pull/93))
+-   @ref ImGuiIntegration::Context now supports dynamic texture updates
+    introduced in ImGui 1.92 (see
+    [mosra/magnum-integration#119](https://github.com/mosra/magnum-integration/pull/119))
 -   Added support for draw list user callbacks to @ref ImGuiIntegration
     (see [mosra/magnum-integration#83](https://github.com/mosra/magnum-integration/issues/83),
     [mosra/magnum-integration#84](https://github.com/mosra/magnum-integration/pull/84)
     and [mosra/magnum-integration#98](https://github.com/mosra/magnum-integration/pull/98))
 -   Fixed @ref ImGuiIntegration to work with ImGui 1.89 and
     `IMGUI_DISABLE_OBSOLETE_FUNCTIONS` set (see [mosra/magnum-integration#100](https://github.com/mosra/magnum-integration/pull/100))
--   Updated @ref ImGuiIntegration::imageButton() to work with ImGui 1.89+ (see
-    [mosra/magnum-integration#109](https://github.com/mosra/magnum-integration/pull/109)
-    and [mosra/magnum-integration#110](https://github.com/mosra/magnum-integration/pull/110))
+-   Updated @ref ImGuiIntegration::image() and
+    @ref ImGuiIntegration::imageButton() to work with ImGui 1.89+ (see
+    [mosra/magnum-integration#109](https://github.com/mosra/magnum-integration/pull/109),
+    [mosra/magnum-integration#110](https://github.com/mosra/magnum-integration/pull/110)
+    and [mosra/magnum-integration#119](https://github.com/mosra/magnum-integration/pull/119))
 -   The @ref ImGuiIntegration::Context::handlePointerPressEvent(),
     @relativeref{ImGuiIntegration::Context,handlePointerReleaseEvent()},
     @relativeref{ImGuiIntegration::Context,handlePointerMoveEvent()} and
