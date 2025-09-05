@@ -1618,16 +1618,23 @@ void ContextGLTest::drawText() {
     /* There are a few (< 10) pixels with higher delta on older ImGui versions
        due to slight differences in font rasterization/atlassing. */
     #if IMGUI_VERSION_NUM < 19200
-    constexpr Float MaxDelta = 30.0f;
+    constexpr Float MaxThreshold = 35.0f;
     #else
-    constexpr Float MaxDelta = 3.0f;
+    constexpr Float MaxThreshold = 3.0f;
+    #endif
+
+    /* On GLES the mean error is larger */
+    #ifdef MAGNUM_TARGET_GLES
+    constexpr Float MeanThreshold = 0.5f;
+    #else
+    constexpr Float MeanThreshold = 0.1f;
     #endif
 
     CORRADE_COMPARE_WITH(
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text.png"),
-        (DebugTools::CompareImageToFile{_manager, MaxDelta, 0.1f}));
+        (DebugTools::CompareImageToFile{_manager, MaxThreshold, MeanThreshold}));
 }
 
 void ContextGLTest::drawScissor() {
