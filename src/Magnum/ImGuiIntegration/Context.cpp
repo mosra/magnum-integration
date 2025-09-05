@@ -9,7 +9,7 @@
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2019 bowling-allie <allie.smith.epic@gmail.com>
     Copyright © 2021 Juan Pedro Bolívar Puente <raskolnikov@gnu.org>
-    Copyright © 2022, 2024 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2022, 2024, 2025 Pablo Escobar <mail@rvrs.in>
     Copyright © 2024 kolbbond <kolbbond@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
@@ -38,6 +38,7 @@
 #include <Corrade/Containers/Reference.h>
 #include <Corrade/Utility/Resource.h>
 #include <Magnum/ImageView.h>
+#include <Magnum/PixelFormat.h>
 #include <Magnum/GL/Context.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Extensions.h>
@@ -48,11 +49,92 @@
 #include <Magnum/GL/TextureFormat.h>
 #include <Magnum/GL/Version.h>
 #include <Magnum/Math/Matrix3.h>
+#include <Magnum/Math/Range.h>
 
 #include "Magnum/ImGuiIntegration/Integration.h"
 #include "Magnum/ImGuiIntegration/Widgets.h"
 
+#define IMGUI_HAS_DYNAMIC_TEXTURES (IMGUI_VERSION_NUM >= 19200)
+
+#if IMGUI_HAS_DYNAMIC_TEXTURES
+#include <imgui_internal.h> /* GetPlatformIO(ImGuiContext*) */
+#endif
+
 namespace Magnum { namespace ImGuiIntegration {
+
+namespace {
+
+#if IMGUI_HAS_DYNAMIC_TEXTURES
+void createTexture(ImTextureData& texture);
+void updateTexture(ImTextureData& texture, const Range2Di& rect);
+void destroyTexture(ImTextureData& texture);
+
+void createTexture(ImTextureData& texture) {
+    /* There's a single-channel format, but most official backends don't
+       support it either */
+    CORRADE_INTERNAL_ASSERT(texture.Format == ImTextureFormat_RGBA32);
+    CORRADE_INTERNAL_ASSERT(texture.GetTexID() == ImTextureID_Invalid);
+    const Vector2i size{texture.Width, texture.Height};
+    GL::Texture2D glTexture;
+    glTexture
+        .setMinificationFilter(SamplerFilter::Linear)
+        .setMagnificationFilter(SamplerFilter::Linear)
+        .setWrapping(GL::SamplerWrapping::ClampToEdge)
+        .setStorage(1, GL::TextureFormat::RGBA8, size);
+    const ImTextureID id = ImTextureID(glTexture.release());
+    texture.SetTexID(id);
+
+    updateTexture(texture, Range2Di::fromSize({}, size));
+    texture.SetStatus(ImTextureStatus_OK);
+}
+
+void updateTexture(ImTextureData& texture, const Range2Di& rect) {
+    /* On ES2 without EXT_unpack_subimage and on WebGL 1 there's no possibility
+       to upload just a slice of the input, upload the whole image instead */
+    Vector2i offset{NoInit};
+    Vector2i size{NoInit};
+    PixelStorage storage;
+    /* Data is tightly packed */
+    storage.setAlignment(1);
+    #ifdef MAGNUM_TARGET_GLES2
+    #ifndef MAGNUM_TARGET_WEBGL
+    if(!GL::Context::current().isExtensionSupported<GL::Extensions::EXT::unpack_subimage>())
+    #endif
+    {
+        offset = {};
+        size = {texture.Width, texture.Height};
+        static_cast<void>(rect);
+    }
+    #ifndef MAGNUM_TARGET_WEBGL
+    else
+    #endif
+    #endif
+    #if !(defined(MAGNUM_TARGET_GLES2) && defined(MAGNUM_TARGET_WEBGL))
+    {
+        offset = rect.min();
+        size = rect.size();
+        storage.setRowLength(texture.Width);
+        storage.setSkip({offset.x(), offset.y(), 0});
+    }
+    #endif
+
+    const auto data = Containers::arrayView(texture.GetPixels(), texture.GetSizeInBytes());
+    const ImageView2D imageView{storage, PixelFormat::RGBA8Unorm, size, data};
+
+    GL::Texture2D glTexture = GL::Texture2D::wrap(GLuint(texture.GetTexID()), GL::ObjectFlag::Created);
+    glTexture.setSubImage(0, offset, imageView);
+    texture.SetStatus(ImTextureStatus_OK);
+}
+
+void destroyTexture(ImTextureData& texture) {
+    CORRADE_UNUSED GL::Texture2D glTexture = GL::Texture2D::wrap(GLuint(texture.GetTexID()),
+        GL::ObjectFlag::Created|GL::ObjectFlag::DeleteOnDestruction);
+    texture.SetTexID(ImTextureID_Invalid);
+    texture.SetStatus(ImTextureStatus_Destroyed);
+}
+#endif
+
+}
 
 Context::Context(const Vector2& size, const Vector2i& windowSize, const Vector2i& framebufferSize): Context{*ImGui::CreateContext(), size, windowSize, framebufferSize} {}
 
@@ -91,6 +173,15 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     }
     #endif
 
+    /* Support dynamic texture uploads */
+    #if IMGUI_HAS_DYNAMIC_TEXTURES
+    io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
+    ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
+    const Vector2i maxTextureSize = GL::Texture2D::maxSize();
+    platformIO.Renderer_TextureMaxWidth = maxTextureSize.x();
+    platformIO.Renderer_TextureMaxHeight = maxTextureSize.y();
+    #endif
+
     /* Set up framebuffer sizes, font supersampling etc. and upload the glyph
        cache */
     relayout(size, windowSize, framebufferSize);
@@ -116,6 +207,14 @@ Context::Context(Context&& other) noexcept: _context{other._context}, _shader{Ut
 
 Context::~Context() {
     if(_context) {
+        #if IMGUI_HAS_DYNAMIC_TEXTURES
+        for(ImTextureData* tex : ImGui::GetPlatformIO(_context).Textures) {
+            /* Only destroy textures used by a single context */
+            if(tex->RefCount == 1 && tex->GetTexID() != ImTextureID_Invalid)
+                destroyTexture(*tex);
+        }
+        #endif
+
         /* Ensure we destroy the context we're linked to */
         ImGui::SetCurrentContext(_context);
         ImGui::DestroyContext();
@@ -191,6 +290,7 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
         _supersamplingRatio = supersamplingRatio;
 
+        #if !IMGUI_HAS_DYNAMIC_TEXTURES
         /* Downscale back the upscaled font to achieve supersampling */
         io.FontGlobalScale = 1.0f/nonZeroSupersamplingRatio;
 
@@ -220,6 +320,7 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
         /* Make the texture available through the ImFontAtlas */
         io.Fonts->SetTexID(textureId(_texture));
+        #endif
     }
 
     /* Display size is the window size. Scaling of this to the actual window
@@ -270,6 +371,30 @@ void Context::drawFrame() {
     ImDrawData* drawData = ImGui::GetDrawData();
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
     drawData->ScaleClipRects(io.DisplayFramebufferScale);
+
+    #if IMGUI_HAS_DYNAMIC_TEXTURES
+    if(drawData->Textures) {
+        for(ImTextureData* tex : *drawData->Textures) {
+            switch(tex->Status) {
+                case ImTextureStatus_WantCreate:
+                    createTexture(*tex);
+                    break;
+                case ImTextureStatus_WantUpdates: {
+                    const ImTextureRect& rect = tex->UpdateRect;
+                    updateTexture(*tex, Range2Di::fromSize({rect.x, rect.y}, {rect.w, rect.h}));
+                    break;
+                }
+                case ImTextureStatus_WantDestroy:
+                    destroyTexture(*tex);
+                    break;
+                case ImTextureStatus_OK:
+                case ImTextureStatus_Destroyed:
+                    /* Nothing to do */
+                    break;
+            }
+        }
+    }
+    #endif
 
     const Matrix3 projection =
         Matrix3::translation({-1.0f, 1.0f})*

@@ -91,7 +91,15 @@ void WidgetsGLTest::image() {
 
     c.newFrame();
 
-    ImGuiIntegration::image(texture, {100, 100});
+    ImGuiIntegration::image(texture, {100, 100},
+        {{}, Vector2{1.0f}});
+
+    #ifdef MAGNUM_BUILD_DEPRECATED
+    CORRADE_IGNORE_DEPRECATED_PUSH
+    ImGuiIntegration::image(texture, {100, 100},
+        {{}, Vector2{1.0f}}, Color4::yellow(), Color4::blue());
+    CORRADE_IGNORE_DEPRECATED_POP
+    #endif
 
     c.drawFrame();
 

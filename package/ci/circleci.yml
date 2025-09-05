@@ -194,14 +194,17 @@ commands:
           unzip swiftshader-gles-r5904.14dcbed947-<< parameters.build >>.zip
 
   install-imgui:
+    parameters:
+      version:
+        type: string
+        default: "v1.88"
     steps:
     - run:
         name: Install ImGui
         command: |
-          export IMGUI_VERSION=v1.88
           mkdir -p $HOME/imgui && cd $HOME/imgui
-          wget --no-check-certificate https://github.com/ocornut/imgui/archive/$IMGUI_VERSION.tar.gz
-          tar --strip-components=1 -xzf $IMGUI_VERSION.tar.gz
+          wget --no-check-certificate https://github.com/ocornut/imgui/archive/<< parameters.version >>.tar.gz
+          tar --strip-components=1 -xzf << parameters.version >>.tar.gz
 
   install-glm:
     steps:
@@ -359,7 +362,8 @@ jobs:
         version: "3.5.2"
     - install-swiftshader-gles:
         build: ubuntu-18.04
-    - install-imgui
+    - install-imgui:
+        version: "v1.92.2"
     - build:
         script: unix-desktop-gles.sh
     - lcov
