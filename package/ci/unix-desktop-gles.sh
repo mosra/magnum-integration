@@ -82,8 +82,12 @@ cmake .. \
     -G Ninja
 ninja $NINJA_JOBS
 
-CORRADE_TEST_COLOR=ON ctest -V
-if [ "$TARGET_GLES2" == "ON" ]; then CORRADE_TEST_COLOR=ON MAGNUM_DISABLE_EXTENSIONS="OES_vertex_array_object" ctest -V -R GLTest; fi
+export CORRADE_TEST_COLOR=ON
+
+ctest -V
+if [ "$TARGET_GLES2" == "ON" ]; then
+    MAGNUM_DISABLE_EXTENSIONS="OES_vertex_array_object" ctest -V -R GLTest
+fi
 
 # Test install, after running the tests as for them it shouldn't be needed
 ninja install

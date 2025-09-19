@@ -85,10 +85,16 @@ cmake .. \
     -G Ninja
 ninja $NINJA_JOBS
 
+export CORRADE_TEST_COLOR=ON
+# Sanitizer options are used only in sanitizer builds, they do nothing
+# elsewhere
+export ASAN_OPTIONS="color=always"
+export LSAN_OPTIONS="color=always"
+
 # DART leaks somewhere deep in std::string, run these tests separately to avoid
 # suppressing too much
-ASAN_OPTIONS="color=always" LSAN_OPTIONS="color=always" CORRADE_TEST_COLOR=ON ctest -V -E "GLTest|Dart"
-ASAN_OPTIONS="color=always" LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" CORRADE_TEST_COLOR=ON ctest -V -R Dart -E GLTest
+ctest -V -E "GLTest|Dart"
+LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" ctest -V -R Dart -E GLTest
 
 # Test install, after running the tests as for them it shouldn't be needed
 ninja install
