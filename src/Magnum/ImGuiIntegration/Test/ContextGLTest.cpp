@@ -243,6 +243,9 @@ struct TextInputEvent {
 struct ContextGLTest: GL::OpenGLTester {
     explicit ContextGLTest();
 
+    void drawSetup();
+    void drawTeardown();
+
     void construct();
     void constructExistingContext();
     void constructExistingContextAddFont();
@@ -277,9 +280,6 @@ struct ContextGLTest: GL::OpenGLTester {
 
     void multipleContexts();
 
-    void drawSetup();
-    void drawTeardown();
-
     void draw();
     void drawCallback();
     void drawTexture();
@@ -297,13 +297,17 @@ struct ContextGLTest: GL::OpenGLTester {
 ContextGLTest::ContextGLTest() {
     addTests({&ContextGLTest::construct,
               &ContextGLTest::constructExistingContext,
-              &ContextGLTest::constructExistingContextAddFont,
-              &ContextGLTest::constructMove,
-              &ContextGLTest::moveAssignEmpty,
+              &ContextGLTest::constructExistingContextAddFont});
 
-              &ContextGLTest::release,
+    addTests({&ContextGLTest::constructMove},
+        &ContextGLTest::drawSetup,
+        &ContextGLTest::drawTeardown);
 
-              &ContextGLTest::frame,
+    addTests({&ContextGLTest::moveAssignEmpty,
+
+              &ContextGLTest::release});
+
+    addTests({&ContextGLTest::frame,
               &ContextGLTest::frameZeroSize,
 
               &ContextGLTest::relayout,
@@ -320,16 +324,19 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::mouseInputTooFast,
               #endif
               &ContextGLTest::keyInput,
-              &ContextGLTest::textInput,
-              &ContextGLTest::updateCursor,
+              &ContextGLTest::textInput},
+        &ContextGLTest::drawSetup,
+        &ContextGLTest::drawTeardown);
+
+    addTests({&ContextGLTest::updateCursor,
 
               &ContextGLTest::clipboardNoOp,
               &ContextGLTest::clipboard,
-              &ContextGLTest::clipboardOwnedString,
+              &ContextGLTest::clipboardOwnedString});
 
-              &ContextGLTest::multipleContexts});
+    addTests({&ContextGLTest::multipleContexts,
 
-    addTests({&ContextGLTest::draw,
+              &ContextGLTest::draw,
               &ContextGLTest::drawCallback,
               &ContextGLTest::drawTexture,
               &ContextGLTest::drawScissor,
@@ -345,6 +352,34 @@ ContextGLTest::ContextGLTest() {
     GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
     GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
     GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+}
+
+constexpr Color4 DrawClearColor{0.5f, 0.5f, 1.0f, 1.0f};
+
+void ContextGLTest::drawSetup() {
+    GL::Renderer::setClearColor(DrawClearColor);
+
+    constexpr Vector2i DrawSize{64, 64};
+
+    _color = GL::Renderbuffer{};
+    _color.setStorage(
+        #if !defined(MAGNUM_TARGET_GLES2) || !defined(MAGNUM_TARGET_WEBGL)
+        GL::RenderbufferFormat::RGBA8,
+        #else
+        GL::RenderbufferFormat::RGBA4,
+        #endif
+        DrawSize);
+
+    _framebuffer = GL::Framebuffer{{{}, DrawSize}};
+    _framebuffer
+        .attachRenderbuffer(GL::Framebuffer::ColorAttachment{0}, _color)
+        .clear(GL::FramebufferClear::Color)
+        .bind();
+}
+
+void ContextGLTest::drawTeardown() {
+    _framebuffer = GL::Framebuffer{NoCreate};
+    _color = GL::Renderbuffer{NoCreate};
 }
 
 void ContextGLTest::construct() {
@@ -1288,34 +1323,6 @@ void ContextGLTest::multipleContexts() {
     CORRADE_IGNORE_DEPRECATED_POP
     CORRADE_COMPARE(ImGui::GetCurrentContext(), a.context());
     #endif
-}
-
-constexpr Color4 DrawClearColor{0.5f, 0.5f, 1.0f, 1.0f};
-
-void ContextGLTest::drawSetup() {
-    GL::Renderer::setClearColor(DrawClearColor);
-
-    constexpr Vector2i DrawSize{64, 64};
-
-    _color = GL::Renderbuffer{};
-    _color.setStorage(
-        #if !defined(MAGNUM_TARGET_GLES2) || !defined(MAGNUM_TARGET_WEBGL)
-        GL::RenderbufferFormat::RGBA8,
-        #else
-        GL::RenderbufferFormat::RGBA4,
-        #endif
-        DrawSize);
-
-    _framebuffer = GL::Framebuffer{{{}, DrawSize}};
-    _framebuffer
-        .attachRenderbuffer(GL::Framebuffer::ColorAttachment{0}, _color)
-        .clear(GL::FramebufferClear::Color)
-        .bind();
-}
-
-void ContextGLTest::drawTeardown() {
-    _framebuffer = GL::Framebuffer{NoCreate};
-    _color = GL::Renderbuffer{NoCreate};
 }
 
 void ContextGLTest::draw() {

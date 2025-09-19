@@ -38,8 +38,11 @@
 
 #include <Corrade/Utility/System.h>
 #include <Magnum/Magnum.h>
-#include <Magnum/GL/TextureFormat.h>
+#include <Magnum/GL/Framebuffer.h>
 #include <Magnum/GL/OpenGLTester.h>
+#include <Magnum/GL/Renderbuffer.h>
+#include <Magnum/GL/RenderbufferFormat.h>
+#include <Magnum/GL/TextureFormat.h>
 
 #include "Magnum/ImGuiIntegration/Context.hpp"
 #include "Magnum/ImGuiIntegration/Widgets.h"
@@ -54,13 +57,22 @@ namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 struct WidgetsGLTest: GL::OpenGLTester {
     explicit WidgetsGLTest();
 
+    void drawSetup();
+    void drawTeardown();
+
     void image();
     void imageButton();
+
+    private:
+        GL::Renderbuffer _color{NoCreate};
+        GL::Framebuffer _framebuffer{NoCreate};
 };
 
 WidgetsGLTest::WidgetsGLTest() {
     addTests({&WidgetsGLTest::image,
-              &WidgetsGLTest::imageButton});
+              &WidgetsGLTest::imageButton},
+        &WidgetsGLTest::drawSetup,
+        &WidgetsGLTest::drawTeardown);
 
     GL::Renderer::enable(GL::Renderer::Feature::Blending);
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
@@ -69,6 +81,30 @@ WidgetsGLTest::WidgetsGLTest() {
     GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
     GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
     GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+}
+
+void WidgetsGLTest::drawSetup() {
+    constexpr Vector2i DrawSize{64, 64};
+
+    _color = GL::Renderbuffer{};
+    _color.setStorage(
+        #if !defined(MAGNUM_TARGET_GLES2) || !defined(MAGNUM_TARGET_WEBGL)
+        GL::RenderbufferFormat::RGBA8,
+        #else
+        GL::RenderbufferFormat::RGBA4,
+        #endif
+        DrawSize);
+
+    _framebuffer = GL::Framebuffer{{{}, DrawSize}};
+    _framebuffer
+        .attachRenderbuffer(GL::Framebuffer::ColorAttachment{0}, _color)
+        .clear(GL::FramebufferClear::Color)
+        .bind();
+}
+
+void WidgetsGLTest::drawTeardown() {
+    _framebuffer = GL::Framebuffer{NoCreate};
+    _color = GL::Renderbuffer{NoCreate};
 }
 
 void WidgetsGLTest::image() {
