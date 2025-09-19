@@ -23,7 +23,6 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DCMAKE_PREFIX_PATH=$HOME/sdl2 \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=$CONFIGURATION \
     -DMAGNUM_WITH_AUDIO=OFF \
@@ -71,7 +70,7 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DCMAKE_PREFIX_PATH="$HOME/deps-dart;$HOME/sdl2" \
+    -DCMAKE_PREFIX_PATH="$HOME/deps-dart" \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DIMGUI_DIR=$HOME/imgui \
     -DCMAKE_BUILD_TYPE=$CONFIGURATION \
