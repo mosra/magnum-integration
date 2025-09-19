@@ -237,6 +237,7 @@ commands:
         command: |
           if [ "$BUILD_STATIC" != "ON" ]; then export BUILD_STATIC=OFF; fi
           if [ "$BUILD_DEPRECATED" != "OFF" ]; then export BUILD_DEPRECATED=ON; fi
+          if [ "$TARGET_EGL" != "ON" ]; then export TARGET_EGL=OFF; fi
           if [ "$WITH_DART" != "OFF" ]; then export WITH_DART=ON; fi
           ./package/ci/<< parameters.script >>
 
@@ -281,6 +282,8 @@ jobs:
       CMAKE_CXX_FLAGS: --coverage
       LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
+      # STUPID yml interprets unquoted ON as a boolean
+      TARGET_EGL: "ON"
       # DART was disabled on Ubuntu 16.04 because of GCC 4 and 5 ABI mismatch
       # on 16.04: https://github.com/dartsim/dart/issues/967#issuecomment-469075835
       # TODO: investigate and re-enable on 18.04
@@ -302,6 +305,14 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
+      # The ARM64 job is a machine job, not a VM, which means running GL tests
+      # will get more expensive. But it's a newer Ubuntu version, meaning it
+      # could provide better coverage than the base job, so enabling EGL to run
+      # the tests. OTOH, the TSan job has them disabled, so the GLX code paths
+      # are tested there. (Also STUPID yml interprets unquoted ON as a
+      # boolean.)
+      # TODO switch to OFF when the main job is upgraded to a newer OS version
+      TARGET_EGL: "ON"
       # DART disabled here because it's just way too huge and annoying
       WITH_DART: "OFF"
     steps:
@@ -333,8 +344,6 @@ jobs:
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
-    - install-swiftshader-gles:
-        build: ubuntu-18.04
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
@@ -357,8 +366,6 @@ jobs:
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
-    - install-swiftshader-gles:
-        build: ubuntu-18.04
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
@@ -371,6 +378,8 @@ jobs:
       BUILD_DEPRECATED: "OFF"
       CMAKE_CXX_FLAGS: -DCORRADE_NO_ASSERT
       CONFIGURATION: Release
+      # STUPID yml interprets unquoted ON as a boolean
+      TARGET_EGL: "ON"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:
@@ -389,6 +398,14 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: -fsanitize=address
       CONFIGURATION: Debug
+      # llvmpipe on Mesa 20 on 18.04 seems to be leaking somewhere, reporting
+      # two 56 byte leaks from calloc in <unknown module>, so not suppressible
+      # in any way. Not reproducible with Mesa 25 Intel, Mesa 25 llvmpipe has
+      # random GLX leaks, so I guess the driver is just in a perpetual state of
+      # disrepair. (Also STUPID yml interprets unquoted OFF as a boolean.)
+      # TODO retry when upgrading to a newer OS version or when that PR is
+      #   merged
+      TARGET_EGL: "OFF"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
     steps:

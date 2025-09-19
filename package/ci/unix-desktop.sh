@@ -25,6 +25,7 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
     -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
     -DCMAKE_BUILD_TYPE=$CONFIGURATION \
+    -DMAGNUM_TARGET_EGL=$TARGET_EGL \
     -DMAGNUM_WITH_AUDIO=OFF \
     -DMAGNUM_WITH_DEBUGTOOLS=ON \
     -DMAGNUM_WITH_MATERIALTOOLS=OFF \
@@ -48,23 +49,24 @@ cmake .. \
 ninja install
 cd ../..
 
-# DartIntegration needs plugins
-if [ "$WITH_DART" == "ON" ]; then
-    # Magnum Plugins
-    git clone --depth 1 https://github.com/mosra/magnum-plugins.git
-    cd magnum-plugins
-    mkdir build && cd build
-    cmake .. \
-        -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
-        -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-        -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
-        -DCMAKE_BUILD_TYPE=$CONFIGURATION \
-        -DMAGNUM_WITH_ASSIMPIMPORTER=$WITH_DART \
-        -DMAGNUM_WITH_STBIMAGEIMPORTER=$WITH_DART \
-        -G Ninja
-    ninja install
-    cd ../..
-fi
+# DartIntegration needs some plugins, GL tests (thus, targeting EGL) need some
+# other
+git clone --depth 1 https://github.com/mosra/magnum-plugins.git
+cd magnum-plugins
+mkdir build && cd build
+cmake .. \
+    -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
+    -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+    -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
+    -DCMAKE_BUILD_TYPE=$CONFIGURATION \
+    -DMAGNUM_WITH_ASSIMPIMPORTER=$WITH_DART \
+    `# Needed by either DartIntegration or GL tests, so enabling always` \
+    -DMAGNUM_WITH_STBIMAGEIMPORTER=ON \
+    `# StbImageConverter so we can easier debug rendering failures on the CI` \
+    -DMAGNUM_WITH_STBIMAGECONVERTER=$TARGET_EGL \
+    -G Ninja
+ninja install
+cd ../..
 
 mkdir build && cd build
 cmake .. \
@@ -91,10 +93,24 @@ export CORRADE_TEST_COLOR=ON
 export ASAN_OPTIONS="color=always"
 export LSAN_OPTIONS="color=always"
 
-# DART leaks somewhere deep in std::string, run these tests separately to avoid
-# suppressing too much
-ctest -V -E "GLTest|Dart"
-LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" ctest -V -R Dart -E GLTest
+# Run GL tests if we can use llvmpipe through EGL. (Not benchmarks because I'm
+# not interested in knowing speed of a random software GPU emulation, further
+# offset by inherent randomness of a CI VM.) Enabled only on some builds to
+# make sure the MAGNUM_TARGET_EGL=OFF option is at least compile-tested too.
+if [ "$TARGET_EGL" == "ON" ]; then
+    # Keep in sync with package/archlinux/PKGBUILD and PKGBUILD-coverage
+    ctest -V -E "GLBenchmark|Dart"
+    MAGNUM_DISABLE_EXTENSIONS="GL_ARB_draw_elements_base_vertex" ctest -V -R GLTest -E Dart
+    # DART leaks somewhere deep in std::string, run these tests separately to
+    # avoid suppressing too much
+    LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" ctest -V -R "Dart.+GLTest"
+    MAGNUM_DISABLE_EXTENSIONS="GL_ARB_draw_elements_base_vertex" LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" ctest -V -R "Dart.+GLTest"
+else
+    ctest -V -E "GLTest|GLBenchmark|Dart"
+    # DART leaks somewhere deep in std::string, run these tests separately to
+    # avoid suppressing too much
+    LSAN_OPTIONS="color=always suppressions=$(pwd)/../package/ci/leaksanitizer.conf" ctest -V -R Dart -E "GLTest|GLBenchmark"
+fi
 
 # Test install, after running the tests as for them it shouldn't be needed
 ninja install

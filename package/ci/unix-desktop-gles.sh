@@ -22,6 +22,9 @@ mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
     -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+    `# SwiftShader is used only on the Mac ES3 build. On Linux Mesa llvmpipe` \
+    `# is used instead and SwiftShader is not even downloaded so this points` \
+    `# to a non-existent location and does nothing.` \
     -DCMAKE_PREFIX_PATH="$HOME/swiftshader" \
     -DCMAKE_INSTALL_RPATH="$HOME/deps/lib;$HOME/swiftshader/lib" \
     -DCMAKE_BUILD_TYPE=Debug \
@@ -84,7 +87,10 @@ ninja $NINJA_JOBS
 
 export CORRADE_TEST_COLOR=ON
 
-ctest -V
+# Not running GL benchmarks because I'm not interested in knowing speed of a
+# random software GPU emulation, further offset by inherent randomness of a CI
+# VM.
+ctest -V -E GLBenchmark
 if [ "$TARGET_GLES2" == "ON" ]; then
     MAGNUM_DISABLE_EXTENSIONS="OES_vertex_array_object" ctest -V -R GLTest
 fi
