@@ -30,4 +30,4 @@
 set(CMAKE_FOLDER "Magnum/OvrIntegration/Test")
 
 corrade_add_test(OvrIntegrationTest IntegrationTest.cpp LIBRARIES MagnumOvrIntegration)
-corrade_add_test(OvrEnumsTest EnumsTest.cpp LIBRARIES MagnumOvrIntegration)
+corrade_add_test(OvrIntegrationEnumsTest EnumsTest.cpp LIBRARIES MagnumOvrIntegration)
