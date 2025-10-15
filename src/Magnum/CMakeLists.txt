@@ -67,27 +67,27 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/versionIntegration.h.cmake
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/versionIntegration.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR})
 
-if(MAGNUM_WITH_BULLET)
+if(MAGNUM_WITH_BULLETINTEGRATION)
     add_subdirectory(BulletIntegration)
 endif()
 
-if(MAGNUM_WITH_DART)
+if(MAGNUM_WITH_DARTINTEGRATION)
     add_subdirectory(DartIntegration)
 endif()
 
-if(MAGNUM_WITH_EIGEN)
+if(MAGNUM_WITH_EIGENINTEGRATION)
     add_subdirectory(EigenIntegration)
 endif()
 
-if(MAGNUM_WITH_GLM)
+if(MAGNUM_WITH_GLMINTEGRATION)
     add_subdirectory(GlmIntegration)
 endif()
 
-if(MAGNUM_WITH_IMGUI)
+if(MAGNUM_WITH_IMGUIINTEGRATION)
     add_subdirectory(ImGuiIntegration)
 endif()
 
-if(MAGNUM_WITH_OVR)
+if(MAGNUM_WITH_OVRINTEGRATION)
     add_subdirectory(OvrIntegration)
 endif()
 

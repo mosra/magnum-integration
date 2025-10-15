@@ -29,9 +29,9 @@ build() {
             -G'Ninja' \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
-            -DMAGNUM_WITH_BULLET=ON \
-            -DMAGNUM_WITH_EIGEN=ON \
-            -DMAGNUM_WITH_GLM=ON
+            -DMAGNUM_WITH_BULLETINTEGRATION=ON \
+            -DMAGNUM_WITH_EIGENINTEGRATION=ON \
+            -DMAGNUM_WITH_GLMINTEGRATION=ON
     ninja
 }
 

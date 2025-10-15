@@ -160,10 +160,12 @@ namespace Magnum {
 @subsection changelog-integration-latest-deprecated Deprecated APIs
 
 -   All @ref building-integration-features "CMake build options" are now
-    prefixed with `MAGNUM_`. For backwards compatibility, unless
-    @ref MAGNUM_BUILD_DEPRECATED is disabled and unless a prefixed option is
-    already set during the initial run, the unprefixed options are still
-    recognized with a warning. See also [mosra/corrade#139](https://github.com/mosra/corrade/issues/139).
+    prefixed with `MAGNUM_`. All `WITH_` options are now also suffixed with
+    `INTEGRATION` for clarity, so instead of e.g. `WITH_BULLET` it's now
+    `MAGNUM_WITH_BULLETINTEGRATION`. For backwards compatibility, unless
+    @ref MAGNUM_BUILD_DEPRECATED is disabled and unless a prefixed / suffixed
+    option is already set during the initial run, the unprefixed & unsuffixed
+    options are still recognized with a warning. See also [mosra/corrade#139](https://github.com/mosra/corrade/issues/139).
 -   @cpp ImGuiIntegration::Context::handleMousePressEvent() @ce,
     @cpp handleMouseReleaseEvent() @ce, @cpp handleMouseMoveEvent() @ce and
     @cpp handleMouseScrollEvent() @ce that operated with the now-deprecated

@@ -31,11 +31,11 @@ build() {
     cmake "$srcdir/${pkgname%-git}" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DMAGNUM_WITH_BULLET=ON \
-        -DMAGNUM_WITH_EIGEN=ON \
-        -DMAGNUM_WITH_GLM=ON \
-        -DMAGNUM_WITH_DART=OFF \
-        -DMAGNUM_WITH_IMGUI=ON \
+        -DMAGNUM_WITH_BULLETINTEGRATION=ON \
+        -DMAGNUM_WITH_EIGENINTEGRATION=ON \
+        -DMAGNUM_WITH_GLMINTEGRATION=ON \
+        -DMAGNUM_WITH_DARTINTEGRATION=OFF \
+        -DMAGNUM_WITH_IMGUIINTEGRATION=ON \
         -G Ninja
     ninja
 }

@@ -64,7 +64,7 @@ have to be specified before the subdirectory gets added:
 @code{.cmake}
 ...
 
-set(MAGNUM_WITH_GLM ON CACHE BOOL "" FORCE) # enable what you need
+set(MAGNUM_WITH_GLMINTEGRATION ON CACHE BOOL "" FORCE) # enable what you need
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 
 find_package(MagnumIntegration REQUIRED ...) # see below

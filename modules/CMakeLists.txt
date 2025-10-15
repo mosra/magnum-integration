@@ -33,19 +33,19 @@ set(MagnumIntegration_MODULES
 # FindMagnumIntegration.cmake to avoid breakages when the directory contains
 # only that new module.
 set(MagnumIntegration_DEPENDENCY_MODULES )
-if(MAGNUM_WITH_BULLET)
+if(MAGNUM_WITH_BULLETINTEGRATION)
     list(APPEND MagnumIntegration_DEPENDENCY_MODULES
         FindBullet.cmake)
 endif()
-if(MAGNUM_WITH_GLM)
+if(MAGNUM_WITH_GLMINTEGRATION)
     list(APPEND MagnumIntegration_DEPENDENCY_MODULES
         FindGLM.cmake)
 endif()
-if(MAGNUM_WITH_IMGUI)
+if(MAGNUM_WITH_IMGUIINTEGRATION)
     list(APPEND MagnumIntegration_DEPENDENCY_MODULES
         FindImGui.cmake)
 endif()
-if(MAGNUM_WITH_OVR)
+if(MAGNUM_WITH_OVRINTEGRATION)
     list(APPEND MagnumIntegration_DEPENDENCY_MODULES
         FindOVR.cmake)
 endif()

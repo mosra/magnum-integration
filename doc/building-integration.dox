@@ -173,7 +173,7 @@ ImGui doesn't provide any packages for Debian and thus the Magnum Integration
 package doesn't have it enabled by default. In order to enable it, put ImGui
 sources (or [clone a branch of your choice](https://github.com/ocornut/imgui))
 into `src/MagnumExternal/ImGui` (note the capitalization) and set
-`MAGNUM_WITH_IMGUI` to `ON` in `package/debian/rules`. When you run
+`MAGNUM_WITH_IMGUIINTEGRATION` to `ON` in `package/debian/rules`. When you run
 `dpkg-buildpackage`, CMake will automatically discover the ImGui sources, build
 them and also install their headers for use by depending projects.
 @endparblock
@@ -369,7 +369,8 @@ vcpkg install magnum-integration
 Note that just a subset of integration libraries is installed by default. To
 opt-in or opt-out of additional features, you can use the following syntax;
 feature names are simply names of CMake `MAGNUM_WITH_*` options from the
-@ref building-integration-features section but lowercase, e.g.:
+@ref building-integration-features section but lowercase and without the
+redundant `integration` suffix, e.g.:
 
 @code{.bat}
 vcpkg install magnum-integration[bullet]
@@ -407,21 +408,21 @@ to `Debug`) have a `-d` suffix, similarly to what is done when
 By default no integration libraries are built and you need to select them
 manually:
 
--   `MAGNUM_WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
+-   `MAGNUM_WITH_BULLETINTEGRATION` --- Build the @ref BulletIntegration
     library. Depends on [Bullet Physics](https://bulletphysics.org/) (or,
     in case of Emscripten, @ref building-integration-features-emscripten-ports "see below")
--   `MAGNUM_WITH_DART` --- Build the @ref DartIntegration "DartIntegration"
-    library. Depends on [DART](https://dartsim.github.io/).
--   `MAGNUM_WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"
-    library. Depends on [Eigen](https://eigen.tuxfamily.org/).
--   `MAGNUM_WITH_GLM` --- Build the @ref GlmIntegration "GlmIntegration"
-    library. Depends on [GLM](https://glm.g-truc.net/).
--   `MAGNUM_WITH_IMGUI` --- Build the @ref ImGuiIntegration "ImGuiIntegration"
-    library. Depends on [Dear ImGui](https://github.com/ocornut/imgui) --- if
-    you are on Vcpkg, it will "just work", otherwise you need to download the
-    sources and point `IMGUI_DIR` to their directory so CMake can find them.
--   `MAGNUM_WITH_OVR` --- Build the @ref OvrIntegration "OvrIntegration"
-    library. Depends on the [Oculus SDK](http://developer.oculus.com/).
+-   `MAGNUM_WITH_DARTINTEGRATION` --- Build the @ref DartIntegration library.
+    Depends on [DART](https://dartsim.github.io/).
+-   `MAGNUM_WITH_EIGENINTEGRATION` --- Build the @ref EigenIntegration library.
+    Depends on [Eigen](https://eigen.tuxfamily.org/).
+-   `MAGNUM_WITH_GLMINTEGRATION` --- Build the @ref GlmIntegration library.
+    Depends on [GLM](https://glm.g-truc.net/).
+-   `MAGNUM_WITH_IMGUIINTEGRATION` --- Build the @ref ImGuiIntegration library.
+    Depends on [Dear ImGui](https://github.com/ocornut/imgui) --- if you are on
+    Vcpkg, it will "just work", otherwise you need to download the sources and
+    point `IMGUI_DIR` to their directory so CMake can find them.
+-   `MAGNUM_WITH_OVRINTEGRATION` --- Build the @ref OvrIntegration library.
+    Depends on the [Oculus SDK](http://developer.oculus.com/).
 
 Note that each [*Integration namespace](namespaces.html) documentation contains
 more detailed information about its dependencies, availability on particular

@@ -31,11 +31,11 @@ class MagnumIntegration < Formula
         # of /opt/homebrew/lib which is dedicated for ARM binaries. Please
         # complain to Homebrew about this insane non-obvious filesystem layout.
         "-DCMAKE_INSTALL_NAME_DIR:STRING=#{lib}",
-        "-DMAGNUM_WITH_BULLET=#{(build.with? 'bullet') ? 'ON' : 'OFF'}",
-        "-DMAGNUM_WITH_DART=#{(build.with? 'dartsim') ? 'ON' : 'OFF'}",
-        "-DMAGNUM_WITH_EIGEN=#{(build.with? 'eigen') ? 'ON' : 'OFF'}",
-        "-DMAGNUM_WITH_GLM=#{(build.with? 'glm') ? 'ON' : 'OFF'}",
-        "-DMAGNUM_WITH_IMGUI=ON",
+        "-DMAGNUM_WITH_BULLETINTEGRATION=#{(build.with? 'bullet') ? 'ON' : 'OFF'}",
+        "-DMAGNUM_WITH_DARTINTEGRATION=#{(build.with? 'dartsim') ? 'ON' : 'OFF'}",
+        "-DMAGNUM_WITH_EIGENINTEGRATION=#{(build.with? 'eigen') ? 'ON' : 'OFF'}",
+        "-DMAGNUM_WITH_GLMINTEGRATION=#{(build.with? 'glm') ? 'ON' : 'OFF'}",
+        "-DMAGNUM_WITH_IMGUIINTEGRATION=ON",
         ".."
       system "cmake", "--build", "."
       system "cmake", "--build", ".", "--target", "install"
