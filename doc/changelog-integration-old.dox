@@ -87,7 +87,7 @@ for a high-level overview.
 -   WebAssembly support when building for Emscripten
 -   WebGL 2.0 support
 -   New experimental @ref DartIntegration library, integrating
-    [DART Dynamic Animation and Robotics Toolkit](http://dartsim.github.io/)
+    [DART Dynamic Animation and Robotics Toolkit](https://dartsim.github.io/)
     (see [mosra/magnum-integration#28](https://github.com/mosra/magnum-integration/pull/28))
 -   New @ref OvrIntegration library, integrating Oculus SDK (see
     [mosra/magnum-integration#3](https://github.com/mosra/magnum-integration/pull/3),
@@ -164,7 +164,7 @@ No APIs were removed since last release.
 
 @subsection changelog-integration-2018-02-documentation Documentation
 
--   New documentation theme powered by [m.css](http://mcss.mosra.cz) and
+-   New documentation theme powered by [m.css](https://mcss.mosra.cz) and
     related massive updates of *everything*
 -   The @ref building-integration documentation now prefers package
     installation instead of manual build

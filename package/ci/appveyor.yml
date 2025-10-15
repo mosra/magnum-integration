@@ -120,9 +120,9 @@ install:
 - 7z x 0.9.9.0.zip -o%APPVEYOR_BUILD_FOLDER%\deps && ren %APPVEYOR_BUILD_FOLDER%\deps\glm-0.9.9.0 glm
 
 # SDL2
-- IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-VC.zip appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.9-VC.zip
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-VC.zip appveyor DownloadFile https://www.libsdl.org/release/SDL2-devel-2.0.9-VC.zip
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER:~0,4%" == "msvc" 7z x SDL2-devel-2.0.9-VC.zip && ren SDL2-2.0.9 SDL
-- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
+- IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-2.0.9-mingw.tar.gz appveyor DownloadFile https://libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
 - IF NOT "%TARGET%" == "rt" IF "%COMPILER%" == "mingw" 7z x SDL2-devel-2.0.9-mingw.tar.gz & 7z x SDL2-devel-2.0.9-mingw.tar & ren SDL2-2.0.9 SDL
 
 # GLFW

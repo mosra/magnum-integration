@@ -38,7 +38,7 @@ find_package(Eigen3 REQUIRED)
 # be extra careful. I also wanted to set INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
 # of MagnumEigenIntegration to ${EIGEN3_INCLUDE_DIR} to avoid this target
 # creation but that was ignored by CMake (?!). This works, tho.
-# http://eigen.tuxfamily.org/index.php?title=ChangeLog#Eigen_3.3.1
+# https://eigen.tuxfamily.org/index.php?title=ChangeLog#Eigen_3.3.1
 if(NOT TARGET Eigen3::Eigen)
     add_library(Eigen3::Eigen INTERFACE IMPORTED)
     set_target_properties(Eigen3::Eigen PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})

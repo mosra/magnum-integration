@@ -206,7 +206,7 @@ mark_as_advanced(FORCE Bullet_INCLUDE_DIR)
 foreach(_library ${_BULLET_LIBRARIES})
     # Usually other Find modules (such as FindSDL2) add an extra step for
     # handling macOS frameworks, but vanilla FindBullet doesn't so it's not
-    # needed? http://public.kitware.com/pipermail/cmake/2016-April/063179.html
+    # needed? https://cmake.org/pipermail/cmake/2016-April/063179.html
     # TODO: When extra optional libraries are added, this needs to check for
     # their presence as well
     if(NOT TARGET Bullet::${_library})

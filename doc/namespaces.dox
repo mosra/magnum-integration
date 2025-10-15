@@ -37,8 +37,8 @@
 
 Conversion of matrix and vector classes, wrappers for rigid body dynamics.
 
-This library depends on the [Bullet Physics](http://bulletphysics.org/) library
-and is built if `MAGNUM_WITH_BULLET` is enabled when building Magnum
+This library depends on the [Bullet Physics](https://bulletphysics.org/)
+library and is built if `MAGNUM_WITH_BULLET` is enabled when building Magnum
 Integration. To use this library with CMake, request the `Bullet` component of
 the `MagnumIntegration` package and link to the `MagnumIntegration::Bullet`
 target:
@@ -103,9 +103,9 @@ example, @ref building-integration and @ref cmake-integration.
 
 @m_class{m-block m-success}
 
-@thirdparty This library makes use of [Bullet Physics](http://bulletphysics.org/),
+@thirdparty This library makes use of [Bullet Physics](https://bulletphysics.org/),
     released under the @m_class{m-label m-success} **zlib license**
-    ([license text](http://zlib.net/zlib_license.html),
+    ([license text](https://zlib.net/zlib_license.html),
     [choosealicense.com](https://choosealicense.com/licenses/zlib/)).
     Attribution is appreciated but not required.
 */
@@ -173,8 +173,8 @@ Conversion of math types from and to the Eigen library.
 
 @section EigenIntegration-usage Usage
 
-This library depends on the [Eigen](http://eigen.tuxfamily.org/) library and is
-built if `MAGNUM_WITH_EIGEN` is enabled when building Magnum Integration. To
+This library depends on the [Eigen](https://eigen.tuxfamily.org/) library and
+is built if `MAGNUM_WITH_EIGEN` is enabled when building Magnum Integration. To
 use this library with CMake, put [FindMagnumIntegration.cmake](https://github.com/mosra/magnum-integration/blob/master/modules/FindMagnumIntegration.cmake)
 into your `modules/` directory, request the `Eigen` component of the
 `MagnumIntegration` package and link to the `MagnumIntegration::Eigen` target:
@@ -227,18 +227,18 @@ documentation for more information.
 @m_class{m-block m-warning}
 
 @thirdparty This library makes use of the
-    [Eigen](http://eigen.tuxfamily.org/),
+    [Eigen](https://eigen.tuxfamily.org/),
     released under @m_class{m-label m-warning} **MPL 2.0**
-    ([license text](http://www.mozilla.org/MPL/2.0),
+    ([license text](https://www.mozilla.org/en-US/MPL/2.0/),
     [choosealicense.com](https://choosealicense.com/licenses/mpl-2.0/)).
     Attribution is required for public use, source code of licensed files and
     modifications of these files have to be made available under the same
     license. Additionally, some parts rely on third-party code licensed under
     @m_class{m-label m-warning} **LGPLv3**
-    ([license text](http://eigen.tuxfamily.org/index.php?title=Main_Page#License),
+    ([license text](https://eigen.tuxfamily.org/index.php?title=Main_Page#License),
     [choosealicense.com](https://choosealicense.com/licenses/lgpl-3.0/)),
     requiring either dynamic linking or full source disclosure for public use.
-    See the [license notes](http://eigen.tuxfamily.org/index.php?title=Main_Page#License)
+    See the [license notes](https://eigen.tuxfamily.org/index.php?title=Main_Page#License)
     for details.
 
 @m_class{m-block m-success}

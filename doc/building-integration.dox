@@ -408,12 +408,12 @@ By default no integration libraries are built and you need to select them
 manually:
 
 -   `MAGNUM_WITH_BULLET` --- Build the @ref BulletIntegration "BulletIntegration"
-    library. Depends on [Bullet Physics](http://bulletphysics.org/) (or,
+    library. Depends on [Bullet Physics](https://bulletphysics.org/) (or,
     in case of Emscripten, @ref building-integration-features-emscripten-ports "see below")
 -   `MAGNUM_WITH_DART` --- Build the @ref DartIntegration "DartIntegration"
-    library. Depends on [DART](http://dartsim.github.io/).
+    library. Depends on [DART](https://dartsim.github.io/).
 -   `MAGNUM_WITH_EIGEN` --- Build the @ref EigenIntegration "EigenIntegration"
-    library. Depends on [Eigen](http://eigen.tuxfamily.org/).
+    library. Depends on [Eigen](https://eigen.tuxfamily.org/).
 -   `MAGNUM_WITH_GLM` --- Build the @ref GlmIntegration "GlmIntegration"
     library. Depends on [GLM](https://glm.g-truc.net/).
 -   `MAGNUM_WITH_IMGUI` --- Build the @ref ImGuiIntegration "ImGuiIntegration"

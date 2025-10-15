@@ -285,7 +285,7 @@ Released 2019-10-24, tagged as
     [mosra/magnum#357](https://github.com/mosra/magnum/issues/357) and
     [mosra/magnum-plugins#63](https://github.com/mosra/magnum-plugins/issues/63).
 -   New @ref EigenIntegration library, providing conversion of math types from
-    and to [Eigen](http://eigen.tuxfamily.org/) APIs (see
+    and to [Eigen](https://eigen.tuxfamily.org/) APIs (see
     [mosra/magnum-integration#40](https://github.com/mosra/magnum-integration/pull/40))
 -   New @ref ImGuiIntegration::imageButton() widget for drawing an image button
     out of @ref GL::Texture2D (see [mosra/magnum-integration#38](https://github.com/mosra/magnum-integration/pull/38))
