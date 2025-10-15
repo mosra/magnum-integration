@@ -31,6 +31,8 @@
  * @brief Forward declarations for the @ref Magnum::DartIntegration namespace
  */
 
+#include <Magnum/configure.h>
+
 #ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace DartIntegration {
 
