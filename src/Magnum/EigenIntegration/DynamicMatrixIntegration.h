@@ -53,7 +53,7 @@ namespace Magnum { namespace EigenIntegration {
 
 /**
 @brief Convert a @relativeref{Corrade,Containers::StridedArrayView2D} to Eigen's dynamic matrix type
-@m_since_latest
+@m_since_latest_{integration}
 */
 template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic>> arrayCast(const Containers::StridedArrayView2D<T>& from) {
     const Containers::StridedDimensions<2, std::size_t> size = from.size();
@@ -86,7 +86,7 @@ template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dyna
 
 /**
 @brief Convert a @relativeref{Corrade,Containers::StridedArrayView1D} to Eigen's dynamic vector type
-@m_since_latest
+@m_since_latest_{integration}
 
 Since for a one-dimensional @relativeref{Corrade,Containers::StridedArrayView}
 there is no column or row version, we always return an Eigen column vector.
@@ -97,7 +97,7 @@ template<class T> inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>, Eigen::
 
 /**
 @brief Convert an Eigen expression to @relativeref{Corrade,Containers::StridedArrayView1D}
-@m_since_latest
+@m_since_latest_{integration}
 
 If it is known at compile time that the Eigen expression has either one column
 or one row, then this function maps the Eigen expression to a
@@ -121,7 +121,7 @@ template<class Derived
 
 /**
 @brief Convert an Eigen expression to @relativeref{Corrade,Containers::StridedArrayView2D}
-@m_since_latest
+@m_since_latest_{integration}
 
 Takes care of any Eigen expression that was not handled by the one-dimensional
 overload above.
@@ -145,7 +145,7 @@ template<class Derived
 
 /**
 @brief Convert an Eigen reverse expression to @relativeref{Corrade,Containers::StridedArrayView1D}
-@m_since_latest
+@m_since_latest_{integration}
 
 If it is known at compile time that the Eigen reverse expression has either one
 column or one row, then this function maps the Eigen reverse expression to a
@@ -179,7 +179,7 @@ template<class Derived, int Direction
 
 /**
 @brief Convert an Eigen reverse expression to @relativeref{Corrade,Containers::StridedArrayView2D}
-@m_since_latest
+@m_since_latest_{integration}
 
 Takes care of any Eigen expression that was not handled by the one-dimensional
 overload above.

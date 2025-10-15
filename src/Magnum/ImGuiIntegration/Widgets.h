@@ -48,7 +48,7 @@ namespace Magnum { namespace ImGuiIntegration {
 
 /**
 @brief Create an `ImTextureID` for a @ref GL::Texture2D
-@m_since_latest
+@m_since_latest_{integration}
 
 Internally, the `ImTextureID` is the underlying OpenGL texture ID, but that's
 an implementation detail that might change in the future.
@@ -94,7 +94,7 @@ inline void image(GL::Texture2D& texture, const Vector2& size,
     default)
 @param backgroundColor  Background color, default @cpp 0x00000000_rgbaf @ce
 @param tintColor        Tint color, default @cpp 0xffffffff_rgbaf @ce
-@m_since_latest
+@m_since_latest_{integration}
 
 @see @ref textureId()
 */
