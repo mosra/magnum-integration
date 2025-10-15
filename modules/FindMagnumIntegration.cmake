@@ -72,7 +72,7 @@
 #
 
 # Magnum library dependencies
-set(_MAGNUMINTEGRATION_DEPENDENCIES )
+set(_MAGNUMINTEGRATION_MAGNUM_DEPENDENCIES )
 foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
     if(_component STREQUAL Bullet)
         set(_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES SceneGraph Shaders GL)
@@ -82,13 +82,9 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         set(_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES GL Shaders)
     endif()
 
-    list(APPEND _MAGNUMINTEGRATION_DEPENDENCIES ${_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES})
-    list(APPEND _MAGNUMINTEGRATION_OPTIONAL_DEPENDENCIES ${_MAGNUMINTEGRATION_${_component}_MAGNUM_OPTIONAL_DEPENDENCIES})
+    list(APPEND _MAGNUMINTEGRATION_MAGNUM_DEPENDENCIES ${_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES})
 endforeach()
-find_package(Magnum REQUIRED ${_MAGNUMINTEGRATION_DEPENDENCIES})
-if(_MAGNUMINTEGRATION_OPTIONAL_DEPENDENCIES)
-    find_package(Magnum OPTIONAL_COMPONENTS ${_MAGNUMINTEGRATION_OPTIONAL_DEPENDENCIES})
-endif()
+find_package(Magnum REQUIRED ${_MAGNUMINTEGRATION_MAGNUM_DEPENDENCIES})
 
 # Global include dir that's unique to Magnum Integration. Often it will be
 # installed alongside Magnum, which is why the hint, but if not, it shouldn't
