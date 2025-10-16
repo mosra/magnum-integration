@@ -7,16 +7,6 @@ rem hell breaks loose. Thus also not passing CORRADE_RC_EXECUTABLE anywhere
 rem below to ensure this doesn't regress.
 set PATH=%APPVEYOR_BUILD_FOLDER%\deps-native\bin;%PATH%
 
-rem Build ANGLE. The repo is now just a README redirecting to googlesource.
-rem I don't want to bother with this right now, so checking out last usable
-rem version from 2017. TODO: fix when I can be bothered
-git clone --depth 10 https://github.com/MSOpenTech/angle.git || exit /b
-cd angle || exit /b
-git checkout c61d0488abd9663e0d4d2450db7345baa2c0dfb6 || exit /b
-cd winrt\10\src || exit /b
-msbuild angle.sln /p:Configuration=Release || exit /b
-cd ..\..\..\.. || exit /b
-
 git clone --depth 1 https://github.com/mosra/corrade.git || exit /b
 cd corrade || exit /b
 
@@ -54,10 +44,6 @@ cmake .. ^
     -DCMAKE_SYSTEM_VERSION=10.0 ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
-    -DOPENGLES2_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
-    -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
-    -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
-    -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DMAGNUM_WITH_AUDIO=OFF ^
     -DMAGNUM_WITH_DEBUGTOOLS=ON ^
     -DMAGNUM_WITH_MATERIALTOOLS=OFF ^
@@ -89,10 +75,6 @@ cmake .. ^
     -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
     -DIMGUI_DIR=%APPVEYOR_BUILD_FOLDER%/deps/imgui ^
-    -DOPENGLES2_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
-    -DOPENGLES2_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
-    -DOPENGLES3_LIBRARY=%APPVEYOR_BUILD_FOLDER%/angle/winrt/10/src/Release_x64/lib/libGLESv2.lib ^
-    -DOPENGLES3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/angle/include ^
     -DEIGEN3_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/eigen/ ^
     -DMAGNUM_WITH_BULLETINTEGRATION=OFF ^
     -DMAGNUM_WITH_DARTINTEGRATION=OFF ^
