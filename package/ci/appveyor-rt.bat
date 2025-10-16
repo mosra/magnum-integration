@@ -83,6 +83,7 @@ cmake .. ^
     -DMAGNUM_WITH_GLMINTEGRATION=ON ^
     -DMAGNUM_WITH_IMGUIINTEGRATION=ON ^
     -DMAGNUM_WITH_OVRINTEGRATION=OFF ^
+    -DMAGNUM_WITH_YOGAINTEGRATION=OFF ^
     -DMAGNUM_BUILD_STATIC=ON ^
     -G "%GENERATOR%" -A x64 || exit /b
 cmake --build . --config Release -- /m /v:m || exit /b

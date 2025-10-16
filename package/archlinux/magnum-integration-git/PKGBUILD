@@ -7,7 +7,7 @@ pkgdesc="Integration libraries for the Magnum C++11/C++14 graphics engine (Git v
 arch=('i686' 'x86_64')
 url="https://magnum.graphics"
 license=('MIT')
-depends=('magnum-git' 'bullet' 'eigen' 'glm')
+depends=('magnum-git' 'magnum-extras-git' 'bullet' 'eigen' 'glm' 'yoga')
 makedepends=('cmake' 'git' 'ninja')
 provides=('magnum-integration')
 conflicts=('magnum-integration')
@@ -36,6 +36,7 @@ build() {
         -DMAGNUM_WITH_GLMINTEGRATION=ON \
         -DMAGNUM_WITH_DARTINTEGRATION=OFF \
         -DMAGNUM_WITH_IMGUIINTEGRATION=ON \
+        -DMAGNUM_WITH_YOGAINTEGRATION=ON \
         -G Ninja
     ninja
 }

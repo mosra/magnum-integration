@@ -6,7 +6,7 @@ pkgdesc="Integration libraries for the Magnum C++11/C++14 graphics engine (Emscr
 arch=('any')
 url="https://magnum.graphics"
 license=('MIT')
-depends=('emscripten-magnum=dev.wasm.webgl2' 'emscripten-bullet' 'imgui-src')
+depends=('emscripten-magnum=dev.wasm.webgl2' 'emscripten-magnum-extras=dev.wasm' 'emscripten-bullet' 'imgui-src' 'emscripten-yoga')
 makedepends=('cmake' 'emscripten' 'corrade' 'ninja' 'rsync')
 options=('!strip' '!buildflags')
 
@@ -55,6 +55,7 @@ build() {
         -DMAGNUM_WITH_DARTINTEGRATION=OFF \
         -DMAGNUM_WITH_GLMINTEGRATION=OFF \
         -DMAGNUM_WITH_IMGUIINTEGRATION=ON \
+        -DMAGNUM_WITH_YOGAINTEGRATION=ON \
         -DMAGNUM_BUILD_TESTS=ON \
         -DMAGNUM_BUILD_GL_TESTS=ON \
         -DCORRADE_TESTSUITE_TEST_TARGET=build-tests

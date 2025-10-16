@@ -8,24 +8,29 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     APPVEYOR_JOB_NAME: windows-msvc2015
     ENABLE_BULLET: ON
+    # MSVC 2015 fails spectacularly when building it. Don't care.
+    ENABLE_YOGA: OFF
   - TARGET: desktop
     COMPILER: msvc
     PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     APPVEYOR_JOB_NAME: windows-msvc2017
     ENABLE_BULLET: ON
+    ENABLE_YOGA: ON
   - TARGET: desktop
     COMPILER: msvc
     PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-msvc2019
     ENABLE_BULLET: ON
+    ENABLE_YOGA: ON
   - TARGET: desktop
     COMPILER: msvc
     PLATFORM: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-msvc2022
     ENABLE_BULLET: ON
+    ENABLE_YOGA: ON
   - TARGET: desktop
     COMPILER: msvc
     PLATFORM: x64
@@ -47,6 +52,7 @@ environment:
     APPVEYOR_JOB_NAME: windows-msvc2019-clang
     # 2.86.1 doesn't build on clang-cl
     ENABLE_BULLET: OFF
+    ENABLE_YOGA: ON
   # This one collects code coverage using Clang's --coverage and grcov
   - TARGET: desktop
     COMPILER: msvc-clang
@@ -55,6 +61,7 @@ environment:
     APPVEYOR_JOB_NAME: windows-msvc2022-clang
     # 2.86.1 doesn't build on clang-cl
     ENABLE_BULLET: OFF
+    ENABLE_YOGA: ON
   - TARGET: desktop
     COMPILER: msvc
     PLATFORM: x64
@@ -63,6 +70,7 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     APPVEYOR_JOB_NAME: windows-conforming-msvc2019
     ENABLE_BULLET: ON
+    ENABLE_YOGA: ON
   - TARGET: desktop
     COMPILER: msvc
     PLATFORM: x64
@@ -71,6 +79,7 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     APPVEYOR_JOB_NAME: windows-conforming-msvc2022
     ENABLE_BULLET: ON
+    ENABLE_YOGA: ON
   # This one collects code coverage using GCC's --coverage and grcov
   - TARGET: desktop
     COMPILER: mingw

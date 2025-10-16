@@ -61,8 +61,9 @@ you want to have more control. Cross-compiling is very similar to
 In `package/archlinux/magnum-integration-git` there is a package for Git
 development build. The package is also in AUR as
 [magnum-integration-git](https://aur.archlinux.org/packages/magnum-integration-git/).
-It depends on @ref building-corrade-packages-arch "Corrade" and
-@ref building-packages-arch "Magnum" ArchLinux packages.
+It depends on @ref building-corrade-packages-arch "Corrade",
+@ref building-packages-arch "Magnum" and
+@ref building-extras-packages-arch "Magnum Extras" ArchLinux packages.
 
 There are also a few development packages for native builds, cross-compilation
 for Emscripten, Android and MinGW or various sanitizer/coverage builds. See the
@@ -95,8 +96,7 @@ Edit the PKGBUILDs if you want to pass additional flags to CMake or
 @ref building-integration-features "enable / disable additional features".
 
 There are also ArchLinux packages for
-@ref building-plugins-packages-arch "Magnum Plugins",
-@ref building-extras-packages-arch "Magnum Extras" and
+@ref building-plugins-packages-arch "Magnum Plugins" and
 @ref building-examples-packages-arch "Magnum Examples".
 
 @subsection building-integration-packages-msys MSYS2 packages
@@ -134,6 +134,10 @@ makepkg-mingw -fp PKGBUILD
 which will build both a 32bit and a 64bit version. See the
 [MSYS2 Wiki](https://github.com/msys2/msys2/wiki/Creating-Packages) for more
 information.
+
+@attention Note that @ref YogaIntegration is not available in the MSYS2 package
+    as there is no Yoga package to depend on. If you need it,
+    @ref building-integration-manual "build the integration library from sources".
 
 There are also MSYS2 packages for
 @ref building-plugins-packages-msys "Magnum Plugins".
@@ -178,6 +182,10 @@ into `src/MagnumExternal/ImGui` (note the capitalization) and set
 them and also install their headers for use by depending projects.
 @endparblock
 
+@attention Note that @ref YogaIntegration is not available in the Debian
+    package as there is no Yoga package to depend on. If you need it,
+    @ref building-integration-manual "build the integration library from sources".
+
 There are also Debian packages for
 @ref building-plugins-packages-deb "Magnum Plugins",
 @ref building-extras-packages-deb "Magnum Extras" and
@@ -199,6 +207,10 @@ sudo ebuild dev-libs/magnum-integration/magnum-integration-9999.ebuild manifest 
 If you want to pass additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", add
 them to `mycmakeargs` in the `*.ebuild` file.
+
+@attention Note that @ref YogaIntegration is not available in the Gentoo
+    package as there is no Yoga package to depend on. If you need it,
+    @ref building-integration-manual "build the integration library from sources".
 
 There are also Gentoo packages for
 @ref building-plugins-packages-gentoo "Magnum Plugins",
@@ -232,6 +244,10 @@ located in `~/rpmbuild/RPMS`. The script will print their names at the end.
 If you want to pass additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", edit
 the `*.spec` file.
+
+@attention Note that @ref YogaIntegration is not available in the RPM package
+    as there is no Yoga package to depend on. If you need it,
+    @ref building-integration-manual "build the integration library from sources".
 
 There are also RPM packages for
 @ref building-plugins-packages-rpm "Magnum Plugins",
@@ -280,6 +296,10 @@ additional flags to CMake or
 @ref building-integration-features "enable / disable additional features", edit
 the `*.rb` file.
 
+@attention Note that @ref YogaIntegration is not available in the Homebrew
+    package as there is no Yoga package to depend on. If you need it,
+    @ref building-integration-manual "build the integration library from sources".
+
 There are also Homebrew packages for
 @ref building-plugins-packages-brew "Magnum Plugins",
 @ref building-extras-packages-brew "Magnum Extras" and
@@ -290,10 +310,11 @@ There are also Homebrew packages for
 If you're using [CPM](https://github.com/cpm-cmake/CPM.cmake), adding Magnum
 Integration as a dependency can be done with the following, together with the
 @ref building-corrade-packages-cpm "Corrade" and
-@ref building-packages-cpm "Magnum" packages. If you're fetching the `master`
-branch, it's recommended to disable `GIT_SHALLOW` to perform a full clone
-including all tags. If not, the build prints a warning about being unable to
-fetch a Git version for the `versionExtras.h` header, and will generate a
+@ref building-packages-cpm "Magnum" packages and optionally also
+@ref building-extras-packages-cpm "Magnum Extras". If you're fetching the
+`master` branch, it's recommended to disable `GIT_SHALLOW` to perform a full
+clone including all tags. If not, the build prints a warning about being unable
+to fetch a Git version for the `versionExtras.h` header, and will generate a
 fallback file instead.
 
 @code{.cmake}
@@ -308,6 +329,13 @@ CPMAddPackage(
     GIT_REPOSITORY https://github.com/mosra/magnum.git
     GIT_TAG master
     GIT_SHALLOW NO)
+
+# Optional, if building YogaIntegration for the Ui library
+# CPMAddPackage(
+#     NAME magnum-extras
+#     GIT_REPOSITORY https://github.com/mosra/magnum-extras.git
+#     GIT_TAG master
+#     GIT_SHALLOW NO)
 
 CPMAddPackage(
     NAME magnum-integration

@@ -36,6 +36,7 @@ class MagnumIntegration < Formula
         "-DMAGNUM_WITH_EIGENINTEGRATION=#{(build.with? 'eigen') ? 'ON' : 'OFF'}",
         "-DMAGNUM_WITH_GLMINTEGRATION=#{(build.with? 'glm') ? 'ON' : 'OFF'}",
         "-DMAGNUM_WITH_IMGUIINTEGRATION=ON",
+        "-DMAGNUM_WITH_YOGAINTEGRATION=OFF",
         ".."
       system "cmake", "--build", "."
       system "cmake", "--build", ".", "--target", "install"

@@ -48,6 +48,26 @@ mkdir -p $HOME/deps/include/SDL2
 cp -R ../../include/* $HOME/deps/include/SDL2
 cd ../../..
 
+# Crosscompile Yoga
+mkdir -p yoga && cd yoga
+# Without the LOL it downloads a zero-byte file and returns success, and then
+# tar also returns success, only the echo after fails. LOL, geez, what the
+# fuck.
+curl -LOL https://github.com/facebook/yoga/archive/refs/tags/v2.0.1.tar.gz
+tar --strip-components=1 -xzf v2.0.1.tar.gz
+# Exclude tests (which cause the whole of Google test installed, ffs!!) by
+# making the CMakeLists empty
+echo > tests/CMakeLists.txt
+mkdir -p build && cd build
+cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE=../../toolchains/generic/iOS.cmake \
+    -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
+    -DCMAKE_OSX_ARCHITECTURES="x86_64" \
+    -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+    -G Xcode
+set -o pipefail && cmake --build . --config Release --target install -j$XCODE_JOBS | xcbeautify
+cd ../..
+
 # Crosscompile Magnum
 git clone --depth 1 https://github.com/mosra/magnum.git
 cd magnum
@@ -67,11 +87,27 @@ cmake .. \
     -DMAGNUM_WITH_SCENETOOLS=OFF \
     -DMAGNUM_WITH_SHADERS=ON \
     -DMAGNUM_WITH_SHADERTOOLS=OFF \
-    -DMAGNUM_WITH_TEXT=OFF \
-    -DMAGNUM_WITH_TEXTURETOOLS=OFF \
+    -DMAGNUM_WITH_TEXT=ON \
+    -DMAGNUM_WITH_TEXTURETOOLS=ON \
     -DMAGNUM_WITH_OPENGLTESTER=ON \
     -DMAGNUM_WITH_SDL2APPLICATION=ON \
     -DMAGNUM_TARGET_GLES2=$TARGET_GLES2 \
+    -DMAGNUM_BUILD_STATIC=ON \
+    -G Xcode
+set -o pipefail && cmake --build . --config Release --target install -j$XCODE_JOBS | xcbeautify
+cd ../..
+
+# Crosscompile Magnum Extras, which are needed by YogaIntegration
+git clone --depth 1 https://github.com/mosra/magnum-extras.git
+cd magnum-extras
+mkdir build-ios && cd build-ios
+cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE=../../toolchains/generic/iOS.cmake \
+    -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
+    -DCMAKE_OSX_ARCHITECTURES="x86_64" \
+    -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+    -DCORRADE_RC_EXECUTABLE=$HOME/deps-native/bin/corrade-rc \
+    -DMAGNUM_WITH_UI=ON \
     -DMAGNUM_BUILD_STATIC=ON \
     -G Xcode
 set -o pipefail && cmake --build . --config Release --target install -j$XCODE_JOBS | xcbeautify
@@ -104,6 +140,7 @@ cmake .. \
     -DMAGNUM_WITH_GLMINTEGRATION=ON \
     -DMAGNUM_WITH_IMGUIINTEGRATION=ON \
     -DMAGNUM_WITH_OVRINTEGRATION=OFF \
+    -DMAGNUM_WITH_YOGAINTEGRATION=ON \
     -DMAGNUM_BUILD_STATIC=ON \
     -DMAGNUM_BUILD_TESTS=ON \
     -DMAGNUM_BUILD_GL_TESTS=ON \

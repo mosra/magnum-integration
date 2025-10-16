@@ -38,8 +38,8 @@ cmake .. \
     -DMAGNUM_WITH_SCENETOOLS=OFF \
     -DMAGNUM_WITH_SHADERS=ON \
     -DMAGNUM_WITH_SHADERTOOLS=OFF \
-    -DMAGNUM_WITH_TEXT=OFF \
-    -DMAGNUM_WITH_TEXTURETOOLS=OFF \
+    -DMAGNUM_WITH_TEXT=$WITH_YOGA \
+    -DMAGNUM_WITH_TEXTURETOOLS=$WITH_YOGA \
     -DMAGNUM_WITH_OPENGLTESTER=ON \
     -DMAGNUM_WITH_ANYIMAGEIMPORTER=ON \
     -DMAGNUM_WITH_SDL2APPLICATION=ON \
@@ -74,6 +74,23 @@ cmake .. \
 ninja install
 cd ../..
 
+# Magnum Extras, which are a dependency for YogaIntegration
+if [ "$WITH_YOGA" == "ON" ]; then
+    git clone --depth 1 https://github.com/mosra/magnum-extras.git
+    cd magnum-extras
+    mkdir build && cd build
+    cmake .. \
+        -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
+        -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+        -DCMAKE_INSTALL_RPATH=$HOME/deps/lib \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DMAGNUM_WITH_UI=ON \
+        -DMAGNUM_BUILD_STATIC=$BUILD_STATIC \
+        -G Ninja
+    ninja install
+    cd ../..
+fi
+
 mkdir build && cd build
 cmake .. \
     -DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
@@ -88,6 +105,7 @@ cmake .. \
     -DMAGNUM_WITH_GLMINTEGRATION=ON \
     -DMAGNUM_WITH_IMGUIINTEGRATION=ON \
     -DMAGNUM_WITH_OVRINTEGRATION=OFF \
+    -DMAGNUM_WITH_YOGAINTEGRATION=$WITH_YOGA \
     -DMAGNUM_BUILD_TESTS=ON \
     -DMAGNUM_BUILD_GL_TESTS=ON \
     -DMAGNUM_BUILD_STATIC=$BUILD_STATIC \
