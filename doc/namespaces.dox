@@ -464,3 +464,49 @@ See the @ref examples-ovr example, @ref building-integration and
     released under the @m_class{m-label m-warning} **Oculus SDK license**
     ([license text](https://developer.oculus.com/licenses/sdk-3.5/)).
 */
+
+/** @dir Magnum/YogaIntegration
+ * @brief Namespace @ref Magnum::YogaIntegration
+ * @m_since_latest_{integration}
+ */
+/** @namespace Magnum::YogaIntegration
+@brief Integration with Yoga Layout
+
+Implements a layouter for the @ref Ui library using
+[Yoga Layout](https://yogalayout.dev).
+
+This library depends on the [Yoga Layout](https://yogalayout.dev) library and
+is built if `MAGNUM_WITH_YOGAINTEGRATION` is enabled when building Magnum
+Integration. To use this library with CMake, request the `Yoga` component of
+the `MagnumIntegration` package and link to the `MagnumIntegration::Yoga`
+target:
+
+@code{.cmake}
+find_package(MagnumIntegration REQUIRED Yoga)
+
+# ...
+target_link_libraries(your-app PRIVATE MagnumIntegration::Yoga)
+@endcode
+
+Additionally, if you're using Magnum as a CMake subproject, bundle the
+[magnum-integration repository](https://github.com/mosra/magnum-integration)
+and do the following *before* calling @cmake find_package() @ce. Using Yoga
+Layout itself as a CMake subproject isn't tested at the moment, so you need to
+provide it as a system dependency and point `CMAKE_PREFIX_PATH` to its
+installation dir if necessary.
+
+@code{.cmake}
+set(MAGNUM_WITH_YOGAINTEGRATION ON CACHE BOOL "" FORCE)
+add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
+@endcode
+
+See @ref building-integration and @ref cmake-integration for more information.
+
+@m_class{m-block m-success}
+
+@thirdparty This library makes use of [Yoga Layout](https://yogalayout.dev),
+    released under @m_class{m-label m-success} **MIT**
+    ([license text](https://github.com/facebook/yoga/blob/main/LICENSE),
+    [choosealicense.com](https://choosealicense.com/licenses/mit/)).
+    Attribution is required for public use.
+*/

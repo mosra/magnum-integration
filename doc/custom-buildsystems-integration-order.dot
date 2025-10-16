@@ -36,6 +36,10 @@ digraph "Magnum Integration dependency order" {
     MagnumSceneGraph [style=solid label="Magnum\nSceneGraph" class="m-info"]
     MagnumShaders [style=solid label="Magnum\nShaders" class="m-info"]
     MagnumTrade [style=solid label="Magnum\nTrade" class="m-info"]
+    MagnumTextureTools [style=solid label="Magnum\nTextureTools" class="m-info"]
+    MagnumText [style=solid label="Magnum\nText" class="m-info"]
+
+    MagnumUi [style=solid label="Magnum\nUi" class="m-info"]
 
     MagnumBulletIntegration [label="Magnum\nBulletIntegration" class="m-info"]
     MagnumEigenIntegration [label="Magnum\nEigenIntegration" class="m-info"]
@@ -43,6 +47,7 @@ digraph "Magnum Integration dependency order" {
     MagnumGlmIntegration [label="Magnum\nGlmIntegration" class="m-info"]
     MagnumImGuiIntegration [label="Magnum\nImGuiIntegration" class="m-info"]
     MagnumOvrIntegration [label="Magnum\nOvrIntegration" class="m-info"]
+    MagnumYogaIntegration [label="Magnum\nYogaIntegration" class="m-info"]
 
     MagnumGL -> Magnum [class="m-info"]
     MagnumMeshTools -> Magnum [class="m-info"]
@@ -50,6 +55,14 @@ digraph "Magnum Integration dependency order" {
     MagnumSceneGraph -> Magnum [class="m-info"]
     MagnumShaders -> MagnumGL [class="m-info"]
     MagnumTrade -> Magnum [class="m-info"]
+    MagnumText -> MagnumTextureTools [class="m-info"]
+    MagnumText -> MagnumGL [style=dotted class="m-info"]
+    MagnumTextureTools -> Magnum [class="m-info"]
+    MagnumTextureTools -> MagnumGL [style=dotted class="m-info"]
+
+    MagnumUi -> MagnumGL [class="m-info"]
+    MagnumUi -> MagnumText [class="m-info"]
+    MagnumUi -> MagnumTrade [class="m-info"]
 
     MagnumBulletIntegration -> MagnumGL
     MagnumBulletIntegration -> MagnumSceneGraph
@@ -66,4 +79,5 @@ digraph "Magnum Integration dependency order" {
     MagnumEigenIntegration -> Magnum
     MagnumGlmIntegration -> Magnum
     MagnumOvrIntegration -> MagnumGL
+    MagnumYogaIntegration -> MagnumUi
 }

@@ -91,6 +91,10 @@ if(MAGNUM_WITH_OVRINTEGRATION)
     add_subdirectory(OvrIntegration)
 endif()
 
+if(MAGNUM_WITH_YOGAINTEGRATION)
+    add_subdirectory(YogaIntegration)
+endif()
+
 if(MAGNUM_BUILD_TESTS)
     add_subdirectory(Test ${EXCLUDE_FROM_ALL_IF_TEST_TARGET})
 endif()

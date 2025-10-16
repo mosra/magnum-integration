@@ -93,6 +93,7 @@ This command alone is useless without specifying the components:
 -   `Glm` --- @ref GlmIntegration library
 -   `ImGui` --- @ref ImGuiIntegration library
 -   `Ovr` --- @ref OvrIntegration library
+-   `Yoga` --- @ref YogaIntegration library
 
 Note that [each *Integration namespace](namespaces.html) contains more detailed
 information about dependencies, availability on particular platform and also
