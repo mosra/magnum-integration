@@ -77,6 +77,24 @@ cd ../..
 # ImGuiIntegration tests use Magnum Plugins, but only for GL tests, which we
 # don't run here
 
+# Magnum Extras, required for YogaIntegration (which depends on Ui, which is
+# ES3-only)
+if [[ "$TARGET_GLES3" == "ON" ]]; then
+    git clone --depth 1 https://github.com/mosra/magnum-extras.git
+    cd magnum-extras
+    mkdir build-emscripten && cd build-emscripten
+    cmake .. \
+        -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten-wasm.cmake" \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+        -DCMAKE_FIND_ROOT_PATH=$HOME/deps \
+        -DMAGNUM_WITH_UI=ON \
+        $EXTRA_OPTS \
+        -G Ninja
+    ninja install
+    cd ../..
+fi
+
 # Crosscompile. There's extra crazy stuff for Eigen3. It's header-only but the
 # archive is so stupid that it's not possible to just use Eigen3Config.cmake,
 # as it's generated using CMake from Eigen3Config.cmake.in. There's
@@ -102,6 +120,7 @@ cmake .. \
     -DMAGNUM_WITH_GLMINTEGRATION=ON \
     -DMAGNUM_WITH_IMGUIINTEGRATION=ON \
     -DMAGNUM_WITH_OVRINTEGRATION=OFF \
+    -DMAGNUM_WITH_YOGAINTEGRATION=$TARGET_GLES3 \
     -DMAGNUM_BUILD_TESTS=ON \
     -DMAGNUM_BUILD_GL_TESTS=ON \
     $EXTRA_OPTS \

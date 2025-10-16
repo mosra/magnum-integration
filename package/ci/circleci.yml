@@ -225,6 +225,27 @@ commands:
           wget --no-check-certificate https://gitlab.com/libeigen/eigen/-/archive/$EIGEN_VERSION/eigen-$EIGEN_VERSION.tar.gz
           tar --strip-components=1 -xzf eigen-$EIGEN_VERSION.tar.gz
 
+  install-yoga:
+    parameters:
+      version:
+        type: string
+    steps:
+    - run:
+        name: Install Yoga
+        command: |
+          mkdir -p $HOME/yoga && cd $HOME/yoga
+          wget --no-check-certificate https://github.com/facebook/yoga/archive/refs/tags/v<< parameters.version >>.tar.gz
+          tar --strip-components=1 -xzf v<< parameters.version >>.tar.gz
+          # Exclude tests (which cause the whole of Google test installed,
+          # ffs!!) by making the CMakeLists empty
+          echo > tests/CMakeLists.txt
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+            -G Ninja
+          ninja install
+
   build:
     parameters:
       script:
@@ -287,6 +308,8 @@ jobs:
       # on 16.04: https://github.com/dartsim/dart/issues/967#issuecomment-469075835
       # TODO: investigate and re-enable on 18.04
       WITH_DART: "OFF"
+      # Yoga requires CMake 3.13+ and C++17 to build
+      WITH_YOGA: "OFF"
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
@@ -314,6 +337,7 @@ jobs:
       TARGET_EGL: "ON"
       # DART disabled here because it's just way too huge and annoying
       WITH_DART: "OFF"
+      WITH_YOGA: "ON"
     steps:
     # Not installing the old GCC 4.8 and CMake 3.5 to speed up. These are
     # tested more than enough on other jobs. SDL needed for some snippets.
@@ -322,6 +346,10 @@ jobs:
         extra: gcc cmake libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
         sudo: sudo
     - install-imgui
+    - install-yoga:
+        # Version 3 requires C++20, and is tested in Mac and Emscripten jobs.
+        # Want to ensure compatibility with pre-C++20 compilers as well.
+        version: "2.0.1"
     - build:
         script: unix-desktop.sh
     - lcov
@@ -336,6 +364,8 @@ jobs:
       TARGET_GLES2: "ON"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
+      # Yoga requires CMake 3.13+ and C++17 to build
+      WITH_YOGA: "OFF"
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
@@ -358,6 +388,8 @@ jobs:
       TARGET_GLES2: "OFF"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
+      # Yoga requires CMake 3.13+ and C++17 to build
+      WITH_YOGA: "OFF"
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
@@ -382,6 +414,8 @@ jobs:
       TARGET_EGL: "ON"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
+      # Yoga requires CMake 3.13+ and C++17 to build
+      WITH_YOGA: "OFF"
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
@@ -390,6 +424,7 @@ jobs:
     - install-cmake:
         version: "3.5.2"
     - install-imgui
+    # No Yoga, as version 2.0.1 is C++11 but requires a too new CMake
     - build:
         script: unix-desktop.sh
     - lcov
@@ -405,6 +440,8 @@ jobs:
       TARGET_EGL: "ON"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
+      # Yoga requires CMake 3.13+ and C++17 to build
+      WITH_YOGA: "OFF"
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
@@ -413,6 +450,7 @@ jobs:
     - install-cmake:
         version: "3.5.2"
     - install-imgui
+    # No Yoga, as version 2.0.1 is C++11 but requires a too new CMake
     - build:
         script: unix-desktop.sh
 
@@ -431,14 +469,23 @@ jobs:
       TARGET_EGL: "OFF"
       # Disabled due to GCC 4/5 ABI mismatch, see above
       WITH_DART: "OFF"
+      # Yoga requires CMake 3.13+, but it's more important to have it tested
+      # for leaks than have ensure the sanitizer builds run with 3.5.
+      WITH_YOGA: "ON"
     steps:
     # libidn11 needed by CMake. SDL needed for some snippets.
     - install-base-linux:
         extra: libidn11 libgl1-mesa-dev libsdl2-dev libglfw3-dev libbullet-dev libeigen3-dev libglm-dev wget
     - install-clang
     - install-cmake:
-        version: "3.5.2"
+        # 3.13 needed by Yoga. Additionally, Yoga 2 wants C++17, which should
+        # be supported by Clang that's used here (as opposed to GCC 4.8 used
+        # elsewhere).
+        version: "3.13.5"
     - install-imgui
+    - install-yoga:
+        # Version 3 requires C++20
+        version: "2.0.1"
     - build:
         script: unix-desktop.sh
 
@@ -447,10 +494,17 @@ jobs:
     environment:
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
+      WITH_YOGA: "ON"
     steps:
     - install-base-macos:
         extra: sdl2 glfw bullet eigen glm dartsim wget
     - install-imgui
+    - install-yoga:
+        # Version 3 requires C++20, unfortunately the current oldest image is
+        # missing std::bit_cast for it to work. Fuck off, Meta, with such
+        # insane toolchain requirements.
+        # TODO try again when it gets bumped to newer
+        version: "2.0.1"
     - build:
         script: unix-desktop.sh
     - lcov
@@ -462,12 +516,19 @@ jobs:
       CONFIGURATION: Debug
       # STUPID yml interprets unquoted OFF as a boolean
       TARGET_GLES2: "OFF"
+      WITH_YOGA: "ON"
     steps:
     - install-base-macos:
         extra: sdl2 glfw bullet eigen glm wget
     - install-swiftshader-gles:
         build: macos12-arm64
     - install-imgui
+    - install-yoga:
+        # Version 3 requires C++20, unfortunately the current oldest image is
+        # missing std::bit_cast for it to work. Fuck off, Meta, with such
+        # insane toolchain requirements.
+        # TODO try again when it gets bumped to newer
+        version: "2.0.1"
     - build:
         script: unix-desktop-gles.sh
     - lcov
@@ -479,10 +540,17 @@ jobs:
       BUILD_STATIC: "ON"
       CMAKE_CXX_FLAGS: --coverage
       CONFIGURATION: Debug
+      WITH_YOGA: "ON"
     steps:
     - install-base-macos:
         extra: sdl2 glfw bullet eigen glm dartsim wget
     - install-imgui
+    - install-yoga:
+        # Version 3 requires C++20, unfortunately the current oldest image is
+        # missing std::bit_cast for it to work. Fuck off, Meta, with such
+        # insane toolchain requirements.
+        # TODO try again when it gets bumped to newer
+        version: "2.0.1"
     - build:
         script: unix-desktop.sh
     - lcov
@@ -516,6 +584,11 @@ jobs:
     - install-imgui
     - install-glm
     - install-eigen
+    - install-yoga:
+        # Version 3 requires C++20, unfortunately on Emscripten it fails due to
+        # missing <concept>. Fuck off, Meta, with such insane toolchain
+        # requirements.
+        version: "2.0.1"
     - build:
         script: emscripten.sh
 
@@ -556,6 +629,11 @@ jobs:
     - install-imgui
     - install-glm
     - install-eigen
+    - install-yoga:
+        # Version 3 requires C++20, and is tested in Mac jobs. Not sure what
+        # Android has, and want to ensure compatibility with pre-C++20
+        # compilers as well.
+        version: "2.0.1"
     - build:
         script: android-x86-gles.sh
 

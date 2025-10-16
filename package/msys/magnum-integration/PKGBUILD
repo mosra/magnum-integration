@@ -40,6 +40,7 @@ build() {
             -DMAGNUM_WITH_BULLETINTEGRATION=ON \
             -DMAGNUM_WITH_EIGENINTEGRATION=ON \
             -DMAGNUM_WITH_GLMINTEGRATION=ON \
+            -DMAGNUM_WITH_YOGAINTEGRATION=OFF \
             "${extra_config[@]}" \
             ../${_realname}-${pkgver}
     ninja

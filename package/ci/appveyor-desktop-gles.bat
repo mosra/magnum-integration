@@ -27,6 +27,24 @@ cmake .. ^
 cmake --build . --target install || exit /b
 cd .. && cd ..
 
+rem Build Yoga, which is needed for YogaIntegration which depends on the Ui
+rem library which is ES3-only
+if "%TARGET_GLES3%" == "ON" (
+    appveyor DownloadFile https://github.com/facebook/yoga/archive/refs/tags/v2.0.1.zip || exit /b
+    7z x v2.0.1.zip || exit /b
+    cd yoga-2.0.1 || exit /b
+    rem Exclude tests (which cause the whole of Google test installed, ffs!!)
+    rem by making the CMakeLists empty
+    type nul > tests/CMakeLists.txt
+    mkdir build && cd build || exit /b
+    cmake .. ^
+        -DCMAKE_BUILD_TYPE=Debug ^
+        -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
+        %COMPILE_EXTRA% -G Ninja || exit /b
+    cmake --build . --target install || exit /b
+    cd .. && cd ..
+)
+
 rem Build Corrade
 git clone --depth 1 https://github.com/mosra/corrade.git || exit /b
 cd corrade || exit /b
@@ -61,8 +79,8 @@ cmake .. ^
     -DMAGNUM_WITH_SCENETOOLS=OFF ^
     -DMAGNUM_WITH_SHADERS=ON ^
     -DMAGNUM_WITH_SHADERTOOLS=OFF ^
-    -DMAGNUM_WITH_TEXT=OFF ^
-    -DMAGNUM_WITH_TEXTURETOOLS=OFF ^
+    -DMAGNUM_WITH_TEXT=%TARGET_GLES3% ^
+    -DMAGNUM_WITH_TEXTURETOOLS=%TARGET_GLES3% ^
     -DMAGNUM_WITH_OPENGLTESTER=ON ^
     -DMAGNUM_WITH_SDL2APPLICATION=ON ^
     -DMAGNUM_WITH_GLFWAPPLICATION=ON ^
@@ -70,6 +88,21 @@ cmake .. ^
 cmake --build . || exit /b
 cmake --build . --target install || exit /b
 cd .. && cd ..
+
+rem Buil Magnum Extras, which are a dependency for YogaIntegration (which
+rem depends on Ui, which is ES3-only)
+if "%TARGET_GLES3%" == "ON" (
+    git clone --depth 1 https://github.com/mosra/magnum-extras.git || exit /b
+    cd magnum-extras || exit /b
+    mkdir build && cd build || exit /b
+    cmake .. ^
+        -DCMAKE_BUILD_TYPE=Debug ^
+        -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/deps ^
+        -DMAGNUM_WITH_UI=ON ^
+        -G Ninja || exit /b
+    cmake --build . --target install || exit /b
+    cd .. && cd ..
+)
 
 rem Unlike ALL OTHER VARIABLES, CMAKE_MODULE_PATH chokes on backwards slashes.
 rem What the hell. This insane snippet converts them.
@@ -91,6 +124,7 @@ cmake .. ^
     -DMAGNUM_WITH_GLMINTEGRATION=ON ^
     -DMAGNUM_WITH_IMGUIINTEGRATION=ON ^
     -DMAGNUM_WITH_OVRINTEGRATION=OFF ^
+    -DMAGNUM_WITH_YOGAINTEGRATION=%TARGET_GLES3% ^
     -DMAGNUM_BUILD_TESTS=ON ^
     -DMAGNUM_BUILD_GL_TESTS=ON ^
     -G Ninja || exit /b
