@@ -70,7 +70,8 @@ rem tests because they take ages to build, each executable is a msix file, and
 rem they can't be reasonably run either. F this platform.
 mkdir build-rt && cd build-rt || exit /b
 cmake .. ^
-    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_SYSTEM_NAME=WindowsStore ^
+    -DCMAKE_SYSTEM_VERSION=10.0 ^
     -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/deps ^
     -DCMAKE_MODULE_PATH=%APPVEYOR_BUILD_FOLDER_FWD%/deps/eigen/cmake/ ^
     -DGLM_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%/deps/glm ^
