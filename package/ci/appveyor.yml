@@ -155,6 +155,12 @@ install:
 - IF "%TARGET%" == "desktop" IF "%COMPILER:~0,4%" == "msvc" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\ovr_sdk_win_1.26.0_public_minimal.zip appveyor DownloadFile https://ci.magnum.graphics/ovr_sdk_win_1.26.0_public_minimal.zip
 - IF "%TARGET%" == "desktop" IF "%COMPILER:~0,4%" == "msvc" 7z x ovr_sdk_win_1.26.0_public_minimal.zip -o%APPVEYOR_BUILD_FOLDER%\deps
 
+# Angle for WinRT. Zip from https://github.com/mosra/magnum-ci/tree/angle and
+# self-hosted because GH Actions would make it too simple for people if you
+# could just download the artifacts directly, right? RIGHT?
+- IF "%TARGET%" == "rt" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\angle-4134-windows-uwp.zip appveyor DownloadFile https://ci.magnum.graphics/angle-4134-windows-uwp.zip
+- IF "%TARGET%" == "rt" 7z x angle-4134-windows-uwp.zip -o%APPVEYOR_BUILD_FOLDER%\deps
+
 build_script:
 - IF "%TARGET%" == "desktop" IF "%COMPILER:~0,4%" == "msvc" call package\ci\appveyor-desktop.bat
 - IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" call package\ci\appveyor-desktop-mingw.bat
