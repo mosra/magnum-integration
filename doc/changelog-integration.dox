@@ -45,6 +45,8 @@ namespace Magnum {
 
 @subsection changelog-integration-latest-new New features
 
+-   New @ref YogaIntegration library integrating
+    [Yoga Layout](https://yogalayout.dev) as a layouter for the @ref Ui library
 -   Conversion between dynamic Eigen types and
     @ref Corrade::Containers::StridedArrayView "Containers::StridedArrayView"
     using @ref EigenIntegration::arrayCast() (see [mosra/magnum-integration#74](https://github.com/mosra/magnum-integration/pull/74))

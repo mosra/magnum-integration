@@ -423,6 +423,8 @@ manually:
     point `IMGUI_DIR` to their directory so CMake can find them.
 -   `MAGNUM_WITH_OVRINTEGRATION` --- Build the @ref OvrIntegration library.
     Depends on the [Oculus SDK](http://developer.oculus.com/).
+-   `MAGNUM_WITH_YOGAINTEGRATION` --- Build the @ref YogaIntegration library.
+    Depends on [Yoga Layout](https://yogalayout.dev).
 
 Note that each [*Integration namespace](namespaces.html) documentation contains
 more detailed information about its dependencies, availability on particular

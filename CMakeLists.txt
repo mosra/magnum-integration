@@ -121,6 +121,7 @@ option(MAGNUM_WITH_EIGENINTEGRATION "Build EigenIntegration library" OFF)
 option(MAGNUM_WITH_GLMINTEGRATION "Build GlmIntegration library" OFF)
 option(MAGNUM_WITH_IMGUIINTEGRATION "Build ImGuiIntegration library" OFF)
 option(MAGNUM_WITH_OVRINTEGRATION "Build OvrIntegration library" OFF)
+option(MAGNUM_WITH_YOGAINTEGRATION "Build YogaIntegration library" OFF)
 
 # Library-specific options. This one uses the `SHELL:` option from CMake 3.12
 # and target_link_options() from 3.13 in order to pass `-s USE_BULLET=1` to

@@ -19,6 +19,7 @@
 #  Glm                          - GLM integration library
 #  ImGui                        - ImGui integration library
 #  Ovr                          - Oculus SDK integration library
+#  Yoga                         - Yoga Layout integration library
 #
 # Example usage with specifying additional components is:
 #
@@ -73,6 +74,7 @@
 
 # Magnum library dependencies
 set(_MAGNUMINTEGRATION_MAGNUM_DEPENDENCIES )
+set(_MAGNUMINTEGRATION_MAGNUMEXTRAS_DEPENDENCIES )
 foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
     if(_component STREQUAL Bullet)
         set(_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES SceneGraph Shaders GL)
@@ -80,11 +82,17 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
         set(_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES SceneGraph Primitives MeshTools GL)
     elseif(_component STREQUAL ImGui)
         set(_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES GL Shaders)
+    elseif(_component STREQUAL Yoga)
+        set(_MAGNUMINTEGRATION_${_component}_MAGNUMEXTRAS_DEPENDENCIES GL Shaders)
     endif()
 
     list(APPEND _MAGNUMINTEGRATION_MAGNUM_DEPENDENCIES ${_MAGNUMINTEGRATION_${_component}_MAGNUM_DEPENDENCIES})
+    list(APPEND _MAGNUMINTEGRATION_MAGNUMEXTRAS_DEPENDENCIES ${_MAGNUMINTEGRATION_${_component}_MAGNUMEXTRAS_DEPENDENCIES})
 endforeach()
 find_package(Magnum REQUIRED ${_MAGNUMINTEGRATION_MAGNUM_DEPENDENCIES})
+if(_MAGNUMINTEGRATION_MAGNUMEXTRAS_DEPENDENCIES)
+    find_package(MagnumExtras REQUIRED ${_MAGNUMINTEGRATION_MAGNUMEXTRAS_DEPENDENCIES})
+endif()
 
 # Global include dir that's unique to Magnum Integration. Often it will be
 # installed alongside Magnum, which is why the hint, but if not, it shouldn't
@@ -123,7 +131,7 @@ endif()
 
 # Component distinction (listing them explicitly to avoid mistakes with finding
 # components from other repositories)
-set(_MAGNUMINTEGRATION_LIBRARY_COMPONENTS Bullet Dart Eigen ImGui Glm)
+set(_MAGNUMINTEGRATION_LIBRARY_COMPONENTS Bullet Dart Eigen ImGui Glm Yoga)
 if(CORRADE_TARGET_WINDOWS)
     list(APPEND _MAGNUMINTEGRATION_LIBRARY_COMPONENTS Ovr)
 endif()
@@ -361,6 +369,15 @@ onent}Integration.h)
             find_package(OVR)
             set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                 INTERFACE_LINK_LIBRARIES OVR::OVR)
+
+        # Yoga integration library
+        elseif(_component STREQUAL Yoga)
+            # Since 2.0.0 the project provides a CMake config file, force it.
+            # Before 2.0 it didn't even have an install target, so assume those
+            # versions just aren't used at all.
+            find_package(yoga CONFIG REQUIRED)
+            set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
+                INTERFACE_LINK_LIBRARIES yoga::yogacore)
         endif()
 
         if(_component IN_LIST _MAGNUMINTEGRATION_LIBRARY_COMPONENTS)
