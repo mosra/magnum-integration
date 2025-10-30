@@ -41,6 +41,39 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/configure.h)
 
+# Use try_compile() to figure out at least a rough Yoga version in order to
+# apply various workarounds or at least have XFAILs in tests. Because of course
+# this damn thing exposes no version macro anywhere, nor it encodes the version
+# in any other distributed file because META doesn't give a fuck, they can pin
+# to the latest version as easily as they can require use of janky C++20 to
+# build the damn thing. So I have to do a similar nasty compile-fail-compile
+# loop as with AssimpImporter, where I painstakingly plow through diffs between
+# versions to find something that differs that I could hook to. Fortunately I
+# only need to know just a few versions so far.
+foreach(_version 302000 300000 200001)
+    try_compile(_works ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/checkYogaVersion.cpp
+        LINK_LIBRARIES yoga::yogacore
+        COMPILE_DEFINITIONS
+            -DCHECK_VERSION=${_version}
+            # The damn thing uses constexpr when building for C++, so have to
+            # enable C++11. Could also build as C, but right now the top-level
+            # CMake project() call enables just CXX because it makes the
+            # initial CMake run twice as fast as it only checks one compiler
+            # and not two.
+            ${CORRADE_CXX11_STANDARD_FLAG}
+        OUTPUT_VARIABLE _version_output)
+    if(_works)
+        set(YOGA_VERSION ${_version})
+        break()
+    endif()
+endforeach()
+if(NOT YOGA_VERSION)
+    message(SEND_ERROR "Could not detect Yoga version. Maybe even older than 2.0.1? ${_version_output}")
+endif()
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configureInternal.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/configureInternal.h)
+
 set(MagnumYogaIntegration_GracefulAssert_SRCS
     Layouter.cpp)
 

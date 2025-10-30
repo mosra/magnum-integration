@@ -446,6 +446,9 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
          *      the changes and update the layout appropriately. For example:
          * @par
          *      @snippet YogaIntegration.cpp Layouter-yogaConfig
+         * @par
+         *      Additionally, before Yoga 3.2.0, changes to the configuration
+         *      may not properly trigger recalculation of existing layouts.
          */
         YGConfigRef yogaConfig();
         YGConfigConstRef yogaConfig() const; /**< @overload */

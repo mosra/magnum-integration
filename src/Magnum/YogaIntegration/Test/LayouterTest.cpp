@@ -42,6 +42,7 @@
 #include <yoga/Yoga.h>
 
 #include "Magnum/YogaIntegration/Layouter.h"
+#include "Magnum/YogaIntegration/configureInternal.h" /* YOGA_VERSION */
 
 namespace Magnum { namespace YogaIntegration { namespace Test { namespace {
 
@@ -1156,10 +1157,18 @@ void LayouterTest::updateFlags() {
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
         void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
-            CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
-                {10.0f, 20.0f},
-                expectedOffset,
-            }), TestSuite::Compare::Container);
+            /** @todo turn this into a regular container compare once we don't
+                support Yoga before 3.0 */
+            CORRADE_COMPARE(nodeOffsets.size(), 2);
+            {
+                /* https://github.com/facebook/yoga/issues/1208 */
+                #if YOGA_VERSION < 300000
+                CORRADE_EXPECT_FAIL_IF(xfail, "Yoga before version 3.0 swaps left and right side with reverse flex direction, causing the X or Y offset to become negative.");
+                #endif
+                CORRADE_COMPARE(nodeOffsets[0], (Vector2{10.0f, 20.0f}));
+            }
+            CORRADE_COMPARE(nodeOffsets[1], expectedOffset);
+
             CORRADE_COMPARE_AS(nodeSizes, Containers::stridedArrayView<Vector2>({
                 {200.0f, 50.0f},
                 expectedSize,
@@ -1168,11 +1177,19 @@ void LayouterTest::updateFlags() {
         }
 
         Vector2 expectedOffset, expectedSize;
+        #if YOGA_VERSION < 300000 /* see above */
+        bool xfail;
+        #endif
         Int called = 0;
     };
     DummyLayouter& dummyLayouter = ui.setLayouterInstance(Containers::pointer<DummyLayouter>(ui.createLayouter()));
     dummyLayouter.expectedOffset = data.expectedOffset;
     dummyLayouter.expectedSize = data.expectedSize;
+    #if YOGA_VERSION < 300000 /* see above */
+    FlexDirection direction = layouter.flexDirection(parentLayout);
+    dummyLayouter.xfail = direction == FlexDirection::ColumnReverse ||
+                          direction == FlexDirection::RowReverse;
+    #endif
     dummyLayouter.add(child);
     ui.update();
     CORRADE_COMPARE(dummyLayouter.called, 1);
@@ -1520,14 +1537,21 @@ void LayouterTest::updateModifyYogaConfigDirectly() {
     /* One has to explicitly call setNeedsUpdate() to actually propagate the
        changes. Now the positions are rounded. */
     layouter.setNeedsUpdate();
-    /** @todo Yoga has an internal "config version" counter, if it'd be exposed
-        in the public API the layouter could track it (assuming the interfaces
-        would get a doState()) and request an update if the version changes */
+    /** @todo Yoga 3.2.0+ has an internal "config version" counter, if it'd be
+        exposed in the public API the layouter could track it (assuming the
+        interfaces would get a doState()) and request an update if the version
+        changes */
     dummyLayouter.expectedOffset = {4.0f, 7.0f};
     dummyLayouter.expectedSize = {6.0f, 9.0f};
     {
         CORRADE_ITERATION(__FILE__ ":" CORRADE_LINE_STRING);
-        ui.update();
+        {
+            #if YOGA_VERSION < 302000
+            /* https://github.com/facebook/yoga/pull/1674 */
+            CORRADE_EXPECT_FAIL("Yoga before version 3.2.0 doesn't correctly relayout on config change.");
+            #endif
+            ui.update();
+        }
         CORRADE_COMPARE(layouter.state(), Ui::LayouterStates{});
         CORRADE_COMPARE(dummyLayouter.called, 2);
     }

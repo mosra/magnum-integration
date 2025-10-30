@@ -41,6 +41,11 @@
     the headers anyway.) */
 #include <yoga/Yoga.h>
 
+#include "Magnum/YogaIntegration/configureInternal.h"
+#if YOGA_VERSION < 300000
+#include <Magnum/Math/Functions.h> /* lerp(), isNan(), see below */
+#endif
+
 namespace Magnum { namespace YogaIntegration {
 
 Debug& operator<<(Debug& debug, const Flag value) {
@@ -310,6 +315,16 @@ Ui::LayoutHandle Layouter::addInternal(const Ui::NodeHandle node, const Ui::Layo
         YGNodeInsertChild(parentYgNode, layout.yogaNode, index);
     }
 
+    /* The default in 2.0.1 was static position, which (apparently?) behaved
+       exactly the same as relative. In 3.0.0 real support for static position
+       got implemented, and so the default got changed:
+        https://github.com/facebook/yoga/pull/1469
+       To make things sane for our API, change the default to relative for old
+       versions as well. */
+    #if YOGA_VERSION < 300000
+    YGNodeStyleSetPositionType(layout.yogaNode, YGPositionTypeRelative);
+    #endif
+
     return handle;
 }
 
@@ -570,6 +585,17 @@ void Layouter::doUpdate(const Containers::BitArrayView layoutIdsToUpdate, const 
                                YGNodeLayoutGetTop(yogaNode)};
         nodeSizes[nodeId] = {YGNodeLayoutGetWidth(yogaNode),
                              YGNodeLayoutGetHeight(yogaNode)};
+        /* In Yoga before version 3.0.0, NaNs sometimes leak through offset
+           values. Not sure if sizes as well, not sure what exactly fixed this
+           but the following commit seems to be related:
+            https://github.com/facebook/yoga/commit/2734784ddb4469402cebcd37adb34b5b56be9483 */
+        #if YOGA_VERSION < 300000
+        /* Idiotic std::initializer_list that cannot preserve mutable
+           references, fucking C++ just couldn't make plain C arrays work
+           here?? */
+        for(Vector2* i: {&nodeOffsets[nodeId], &nodeSizes[nodeId]})
+            *i = Math::lerp(*i, Vector2{Math::ZeroInit}, Math::isNan(*i));
+        #endif
         /** @todo anything to do with YGNodeLayoutGetHadOverflow()? */
     }
 }
