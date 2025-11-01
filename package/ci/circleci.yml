@@ -244,12 +244,12 @@ commands:
     steps:
     - run:
         name: Collect code coverage
-        # Keep in sync with PKBUILD-coverage and appveyor-lcov.sh, please
+        # Keep in sync with PKBUILD-coverage, appveyor-desktop.bat and
+        # appveyor-desktop-mingw.bat, please
         command: |
           lcov $LCOV_EXTRA_OPTS --directory . --capture --output-file coverage.info > /dev/null
           lcov $LCOV_EXTRA_OPTS --extract coverage.info "*/src/Magnum*/*" --output-file coverage.info > /dev/null
           lcov $LCOV_EXTRA_OPTS --remove coverage.info "*/Test/*" --output-file coverage.info > /dev/null
-          lcov $LCOV_EXTRA_OPTS --remove coverage.info "*/build/src/*" --output-file coverage.info > /dev/null
     # Official docs say "token not needed for public repos", in reality not
     # using the token is "extremely flakey". What's best is that if the upload
     # fails, the damn thing exits with a success error code, and nobody cares:
