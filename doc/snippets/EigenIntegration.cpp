@@ -26,12 +26,11 @@
 */
 
 #include <Corrade/Utility/DebugStl.h>
+#include <Magnum/Math/Matrix3.h>
+#include <Magnum/Math/Matrix4.h>
 
-#include "Magnum/Magnum.h"
 #include "Magnum/EigenIntegration/GeometryIntegration.h"
 #include "Magnum/EigenIntegration/DynamicMatrixIntegration.h"
-#include "Magnum/Math/Matrix3.h"
-#include "Magnum/Math/Matrix4.h"
 
 #define DOXYGEN_ELLIPSIS(...) __VA_ARGS__
 

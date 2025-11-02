@@ -25,9 +25,9 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include <imgui.h>
 #include <Corrade/Containers/StringView.h>
 #include <Corrade/Utility/Resource.h>
+#include <imgui.h>
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
 

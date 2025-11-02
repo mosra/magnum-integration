@@ -24,8 +24,9 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-#include "Magnum/Magnum.h"
-#include "Magnum/Math/Matrix3.h"
+#include <Magnum/Magnum.h>
+#include <Magnum/Math/Matrix3.h>
+
 #include "Magnum/GlmIntegration/Integration.h"
 
 #if GLM_VERSION < 96

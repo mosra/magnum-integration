@@ -26,10 +26,10 @@
 */
 
 #include <dart/simulation/World.hpp>
+#include <Magnum/SceneGraph/Scene.h>
+#include <Magnum/SceneGraph/Object.h>
+#include <Magnum/SceneGraph/MatrixTransformation3D.h>
 
-#include "Magnum/SceneGraph/Scene.h"
-#include "Magnum/SceneGraph/Object.h"
-#include "Magnum/SceneGraph/MatrixTransformation3D.h"
 #include "Magnum/DartIntegration/World.h"
 
 #define DOXYGEN_ELLIPSIS(...) __VA_ARGS__
