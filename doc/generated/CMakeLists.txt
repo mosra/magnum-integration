@@ -55,3 +55,7 @@ target_link_libraries(yogaintegration PRIVATE
     Magnum::Trade
     Magnum::WindowlessApplication
     MagnumIntegration::Yoga)
+
+add_executable(yogaintegration-debuglayer yogaintegration-debuglayer.cpp)
+target_link_libraries(yogaintegration-debuglayer PRIVATE
+    MagnumIntegration::Yoga)

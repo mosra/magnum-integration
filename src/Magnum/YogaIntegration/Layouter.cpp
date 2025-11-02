@@ -30,6 +30,7 @@
 #include <Corrade/Containers/EnumSet.hpp>
 #include <Corrade/Containers/GrowableArray.h>
 #include <Corrade/Containers/StridedArrayView.h>
+#include <Corrade/Containers/StringView.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Ui/AbstractUserInterface.h>
 #include <Magnum/Ui/Handle.h>
@@ -598,6 +599,26 @@ void Layouter::doUpdate(const Containers::BitArrayView layoutIdsToUpdate, const 
         #endif
         /** @todo anything to do with YGNodeLayoutGetHadOverflow()? */
     }
+}
+
+void Layouter::DebugIntegration::print(Debug& debug, const Layouter& layouter, const Containers::StringView& layouterName, const Ui::LayouterDataHandle layout) {
+    debug << "  Layout" << Debug::packed << layout << "from layouter" << Debug::packed << layouter.handle();
+    if(layouterName)
+        debug << Debug::color(Debug::Color::Yellow) << layouterName << Debug::resetColor;
+    debug << Debug::newline;
+
+    const Flags flags = layouter.flags(layout);
+    if(flags) {
+        debug << "    Flags:" << Debug::color(Debug::Color::Cyan) << Debug::packed << flags << Debug::resetColor << Debug::newline;
+    }
+
+    debug << "    Flex direction:" << Debug::color(Debug::Color::Cyan) << Debug::packed << layouter.flexDirection(layout) << Debug::resetColor << Debug::newline;
+
+    /* Print node offset type only if it's not the relative default, which is
+       likely the case for majority of layouts and it'd be just extra noise */
+    const NodeOffsetType nodeOffsetType = layouter.nodeOffsetType(layout);
+    if(nodeOffsetType != NodeOffsetType::Relative)
+        debug << "    Node offset type:" << Debug::color(Debug::Color::Cyan) << Debug::packed << nodeOffsetType << Debug::resetColor << Debug::newline;
 }
 
 }}

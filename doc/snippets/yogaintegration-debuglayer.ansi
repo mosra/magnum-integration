@@ -1,0 +1,6 @@
+[0;1;39mNode[0m {0x8, 0x2}
+  Offset: {15, 5}, size: {75, 0}
+  Layout {0x3, 0x3} from layouter {0x1, 0x2}[0;33m Yoga[0m
+    Flags:[0;36m NodeOffsetFromRight|PercentageNodeSizeX[0m
+    Flex direction:[0;36m Row[0m
+    Node offset type:[0;36m Absolute[0m

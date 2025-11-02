@@ -408,9 +408,22 @@ afterwards to make the layouter aware of the changes. For example, the
 following snippet enables pixel grid snapping back:
 
 @snippet YogaIntegration.cpp Layouter-yogaConfig
+
+@section YogaIntegration-Layouter-debug-integration Debug layer integration
+
+When using @ref Ui-DebugLayer-node-inspect "DebugLayer node inspect" and
+@ref Ui::DebugLayerSource::NodeLayoutDetails is enabled, passing this layouter
+to @ref Ui::DebugLayer::setLayouterName(const T&, const Containers::StringView&) "Ui::DebugLayer::setLayouterName()"
+will make it list basic properties of a particular layout. Because the layout
+inherits node offset and size, it's useful to enable
+@ref Ui::DebugLayerSource::NodeOffsetSize as well. For example:
+
+@include yogaintegration-debuglayer.ansi
 */
 class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
     public:
+        class DebugIntegration;
+
         /**
          * @brief Constructor
          * @param handle    Layouter handle returned from
@@ -681,6 +694,21 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
 
         struct State;
         Containers::Pointer<State> _state;
+};
+
+/**
+@brief Debug layer integration
+
+Integrates the layouter with @ref Ui::DebugLayer. See
+@ref YogaIntegration-Layouter-debug-integration "Layouter debug layer integration"
+for more information and example usage.
+*/
+class MAGNUM_YOGAINTEGRATION_EXPORT Layouter::DebugIntegration {
+    public:
+        #ifndef DOXYGEN_GENERATING_OUTPUT
+        /* Used internally by DebugLayer, no point in documenting it here */
+        void print(Debug& debug, const Layouter& layouter, const Containers::StringView& layouterName, Ui::LayouterDataHandle layout);
+        #endif
 };
 
 }}

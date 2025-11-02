@@ -25,6 +25,7 @@
 */
 
 #include <Corrade/Containers/BitArrayView.h>
+#include <Corrade/Containers/Function.h> /* for debugIntegration() */
 #include <Corrade/Containers/Optional.h>
 #include <Corrade/Containers/StridedArrayView.h>
 #include <Corrade/TestSuite/Tester.h>
@@ -32,6 +33,7 @@
 #include <Corrade/TestSuite/Compare/String.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Ui/AbstractUserInterface.h>
+#include <Magnum/Ui/DebugLayer.h> /* for debugIntegration() */
 #include <Magnum/Ui/Handle.h>
 #include <Magnum/Ui/NodeFlags.h>
 
@@ -83,6 +85,9 @@ struct LayouterTest: TestSuite::Tester {
     void updateModifyLayoutNodeOffsetType();
     void updateModifyYogaConfigDirectly();
     void updateModifyYogaNodeDirectly();
+
+    void debugIntegration();
+    void debugIntegrationNoCallback();
 };
 
 const struct {
@@ -325,6 +330,53 @@ const struct {
     {"explicit display none", true, false}
 };
 
+const struct {
+    TestSuite::TestCaseDescriptionSourceLocation name;
+    bool layouterName;
+    Flags flags;
+    Containers::Optional<FlexDirection> flexDirection;
+    Containers::Optional<NodeOffsetType> nodeOffsetType;
+    const char* expected;
+} DebugIntegrationData[]{
+    {"defaults", false,
+        {}, {}, {},
+        "Node {0x1, 0x1}\n"
+        "  Layout {0x6, 0x2} from layouter {0x0, 0x3}\n"
+        "    Flex direction: Column"},
+    {"defaults, layouter name", true,
+        {}, {}, {},
+        "Node {0x1, 0x1}\n"
+        "  Layout {0x6, 0x2} from layouter {0x0, 0x3} WebScaleTech!!\n"
+        "    Flex direction: Column"},
+    {"flags", false,
+        Flag::NodeOffsetFromRight|Flag::PercentageNodeOffsetY|Flag::IgnoreNodeSize, {}, {},
+        "Node {0x1, 0x1}\n"
+        "  Layout {0x6, 0x2} from layouter {0x0, 0x3}\n"
+        "    Flags: NodeOffsetFromRight|PercentageNodeOffsetY|IgnoreNodeSize\n"
+        "    Flex direction: Column"},
+    {"different flex direction", false,
+        {}, FlexDirection::RowReverse, {},
+        "Node {0x1, 0x1}\n"
+        "  Layout {0x6, 0x2} from layouter {0x0, 0x3}\n"
+        "    Flex direction: RowReverse"},
+    {"absolute node offset type", false,
+        {}, {}, NodeOffsetType::Absolute,
+        "Node {0x1, 0x1}\n"
+        "  Layout {0x6, 0x2} from layouter {0x0, 0x3}\n"
+        "    Flex direction: Column\n"
+        "    Node offset type: Absolute"},
+    {"flags, different flex direction, absolute node offset type", true,
+        Flag::NodeOffsetFromRight|Flag::PercentageNodeOffsetY|Flag::IgnoreNodeSize, FlexDirection::ColumnReverse, NodeOffsetType::Absolute,
+        "Node {0x1, 0x1}\n"
+        "  Layout {0x6, 0x2} from layouter {0x0, 0x3} WebScaleTech!!\n"
+        "    Flags: NodeOffsetFromRight|PercentageNodeOffsetY|IgnoreNodeSize\n"
+        "    Flex direction: ColumnReverse\n"
+        "    Node offset type: Absolute"},
+    /* The last case here is used in debugIntegrationNoCallback() to verify
+       output w/o a callback and for visual color verification, it's expected
+       to be the most complete, executing all coloring code paths */
+};
+
 LayouterTest::LayouterTest() {
     addTests({&LayouterTest::debugFlag,
               &LayouterTest::debugFlagPacked,
@@ -368,6 +420,11 @@ LayouterTest::LayouterTest() {
               &LayouterTest::updateModifyLayoutNodeOffsetType,
               &LayouterTest::updateModifyYogaConfigDirectly,
               &LayouterTest::updateModifyYogaNodeDirectly});
+
+    addInstancedTests({&LayouterTest::debugIntegration},
+        Containers::arraySize(DebugIntegrationData));
+
+    addTests({&LayouterTest::debugIntegrationNoCallback});
 }
 
 void LayouterTest::debugFlag() {
@@ -1634,6 +1691,109 @@ void LayouterTest::updateModifyYogaNodeDirectly() {
         CORRADE_ITERATION(__FILE__ ":" CORRADE_LINE_STRING);
         ui.update();
         CORRADE_COMPARE(dummyLayouter.called, 2);
+    }
+}
+
+void LayouterTest::debugIntegration() {
+    auto&& data = DebugIntegrationData[testCaseInstanceId()];
+    setTestCaseDescription(data.name);
+
+    Ui::AbstractUserInterface ui{{100, 100}};
+    Ui::NodeHandle root = ui.createNode({}, {100, 100});
+    Ui::NodeHandle node = ui.createNode(root, {}, {100, 100});
+
+    /* Create and remove a bunch of layouters first to have the handle with a
+       non-trivial value */
+    ui.removeLayouter(ui.createLayouter());
+    ui.removeLayouter(ui.createLayouter());
+    Layouter& layouter = ui.setLayouterInstance(Containers::pointer<Layouter>(ui.createLayouter()));
+    /* And also some more layouts to not list a trivial handle */
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.remove(layouter.add(ui.createNode({}, {})));
+    Ui::LayoutHandle layout = layouter.add(node, data.flags);
+    if(data.flexDirection)
+        layouter.setFlexDirection(layout, *data.flexDirection);
+    if(data.nodeOffsetType)
+        layouter.setNodeOffsetType(layout, *data.nodeOffsetType);
+
+    Ui::DebugLayer& debugLayer = ui.setLayerInstance(Containers::pointer<Ui::DebugLayer>(ui.createLayer(), Ui::DebugLayerSource::NodeLayoutDetails, Ui::DebugLayerFlag::NodeInspect));
+
+    Containers::String out;
+    debugLayer.setNodeInspectCallback([&out](Containers::StringView message) {
+        out = message;
+    });
+    /* Each Yoga node allocation is 586 bytes! Web scale!! */
+    debugLayer.setLayouterName(layouter, data.layouterName ? "WebScaleTech!!" : "");
+
+    /* Make the debug layer aware of everything */
+    ui.update();
+
+    CORRADE_VERIFY(debugLayer.inspectNode(node));
+    CORRADE_COMPARE_AS(out, data.expected, TestSuite::Compare::String);
+}
+
+void LayouterTest::debugIntegrationNoCallback() {
+    Ui::AbstractUserInterface ui{{100, 100}};
+    Ui::NodeHandle root = ui.createNode({}, {100, 100});
+    Ui::NodeHandle node = ui.createNode(root, {}, {100, 100});
+
+    /* Just to match the layouter handle in debugIntegration() above */
+    ui.removeLayouter(ui.createLayouter());
+    ui.removeLayouter(ui.createLayouter());
+    Layouter& layouter = ui.setLayouterInstance(Containers::pointer<Layouter>(ui.createLayouter()));
+    /* ... and the data handle also */
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.add(ui.createNode({}, {}));
+    layouter.remove(layouter.add(ui.createNode({}, {})));
+    Ui::LayoutHandle layout = layouter.add(node, Flag::IgnoreNodeSize|Flag::NodeOffsetFromRight|Flag::PercentageNodeOffsetY);
+    layouter.setFlexDirection(layout, FlexDirection::ColumnReverse);
+    layouter.setNodeOffsetType(layout, NodeOffsetType::Absolute);
+
+    Ui::DebugLayer& debugLayer = ui.setLayerInstance(Containers::pointer<Ui::DebugLayer>(ui.createLayer(), Ui::DebugLayerSource::NodeLayoutDetails, Ui::DebugLayerFlag::NodeInspect));
+
+    debugLayer.setLayouterName(layouter, "WebScaleTech!!");
+
+    /* Make the debug layer aware of everything */
+    ui.update();
+
+    /* Inspect the node for visual color verification */
+    {
+        Debug{} << "======================== visual color verification start =======================";
+
+        debugLayer.addFlags(Ui::DebugLayerFlag::ColorAlways);
+
+        CORRADE_VERIFY(debugLayer.inspectNode(node));
+
+        debugLayer.clearFlags(Ui::DebugLayerFlag::ColorAlways);
+
+        Debug{} << "======================== visual color verification end =========================";
+    }
+
+    /* Do the same, but this time with output redirection to verify the
+       contents. The internals automatically disable coloring if they detect
+       the output isn't a TTY. */
+    {
+        Containers::String out;
+        Debug redirectOutput{&out};
+        CORRADE_VERIFY(debugLayer.inspectNode(node));
+        /* The output always has a newline at the end which cannot be disabled
+           so strip it to have the comparison match the debugIntegration()
+           case */
+        CORRADE_COMPARE_AS(out,
+            "\n",
+            TestSuite::Compare::StringHasSuffix);
+        CORRADE_COMPARE_AS(out.exceptSuffix("\n"),
+            Containers::arrayView(DebugIntegrationData).back().expected,
+            TestSuite::Compare::String);
     }
 }
 
