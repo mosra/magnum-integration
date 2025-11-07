@@ -311,7 +311,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
             # case, propagate proper compiler flag.
             if(CORRADE_TARGET_EMSCRIPTEN)
                 # The library-specific configure file was read above already
-                string(FIND "${_magnumIntegrationConfigure}" "#define MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET" _magnum${_component}Integration_USE_EMSCRIPTEN_PORTS_BULLET)
+                list(FIND _magnumIntegrationConfigure "#define MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET" _magnum${_component}Integration_USE_EMSCRIPTEN_PORTS_BULLET)
                 if(NOT _magnum${_component}Integration_USE_EMSCRIPTEN_PORTS_BULLET EQUAL -1)
                     set(MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET 1)
                 endif()
