@@ -126,7 +126,7 @@ option(MAGNUM_WITH_YOGAINTEGRATION "Build YogaIntegration library" OFF)
 # Library-specific options. This one uses the `SHELL:` option from CMake 3.12
 # and target_link_options() from 3.13 in order to pass `-s USE_BULLET=1` to
 # both the compiler and linker without it being split into two parts and passed
-# through an unique filter.
+# through a unique filter.
 if(CORRADE_TARGET_EMSCRIPTEN AND NOT CMAKE_VERSION VERSION_LESS 3.13)
     option(MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET "Use Bullet from emscripten-ports instead of looking for it elsewhere (warning: likely an outdated version)" OFF)
 else()

@@ -462,13 +462,15 @@ use it with CMake.
 @subsubsection building-integration-features-emscripten-ports Using dependencies from Emscripten Ports
 
 When building for Emscripten, by enabling the following options you can use
-dependencies from [Emscripten Ports](https://github.com/emscripten-ports):
+dependencies from [Emscripten Ports](https://github.com/emscripten-ports). This
+requires CMake 3.13 and newer in order to pass appropriate compiler and linker
+flags.
 
 -   `MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET` --- Build @ref BulletIntegration using
-    the version from Emscripten Ports. Requires CMake 3.13 and newer and is
-    equivalent to passing `-s USE_BULLET=1` to the compiler. Please note that
-    currently (September 2019), the version there is still the old 2.82 from
-    2013.
+    the version of Bullet from Emscripten Ports. Causes `-s USE_BULLET=1` to be
+    passed to the compiler and linker instead of finding an installed library.
+    Please note that currently (November 2025), the version there is still the
+    old 2.82 from 2013.
 
 If Emscripten doesn't have the ports cached yet, due to parallel compilation it
 might happen that while one job is downloading and building the port, another

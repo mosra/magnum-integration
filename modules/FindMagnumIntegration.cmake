@@ -319,7 +319,7 @@ foreach(_component ${MagnumIntegration_FIND_COMPONENTS})
 
             if(MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET)
                 if(CMAKE_VERSION VERSION_LESS 3.13)
-                    message(FATAL_ERROR "BulletIntegration was compiled against emscripten-ports version but linking to it requires CMake 3.13 at least")
+                    message(FATAL_ERROR "${_component}Integration was compiled against an emscripten-ports version of Bullet but linking to it requires CMake 3.13 at least")
                 endif()
                 set_property(TARGET MagnumIntegration::${_component} APPEND PROPERTY
                     INTERFACE_COMPILE_OPTIONS "SHELL:-s USE_BULLET=1")
