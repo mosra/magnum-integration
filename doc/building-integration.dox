@@ -482,6 +482,9 @@ via `embuilder.py`, for example:
 embuilder.py build bullet
 @endcode
 
+The @ref building-plugins-features-emscripten-ports "Magnum Plugins" repository
+can make use of Emscripten ports as well.
+
 @section building-integration-doc Building documentation
 
 The documentation for integration libraries is built as part of of the main
