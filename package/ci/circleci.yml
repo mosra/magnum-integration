@@ -560,6 +560,8 @@ jobs:
     environment:
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_GLES2: "ON"
+      # Bullet is compiled directly here instead
+      USE_EMSCRIPTEN_PORTS: "OFF"
     steps:
     - install-base-linux
     - install-imgui
@@ -577,6 +579,9 @@ jobs:
       # /usr/bin/node to be used by CMake
       EXTRA_OPTS: >
         -DNODEJS_EXECUTABLE=/usr/bin/node
+      # Get Bullet from Emscripten Ports. Done only in one of the two builds to
+      # ensure there's nothing that would make the build without to fail.
+      USE_EMSCRIPTEN_PORTS: "ON"
     steps:
     - install-base-linux:
         extra: curl

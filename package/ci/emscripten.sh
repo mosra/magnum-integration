@@ -18,31 +18,33 @@ ninja install
 cd ../..
 
 # Crosscompile Bullet
-wget https://github.com/bulletphysics/bullet3/archive/2.87.tar.gz
-tar -xzf 2.87.tar.gz && cd bullet3-2.87
-mkdir build-emscripten && cd build-emscripten
-cmake .. \
-    -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten-wasm.cmake" \
-    -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_INSTALL_PREFIX=$HOME/deps \
-    -DBUILD_BULLET2_DEMOS=OFF \
-    -DBUILD_BULLET3=OFF \
-    -DBUILD_CLSOCKET=OFF \
-    -DBUILD_CPU_DEMOS=OFF \
-    -DBUILD_ENET=OFF \
-    -DBUILD_EXTRAS=OFF \
-    -DBUILD_OPENGL3_DEMOS=OFF \
-    -DBUILD_PYBULLET=OFF \
-    -DBUILD_UNIT_TESTS=OFF \
-    -DINSTALL_LIBS=ON \
-    -DINSTALL_CMAKE_FILES=OFF \
-    -DUSE_GLUT=OFF \
-    -DUSE_GRAPHICAL_BENCHMARK=OFF \
-    -D_FIND_LIB_PYTHON_PY=$TRAVIS_BUILD_DIR/bullet3-2.87/build3/cmake/FindLibPython.py \
-    $EXTRA_OPTS \
-    -G Ninja
-ninja install
-cd ../..
+if [[ "$USE_EMSCRIPTEN_PORTS" == "OFF" ]]; then
+    wget https://github.com/bulletphysics/bullet3/archive/2.87.tar.gz
+    tar -xzf 2.87.tar.gz && cd bullet3-2.87
+    mkdir build-emscripten && cd build-emscripten
+    cmake .. \
+        -DCMAKE_TOOLCHAIN_FILE="../../toolchains/generic/Emscripten-wasm.cmake" \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_INSTALL_PREFIX=$HOME/deps \
+        -DBUILD_BULLET2_DEMOS=OFF \
+        -DBUILD_BULLET3=OFF \
+        -DBUILD_CLSOCKET=OFF \
+        -DBUILD_CPU_DEMOS=OFF \
+        -DBUILD_ENET=OFF \
+        -DBUILD_EXTRAS=OFF \
+        -DBUILD_OPENGL3_DEMOS=OFF \
+        -DBUILD_PYBULLET=OFF \
+        -DBUILD_UNIT_TESTS=OFF \
+        -DINSTALL_LIBS=ON \
+        -DINSTALL_CMAKE_FILES=OFF \
+        -DUSE_GLUT=OFF \
+        -DUSE_GRAPHICAL_BENCHMARK=OFF \
+        -D_FIND_LIB_PYTHON_PY=$TRAVIS_BUILD_DIR/bullet3-2.87/build3/cmake/FindLibPython.py \
+        $EXTRA_OPTS \
+        -G Ninja
+    ninja install
+    cd ../..
+fi
 
 # Crosscompile Magnum
 git clone --depth 1 https://github.com/mosra/magnum.git
@@ -114,6 +116,7 @@ cmake .. \
     -DEIGEN3_INCLUDE_DIR=$HOME/eigen/ \
     -DGLM_INCLUDE_DIR=$HOME/glm \
     -DIMGUI_DIR=$HOME/imgui \
+    -DMAGNUM_USE_EMSCRIPTEN_PORTS_BULLET=$USE_EMSCRIPTEN_PORTS \
     -DMAGNUM_WITH_BULLETINTEGRATION=ON \
     -DMAGNUM_WITH_DARTINTEGRATION=OFF \
     -DMAGNUM_WITH_EIGENINTEGRATION=ON \
