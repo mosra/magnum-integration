@@ -17,8 +17,12 @@ cmake .. \
 ninja install
 cd ../..
 
-# Crosscompile Bullet
-if [[ "$USE_EMSCRIPTEN_PORTS" == "OFF" ]]; then
+# Crosscompile Bullet. If using Emscripten Ports, build it explicitly as well
+# because otherwise it gets done at some point during the compilation below,
+# possibly multiple times in parallel (ugh), increasing a likelihood of an OOM.
+if [[ "$USE_EMSCRIPTEN_PORTS" == "ON" ]]; then
+    embuilder.py build bullet
+else
     wget https://github.com/bulletphysics/bullet3/archive/2.87.tar.gz
     tar -xzf 2.87.tar.gz && cd bullet3-2.87
     mkdir build-emscripten && cd build-emscripten
