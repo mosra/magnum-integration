@@ -31,6 +31,11 @@ set(CMAKE_FOLDER "Magnum/BulletIntegration/Test")
 
 corrade_add_test(BulletIntegrationTest IntegrationTest.cpp LIBRARIES MagnumBulletIntegration)
 corrade_add_test(BulletIntegrationDebugDrawTest DebugDrawTest.cpp LIBRARIES MagnumBulletIntegration)
-corrade_add_test(BulletIntegrationMotionStateTest MotionStateTest.cpp LIBRARIES
-    MagnumBulletIntegration
-    Bullet::Dynamics)
+
+corrade_add_test(BulletIntegrationMotionStateTest MotionStateTest.cpp LIBRARIES MagnumBulletIntegration)
+# If we use the Emscripten port, no find_package() was called and the targets
+# are not defined. The appropriate libraries should get linked thanks to the
+# transitive -s USE_BULLET option instead.
+if(NOT MAGNUM_USE_EMSCRIPTEN_PORTS_BULLET)
+    target_link_libraries(BulletIntegrationMotionStateTest PRIVATE Bullet::Dynamics)
+endif()
