@@ -47,6 +47,20 @@
 #include "Magnum/ImGuiIntegration/Context.h"
 
 namespace Magnum { namespace ImGuiIntegration {
+namespace Implementation {
+    template<class Application, class = decltype(&Application::warpCursor)>
+    constexpr static bool hasWarpCursor(const Application&) { return true; }
+
+    template<class... T> constexpr static bool hasWarpCursor(const T&...) { return false; }
+}
+
+template<class Application> Context::Context(const Vector2& size, const Application& application): Context{*ImGui::CreateContext(), size, application} {}
+
+template<class Application> Context::Context(ImGuiContext& context, const Vector2& size, const Application& application): Context{context, size, application.windowSize(), application.framebufferSize()} {
+    /* We can honor io.WantSetMousePos requests if application type supports it */
+    if(Implementation::hasWarpCursor(application))
+       ImGui::GetIO().BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+}
 
 template<class KeyEvent> bool Context::handleKeyEvent(KeyEvent& event, bool value) {
     /* Ensure we use the context we're linked to */
@@ -445,11 +459,23 @@ MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR(No)
 #undef MAGNUM_IMGUIINTEGRATION_OPTIONAL_CURSOR
 #endif
 
+    template<class... T> static void callWarpCursor(const T&...) {}
+
+    template<class Application, class = decltype(&Application::warpCursor)>
+    static void callWarpCursor(Application& application, const Vector2i& position) {
+        application.warpCursor(position);
+    }
 }
 
 template<class Application> void Context::updateApplicationCursor(Application& application) {
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(_context);
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    if(io.WantSetMousePos) {
+        Implementation::callWarpCursor(application, Vector2i(Vector2(io.MousePos)/_eventScaling));
+    }
 
     switch(ImGui::GetMouseCursor()) {
         case ImGuiMouseCursor_TextInput:
