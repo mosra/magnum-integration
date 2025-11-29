@@ -262,15 +262,19 @@ commands:
           ./package/ci/<< parameters.script >>
 
   lcov:
+    parameters:
+      extra:
+        type: string
+        default: ""
     steps:
     - run:
         name: Collect code coverage
         # Keep in sync with PKBUILD-coverage, appveyor-desktop.bat and
         # appveyor-desktop-mingw.bat, please
         command: |
-          lcov $LCOV_EXTRA_OPTS --directory . --capture --output-file coverage.info > /dev/null
-          lcov $LCOV_EXTRA_OPTS --extract coverage.info "*/src/Magnum*/*" --output-file coverage.info > /dev/null
-          lcov $LCOV_EXTRA_OPTS --remove coverage.info "*/Test/*" --output-file coverage.info > /dev/null
+          lcov << parameters.extra >> --directory . --capture --output-file coverage.info > /dev/null
+          lcov << parameters.extra >> --extract coverage.info "*/src/Magnum*/*" --output-file coverage.info > /dev/null
+          lcov << parameters.extra >> --remove coverage.info "*/Test/*" --output-file coverage.info > /dev/null
     # Official docs say "token not needed for public repos", in reality not
     # using the token is "extremely flakey". What's best is that if the upload
     # fails, the damn thing exits with a success error code, and nobody cares:
@@ -300,7 +304,6 @@ jobs:
     executor: ubuntu-18_04
     environment:
       CMAKE_CXX_FLAGS: --coverage
-      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_EGL: "ON"
@@ -320,7 +323,8 @@ jobs:
     - install-imgui
     - build:
         script: unix-desktop.sh
-    - lcov
+    - lcov:
+        extra: --gcov-tool /usr/bin/gcov-4.8
 
   linux-arm64:
     executor: arm64
@@ -358,7 +362,6 @@ jobs:
     executor: ubuntu-18_04
     environment:
       CMAKE_CXX_FLAGS: --coverage
-      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_GLES2: "ON"
@@ -376,13 +379,13 @@ jobs:
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
-    - lcov
+    - lcov:
+        extra: --gcov-tool /usr/bin/gcov-4.8
 
   linux-gles3:
     executor: ubuntu-18_04
     environment:
       CMAKE_CXX_FLAGS: --coverage
-      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
       # STUPID yml interprets unquoted OFF as a boolean
       TARGET_GLES2: "OFF"
@@ -400,7 +403,8 @@ jobs:
     - install-imgui
     - build:
         script: unix-desktop-gles.sh
-    - lcov
+    - lcov:
+        extra: --gcov-tool /usr/bin/gcov-4.8
 
   linux-static:
     executor: ubuntu-18_04
@@ -408,7 +412,6 @@ jobs:
       # STUPID yml interprets unquoted ON as a boolean
       BUILD_STATIC: "ON"
       CMAKE_CXX_FLAGS: --coverage
-      LCOV_EXTRA_OPTS: --gcov-tool /usr/bin/gcov-4.8
       CONFIGURATION: Debug
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_EGL: "ON"
@@ -427,7 +430,8 @@ jobs:
     # No Yoga, as version 2.0.1 is C++11 but requires a too new CMake
     - build:
         script: unix-desktop.sh
-    - lcov
+    - lcov:
+        extra: --gcov-tool /usr/bin/gcov-4.8
 
   linux-nondeprecated:
     executor: ubuntu-18_04
