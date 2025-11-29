@@ -696,7 +696,7 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
 
         MAGNUM_YOGAINTEGRATION_LOCAL Ui::LayouterFeatures doFeatures() const override;
         MAGNUM_YOGAINTEGRATION_LOCAL void doClean(Containers::BitArrayView layoutIdsToRemove) override;
-        MAGNUM_YOGAINTEGRATION_LOCAL void doUpdate(Containers::BitArrayView layoutIdsToUpdate, const Containers::StridedArrayView1D<const UnsignedInt>& topLevelLayoutIds, const Containers::StridedArrayView1D<const Ui::NodeHandle>& nodeParents, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override;
+        MAGNUM_YOGAINTEGRATION_LOCAL void doUpdate(Containers::BitArrayView layoutIdsToUpdate, const Containers::StridedArrayView1D<const UnsignedInt>& topLevelLayoutIds, const Containers::StridedArrayView1D<const Ui::NodeHandle>& nodeParents, const Containers::StridedArrayView1D<const Vector2>& nodeMinSizes, const Containers::StridedArrayView1D<const Vector2>& nodeMaxSizes, const Containers::StridedArrayView1D<const Float>& nodeAspectRatios, const Containers::StridedArrayView1D<const Vector4>& nodePaddings, const Containers::StridedArrayView1D<const Vector4>& nodeMargins, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override;
 
         struct State;
         Containers::Pointer<State> _state;

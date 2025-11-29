@@ -1021,7 +1021,7 @@ void LayouterTest::updateEmpty() {
     layouter.setSize({1, 1});
 
     /* It shouldn't crash or do anything weird */
-    layouter.update({}, {}, {}, {}, {});
+    layouter.update({}, {}, {}, {}, {}, {}, {}, {}, {}, {});
     CORRADE_VERIFY(true);
 }
 
@@ -1119,7 +1119,7 @@ void LayouterTest::updateDataOrder() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 /* The initial offset of main should not change */
                 {15.0f, 35.0f},     /* main */
@@ -1213,7 +1213,7 @@ void LayouterTest::updateFlags() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             /** @todo turn this into a regular container compare once we don't
                 support Yoga before 3.0 */
             CORRADE_COMPARE(nodeOffsets.size(), 2);
@@ -1283,7 +1283,7 @@ void LayouterTest::updateModifyNodeOffsetSize() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 {},
                 expectedOffset,
@@ -1353,7 +1353,7 @@ void LayouterTest::updateModifyNodeVisibility() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 {0.0f, 0.0f},       /* root */
                 {0.0f, 0.0f},       /* child1 */
@@ -1425,7 +1425,7 @@ void LayouterTest::updateModifyLayoutFlexDirection() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 {},
                 expectedOffset,
@@ -1489,7 +1489,7 @@ void LayouterTest::updateModifyLayoutNodeOffsetType() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 {},
                 {},
@@ -1549,7 +1549,7 @@ void LayouterTest::updateModifyYogaConfigDirectly() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 expectedOffset,
             }), TestSuite::Compare::Container);
@@ -1633,7 +1633,7 @@ void LayouterTest::updateModifyYogaNodeDirectly() {
         using Ui::AbstractLayouter::add;
 
         Ui::LayouterFeatures doFeatures() const override { return {}; }
-        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
+        void doUpdate(Containers::BitArrayView, const Containers::StridedArrayView1D<const UnsignedInt>&, const Containers::StridedArrayView1D<const Ui::NodeHandle>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Vector2>&, const Containers::StridedArrayView1D<const Float>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<const Vector4>&, const Containers::StridedArrayView1D<Vector2>& nodeOffsets, const Containers::StridedArrayView1D<Vector2>& nodeSizes) override {
             CORRADE_COMPARE_AS(nodeOffsets, Containers::stridedArrayView<Vector2>({
                 {},
                 expectedOffset,
