@@ -485,6 +485,9 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
          * complexity where @f$ n @f$ is sibling layout count, due to a linear
          * lookup in the layouter and insertion in the middle of an array
          * inside Yoga.
+         *
+         * Delegates to @ref Ui::AbstractLayouter::add(), see its documentation
+         * for more information.
          * @see @ref isHandleValid(Ui::LayoutHandle) const,
          *      @ref Ui::AbstractUserInterface::nodeParent(),
          *      @ref Ui::AbstractUserInterface::nodeUniqueLayout()
@@ -505,9 +508,9 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
         /**
          * @brief Add a layout assigned to given node and before given layout assuming the layout belongs to this layouter
          *
-         * Like @ref add(Ui::NodeHandle, Ui::LayouterDataHandle, Flags)
-         * but without checking that @p before indeed belongs to this layouter.
-         * See its documentation for more information.
+         * Like @ref add(Ui::NodeHandle, Ui::LayoutHandle, Flags) but without
+         * checking that @p before indeed belongs to this layouter. See its
+         * documentation for more information.
          * @see @ref isHandleValid(Ui::LayouterDataHandle) const,
          *      @ref layoutHandleData()
          */
@@ -520,6 +523,9 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
          * same layouter. To remove a layout that has children, either remove
          * the child layouts first or remove the whole node along with its
          * children using @ref Ui::AbstractUserInterface::removeNode().
+         *
+         * Delegates to @ref Ui::AbstractLayouter::remove(), see its
+         * documentation for more information.
          * @see @ref isHandleValid(Ui::LayoutHandle) const
          */
         void remove(Ui::LayoutHandle handle);
