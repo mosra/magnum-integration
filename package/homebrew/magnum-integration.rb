@@ -2,7 +2,7 @@ class MagnumIntegration < Formula
   desc "Integration libraries for the Magnum C++11 graphics engine"
   homepage "https://magnum.graphics"
   # git describe origin/master, except the `v` prefix
-  version "2020.06-306-g30d179f3"
+  version "2020.06-358-g0184c837"
   # Clone instead of getting an archive to have tags for version.h generation
   url "https://github.com/mosra/magnum-integration.git", revision: version.to_str().rpartition('g')[2]
   head "https://github.com/mosra/magnum-integration.git"
