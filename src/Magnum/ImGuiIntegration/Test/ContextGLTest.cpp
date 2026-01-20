@@ -194,8 +194,11 @@ struct Application {
         None = 999
     };
 
-    void setCursor(Cursor cursor) { currentCursor = cursor; }
     Cursor currentCursor = Cursor::None;
+    Vector2i mousePos;
+
+    void setCursor(Cursor cursor) { currentCursor = cursor; }
+    void warpCursor(const Vector2i& pos) { mousePos = pos; }
 };
 
 struct KeyEvent: public InputEvent {
@@ -1144,7 +1147,7 @@ void ContextGLTest::textInput() {
 }
 
 void ContextGLTest::updateCursor() {
-    Context c{{}};
+    Context c{{200, 200}, {400, 400}, {300, 300}};
 
     Application app;
 
@@ -1172,6 +1175,26 @@ void ContextGLTest::updateCursor() {
     ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNESW);
     c.updateApplicationCursor(app);
     CORRADE_VERIFY(app.currentCursor == Application::Cursor::Arrow);
+
+    /* Change to imgui mouse pos and mark it as changed
+       Account for 2x DPI scaling in equality check */
+    ImGuiIO& io = ImGui::GetIO();
+    io.MousePos = ImVec2(10, 15);
+    io.WantSetMousePos = true;
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.mousePos == Vector2i(20, 30));
+
+    /* Change to imgui mouse pos without marking it as changed */
+    io.MousePos = ImVec2(50, 0);
+    io.WantSetMousePos = false;
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.mousePos == Vector2i(20, 30));
+
+    /* Mark mouse pos changed */
+    io.WantSetMousePos = true;
+    c.updateApplicationCursor(app);
+    CORRADE_VERIFY(app.mousePos == Vector2i(100, 0));
+    
 }
 
 void ContextGLTest::clipboardNoOp() {
