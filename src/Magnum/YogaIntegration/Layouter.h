@@ -475,9 +475,9 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
          * @return New layout handle
          *
          * The @p node is expected to not have a layout assigned from this
-         * layouter yet. If @p before is not null, it's expected to be valid,
-         * belong to the same layouter and have the same non-null parent layout
-         * as @p node.
+         * layouter yet. If @p before is not @ref Ui::LayoutHandle::Null, it's
+         * expected to be valid, belong to the same layouter and have the same
+         * non-null parent layout as @p node.
          *
          * If @p before is @ref Ui::LayoutHandle::Null, the operation is
          * performed in an amortized @f$ \mathcal{O}(1) @f$ complexity. If it's
@@ -533,9 +533,8 @@ class MAGNUM_YOGAINTEGRATION_EXPORT Layouter: public Ui::AbstractLayouter {
         /**
          * @brief Remove a node from this layouter assuming it belongs to it
          *
-         * Like @ref remove(Ui::LayoutHandle) but without checking that
-         * @p handle indeed belongs to this layouter. See its documentation for
-         * more information.
+         * Compared to @ref remove(Ui::LayoutHandle) delegates to
+         * @ref Ui::AbstractLayouter::remove(LayouterDataHandle) instead.
          * @see @ref isHandleValid(Ui::LayouterDataHandle) const,
          *      @ref layoutHandleData()
          */
