@@ -70,7 +70,7 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
 
     /* Tell ImGui that changing mouse cursors is supported */
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-
+    
     /* Check if we can support base vertex > 0 in draw commands */
     #if !(defined(MAGNUM_TARGET_WEBGL) && defined(MAGNUM_TARGET_GLES2))
     if(
@@ -263,17 +263,17 @@ void Context::drawFrame() {
 
     ImGui::Render();
 
-    ImGuiIO& io = ImGui::GetIO();
-    const Vector2 fbSize = Vector2{io.DisplaySize}*Vector2{io.DisplayFramebufferScale};
-    if(!fbSize.product()) return;
-
     ImDrawData* drawData = ImGui::GetDrawData();
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
-    drawData->ScaleClipRects(io.DisplayFramebufferScale);
+
+    const Vector2 fbSize = Vector2{drawData->DisplaySize}*Vector2{drawData->FramebufferScale};
+    if(!fbSize.product()) return;
+
+    drawData->ScaleClipRects(drawData->FramebufferScale);
 
     const Matrix3 projection =
         Matrix3::translation({-1.0f, 1.0f})*
-        Matrix3::scaling({2.0f/Vector2(io.DisplaySize)})*
+        Matrix3::scaling({2.0f/Vector2(drawData->DisplaySize)})*
         Matrix3::scaling({1.0f, -1.0f});
     _shader.setTransformationProjectionMatrix(projection);
 
