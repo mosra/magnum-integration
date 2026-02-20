@@ -76,12 +76,14 @@ include(CMakeDependentOption)
 # two+ years passed, and then I realized I should change to
 # MAGNUM_WITH_BLAHINTEGRATION to avoid confusion. Sorry it took two steps.)
 set(_MAGNUMINTEGRATION_DEPRECATED_UNPREFIXED_OPTIONS
+    USE_EMSCRIPTEN_PORTS_JOLT
     USE_EMSCRIPTEN_PORTS_BULLET
     BUILD_STATIC
     BUILD_STATIC_PIC
     BUILD_TESTS
     BUILD_GL_TESTS)
 set(_MAGNUMINTEGRATION_DEPRECATED_UNPREFIXED_UNSUFFIXED_OPTIONS
+    WITH_JOLT
     WITH_BULLET
     WITH_DART
     WITH_EIGEN
@@ -115,6 +117,7 @@ if(NOT DEFINED _MAGNUMINTEGRATION_ACCEPT_DEPRECATED_UNPREFIXED_UNSUFFIXED_OPTION
 endif()
 
 # Parts of the library
+option(MAGNUM_WITH_JOLTINTEGRATION "Build JoltIntegration library" OFF)
 option(MAGNUM_WITH_BULLETINTEGRATION "Build BulletIntegration library" OFF)
 option(MAGNUM_WITH_DARTINTEGRATION "Build DartIntegration library" OFF)
 option(MAGNUM_WITH_EIGENINTEGRATION "Build EigenIntegration library" OFF)
