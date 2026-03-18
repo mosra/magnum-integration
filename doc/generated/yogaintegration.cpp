@@ -61,8 +61,8 @@ using namespace Math::Literals;
 
 namespace {
 
-struct UiDebugLayer: Platform::WindowlessApplication {
-    explicit UiDebugLayer(const Arguments& arguments): Platform::WindowlessApplication{arguments} {}
+struct YogaIntegrationLayouter: Platform::WindowlessApplication {
+    explicit YogaIntegrationLayouter(const Arguments& arguments): Platform::WindowlessApplication{arguments} {}
 
     int exec() override;
 };
@@ -78,7 +78,7 @@ Image2D unpremultiply(Image2D image) {
     return image;
 }
 
-int UiDebugLayer::exec() {
+int YogaIntegrationLayouter::exec() {
     GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::One, GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
     PluginManager::Manager<Trade::AbstractImageConverter> converterManager;
@@ -187,4 +187,4 @@ layouter.setNodeOffsetType(footerLayout, YogaIntegration::NodeOffsetType::Absolu
 
 }
 
-MAGNUM_WINDOWLESSAPPLICATION_MAIN(UiDebugLayer)
+MAGNUM_WINDOWLESSAPPLICATION_MAIN(YogaIntegrationLayouter)
