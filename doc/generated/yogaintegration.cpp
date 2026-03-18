@@ -26,6 +26,7 @@
 
 #include <Corrade/Containers/Function.h>
 #include <Corrade/Containers/StridedArrayView.h>
+#include <Corrade/Containers/StringView.h>
 #include <Corrade/PluginManager/Manager.h>
 #include <Magnum/Image.h>
 #include <Magnum/ImageView.h>
