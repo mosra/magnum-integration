@@ -132,13 +132,15 @@ Float _supersamplingRatio{};
 // ...
 
 void MyApp::pointerPressEvent(PointerEvent& event) {
-    if(_imgui.handlePointerPressEvent(event)) return;
+    if(_imgui.handlePointerPressEvent(event))
+        return;
 
     // event not handled by ImGui, handle it for the app itself
 }
 
 void MyApp::pointerReleaseEvent(PointerEvent& event) {
-    if(_imgui.handlePointerReleaseEvent(event)) return;
+    if(_imgui.handlePointerReleaseEvent(event))
+        return;
 
     // ...
 }

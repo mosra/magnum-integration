@@ -64,24 +64,29 @@ class ApplicationTest: public Platform::Application {
 
         #ifndef CORRADE_TARGET_ANDROID
         void keyPressEvent(KeyEvent& event) override{
-            if(_imgui.handleKeyPressEvent(event)) return;
+            if(_imgui.handleKeyPressEvent(event))
+                return;
         }
 
         void keyReleaseEvent(KeyEvent& event) override {
-            if(_imgui.handleKeyReleaseEvent(event)) return;
+            if(_imgui.handleKeyReleaseEvent(event))
+                return;
         }
         #endif
 
         /* Set to 0 to test the deprecated mouse events instead */
         #if 1
         void pointerPressEvent(PointerEvent& event) override {
-            if(_imgui.handlePointerPressEvent(event)) return;
+            if(_imgui.handlePointerPressEvent(event))
+                return;
         }
         void pointerReleaseEvent(PointerEvent& event) override {
-            if(_imgui.handlePointerReleaseEvent(event)) return;
+            if(_imgui.handlePointerReleaseEvent(event))
+                return;
         }
         void pointerMoveEvent(PointerMoveEvent& event) override {
-            if(_imgui.handlePointerMoveEvent(event)) return;
+            if(_imgui.handlePointerMoveEvent(event))
+                return;
         }
         #ifndef CORRADE_TARGET_ANDROID
         void scrollEvent(ScrollEvent& event) override {
@@ -95,13 +100,16 @@ class ApplicationTest: public Platform::Application {
         #else
         CORRADE_IGNORE_DEPRECATED_PUSH
         void mousePressEvent(MouseEvent& event) override {
-            if(_imgui.handleMousePressEvent(event)) return;
+            if(_imgui.handleMousePressEvent(event))
+                return;
         }
         void mouseReleaseEvent(MouseEvent& event) override {
-            if(_imgui.handleMouseReleaseEvent(event)) return;
+            if(_imgui.handleMouseReleaseEvent(event))
+                return;
         }
         void mouseMoveEvent(MouseMoveEvent& event) override {
-            if(_imgui.handleMouseMoveEvent(event)) return;
+            if(_imgui.handleMouseMoveEvent(event))
+                return;
         }
         #ifndef CORRADE_TARGET_ANDROID
         void mouseScrollEvent(MouseScrollEvent& event) override {
@@ -117,7 +125,8 @@ class ApplicationTest: public Platform::Application {
 
         #ifndef CORRADE_TARGET_ANDROID
         void textInputEvent(TextInputEvent& event) override {
-            if(_imgui.handleTextInputEvent(event)) return;
+            if(_imgui.handleTextInputEvent(event))
+                return;
         }
         #endif
 

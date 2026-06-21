@@ -102,10 +102,12 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
     _updatedMesh = false;
 
     /* This is not a valid object */
-    if(!_node && !_body) return false;
+    if(!_node && !_body)
+        return false;
 
     /* This object has no shape */
-    if(!_node) return true;
+    if(!_node)
+        return true;
 
     UnsignedInt dataVariance = _node->getShape()->getDataVariance();
 
@@ -134,10 +136,12 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
     Containers::Optional<ShapeData> shapeData = convertShapeNode(shapeNode, loadType, importer);
 
     /* Could not convertShapeNode to ShapeData */
-    if(!shapeData) return false;
+    if(!shapeData)
+        return false;
 
     /* Create the DrawData structure, default scaling to identity */
-    if(firstTime) _drawData = DrawData{{}, {}, {}, Vector3{1.0f}};
+    if(firstTime)
+        _drawData = DrawData{{}, {}, {}, Vector3{1.0f}};
 
     /* Get the material */
     if(loadType & ConvertShapeType::Material) {
@@ -148,7 +152,8 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         _drawData->textures = Containers::Array<Containers::Optional<GL::Texture2D>>(shapeData->textures.size());
         for(UnsignedInt i = 0; i < shapeData->textures.size(); i++) {
             /* This is to preserve indexing for materials */
-            if(!shapeData->textures[i] || !shapeData->images[i]) continue;
+            if(!shapeData->textures[i] || !shapeData->images[i])
+                continue;
 
             (*(_drawData->textures[i] = GL::Texture2D{}))
                 .setMagnificationFilter(shapeData->textures[i]->magnificationFilter())

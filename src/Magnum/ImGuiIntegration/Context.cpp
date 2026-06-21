@@ -265,7 +265,8 @@ void Context::drawFrame() {
 
     ImGuiIO& io = ImGui::GetIO();
     const Vector2 fbSize = Vector2{io.DisplaySize}*Vector2{io.DisplayFramebufferScale};
-    if(!fbSize.product()) return;
+    if(!fbSize.product())
+        return;
 
     ImDrawData* drawData = ImGui::GetDrawData();
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */

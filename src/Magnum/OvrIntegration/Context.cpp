@@ -73,7 +73,8 @@ bool Context::detect() const {
 }
 
 std::unique_ptr<Session> Context::createSession() {
-    if(!detect()) return {};
+    if(!detect())
+        return {};
 
     ovrSession session;
     ovrGraphicsLuid luid;

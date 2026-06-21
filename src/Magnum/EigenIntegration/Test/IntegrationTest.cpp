@@ -48,7 +48,8 @@ namespace Corrade { namespace TestSuite {
 template<class T> class Comparator<EigenType<T>> {
     public:
         ComparisonStatusFlags operator()(const T& actual, const T& expected) {
-            if(actual.isApprox(expected)) return {};
+            if(actual.isApprox(expected))
+                return {};
 
             actualValue = &actual;
             expectedValue = &expected;
