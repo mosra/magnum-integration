@@ -425,9 +425,17 @@ itself, where APIs get removed in two years after they were marked as obsolete.
 
 /** @dir Magnum/OvrIntegration
  * @brief Namespace @ref Magnum::OvrIntegration
+ * @m_deprecated_since_latest The original Oculus hardware and the associated
+ *      SDK are no longer supported by the manufacturer and the integration
+ *      library is thus scheduled for removal. At the moment, no integration
+ *      for the successor OpenXR library is provided.
  */
 /** @namespace Magnum::OvrIntegration
 @brief Integration with the Oculus SDK (LibOVR)
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the
+    successor OpenXR library is provided.
 
 Conversion of math classes, wrappers for most OVR CAPI structures and functions.
 

@@ -29,7 +29,7 @@ digraph "Magnum Integration dependency order" {
     ranksep=0.5
     node [style=filled shape=rect margin="0.03,0.03"]
 
-    Magnum [style=solid class="m-info"]
+    Magnum [style=solid class="m-primary"]
     MagnumGL [style=solid label="Magnum\nGL" class="m-info"]
     MagnumMeshTools [style=solid label="Magnum\nMeshTools" class="m-info"]
     MagnumPrimitives [style=solid label="Magnum\nPrimitives" class="m-info"]
@@ -46,7 +46,7 @@ digraph "Magnum Integration dependency order" {
     MagnumDartIntegration [label="Magnum\nDartIntegration" class="m-info"]
     MagnumGlmIntegration [label="Magnum\nGlmIntegration" class="m-info"]
     MagnumImGuiIntegration [label="Magnum\nImGuiIntegration" class="m-info"]
-    MagnumOvrIntegration [label="Magnum\nOvrIntegration" class="m-info"]
+    MagnumOvrIntegration [label="Magnum\nOvrIntegration" class="m-dim"]
     MagnumYogaIntegration [label="Magnum\nYogaIntegration" class="m-info"]
 
     MagnumGL -> Magnum [class="m-info"]
@@ -60,7 +60,7 @@ digraph "Magnum Integration dependency order" {
     MagnumTextureTools -> Magnum [class="m-info"]
     MagnumTextureTools -> MagnumGL [style=dotted class="m-info"]
 
-    MagnumUi -> MagnumGL [class="m-info"]
+    MagnumUi -> MagnumGL [style=dotted class="m-info"]
     MagnumUi -> MagnumText [class="m-info"]
 
     MagnumBulletIntegration -> MagnumGL
@@ -77,6 +77,6 @@ digraph "Magnum Integration dependency order" {
 
     MagnumEigenIntegration -> Magnum
     MagnumGlmIntegration -> Magnum
-    MagnumOvrIntegration -> MagnumGL
+    MagnumOvrIntegration -> MagnumGL [class="m-dim"]
     MagnumYogaIntegration -> MagnumUi
 }

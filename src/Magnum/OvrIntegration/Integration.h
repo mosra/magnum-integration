@@ -27,8 +27,13 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef MAGNUM_BUILD_DEPRECATED
 /** @file
 @brief Conversion of libOVR math types
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 Provides conversion for the following types:
 
@@ -50,14 +55,22 @@ Example usage:
 @snippet OvrIntegration.cpp Integration
 
 @see @ref types-thirdparty-integration
-*/
+ */
+#endif
 
+#include <Magnum/configure.h>
+
+#ifdef MAGNUM_BUILD_DEPRECATED
 #include <Magnum/Math/Range.h>
 #include <Magnum/Math/Vector.h>
 #include <Magnum/Math/Matrix4.h>
 #include <Magnum/Math/Quaternion.h>
 #include <Magnum/Math/DualQuaternion.h>
 #include <OVR_CAPI.h>
+
+#include "Magnum/OvrIntegration/OvrIntegration.h" /* for file deprecation warning */
+
+/* File deprecation warning printed in OvrIntegration.h */
 
 /* Don't list (useless) Magnum and Math namespaces without anything else */
 #ifndef DOXYGEN_GENERATING_OUTPUT
@@ -145,6 +158,9 @@ template<> struct RangeConverter<2, Int, ovrRecti> {
 };
 
 }}}
+#endif
+#else
+#error the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete
 #endif
 
 #endif

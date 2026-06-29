@@ -25,12 +25,15 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+
 #include "Enums.h"
 
 #include <Corrade/Utility/Debug.h>
 
 namespace Magnum { namespace OvrIntegration {
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 constexpr Containers::EnumSet<Button> Buttons::RMask;
 constexpr Containers::EnumSet<Button> Buttons::LMask;
 constexpr Containers::EnumSet<Button> Buttons::PrivateMask;
@@ -273,5 +276,6 @@ Debug& operator<<(Debug& debug, const ErrorType value) {
 
     return debug << "OvrIntegration::ErrorType::(invalid)";
 }
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}

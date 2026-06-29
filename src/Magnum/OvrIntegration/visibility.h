@@ -27,9 +27,15 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#include <Magnum/configure.h>
+
+#ifdef MAGNUM_BUILD_DEPRECATED
 #include <Corrade/Utility/VisibilityMacros.h>
 
 #include "Magnum/OvrIntegration/configure.h"
+#include "Magnum/OvrIntegration/OvrIntegration.h" /* for file deprecation warning */
+
+/* File deprecation warning printed in OvrIntegration.h */
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
 #ifndef MAGNUM_OVRINTEGRATION_BUILD_STATIC
@@ -43,6 +49,9 @@
 #endif
 #else
 #define MAGNUM_OVRINTEGRATION_EXPORT
+#endif
+#else
+#error the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete
 #endif
 
 #endif

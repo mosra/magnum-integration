@@ -25,6 +25,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+
 #include <Corrade/TestSuite/Tester.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Matrix3.h>

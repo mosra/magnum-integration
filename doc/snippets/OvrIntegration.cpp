@@ -24,6 +24,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/DualQuaternion.h>
 

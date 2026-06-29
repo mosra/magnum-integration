@@ -196,7 +196,7 @@ namespace Magnum {
     [mosra/magnum-integration#108](https://github.com/mosra/magnum-integration/issues/108)
     and [mosra/magnum-integration#112](https://github.com/mosra/magnum-integration/pull/112).
 -   Removed the `Magnum/OvrIntegration/Conversion.h` header that was deprecated
-    in 2019.01, use @ref Magnum/OvrIntegration/Integration.h instead
+    in 2019.01, use `Magnum/OvrIntegration/Integration.h` instead
 
 @subsection changelog-integration-latest-documentation Documentation
 
@@ -406,7 +406,7 @@ Released 2019-02-04, tagged as
 
 -   The `Magnum/OvrIntegration/Conversion.h` header name was not consistent
     with other libraries and thus is deprecated, use
-    @ref Magnum/OvrIntegration/Integration.h instead
+    `Magnum/OvrIntegration/Integration.h` instead
 
 @subsection changelog-integration-2019-01-compatibility Potential compatibility breakages, removed APIs
 
@@ -433,8 +433,8 @@ Released 2018-10-23, tagged as
 
 @subsection changelog-integration-2018-10-changes Changes and improvements
 
--   Updated the @ref OvrIntegration library to work with OVR SDK 1.17 and newer
-    and adapted it to work with latest changes in the @ref GL library
+-   Updated the @cpp OvrIntegration @ce library to work with OVR SDK 1.17 and
+    newer and adapted it to work with latest changes in the @ref GL library
     (see [mosra/magnum-integration#26](https://github.com/mosra/magnum-integration/pull/26)
     and [mosra/magnum-integration#32](https://github.com/mosra/magnum-integration/pull/32))
 -   It's now possible to construct @ref BulletIntegration::DebugDraw without an

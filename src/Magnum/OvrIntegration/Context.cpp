@@ -25,6 +25,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+
 #include "Context.h"
 
 #include "Magnum/OvrIntegration/Session.h"
@@ -34,6 +36,7 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 Debug& operator<<(Debug& debug, const DetectResult value) {
     switch(value) {
         #define _c(value) case DetectResult::value: return debug << "OvrIntegration::DetectResult::" #value;
@@ -92,5 +95,6 @@ Error Context::error() const {
 
     return err;
 }
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}

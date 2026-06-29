@@ -449,7 +449,8 @@ manually:
     Depends on [Dear ImGui](https://github.com/ocornut/imgui) --- if you are on
     Vcpkg, it will "just work", otherwise you need to download the sources and
     point `IMGUI_DIR` to their directory so CMake can find them.
--   `MAGNUM_WITH_OVRINTEGRATION` --- Build the @ref OvrIntegration library.
+-   `MAGNUM_WITH_OVRINTEGRATION` @m_class{m-label m-danger} **deprecated** ---
+    Build the @ref OvrIntegration library.
     Depends on the [Oculus SDK](http://developer.oculus.com/).
 -   `MAGNUM_WITH_YOGAINTEGRATION` --- Build the @ref YogaIntegration library.
     Depends on [Yoga Layout](https://yogalayout.dev).

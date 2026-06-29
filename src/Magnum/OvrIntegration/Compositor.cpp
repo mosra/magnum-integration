@@ -25,6 +25,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+
 #include "Compositor.h"
 
 #include "Magnum/OvrIntegration/Integration.h"
@@ -34,6 +36,7 @@
 
 namespace Magnum { namespace OvrIntegration {
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 Layer::Layer(const LayerType type): _layer(), _type(type) {
     _layer.Header.Type = ovrLayerType(Int(_type));
     _layer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;
@@ -140,5 +143,6 @@ Compositor& Compositor::submitFrame(Session& session) {
 
     return *this;
 }
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}

@@ -25,6 +25,8 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#define _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+
 #include <Corrade/Containers/String.h>
 #include <Corrade/TestSuite/Tester.h>
 #include <Magnum/Magnum.h>
@@ -73,6 +75,7 @@ EnumTest::EnumTest() {
               &EnumTest::sessionStatusFlag});
 }
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 void EnumTest::hmdType() {
     Containers::String out;
     Debug(&out) << HmdType::DK2;
@@ -221,6 +224,7 @@ void EnumTest::sessionStatusFlag() {
     Debug(&out) << SessionStatusFlag(-1);
     CORRADE_COMPARE(out, "OvrIntegration::SessionStatusFlag::(invalid)\n");
 }
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}}}
 

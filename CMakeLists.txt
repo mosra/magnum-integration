@@ -120,7 +120,9 @@ option(MAGNUM_WITH_DARTINTEGRATION "Build DartIntegration library" OFF)
 option(MAGNUM_WITH_EIGENINTEGRATION "Build EigenIntegration library" OFF)
 option(MAGNUM_WITH_GLMINTEGRATION "Build GlmIntegration library" OFF)
 option(MAGNUM_WITH_IMGUIINTEGRATION "Build ImGuiIntegration library" OFF)
-option(MAGNUM_WITH_OVRINTEGRATION "Build OvrIntegration library" OFF)
+if(MAGNUM_BUILD_DEPRECATED)
+    option(MAGNUM_WITH_OVRINTEGRATION "Build OvrIntegration library" OFF)
+endif()
 option(MAGNUM_WITH_YOGAINTEGRATION "Build YogaIntegration library" OFF)
 
 # Library-specific options. This one uses the `SHELL:` option from CMake 3.12

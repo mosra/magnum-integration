@@ -27,49 +27,66 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef MAGNUM_BUILD_DEPRECATED
 /** @file
  * @brief Forward declarations for the @ref Magnum::OvrIntegration namespace
+ * @m_deprecated_since_latest The original Oculus hardware and the associated
+ *      SDK are no longer supported by the manufacturer and the integration
+ *      library is thus scheduled for removal. At the moment, no integration
+ *      for the successor OpenXR library is provided.
  */
+#endif
 
+#include <Magnum/configure.h>
+
+#ifdef MAGNUM_BUILD_DEPRECATED
+#include <Corrade/Utility/DeprecationMacros.h>
 #include <Magnum/Magnum.h>
+
+#ifndef _MAGNUM_NO_DEPRECATED_OVRINTEGRATION
+CORRADE_DEPRECATED_FILE("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete")
+#endif
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
 namespace Magnum { namespace OvrIntegration {
 
-class Session;
-class TextureSwapChain;
-class Context;
-class Compositor;
-class Layer;
-class LayerEyeFov;
-class LayerQuad;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Session;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") TextureSwapChain;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Context;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Compositor;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Layer;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") LayerEyeFov;
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") LayerQuad;
 
-enum class StatusFlag: Int;
-enum class HmdType: Int;
-enum class HmdCapability: Int;
-enum class Button: UnsignedInt;
-enum class Touch: UnsignedInt;
-enum class TrackingOrigin: Int;
-enum class TrackerFlag: Int;
-enum class ControllerType: Int;
-enum class SessionStatusFlag: UnsignedByte;
-enum class MirrorOption: UnsignedInt;
-enum class PerformanceHudMode: Int;
-enum class DebugHudStereoMode: Int;
-enum class DetectResult: UnsignedByte;
-enum class LayerHudMode: Int;
-enum class LayerType: Int;
-enum class ErrorType: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") StatusFlag: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") HmdType: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") HmdCapability: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Button: UnsignedInt;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Touch: UnsignedInt;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") TrackingOrigin: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") TrackerFlag: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") ControllerType: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") SessionStatusFlag: UnsignedByte;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") MirrorOption: UnsignedInt;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") PerformanceHudMode: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") DebugHudStereoMode: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") DetectResult: UnsignedByte;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") LayerHudMode: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") LayerType: Int;
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") ErrorType: Int;
 
-typedef Containers::EnumSet<StatusFlag> StatusFlags;
-typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
-struct Buttons;
-struct Touches;
-typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
-typedef Containers::EnumSet<DetectResult> DetectResults;
-typedef Corrade::Containers::EnumSet<MirrorOption> MirrorOptions;
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<StatusFlag> StatusFlags;
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<TrackerFlag> TrackerFlags;
+struct CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Buttons;
+struct CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Touches;
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<DetectResult> DetectResults;
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<MirrorOption> MirrorOptions;
 
 }}
+#endif
+#else
+#error the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete
 #endif
 
 #endif

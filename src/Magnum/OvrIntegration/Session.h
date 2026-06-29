@@ -27,10 +27,19 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef MAGNUM_BUILD_DEPRECATED
 /** @file
- * @brief Class @ref Magnum::OvrIntegration::PoseState, @ref Magnum::OvrIntegration::InputState, @ref Magnum::OvrIntegration::TextureSwapChain, @ref Magnum::OvrIntegration::Session,
+ * @brief Class @ref Magnum::OvrIntegration::PoseState, @ref Magnum::OvrIntegration::InputState, @ref Magnum::OvrIntegration::TextureSwapChain, @ref Magnum::OvrIntegration::Session
+ * @m_deprecated_since_latest The original Oculus hardware and the associated
+ *      SDK are no longer supported by the manufacturer and the integration
+ *      library is thus scheduled for removal. At the moment, no integration
+ *      for the successor OpenXR library is provided.
  */
+#endif
 
+#include <Magnum/configure.h>
+
+#ifdef MAGNUM_BUILD_DEPRECATED
 #include <array>
 #include <memory>
 #include <Corrade/Containers/Array.h>
@@ -42,6 +51,8 @@
 #include "Magnum/OvrIntegration/OvrIntegration.h"
 #include "Magnum/OvrIntegration/visibility.h"
 
+/* File deprecation warning printed in OvrIntegration.h */
+
 namespace Magnum { namespace OvrIntegration {
 
 namespace Implementation {
@@ -49,13 +60,20 @@ namespace Implementation {
     typedef Corrade::Containers::EnumSet<HmdStatusFlag> HmdStatusFlags;
 }
 
-/** @brief A full rigid body pose with first and second derivatives */
-class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
+/**
+@brief A full rigid body pose with first and second derivatives
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") MAGNUM_OVRINTEGRATION_EXPORT PoseState {
     public:
         /**
          * @brief Wrap a `ovrPoseStatef` as @ref PoseState
          * @return `state` as @ref PoseState reference
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         static PoseState& wrap(::ovrPoseStatef& state) {
             return reinterpret_cast<PoseState&>(state);
         }
@@ -63,6 +81,7 @@ class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
         static const PoseState& wrap(const ::ovrPoseStatef& state) {
             return reinterpret_cast<const PoseState&>(state);
         }
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Constructor
@@ -119,12 +138,16 @@ class MAGNUM_OVRINTEGRATION_EXPORT PoseState {
 
 /**
 @brief Input state
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 Describes the complete controller input state, including Oculus Touch and XBox
 gamepad. If multiple inputs are connected and used at the same time, their
 inputs are combined.
 */
-class MAGNUM_OVRINTEGRATION_EXPORT InputState {
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") MAGNUM_OVRINTEGRATION_EXPORT InputState {
     public:
         /**
          * @brief Constructor
@@ -141,10 +164,14 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
         InputState(const ovrInputState& state): _state(state) {}
 
         /** @brief Values for buttons described by `ovrButton` */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         Buttons buttons() const;
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief Touch values for buttons and sensors as described by `ovrTouch` */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         Touches touches() const;
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Left and right finger trigger values
@@ -194,20 +221,26 @@ class MAGNUM_OVRINTEGRATION_EXPORT InputState {
 
 /**
 @brief Texture swap chain
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 Contains an array of textures which can be rendered to an HMD by the Oculus SDK
 @ref Compositor.
 @see @ref Session, @ref Layer
 */
-class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
     public:
         /**
          * @brief Constructor
          * @param session   HMD for which this texture swap chain is created
          * @param size      Size for the textures
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         explicit TextureSwapChain(const Session& session,  const Vector2i& size);
         ~TextureSwapChain();
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief Currently active texture in the set */
         GL::Texture2D& activeTexture();
@@ -216,7 +249,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
          * @brief Increment to use the next texture in the set
          * @return Reference to self (for method chaining)
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         TextureSwapChain& commit();
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief The underlying `ovrTextureSwapChain` */
         ::ovrTextureSwapChain ovrTextureSwapChain() const {
@@ -224,7 +259,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
         }
 
     private:
+        CORRADE_IGNORE_DEPRECATED_PUSH
         const Session& _session;
+        CORRADE_IGNORE_DEPRECATED_POP
         Vector2i _size;
         Int _curIndex;
 
@@ -234,6 +271,10 @@ class MAGNUM_OVRINTEGRATION_EXPORT TextureSwapChain {
 
 /**
 @brief Session
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 Wraps `ovrSession`, `ovrHmdDesc` and methods from the Oculus SDK which directly
 affect an HMD and its properties.
@@ -323,7 +364,7 @@ GL::Framebuffer::blit(mirrorFramebuffer,
 
 @see @ref Context, @ref TextureSwapChain, @ref Compositor
 */
-class MAGNUM_OVRINTEGRATION_EXPORT Session {
+class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") MAGNUM_OVRINTEGRATION_EXPORT Session {
     public:
         ~Session();
 
@@ -351,7 +392,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * The libOVR compositor will render a copy of its result to the
          * texture returned by this method.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         GL::Texture2D& createMirrorTexture(const Vector2i& size, MirrorOptions mirrorOptions = {});
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Convenience method to create a @ref TextureSwapChain for this HMD
@@ -360,7 +403,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          *
          * @see @ref createTextureSwapChain(const Vector2i&)
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         std::unique_ptr<TextureSwapChain> createTextureSwapChain(Int eye);
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Create a @ref TextureSwapChain for this HMD
@@ -368,14 +413,18 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          *
          * @see @ref createTextureSwapChain(Int)
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         std::unique_ptr<TextureSwapChain> createTextureSwapChain(const Vector2i& size);
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Get the current tracked head pose as a PoseState.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         const PoseState& headPoseState() const {
             return PoseState::wrap(_trackingState.HeadPose);
         }
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief The pose of the origin captured during calibration.
@@ -404,11 +453,13 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * orientation of each hand. The first referring to the left hand,
          * the second referring to the right hand.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         std::array<std::reference_wrapper<const PoseState>, 2> handPoseStates() const {
             return std::array<std::reference_wrapper<const PoseState>, 2>{{
                     PoseState::wrap(_trackingState.HandPoses[0]),
                     PoseState::wrap(_trackingState.HandPoses[1])}};
         }
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Refresh cached tracking state
@@ -434,7 +485,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
          * @param state Receives the resulting input state
          * @return Reference to self (for method chaining)
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         Session& pollController(ControllerType types, InputState& state);
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief Resolution of the HMD's display */
         Vector2i resolution() const {
@@ -617,9 +670,11 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         void setLayerHudMode(LayerHudMode mode) const;
 
         /** @brief Tracking state */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         StatusFlags trackingState() const {
             return {StatusFlag(_trackingState.StatusFlags)};
         }
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief Name of the active Oculus profile */
         std::string user() const {
@@ -661,7 +716,9 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
         }
 
         /** @brief Status of the OVR session */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         SessionStatusFlags status() const;
+        CORRADE_IGNORE_DEPRECATED_POP
 
     private:
         #ifndef DOXYGEN_GENERATING_OUTPUT
@@ -689,5 +746,8 @@ class MAGNUM_OVRINTEGRATION_EXPORT Session {
 };
 
 }}
+#else
+#error the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete
+#endif
 
 #endif

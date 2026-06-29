@@ -27,24 +27,40 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef MAGNUM_BUILD_DEPRECATED
 /** @file
  * @brief Enum @ref Magnum::OvrIntegration::HmdType, @ref Magnum::OvrIntegration::TrackingOrigin, @ref Magnum::OvrIntegration::TrackerFlag, @ref Magnum::OvrIntegration::Button, @ref Magnum::OvrIntegration::Touch, @ref Magnum::OvrIntegration::StatusFlag, @ref Magnum::OvrIntegration::SessionStatusFlag, @ref Magnum::OvrIntegration::PerformanceHudMode, @ref Magnum::OvrIntegration::DebugHudStereoMode, @ref Magnum::OvrIntegration::LayerHudMode, @ref Magnum::OvrIntegration::ErrorType, enum set @ref Magnum::OvrIntegration::TrackerFlags, @ref Magnum::OvrIntegration::Buttons, @ref Magnum::OvrIntegration::Touches, @ref Magnum::OvrIntegration::StatusFlags, @ref Magnum::OvrIntegration::SessionStatusFlags
+ * @m_deprecated_since_latest The original Oculus hardware and the associated
+ *      SDK are no longer supported by the manufacturer and the integration
+ *      library is thus scheduled for removal. At the moment, no integration
+ *      for the successor OpenXR library is provided.
  */
+#endif
 
+#include <Magnum/configure.h>
+
+#ifdef MAGNUM_BUILD_DEPRECATED
 #include <Corrade/Containers/EnumSet.h>
 #include <Magnum/Magnum.h>
 #include <OVR_CAPI.h>
 
 #include "Magnum/OvrIntegration/visibility.h"
+#include "Magnum/OvrIntegration/OvrIntegration.h" /* for file deprecation warning */
+
+/* File deprecation warning printed in OvrIntegration.h */
 
 namespace Magnum { namespace OvrIntegration {
 
 /**
 @brief HMD type
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Context::createSession()
 */
-enum class HmdType: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") HmdType: Int {
     /** Absence of a HMD type */
     None = ovrHmd_None,
 
@@ -79,15 +95,27 @@ enum class HmdType: Int {
     CV1 = ovrHmd_CV1,
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::HmdType} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::HmdType}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, HmdType value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Tracking origin
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::setTrackingOrigin()
 */
-enum class TrackingOrigin: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") TrackingOrigin: Int {
     /**
      * Tracking system origin reported at eye (HMD) height.
      *
@@ -119,15 +147,27 @@ enum class TrackingOrigin: Int {
     FloorLevel = ovrTrackingOrigin_FloorLevel,
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::TrackingOrigin} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::TrackingOrigin}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackingOrigin value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Tracker flag
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref TrackerFlags
 */
-enum class TrackerFlag: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") TrackerFlag: Int {
     /** The sensor is present, else the sensor is absent or offline */
     Connected = ovrTracker_Connected,
 
@@ -138,18 +178,36 @@ enum class TrackerFlag: Int {
     PoseTracked = ovrTracker_PoseTracked
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::TrackerFlag} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::TrackerFlag}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, TrackerFlag value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Tracker flags
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 */
-typedef Containers::EnumSet<TrackerFlag> TrackerFlags;
+CORRADE_IGNORE_DEPRECATED_PUSH
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<TrackerFlag> TrackerFlags;
 
 CORRADE_ENUMSET_OPERATORS(TrackerFlags)
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Button
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 The Oculus SDK provides an abstraction of input for the XBox controller,
 the Oculus Remote and Oculus Touch. This enum describes all possible buttons
@@ -157,7 +215,7 @@ pressable on one of these controllers.
 
 @see @ref Buttons
 */
-enum class Button: UnsignedInt {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Button: UnsignedInt {
     A = ovrButton_A,                    /**< A */
     B = ovrButton_B,                    /**< B */
     X = ovrButton_X,                    /**< X */
@@ -185,13 +243,28 @@ enum class Button: UnsignedInt {
     Home = ovrButton_Home,              /**< Home */
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::Button} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::Button}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Button value);
 
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Button>)
+CORRADE_IGNORE_DEPRECATED_POP
 
-/** @brief Buttons */
-struct Buttons: Containers::EnumSet<Button> {
+/**
+@brief Buttons
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
+struct CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Buttons: Containers::EnumSet<Button> {
     /** @brief Bit mask of all buttons on the right Touch controller */
     static constexpr
         #ifdef DOXYGEN_GENERATING_OUTPUT
@@ -228,9 +301,14 @@ struct Buttons: Containers::EnumSet<Button> {
     explicit Buttons(NoInitT): Containers::EnumSet<Button>{NoInit} {}
     #endif
 };
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Touch
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 The Oculus SDK provides an abstraction of input for the XBox controller,
 the Oculus Remote and Oculus Touch. This enum describes all possible buttons
@@ -239,7 +317,7 @@ but not pressing it.
 
 @see @ref Touches
 */
-enum class Touch: UnsignedInt {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Touch: UnsignedInt {
     A = ovrTouch_A, /**< A button touch */
     B = ovrTouch_B, /**< B button touch */
 
@@ -268,13 +346,28 @@ enum class Touch: UnsignedInt {
     LThumbUp = ovrTouch_LThumbUp, /**< Left thumb pose state */
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::Touch} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::Touch}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, Touch value);
 
 CORRADE_ENUMSET_OPERATORS(Containers::EnumSet<Touch>)
+CORRADE_IGNORE_DEPRECATED_POP
 
-/** @brief Touches */
-struct Touches: Containers::EnumSet<Touch> {
+/**
+@brief Touches
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
+struct CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Touches: Containers::EnumSet<Touch> {
     /** @brief Bit mask of all the button touches on the right controller */
     static constexpr
         #ifdef DOXYGEN_GENERATING_OUTPUT
@@ -320,13 +413,18 @@ struct Touches: Containers::EnumSet<Touch> {
     explicit Touches(NoInitT): Containers::EnumSet<Touch>{NoInit} {}
     #endif
 };
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Controller type
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref InputState::controllerType(), @ref Session::pollController()
 */
-enum class ControllerType: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") ControllerType: Int {
     None = ovrControllerType_None,      /**< No controllers */
     LTouch = ovrControllerType_LTouch,  /**< Left Touch controller */
     RTouch = ovrControllerType_RTouch,  /**< Right Touch controller */
@@ -338,16 +436,28 @@ enum class ControllerType: Int {
     Active   = ovrControllerType_Active,
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::ControllerType} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::ControllerType}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ControllerType value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Status flag
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 Flags describing the current status of sensor tracking.
 @see @ref StatusFlags, @ref Session::trackingState()
 */
-enum class StatusFlag: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") StatusFlag: Int {
     /** Orientation is currently tracked (connected and in use) */
     OrientationTracked = ovrStatus_OrientationTracked,
 
@@ -355,24 +465,42 @@ enum class StatusFlag: Int {
     PositionTracked = ovrStatus_PositionTracked,
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::StatusFlag} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::StatusFlag}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, StatusFlag value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Status flags
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::trackingState()
 */
-typedef Containers::EnumSet<StatusFlag> StatusFlags;
+CORRADE_IGNORE_DEPRECATED_PUSH
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<StatusFlag> StatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(StatusFlags)
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Session status flag
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref SessionStatusFlags, @ref Session::status()
 */
-enum class SessionStatusFlag: UnsignedByte {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") SessionStatusFlag: UnsignedByte {
     /** Set when the process has VR focus and thus is visible in the HMD */
     IsVisible = 0,
 
@@ -392,24 +520,42 @@ enum class SessionStatusFlag: UnsignedByte {
     ShouldRecenter = 5,
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::SessionStatusFlag} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::SessionStatusFlag}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, SessionStatusFlag value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Session status flags
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::status()
 */
-typedef Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
+CORRADE_IGNORE_DEPRECATED_PUSH
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 
 CORRADE_ENUMSET_OPERATORS(SessionStatusFlags)
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Mirror option
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::createMirrorTexture()
 */
-enum class MirrorOption: UnsignedInt {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") MirrorOption: UnsignedInt {
     Default = ovrMirrorOption_Default,                  /**< Default */
     PostDistortion = ovrMirrorOption_PostDistortion,    /**< Post distortion */
     LeftEyeOnly = ovrMirrorOption_LeftEyeOnly,          /**< Left eye only */
@@ -419,22 +565,40 @@ enum class MirrorOption: UnsignedInt {
     IncludeSystemGui = ovrMirrorOption_IncludeSystemGui /**< Include system GUI */
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::MirrorOption} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::MirrorOption}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, MirrorOption value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Tracker flags
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 */
-typedef Containers::EnumSet<MirrorOption> MirrorOptions;
+CORRADE_IGNORE_DEPRECATED_PUSH
+typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<MirrorOption> MirrorOptions;
 
 CORRADE_ENUMSET_OPERATORS(MirrorOptions)
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Performance HUD mode
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::setPerformanceHudMode()
 */
-enum class PerformanceHudMode: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") PerformanceHudMode: Int {
     Off = ovrPerfHud_Off,                     /**< Turns off the performance HUD */
     PerfSummary = ovrPerfHud_PerfSummary,     /**< Shows performance summary and headroom */
     LatencyTiming = ovrPerfHud_LatencyTiming, /**< Shows latency related timing info */
@@ -443,15 +607,27 @@ enum class PerformanceHudMode: Int {
     VersionInfo = ovrPerfHud_VersionInfo      /**< Shows SDK & HMD version Info */
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::PerformanceHudMode} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::PerformanceHudMode}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, PerformanceHudMode value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Debug HUD mode
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::setDebugHudStereoMode()
 */
-enum class DebugHudStereoMode: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") DebugHudStereoMode: Int {
     /** Turns off the Stereo Debug HUD */
     Off = ovrDebugHudStereo_Off,
 
@@ -465,15 +641,27 @@ enum class DebugHudStereoMode: Int {
     CrosshairAtInfinity = ovrDebugHudStereo_CrosshairAtInfinity
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::DebugHudStereoMode} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::DebugHudStereoMode}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, DebugHudStereoMode value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Layer HUD mode
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Session::setLayerHudMode()
 */
-enum class LayerHudMode: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") LayerHudMode: Int {
     /** Turns off the layer HUD */
     Off = ovrLayerHud_Off,
 
@@ -481,15 +669,27 @@ enum class LayerHudMode: Int {
     Info = ovrLayerHud_Info,
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::LayerHudMode} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::LayerHudMode}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, LayerHudMode value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 /**
 @brief Error type
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
 
 @see @ref Error, @ref Context::error()
 */
-enum class ErrorType: Int {
+enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") ErrorType: Int {
     /* General errors */
 
     /** Failure to allocate memory */
@@ -643,9 +843,20 @@ enum class ErrorType: Int {
 
 };
 
-/** @debugoperatorenum{Magnum::OvrIntegration::ErrorType} */
+/**
+@debugoperatorenum{Magnum::OvrIntegration::ErrorType}
+@m_deprecated_since_latest The original Oculus hardware and the associated SDK
+    are no longer supported by the manufacturer and the integration library is
+    thus scheduled for removal. At the moment, no integration for the successor
+    OpenXR library is provided.
+*/
+CORRADE_IGNORE_DEPRECATED_PUSH
 MAGNUM_OVRINTEGRATION_EXPORT Debug& operator<<(Debug& debug, ErrorType value);
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}
+#else
+#error the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete
+#endif
 
 #endif
