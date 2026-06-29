@@ -195,6 +195,8 @@ namespace Magnum {
     code. See also [mosra/magnum#476](https://github.com/mosra/magnum/issues/476),
     [mosra/magnum-integration#108](https://github.com/mosra/magnum-integration/issues/108)
     and [mosra/magnum-integration#112](https://github.com/mosra/magnum-integration/pull/112).
+-   Removed the `Magnum/OvrIntegration/Conversion.h` header that was deprecated
+    in 2019.01, use @ref Magnum/OvrIntegration/Integration.h instead
 
 @subsection changelog-integration-latest-documentation Documentation
 

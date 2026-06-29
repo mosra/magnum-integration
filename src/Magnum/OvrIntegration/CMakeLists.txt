@@ -55,10 +55,6 @@ set(MagnumOvrIntegration_HEADERS
 
     visibility.h)
 
-if(MAGNUM_BUILD_DEPRECATED)
-    list(APPEND MagnumOvrIntegration_HEADERS Conversion.h)
-endif()
-
 # OvrIntegration library
 add_library(MagnumOvrIntegration ${SHARED_OR_STATIC}
     ${MagnumOvrIntegration_SRCS}
