@@ -62,7 +62,6 @@ digraph "Magnum Integration dependency order" {
 
     MagnumUi -> MagnumGL [class="m-info"]
     MagnumUi -> MagnumText [class="m-info"]
-    MagnumUi -> MagnumTrade [class="m-info"]
 
     MagnumBulletIntegration -> MagnumGL
     MagnumBulletIntegration -> MagnumSceneGraph
