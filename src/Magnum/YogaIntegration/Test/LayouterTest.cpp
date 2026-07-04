@@ -27,6 +27,7 @@
 #include <Corrade/Containers/BitArrayView.h>
 #include <Corrade/Containers/Function.h> /* for debugIntegration() */
 #include <Corrade/Containers/Optional.h>
+#include <Corrade/Containers/String.h>
 #include <Corrade/Containers/StridedArrayView.h>
 #include <Corrade/TestSuite/Tester.h>
 #include <Corrade/TestSuite/Compare/Container.h>
