@@ -75,13 +75,17 @@ enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no l
 enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") LayerType: Int;
 enum class CORRADE_DEPRECATED_ENUM("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") ErrorType: Int;
 
+CORRADE_IGNORE_DEPRECATED_PUSH
 typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<StatusFlag> StatusFlags;
 typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<TrackerFlag> TrackerFlags;
+CORRADE_IGNORE_DEPRECATED_POP
 struct CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Buttons;
 struct CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Touches;
+CORRADE_IGNORE_DEPRECATED_PUSH
 typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<SessionStatusFlag> SessionStatusFlags;
 typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<DetectResult> DetectResults;
 typedef CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supported and the OvrIntegration library is thus obsolete") Containers::EnumSet<MirrorOption> MirrorOptions;
+CORRADE_IGNORE_DEPRECATED_POP
 
 }}
 #endif

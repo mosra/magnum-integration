@@ -206,9 +206,11 @@ class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supp
         }
 
         /** @brief The type of the controller this state is for */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         ControllerType controllerType() const {
             return static_cast<ControllerType>(_state.ControllerType);
         }
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief The underlying `ovrInputState` */
         ::ovrInputState& ovrInputState() {
@@ -610,9 +612,11 @@ class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supp
          * When the tracking origin is changed, all of the calls that either
          * provide or accept ovrPosef will use the new tracking origin provided.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         void setTrackingOrigin(TrackingOrigin origin) const {
             ovr_SetTrackingOriginType(_session, ovrTrackingOrigin(origin));
         }
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Clear @ref SessionStatusFlag::ShouldRecenter.
@@ -647,7 +651,9 @@ class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supp
          * the real-time operation of the VR application such as latency timing
          * and CPU & GPU performance metrics.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         void setPerformanceHudMode(PerformanceHudMode mode) const;
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Set debug HUD Setero Mode
@@ -660,14 +666,18 @@ class CORRADE_DEPRECATED("the original Oculus hardware and SDK is no longer supp
          * rendered with the proper separation), measuring VR geometry sizes
          * and distances and more.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         void setDebugHudStereoMode(DebugHudStereoMode mode) const;
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /**
          * @brief Set layer HUD mode
          *
          * Layer HUD enables the HMD user to see information about a layer.
          */
+        CORRADE_IGNORE_DEPRECATED_PUSH
         void setLayerHudMode(LayerHudMode mode) const;
+        CORRADE_IGNORE_DEPRECATED_POP
 
         /** @brief Tracking state */
         CORRADE_IGNORE_DEPRECATED_PUSH
