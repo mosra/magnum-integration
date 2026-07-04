@@ -463,8 +463,7 @@ set(MAGNUM_WITH_OVRINTEGRATION ON CACHE BOOL "" FORCE)
 add_subdirectory(magnum-integration EXCLUDE_FROM_ALL)
 @endcode
 
-See the @ref examples-ovr example, @ref building-integration and
-@ref cmake-integration for more information.
+See @ref building-integration and @ref cmake-integration for more information.
 
 @m_class{m-block m-warning}
 
