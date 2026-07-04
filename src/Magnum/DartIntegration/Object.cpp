@@ -149,7 +149,7 @@ bool Object::extractDrawData(Trade::AbstractImporter* importer) {
         _drawData->materials = std::move(shapeData->materials);
 
         /* Create textures */
-        _drawData->textures = Containers::Array<Containers::Optional<GL::Texture2D>>(shapeData->textures.size());
+        _drawData->textures = Containers::Array<Containers::Optional<GL::Texture2D>>(ValueInit, shapeData->textures.size());
         for(UnsignedInt i = 0; i < shapeData->textures.size(); i++) {
             /* This is to preserve indexing for materials */
             if(!shapeData->textures[i] || !shapeData->images[i])

@@ -66,7 +66,7 @@ LayerEyeFov& LayerEyeFov::setViewport(const Int eye, const Range2Di& viewport) {
 }
 
 LayerEyeFov& LayerEyeFov::setRenderPoses(const Session& session) {
-    const ovrPosef* poses = session.ovrEyePoses();
+    const ovrPosef* poses = session.ovrEyePoses().data();
     _layer.EyeFov.RenderPose[0] = poses[0];
     _layer.EyeFov.RenderPose[1] = poses[1];
 
