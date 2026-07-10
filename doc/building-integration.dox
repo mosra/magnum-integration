@@ -140,7 +140,8 @@ information.
     @ref building-integration-manual "build the integration library from sources".
 
 There are also MSYS2 packages for
-@ref building-plugins-packages-msys "Magnum Plugins".
+@ref building-plugins-packages-msys "Magnum Plugins" and
+@ref building-extras-packages-msys "Magnum Extras".
 
 @subsection building-integration-packages-deb Packages for Debian, Ubuntu and derivatives
 
