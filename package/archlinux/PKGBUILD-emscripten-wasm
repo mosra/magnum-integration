@@ -2,7 +2,7 @@
 pkgname=emscripten-magnum-integration
 pkgver=dev.wasm
 pkgrel=1
-pkgdesc="Integration libraries for the Magnum C++11/C++14 graphics engine (Emscripten, wasm)"
+pkgdesc="Integration libraries for the Magnum C++11 graphics engine (Emscripten, wasm)"
 arch=('any')
 url="https://magnum.graphics"
 license=('MIT')

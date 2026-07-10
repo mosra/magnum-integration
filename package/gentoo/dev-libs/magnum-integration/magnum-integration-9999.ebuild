@@ -4,7 +4,7 @@ EGIT_REPO_URI="https://github.com/mosra/magnum-integration.git"
 
 inherit cmake-utils git-r3
 
-DESCRIPTION="Integration libraries for the Magnum C++11/C++14 graphics engine"
+DESCRIPTION="Integration libraries for the Magnum C++11 graphics engine"
 HOMEPAGE="https://magnum.graphics"
 
 LICENSE="MIT"

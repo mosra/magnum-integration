@@ -1,7 +1,7 @@
 Name: magnum-integration
 Version: 2020.06.260.g343680a
 Release: 1
-Summary: Integration libraries for the Magnum C++11/C++14 graphics engine
+Summary: Integration libraries for the Magnum C++11 graphics engine
 License: MIT
 Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot

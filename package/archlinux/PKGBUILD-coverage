@@ -2,7 +2,7 @@
 pkgname=magnum-integration
 pkgver=dev
 pkgrel=1
-pkgdesc="Integration libraries for the Magnum C++11/C++14 graphics engine (coverage build)"
+pkgdesc="Integration libraries for the Magnum C++11 graphics engine (coverage build)"
 arch=('i686' 'x86_64')
 url="https://magnum.graphics"
 license=('MIT')
