@@ -278,7 +278,8 @@ else()
     set(SHARED_OR_STATIC STATIC)
 endif()
 
-set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR share/cmake/MagnumIntegration)
+# Assumes GNUInstallDirs was included by FindMagnum above
+set(MAGNUMINTEGRATION_CMAKE_MODULE_INSTALL_DIR ${CMAKE_INSTALL_DATADIR}/cmake/MagnumIntegration)
 
 # Library version. MAGNUMINTEGRATION_VERSION_YEAR/MONTH is used in
 # src/Magnum/CMakeLists.txt to generate the versionIntegration.h header.

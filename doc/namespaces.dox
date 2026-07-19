@@ -70,7 +70,7 @@ set(BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
 set(BUILD_BULLET3 OFF CACHE BOOL "" FORCE)
 # This is needed in case BUILD_EXTRAS is enabled, as you'd get a CMake syntax
 # error otherwise
-set(PKGCONFIG_INSTALL_PREFIX "lib${LIB_SUFFIX}/pkgconfig/")
+set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_INSTALL_LIBDIR}/pkgconfig/")
 # Bullet's buildsystem doesn't correctly express dependencies between static
 # libs, causing linker errors on Magnum side. If you have CMake 3.13, the Find
 # module is able to correct that on its own, otherwise you need to enable
