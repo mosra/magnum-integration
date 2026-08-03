@@ -391,7 +391,18 @@ void Context::drawFrame() {
         Matrix3::scaling({1.0f, -1.0f});
     _shader.setTransformationProjectionMatrix(projection);
 
-    for(std::int_fast32_t n = 0; n < drawData->CmdListsCount; ++n) {
+    /* CmdListsCount was obsoleted in 1.92.9 but has been copied from
+       CmdLists.Size since 1.89.8 already (and the copy is actually missing in
+       1.92.9, causing a regression fixed later in 1.92.9b). Using the earlier
+       version allows us to remove this preprocessor branch sooner on the next
+       minimum version bump. */
+    #if IMGUI_VERSION_NUM >= 18980
+    const int cmdListCount = drawData->CmdLists.Size;
+    #else
+    const int cmdListCount = drawData->CmdListsCount;
+    #endif
+
+    for(std::int_fast32_t n = 0; n < cmdListCount; ++n) {
         const ImDrawList* cmdList = drawData->CmdLists[n];
 
         _vertexBuffer.setData(
