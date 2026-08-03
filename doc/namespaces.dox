@@ -364,10 +364,10 @@ Conversion of math classes and rendering of Dear ImGui using Magnum.
 
 @section ImGuiIntegration-usage Usage
 
-This library depends on [Dear ImGui](https://github.com/ocornut/imgui) 1.88 and
-newer and is built if `MAGNUM_WITH_IMGUIINTEGRATION` is enabled when building
-Magnum Integration. To use this library with CMake, request the `ImGui`
-component of the `MagnumIntegration` package and link to the
+This library depends on [Dear ImGui](https://github.com/ocornut/imgui) 1.91.0
+and newer and is built if `MAGNUM_WITH_IMGUIINTEGRATION` is enabled when
+building Magnum Integration. To use this library with CMake, request the
+`ImGui` component of the `MagnumIntegration` package and link to the
 `MagnumIntegration::ImGui` target:
 
 @code{.cmake}
@@ -410,8 +410,8 @@ also the @ref examples-imgui example, @ref building-integration and
 @section ImGuiIntegration-version-support-policy ImGui version support policy
 
 The oldest supported ImGui version is regularly bumped to one that was released
-roughly two years ago (so for example in September 2024 it's version 1.88,
-released in June 2022). This matches deprecation policy of the ImGui project
+roughly two years ago (so for example in August 2026 it's version 1.91.0,
+released in July 2024). This matches deprecation policy of the ImGui project
 itself, where APIs get removed in two years after they were marked as obsolete.
 
 @m_class{m-block m-success}

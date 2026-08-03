@@ -1,7 +1,7 @@
 # Author: mosra <mosra@centrum.cz>
 pkgname=magnum-integration-git
 pkgver=2020.06.r145.g012d62b
-_imgui_pkgver=1.88
+_imgui_pkgver=1.91.0
 pkgrel=1
 pkgdesc="Integration libraries for the Magnum C++11 graphics engine (Git version)"
 arch=('i686' 'x86_64')

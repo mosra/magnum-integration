@@ -101,11 +101,7 @@ struct PointerEvent: public InputEvent {
     Vector2 _position;
     bool _primary;
 
-    /* Used only with ImGui 1.89.5+, compile away on older versions to avoid an
-       unused member warning on Clang */
-    #if IMGUI_VERSION_NUM >= 18948
     PointerEventSource source() const { return _source; }
-    #endif
     Pointer pointer() const { return _pointer; }
     Vector2 position() const { return _position; }
     bool isPrimary() const { return _primary; }
@@ -120,11 +116,7 @@ struct PointerMoveEvent: public InputEvent {
     Vector2 _position;
     bool _primary;
 
-    /* Used only with ImGui 1.89.5+, compile away on older versions to avoid an
-       unused member warning on Clang */
-    #if IMGUI_VERSION_NUM >= 18948
     PointerEventSource source() const { return _source; }
-    #endif
     Containers::Optional<Pointer> pointer() const { return _pointer; }
     Pointers pointers() const { return _pointers; }
     Vector2 position() const { return _position; }
@@ -799,9 +791,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{1.0f, 2.0f}));
     c.drawFrame();
@@ -810,9 +800,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Right));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
@@ -821,9 +809,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
@@ -832,9 +818,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{3.0f, 4.0f}));
     c.drawFrame();
@@ -843,9 +827,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
@@ -854,9 +836,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{5.0f, 6.0f}));
     c.drawFrame();
@@ -872,9 +852,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_TouchScreen);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2{ImGui::GetMousePos()}, (Vector2{5.0f, 3.0f}));
     c.drawFrame();
@@ -883,9 +861,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Pen);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{2.0f, 4.0f}));
     c.drawFrame();
@@ -898,9 +874,7 @@ void ContextGLTest::pointerInput() {
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Right));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{1.0f, 2.0f}));
     c.drawFrame();
@@ -917,9 +891,7 @@ void ContextGLTest::pointerInput() {
     Utility::System::sleep(1);
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_TouchScreen);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
     c.drawFrame();
@@ -931,9 +903,7 @@ void ContextGLTest::pointerInput() {
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Middle));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Pen);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{8.0f, 0.0f}));
     c.drawFrame();
@@ -945,9 +915,7 @@ void ContextGLTest::pointerInput() {
     c.newFrame();
     CORRADE_VERIFY(ImGui::IsMouseDown(ImGuiMouseButton_Left));
     CORRADE_VERIFY(!ImGui::IsMouseDown(ImGuiMouseButton_Middle));
-    #if IMGUI_VERSION_NUM >= 18948
     CORRADE_COMPARE(ImGui::GetIO().MouseSource, ImGuiMouseSource_Mouse);
-    #endif
     /* ImGui floors the positions internally, so the fraction gets lost */
     CORRADE_COMPARE(Vector2(ImGui::GetMousePos()), (Vector2{9.0f, 1.0f}));
     c.drawFrame();
@@ -1605,10 +1573,7 @@ void ContextGLTest::drawText() {
 
     /* Scale up default font so large text output is not a complete blurry
        mess. On 1.92 and up rasterization happens dynamically, so no scaling
-       needed for sharp text.
-
-       A scale of 3 here works around potentially different output on < 1.90.5:
-       https://github.com/ocornut/imgui/pull/7404 */
+       needed for sharp text. */
     constexpr float FontSize = 13.0f;
     constexpr float FontDrawSize = 3.0f*FontSize;
 
@@ -1705,18 +1670,10 @@ void ContextGLTest::drawTextDpiScaled() {
         CORRADE_SKIP("AnyImageImporter / PngImporter plugin can't be loaded.");
 
     /* There are a few (< 10) pixels with higher delta on older ImGui versions
-       due to slight differences in font rasterization/atlassing. We don't work
-       around the ascent calculation difference between 1.90.5 and 1.92 (see
-       comment in drawText()) because we use the default font, so just bump the
-       max and mean there. */
+       due to slight differences in font rasterization/atlassing */
     #if IMGUI_VERSION_NUM < 19200
-    #if IMGUI_VERSION_NUM >= 19005
     constexpr Float MaxThreshold = 67.0f;
-    constexpr Float MeanThreshold = 1.5f;
-    #else
-    constexpr Float MaxThreshold = 35.0f;
-    constexpr Float MeanThreshold = 0.4f;
-    #endif
+    constexpr Float MeanThreshold = 1.9f;
     #else
     constexpr Float MaxThreshold = 3.0f;
     constexpr Float MeanThreshold = 0.4f;

@@ -7,7 +7,7 @@ Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires: magnum, bullet, bullet-extras, eigen3
 BuildRequires: cmake, git, gcc-c++, bullet-devel, eigen3-devel, glm-devel
-Source1: https://github.com/ocornut/imgui/archive/v1.88.zip
+Source1: https://github.com/ocornut/imgui/archive/v1.91.0.zip
 
 %description
 Here are integration libraries for the Magnum C++11 graphics engine, providing
@@ -32,7 +32,7 @@ mkdir build && cd build
 cmake ../%{name}-%{version} \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-  -DIMGUI_DIR=%{_builddir}/imgui-1.88 \
+  -DIMGUI_DIR=%{_builddir}/imgui-1.91.0 \
   -DMAGNUM_WITH_BULLETINTEGRATION=ON \
   -DMAGNUM_WITH_DARTINTEGRATION=OFF \
   -DMAGNUM_WITH_EIGENINTEGRATION=ON \
@@ -54,7 +54,7 @@ strip $RPM_BUILD_ROOT/%{_libdir}/*.so*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-rm -rf %{_builddir}/imgui-1.88
+rm -rf %{_builddir}/imgui-1.91.0
 
 %files
 %defattr(-,root,root,-)

@@ -16,7 +16,7 @@ class MagnumIntegration < Formula
 
   def install
     # Bundle ImGui
-    system "curl", "-L", "https://github.com/ocornut/imgui/archive/v1.88.tar.gz", "-o", "src/MagnumExternal/imgui.tar.gz"
+    system "curl", "-L", "https://github.com/ocornut/imgui/archive/v1.91.0.tar.gz", "-o", "src/MagnumExternal/imgui.tar.gz"
     cd "src/MagnumExternal" do
       system "mkdir", "ImGui"
       system "tar", "xzvf", "imgui.tar.gz", "-C", "ImGui", "--strip-components=1"
