@@ -1487,8 +1487,13 @@ void ContextGLTest::drawCallback() {
     drawList->AddCallback(data.callback, &data);
     drawList->PushClipRect({}, data.rectSizes[1]);
     drawList->AddCallback(data.callback, &data);
-    /* Special reset state callback should be handled (and not called) */
+    /* Special reset state callback should be handled and not called on older
+       versions. On newer versions AddCallback() asserts if the callback is
+       nullptr, and we set ImGuiPlatformIO::DrawCallback_ResetRenderState to
+       nullptr, so nothing to test there. */
+    #if IMGUI_VERSION_NUM < 19280
     drawList->AddCallback(ImDrawCallback_ResetRenderState, &data);
+    #endif
     /* Different callbacks should work */
     drawList->AddCallback([](const ImDrawList*, const ImDrawCmd* cmd) {
         auto* callbackData = static_cast<CallbackData*>(cmd->UserCallbackData);

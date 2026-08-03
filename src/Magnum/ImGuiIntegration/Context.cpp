@@ -128,10 +128,22 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     }
     #endif
 
+    #if IMGUI_VERSION_NUM >= 19200
+    ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
+    #endif
+
+    /* Set up drawing callbacks, passed by users to ImDrawList::AddCallback() */
+    #if IMGUI_VERSION_NUM >= 19280
+    /* We do not have anything to do here. AddCallback() asserts if the
+       callback is nullptr, so the user needs to check (consistent with ImGui's
+       own demo code). But we also check for nullptr in drawFrame() anyway. */
+    platformIO.DrawCallback_ResetRenderState = nullptr;
+    /** @todo Support SetSamplerLinear and SetSamplerNearest */
+    #endif
+
     /* Support dynamic texture uploads */
     #if IMGUI_HAS_DYNAMIC_TEXTURES
     io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
-    ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
     const Vector2i maxTextureSize = GL::Texture2D::maxSize();
     platformIO.Renderer_TextureMaxWidth = maxTextureSize.x();
     platformIO.Renderer_TextureMaxHeight = maxTextureSize.y();
@@ -395,9 +407,13 @@ void Context::drawFrame() {
             if(pcmd->UserCallback) {
                 /* User callback, registered via ImDrawList::AddCallback().
                    ImDrawCallback_ResetRenderState is a special callback value
-                   used by the user to request the renderer to reset render
-                   state. We do not have anything to do here though. */
+                   in older versions used by the user to request the renderer
+                   to reset render state, which shouldn't actually be called.
+                   Newer versions allow setting callbacks in ImGuiPlatformIO,
+                   those are callable or null and don't need an extra check. */
+                #if IMGUI_VERSION_NUM < 19280
                 if(pcmd->UserCallback != ImDrawCallback_ResetRenderState)
+                #endif
                     pcmd->UserCallback(cmdList, pcmd);
                 continue;
             }
