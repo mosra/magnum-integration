@@ -266,6 +266,9 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
        crisp enough look. This is the same as in Magnum::Ui::UserInterface. */
     const Vector2 supersamplingRatio = Vector2(framebufferSize)/size;
 
+    /* Need to use > 0.0f instead of just != 0 so we catch NaNs too */
+    const Vector2 nonZeroSupersamplingRatio = (supersamplingRatio > Vector2{0.0f}).all() ? supersamplingRatio : Vector2{1.0f};
+
     /* ImGui unfortunately expects that event coordinates == positioning
        coordinates, which means we have to scale the events like they would be
        related to `size` and not `windowSize`. */
@@ -273,7 +276,22 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
     ImGuiIO& io = ImGui::GetIO();
 
-    /* If the supersampling ratio changed, we need to regenerate the font. Do
+    /* Display size is the window size. Scaling of this to the actual window
+       and framebuffer size is done on the magnum side when rendering. */
+    io.DisplaySize = ImVec2(Vector2(size));
+    io.DisplayFramebufferScale = ImVec2{nonZeroSupersamplingRatio};
+
+    /* ImGui 1.92 and up support dynamic font rasterization based on
+       DisplayFramebufferScale. Textures are created and uploaded during
+       drawFrame(). Nothing else we have to do here, except load the default
+       font for convenience. This would only happen later in NewFrame(). */
+    #ifdef IMGUI_HAS_TEXTURES
+    if(io.Fonts->Fonts.empty())
+        io.Fonts->AddFontDefault();
+    #else
+    /* On older versions we need to build and upload the atlas manually.
+
+       If the supersampling ratio changed, we need to regenerate the font. Do
        that also if the fonts are not loaded yet -- that means these were
        supplied by the user after Context was created (or after last call to
        relayout()). */
@@ -283,11 +301,8 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
         break;
     }
     if(_supersamplingRatio != supersamplingRatio || !allFontsLoaded) {
-        /* Need to use > 0.0f instead of just != 0 so we catch NaNs too */
-        const Float nonZeroSupersamplingRatio = (supersamplingRatio.x() > 0.0f ? supersamplingRatio.x() : 1.0f);
-
         /* If there's no fonts yet (first run) or only one font and it's the
-           one we set earier (has the [SCALED] suffix), wipe it and replace
+           one we set earlier (has the [SCALED] suffix), wipe it and replace
            with a differently scaled version. Otherwise assume the fonts are
            user-supplied, do not touch them and just rebuild the cache. */
         if(io.Fonts->Fonts.empty() || (io.Fonts->Fonts.size() == 1 && std::strcmp(io.Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]") == 0)) {
@@ -300,15 +315,12 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
                the UI */
             ImFontConfig cfg;
             std::strcpy(cfg.Name, "ProggyClean.ttf, 13px [SCALED]");
-            cfg.SizePixels = 13.0f*nonZeroSupersamplingRatio;
+            cfg.SizePixels = 13.0f*nonZeroSupersamplingRatio.x();
             io.Fonts->AddFontDefault(&cfg);
         }
 
-        _supersamplingRatio = supersamplingRatio;
-
-        #ifndef IMGUI_HAS_TEXTURES
         /* Downscale back the upscaled font to achieve supersampling */
-        io.FontGlobalScale = 1.0f/nonZeroSupersamplingRatio;
+        io.FontGlobalScale = 1.0f/nonZeroSupersamplingRatio.x();
 
         unsigned char *pixels;
         int width, height;
@@ -336,15 +348,10 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
         /* Make the texture available through the ImFontAtlas */
         io.Fonts->SetTexID(textureId(_texture));
-        #endif
     }
+    #endif
 
-    /* Display size is the window size. Scaling of this to the actual window
-       and framebuffer size is done on the magnum side when rendering. */
-    io.DisplaySize = ImVec2(Vector2(size));
-    /* io.DisplayFramebufferScale is currently not used by imgui (1.66b), so
-       why bother */
-    /** @todo revisit when there's progress on https://github.com/ocornut/imgui/issues/1676 */
+    _supersamplingRatio = supersamplingRatio;
 }
 
 void Context::relayout(const Vector2i& size) {
@@ -383,11 +390,14 @@ void Context::drawFrame() {
     ImDrawData* drawData = ImGui::GetDrawData();
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
 
-    const Vector2 fbSize = Vector2{drawData->DisplaySize}*Vector2{drawData->FramebufferScale};
-    if(!fbSize.product())
+    const Vector2 displaySize{drawData->DisplaySize};
+    if(!displaySize.product())
         return;
 
-    drawData->ScaleClipRects(drawData->FramebufferScale);
+    /* Not calling drawData->ScaleClipRects() because user callbacks might
+       expect to read the original rects. This matches what the other built-in
+       backends do. We scale them manually below. */
+    const Vector2 fbScale{drawData->FramebufferScale};
 
     #ifdef IMGUI_HAS_TEXTURES
     if(drawData->Textures) {
@@ -415,7 +425,7 @@ void Context::drawFrame() {
 
     const Matrix3 projection =
         Matrix3::translation({-1.0f, 1.0f})*
-        Matrix3::scaling({2.0f/Vector2(drawData->DisplaySize)})*
+        Matrix3::scaling(2.0f/displaySize)*
         Matrix3::scaling({1.0f, -1.0f});
     _shader.setTransformationProjectionMatrix(projection);
 
@@ -458,9 +468,9 @@ void Context::drawFrame() {
             }
 
             GL::Renderer::setScissor(Range2Di{Range2D{
-                {pcmd->ClipRect.x, fbSize.y() - pcmd->ClipRect.w},
-                {pcmd->ClipRect.z, fbSize.y() - pcmd->ClipRect.y}}
-                    .scaled(_supersamplingRatio)});
+                {pcmd->ClipRect.x, displaySize.y() - pcmd->ClipRect.w},
+                {pcmd->ClipRect.z, displaySize.y() - pcmd->ClipRect.y}}
+                    .scaled(fbScale)});
 
             /* Only > 0 if ImGuiBackendFlags_RendererHasVtxOffset is set */
             _mesh.setBaseVertex(pcmd->VtxOffset);
@@ -490,7 +500,7 @@ void Context::drawFrame() {
        users would be required to disable the scissor right after as otherwise
        the framebuffer clear would only happen on whatever the last scissor
        was. (And I hope the floating-point precision is enough here.) */
-    GL::Renderer::setScissor(Range2Di{Range2D{{}, fbSize}.scaled(_supersamplingRatio)});
+    GL::Renderer::setScissor(Range2Di{Range2D{{}, displaySize}.scaled(fbScale)});
 }
 
 }}

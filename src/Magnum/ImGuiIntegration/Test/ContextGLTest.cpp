@@ -389,10 +389,12 @@ void ContextGLTest::construct() {
         CORRADE_VERIFY(c.context());
         CORRADE_COMPARE(c.context(), ImGui::GetCurrentContext());
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
         #if IMGUI_VERSION_NUM >= 19200
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
         #else
+        /* On older versions we manually scale the font for supersampling */
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
         #endif
 
@@ -420,10 +422,11 @@ void ContextGLTest::constructExistingContext() {
         /* No user-supplied font even though we used a custom context, add
            the default one  */
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
         #if IMGUI_VERSION_NUM >= 19200
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
         #else
+        CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
         CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
         #endif
     }
@@ -610,20 +613,22 @@ void ContextGLTest::relayout() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
     #else
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
     #endif
 
     c.relayout({200, 200});
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
     #else
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
     #endif
 
@@ -647,21 +652,26 @@ void ContextGLTest::relayoutDpiChange() {
     MAGNUM_VERIFY_NO_GL_ERROR();
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     #if IMGUI_VERSION_NUM >= 19200
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
     #else
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 13.0f);
     #endif
 
     c.relayout({200, 200}, {70, 70}, {400, 400});
 
     CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts.size(), 1);
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
     #if IMGUI_VERSION_NUM >= 19200
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 26.0f); /* 2x */
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf"_s);
+    /* With dynamic font rasterization on 1.92 and up, the LegacySize is simply
+       the logical size it was originally added with */
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->LegacySize, 13.0f);
     #else
-    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f);
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->GetDebugName(), "ProggyClean.ttf, 13px [SCALED]"_s);
+    /* On older versions we manually scale up the font for supersampling */
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->Fonts[0]->FontSize, 26.0f); /* 2x */
     #endif
 
     Utility::System::sleep(1);
@@ -1589,28 +1599,31 @@ void ContextGLTest::drawTexture() {
 }
 
 void ContextGLTest::drawText() {
-    Context c{{200, 200}};
+    Context c{_framebuffer.viewport().size()};
 
     /* Scale up default font so large text output is not a complete blurry
        mess. On 1.92 and up rasterization happens dynamically, so no scaling
-       needed, and the output is sharper.
+       needed for sharp text.
 
-       A scale of 7 here works around potentially different output on < 1.90.5:
+       A scale of 3 here works around potentially different output on < 1.90.5:
        https://github.com/ocornut/imgui/pull/7404 */
-    constexpr float FontScale = 7.0f;
-    constexpr float FontDrawSize = FontScale*13.0f;
+    constexpr float FontSize = 13.0f;
+    constexpr float FontDrawSize = 3.0f*FontSize;
 
     ImGui::GetIO().Fonts->Clear();
     ImFontConfig cfg;
-    std::strcpy(cfg.Name, "ProggyClean.ttf, custom scale");
+    std::strcpy(cfg.Name, "ProggyClean.ttf, custom size");
     #if IMGUI_VERSION_NUM < 19200
-    cfg.SizePixels = FontScale*13.0f;
+    cfg.SizePixels = FontDrawSize;
     #else
-    cfg.SizePixels = 13.0f;
+    cfg.SizePixels = FontSize;
     #endif
     ImGui::GetIO().Fonts->AddFontDefault(&cfg);
 
-    c.relayout({200, 200}, {70, 70}, _framebuffer.viewport().size());
+    #if IMGUI_VERSION_NUM < 19200
+    /* Force font rasterization */
+    c.relayout(_framebuffer.viewport().size());
+    #endif
 
     /* ImGui doesn't draw anything the first frame */
     c.newFrame();
