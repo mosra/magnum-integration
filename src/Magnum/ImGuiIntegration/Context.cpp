@@ -55,9 +55,7 @@
 #include "Magnum/ImGuiIntegration/Integration.h"
 #include "Magnum/ImGuiIntegration/Widgets.h"
 
-#define IMGUI_HAS_DYNAMIC_TEXTURES (IMGUI_VERSION_NUM >= 19200)
-
-#if IMGUI_HAS_DYNAMIC_TEXTURES
+#ifdef IMGUI_HAS_TEXTURES
 #include <imgui_internal.h> /* GetPlatformIO(ImGuiContext*) */
 #endif
 
@@ -65,7 +63,7 @@ namespace Magnum { namespace ImGuiIntegration {
 
 namespace {
 
-#if IMGUI_HAS_DYNAMIC_TEXTURES
+#ifdef IMGUI_HAS_TEXTURES
 void createTexture(ImTextureData& texture);
 void updateTexture(ImTextureData& texture, const Range2Di& rect);
 void destroyTexture(ImTextureData& texture);
@@ -180,8 +178,15 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     }
     #endif
 
-    #if IMGUI_VERSION_NUM >= 19200
+    /* Support dynamic texture uploads */
+    #ifdef IMGUI_HAS_TEXTURES
+    /* Also used in the block below, gated on 1.92.8. IMGUI_HAS_TEXTURES was
+       added before 1.92. */
     ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
+    io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
+    const Vector2i maxTextureSize = GL::Texture2D::maxSize();
+    platformIO.Renderer_TextureMaxWidth = maxTextureSize.x();
+    platformIO.Renderer_TextureMaxHeight = maxTextureSize.y();
     #endif
 
     /* Set up drawing callbacks, passed by users to ImDrawList::AddCallback() */
@@ -191,14 +196,6 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
        own demo code). But we also check for nullptr in drawFrame() anyway. */
     platformIO.DrawCallback_ResetRenderState = nullptr;
     /** @todo Support SetSamplerLinear and SetSamplerNearest */
-    #endif
-
-    /* Support dynamic texture uploads */
-    #if IMGUI_HAS_DYNAMIC_TEXTURES
-    io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
-    const Vector2i maxTextureSize = GL::Texture2D::maxSize();
-    platformIO.Renderer_TextureMaxWidth = maxTextureSize.x();
-    platformIO.Renderer_TextureMaxHeight = maxTextureSize.y();
     #endif
 
     /* Set up framebuffer sizes, font supersampling etc. and upload the glyph
@@ -226,7 +223,7 @@ Context::Context(Context&& other) noexcept: _context{other._context}, _shader{Ut
 
 Context::~Context() {
     if(_context) {
-        #if IMGUI_HAS_DYNAMIC_TEXTURES
+        #ifdef IMGUI_HAS_TEXTURES
         for(ImTextureData* tex : ImGui::GetPlatformIO(_context).Textures) {
             /* Only destroy textures used by a single context */
             if(tex->RefCount == 1 && tex->GetTexID() != ImTextureID_Invalid)
@@ -309,7 +306,7 @@ void Context::relayout(const Vector2& size, const Vector2i& windowSize, const Ve
 
         _supersamplingRatio = supersamplingRatio;
 
-        #if !IMGUI_HAS_DYNAMIC_TEXTURES
+        #ifndef IMGUI_HAS_TEXTURES
         /* Downscale back the upscaled font to achieve supersampling */
         io.FontGlobalScale = 1.0f/nonZeroSupersamplingRatio;
 
@@ -392,7 +389,7 @@ void Context::drawFrame() {
     CORRADE_INTERNAL_ASSERT(drawData); /* This is always valid after Render() */
     drawData->ScaleClipRects(io.DisplayFramebufferScale);
 
-    #if IMGUI_HAS_DYNAMIC_TEXTURES
+    #ifdef IMGUI_HAS_TEXTURES
     if(drawData->Textures) {
         for(ImTextureData* tex : *drawData->Textures) {
             switch(tex->Status) {
