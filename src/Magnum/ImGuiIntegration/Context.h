@@ -483,6 +483,11 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /**
          * @brief Font texture used in `ImFontAtlas`
          * @m_since_{integration,2020,06}
+         *
+         * Returns the underlying texture for the ImGui font atlas. ImGui
+         * versions 1.92 and later create and destroy textures dynamically, on
+         * those versions this function returns an empty, default-constructed
+         * texture.
          */
         GL::Texture2D& atlasTexture() { return _texture; }
 
