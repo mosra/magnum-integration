@@ -150,6 +150,11 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
     /* Ensure we use the context we're linked to */
     ImGui::SetCurrentContext(&context);
 
+    /* Verify ABI compatibility with the linked ImGui. Helps detect config
+       mismatches, e.g. IMGUI_DISABLE_OBSOLETE_FUNCTIONS only defined in user
+       code, but not while building ImGui. */
+    IMGUI_CHECKVERSION();
+
     ImGuiIO &io = ImGui::GetIO();
 
     /* Tell ImGui that changing mouse cursors is supported */
