@@ -244,7 +244,8 @@ will result in the font caches being rebuilt.
     The default font used by ImGui, [Proggy Clean](https://www.dafont.com/proggy-clean.font),
     is a bitmap one, becoming rather blurry and blocky in larger sizes. It's
     recommended to switch to a different font for a crisper experience on HiDPI
-    screens.
+    screens. On ImGui 1.92.6 and up, you can load a scalable font, [Proggy Forever](https://github.com/ocornut/proggyforever),
+    using `ImGui::AddFontDefaultVector()`.
 
 There are further important steps for DPI awareness if you are supplying custom
 fonts. Use the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
