@@ -25,13 +25,6 @@
     DEALINGS IN THE SOFTWARE.
 */
 
-/* Explicitly disable deprecated functions to catch issues early. Doing this
-   only in tests so the library itself can be used with any newer version, but
-   tests should be always run against the oldest supported which is mentioned
-   in doc/namespaces.dox. The oldest supported version is tracked to be roughly
-   two years back. */
-#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-
 #include <Corrade/TestSuite/Tester.h>
 #include <Corrade/TestSuite/Compare/Numeric.h>
 #include <Magnum/Magnum.h>

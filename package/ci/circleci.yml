@@ -403,8 +403,7 @@ jobs:
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
-    - install-imgui:
-        version: "v1.92.9"
+    - install-imgui
     - build:
         script: unix-desktop-gles.sh
     - lcov:
@@ -442,7 +441,16 @@ jobs:
     environment:
       # STUPID yml interprets unquoted OFF as a boolean
       BUILD_DEPRECATED: "OFF"
-      CMAKE_CXX_FLAGS: -DCORRADE_NO_ASSERT
+      # Also disable deprecated ImGui functionality here to catch issues early.
+      # Doing this only on CI so the library itself can be used with any newer
+      # version. Other jobs run against the oldest supported version (mentioned
+      # in doc/namespaces.dox), but here we test against the most recent known
+      # and supported version.
+      # Has to be a global define and not something set on the test targets as
+      # it changes layout of ImGui structures and thus has to match what the
+      # ImGui::Sources target uses, which is privately linked into
+      # MagnumImGuiIntegration.
+      CMAKE_CXX_FLAGS: -DCORRADE_NO_ASSERT -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS
       CONFIGURATION: Release
       # STUPID yml interprets unquoted ON as a boolean
       TARGET_EGL: "ON"
@@ -457,7 +465,8 @@ jobs:
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
-    - install-imgui
+    - install-imgui:
+        version: "v1.92.9"
     # No Yoga, as version 2.0.1 is C++11 but requires a too new CMake
     - build:
         script: unix-desktop.sh
