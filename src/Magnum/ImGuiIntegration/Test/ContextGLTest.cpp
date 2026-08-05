@@ -281,6 +281,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void drawCallback();
     void drawTexture();
     void drawText();
+    void drawTextDpiScaled();
     void drawScissor();
     void drawVertexOffset();
     void drawIndexOffset();
@@ -339,6 +340,7 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::drawCallback,
               &ContextGLTest::drawTexture,
               &ContextGLTest::drawText,
+              &ContextGLTest::drawTextDpiScaled,
               &ContextGLTest::drawScissor,
               &ContextGLTest::drawVertexOffset,
               &ContextGLTest::drawIndexOffset},
@@ -1666,6 +1668,64 @@ void ContextGLTest::drawText() {
         /* Dropping the alpha channel, as it's always 1.0 */
         Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text.png"),
+        (DebugTools::CompareImageToFile{_manager, MaxThreshold, MeanThreshold}));
+}
+
+void ContextGLTest::drawTextDpiScaled() {
+    /* Like drawText(), but with 2x DPI scale */
+    Context c{{32, 32}, {32, 32}, _framebuffer.viewport().size()};
+
+    /* ImGui doesn't draw anything the first frame */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    Utility::System::sleep(1);
+
+    c.newFrame();
+
+    /* Last drawlist that gets rendered, covers the entire display */
+    ImDrawList* drawList = ImGui::GetForegroundDrawList();
+    const ImVec2& size = ImGui::GetIO().DisplaySize;
+
+    drawList->AddRectFilled({size.x*0.1f, size.y*0.2f}, {size.x*0.9f, size.y*0.8f},
+        IM_COL32(255, 128, 128, 255));
+    /* Use default font at default size */
+    drawList->AddText(nullptr, 0.0f,
+        {size.x*0.15f, size.y*0.3f}, IM_COL32(255, 255, 0, 200), "DPI");
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    /* Catch also ABI and interface mismatch errors */
+    if(!(_manager.load("AnyImageImporter") & PluginManager::LoadState::Loaded) ||
+       !(_manager.load("PngImporter") & PluginManager::LoadState::Loaded))
+        CORRADE_SKIP("AnyImageImporter / PngImporter plugin can't be loaded.");
+
+    /* There are a few (< 10) pixels with higher delta on older ImGui versions
+       due to slight differences in font rasterization/atlassing. We don't work
+       around the ascent calculation difference between 1.90.5 and 1.92 (see
+       comment in drawText()) because we use the default font, so just bump the
+       max and mean there. */
+    #if IMGUI_VERSION_NUM < 19200
+    #if IMGUI_VERSION_NUM >= 19005
+    constexpr Float MaxThreshold = 67.0f;
+    constexpr Float MeanThreshold = 1.5f;
+    #else
+    constexpr Float MaxThreshold = 35.0f;
+    constexpr Float MeanThreshold = 0.4f;
+    #endif
+    #else
+    constexpr Float MaxThreshold = 3.0f;
+    constexpr Float MeanThreshold = 0.4f;
+    #endif
+
+    CORRADE_COMPARE_WITH(
+        /* Dropping the alpha channel, as it's always 1.0 */
+        Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text-dpi-scaled.png"),
         (DebugTools::CompareImageToFile{_manager, MaxThreshold, MeanThreshold}));
 }
 
