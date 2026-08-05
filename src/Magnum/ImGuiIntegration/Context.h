@@ -247,8 +247,13 @@ will result in the font caches being rebuilt.
     screens. On ImGui 1.92.6 and up, you can load a scalable font, [Proggy Forever](https://github.com/ocornut/proggyforever),
     using `ImGui::AddFontDefaultVector()`.
 
-There are further important steps for DPI awareness if you are supplying custom
-fonts. Use the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
+@note
+    On ImGui 1.92 and up, font rasterization is done dynamically, and none of
+    the following steps are needed. Manual scaling is only required on older
+    versions.
+
+On older versions of ImGui (before 1.92), there are further important steps for
+DPI awareness if you are supplying custom fonts. Use the @ref Context(ImGuiContext&, const Vector2&, const Vector2i&, const Vector2i&)
 constructor and pre-scale their size by the ratio of @p size and
 @p framebufferSize. If you don't do that, the fonts will appear tiny on HiDPI
 screens. Example:
