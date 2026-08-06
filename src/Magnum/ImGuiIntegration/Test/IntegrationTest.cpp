@@ -43,9 +43,9 @@ namespace Magnum { namespace ImGuiIntegration { namespace Test { namespace {
 struct IntegrationTest: TestSuite::Tester {
     explicit IntegrationTest();
 
-#ifdef IMGUI_HAS_IMSTR
+    #ifdef IMGUI_HAS_IMSTR
     void stringView();
-#endif
+    #endif
     void vector2();
     void vector4();
     void color();
@@ -54,14 +54,13 @@ struct IntegrationTest: TestSuite::Tester {
 
 IntegrationTest::IntegrationTest() {
     addTests({
-#ifdef IMGUI_HAS_IMSTR
+              #ifdef IMGUI_HAS_IMSTR
               &IntegrationTest::stringView,
-#endif
+              #endif
               &IntegrationTest::vector2,
               &IntegrationTest::vector4,
               &IntegrationTest::color,
-              &IntegrationTest::colorLiterals
-              });
+              &IntegrationTest::colorLiterals});
 }
 
 #ifdef IMGUI_HAS_IMSTR
