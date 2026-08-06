@@ -30,15 +30,25 @@
 */
 
 /** @file
-@brief Conversion of Dear ImGui math types
+@brief Conversion of Dear ImGui types
 
-Provides conversion for the following types:
+Provides conversion for string views (in the [features/string_view](https://github.com/ocornut/imgui/pull/3038)
+branch of ImGui):
+
+| Corrade container type                | ↭ | Equivalent ImGui type        |
+| ------------------------------------- | - | ----------------------------- |
+| @ref Corrade::String "String"         | ← | @cpp ImStrv @ce (data copy)   |
+| @ref Corrade::String "String"         | → | @cpp ImStrv @ce               |
+| @ref Corrade::StringView "StringView" | ⇆ | @cpp ImStrv @ce              |
+| @ref Corrade::MutableStringView "MutableStringView" | → | @cpp ImStrv @ce |
+
+Provides conversion for the following math types:
 
 | Magnum vector type                | Equivalent ImGui type     |
 | --------------------------------- | ------------------------- |
 | @ref Magnum::Vector2 "Vector2"    | @cpp ImVec2 @ce <b></b>   |
 | @ref Magnum::Vector4 "Vector4", @ref Magnum::Color4 "Color4" | @cpp ImVec4 @ce, @cpp ImColor @ce |
-| @ref Magnum::Vector3 "Vector3", @ref Magnum::Color3 "Color3" | @cpp ImColor @ce <b></b> |
+| @ref Magnum::Vector3 "Vector3", @ref Magnum::Color3 "Color3" | @cpp ImColor @ce |
 
 Note that conversion of @cpp ImColor @ce to @ref Magnum::Color3 "Color3" loses
 the alpha channel, while in the other direction alpha will be set to @cpp 1.0f @ce.
