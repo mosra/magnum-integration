@@ -65,14 +65,22 @@ IntegrationTest::IntegrationTest() {
 
 #ifdef IMGUI_HAS_IMSTR
 void IntegrationTest::stringView() {
-    using Containers::StringView;
-    StringView stringView("Hello World!");
-    ImStrv imStrv{"Hello World!"};
+    using namespace Containers;
 
-    CORRADE_COMPARE(StringView(imStrv), stringView);
+    StringView stringView{"Hello Corrade!"};
+    ImStrv imStrv{"Hello ImGui!"};
 
-    ImStrv c(stringView);
-    CORRADE_COMPARE(c, stringView);
+    /* ImStrv -> StringView */
+    StringView fromImStrv(imStrv);
+    CORRADE_COMPARE(fromImStrv.begin(), imStrv.Begin);
+    CORRADE_COMPARE(fromImStrv.end(), imStrv.End);
+    CORRADE_COMPARE(fromImStrv.size(), imStrv.length());
+
+    /* StringView -> ImStrv */
+    ImStrv fromStringView(stringView);
+    CORRADE_COMPARE(fromStringView.Begin, stringView.begin());
+    CORRADE_COMPARE(fromStringView.End, stringView.end());
+    CORRADE_COMPARE(fromStringView.length(), stringView.size());
 }
 #endif
 
