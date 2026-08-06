@@ -58,7 +58,9 @@ Example usage:
 #include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
 
 #include <imgui.h>
+#ifdef IMGUI_HAS_IMSTR
 #include <Corrade/Containers/StringView.h>
+#endif
 #include <Magnum/Types.h>
 #include <Magnum/Math/Vector.h>
 
