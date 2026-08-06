@@ -73,9 +73,18 @@ namespace Corrade { namespace Containers { namespace Implementation {
 
 template<> struct StringViewConverter<const char, ImStrv> {
     static StringView from(const ImStrv& other) {
-        return StringView{other.Begin, other.length()};
+        return StringView{other.Begin, std::size_t(other.length())};
     }
-    static ImStrv to(StringView other) { return ImStrv{other.begin(), other.end()}; }
+    static ImStrv to(StringView other) {
+        return ImStrv{other.begin(), other.end()};
+    }
+};
+
+/* There's no mutable variant of ImStrv, so this goes just one direction */
+template<> struct StringViewConverter<char, ImStrv> {
+    static ImStrv to(MutableStringView other) {
+        return ImStrv{other.begin(), other.end()};
+    }
 };
 
 }}}

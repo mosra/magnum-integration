@@ -81,6 +81,19 @@ void IntegrationTest::stringView() {
     CORRADE_COMPARE(fromStringView.Begin, stringView.begin());
     CORRADE_COMPARE(fromStringView.End, stringView.end());
     CORRADE_COMPARE(fromStringView.length(), stringView.size());
+
+    /* MutableStringView -> ImStrv */
+    char mutableString[]{"Hello Mutable!"};
+    MutableStringView mutableStringView{mutableString};
+    ImStrv fromMutable{mutableStringView};
+    CORRADE_COMPARE(fromMutable.Begin, mutableStringView.begin());
+    CORRADE_COMPARE(fromMutable.End, mutableStringView.end());
+    CORRADE_COMPARE(fromMutable.length(), mutableStringView.size());
+
+    /* An ImStrv should never be convertible to a mutable view. Not using
+       is_convertible to catch also accidental explicit conversions. */
+    CORRADE_VERIFY(std::is_constructible<StringView, ImStrv>::value);
+    CORRADE_VERIFY(!std::is_constructible<MutableStringView, ImStrv>::value);
 }
 #endif
 
