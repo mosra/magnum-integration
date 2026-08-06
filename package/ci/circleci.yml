@@ -379,7 +379,10 @@ jobs:
     - install-gcc-4_8
     - install-cmake:
         version: "3.5.2"
-    - install-imgui
+    # Test newer ImGui in at least one GLES2 job to cover the dynamic texture
+    # path in 1.92 and up
+    - install-imgui:
+        version: "v1.92.9"
     - build:
         script: unix-desktop-gles.sh
     - lcov:
