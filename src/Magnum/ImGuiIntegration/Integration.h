@@ -30,9 +30,19 @@
 */
 
 /** @file
-@brief Conversion of Dear ImGui math types
+@brief Conversion of Dear ImGui types
 
-Provides conversion for the following types:
+Provides conversion for string views (in the [features/string_view](https://github.com/ocornut/imgui/pull/3038)
+branch of ImGui):
+
+| Corrade container type                | ↭ | Equivalent ImGui type        |
+| ------------------------------------- | - | ---------------------------- |
+| @relativeref{Corrade,Containers::String} | ← | @cpp ImStrv @ce (data copy) |
+| @relativeref{Corrade,Containers::String} | → | @cpp ImStrv @ce           |
+| @ref Corrade::Containers::BasicStringView "Containers::StringView" | ⇆ | @cpp ImStrv @ce |
+| @ref Corrade::Containers::BasicStringView "Containers::MutableStringView" | → | @cpp ImStrv @ce |
+
+Provides conversion for the following math types:
 
 | Magnum vector type                | Equivalent ImGui type     |
 | --------------------------------- | ------------------------- |
