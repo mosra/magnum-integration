@@ -282,6 +282,9 @@ struct ContextGLTest: GL::OpenGLTester {
     void drawTexture();
     void drawText();
     void drawTextDpiScaled();
+    #if IMGUI_VERSION_NUM >= 19200
+    void drawTextSingleChannel();
+    #endif
     void drawScissor();
     void drawVertexOffset();
     void drawIndexOffset();
@@ -341,6 +344,9 @@ ContextGLTest::ContextGLTest() {
               &ContextGLTest::drawTexture,
               &ContextGLTest::drawText,
               &ContextGLTest::drawTextDpiScaled,
+              #if IMGUI_VERSION_NUM >= 19200
+              &ContextGLTest::drawTextSingleChannel,
+              #endif
               &ContextGLTest::drawScissor,
               &ContextGLTest::drawVertexOffset,
               &ContextGLTest::drawIndexOffset},
@@ -1728,6 +1734,63 @@ void ContextGLTest::drawTextDpiScaled() {
         Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text-dpi-scaled.png"),
         (DebugTools::CompareImageToFile{_manager, MaxThreshold, MeanThreshold}));
 }
+
+#if IMGUI_VERSION_NUM >= 19200
+void ContextGLTest::drawTextSingleChannel() {
+    #if defined(MAGNUM_TARGET_GLES2) || defined(MAGNUM_TARGET_WEBGL)
+    CORRADE_SKIP("Single-channel textures not supported in OpenGL ES 2.0 or WebGL");
+    #endif
+
+    Context c{_framebuffer.viewport().size()};
+
+    /* Remove default-created RGBA texture */
+    ImGui::GetIO().Fonts->ClearFonts();
+
+    /* Request atlas with single-channel texture */
+    ImGui::GetIO().Fonts->TexDesiredFormat = ImTextureFormat_Alpha8;
+
+    /* Ensure font atlas gets built. Seems to require two frames. */
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    c.newFrame();
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    CORRADE_COMPARE(ImGui::GetIO().Fonts->TexData->Format, ImTextureFormat_Alpha8);
+
+    Utility::System::sleep(1);
+
+    c.newFrame();
+
+    /* Last drawlist that gets rendered, covers the entire display */
+    ImDrawList* drawList = ImGui::GetForegroundDrawList();
+    const ImVec2& size = ImGui::GetIO().DisplaySize;
+
+    drawList->AddRectFilled({size.x*0.1f, size.y*0.2f}, {size.x*0.9f, size.y*0.8f},
+        IM_COL32(255, 128, 128, 255));
+    drawList->AddText(nullptr, 0.0f,
+        {size.x*0.3f, size.y*0.3f}, IM_COL32(255, 255, 0, 200), "Alpha");
+
+    c.drawFrame();
+
+    MAGNUM_VERIFY_NO_GL_ERROR();
+
+    /* Catch also ABI and interface mismatch errors */
+    if(!(_manager.load("AnyImageImporter") & PluginManager::LoadState::Loaded) ||
+       !(_manager.load("PngImporter") & PluginManager::LoadState::Loaded))
+        CORRADE_SKIP("AnyImageImporter / PngImporter plugin can't be loaded.");
+
+    CORRADE_COMPARE_WITH(
+        /* Dropping the alpha channel, as it's always 1.0 */
+        Containers::arrayCast<Color3ub>(_framebuffer.read(_framebuffer.viewport(), {PixelFormat::RGBA8Unorm}).pixels<Color4ub>()),
+        Utility::Path::join(IMGUIINTEGRATION_TEST_DIR, "ContextTestFiles/draw-text-single-channel.png"),
+        (DebugTools::CompareImageToFile{_manager, 3.0f, 0.4f}));
+}
+#endif
 
 void ContextGLTest::drawScissor() {
     Context c{{200, 200}, {70, 70}, _framebuffer.viewport().size()};

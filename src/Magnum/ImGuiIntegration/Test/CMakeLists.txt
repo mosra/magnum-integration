@@ -65,6 +65,7 @@ if(MAGNUM_BUILD_GL_TESTS)
             ContextTestFiles/draw-texture.png
             ContextTestFiles/draw-text.png
             ContextTestFiles/draw-text-dpi-scaled.png
+            ContextTestFiles/draw-text-single-channel.png
             ContextTestFiles/texture.png)
     target_include_directories(ImGuiIntegrationContextGLTest PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
     if(MAGNUM_IMGUIINTEGRATION_BUILD_STATIC)

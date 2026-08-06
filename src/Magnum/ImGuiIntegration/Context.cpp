@@ -69,17 +69,41 @@ void updateTexture(ImTextureData& texture, const Range2Di& rect);
 void destroyTexture(ImTextureData& texture);
 
 void createTexture(ImTextureData& texture) {
-    /* There's a single-channel format, but most official backends don't
-       support it either */
-    CORRADE_INTERNAL_ASSERT(texture.Format == ImTextureFormat_RGBA32);
+    CORRADE_INTERNAL_ASSERT(texture.Format == ImTextureFormat_Alpha8 || texture.Format == ImTextureFormat_RGBA32);
+    /* We don't support single-channel textures on GLES2/WebGL:
+       - need swizzling support to reuse shaders reading alpha for transparency
+       - ES2 without EXT_texture_rg has no R8 format. We could emulate this
+         with LuminanceAlpha without swizzling, but that doesn't exist on
+         WebGL2, so there we'd have no way to get around the missing swizzling. */
+    #if defined(MAGNUM_TARGET_GLES2) || defined(MAGNUM_TARGET_WEBGL)
+    CORRADE_ASSERT(texture.Format != ImTextureFormat_Alpha8,
+        "Single-channel textures not supported in OpenGL ES 2.0 or WebGL", );
+    #endif
     CORRADE_INTERNAL_ASSERT(texture.GetTexID() == ImTextureID_Invalid);
     const Vector2i size{texture.Width, texture.Height};
+
+    const PixelFormat pixelFormat = texture.Format == ImTextureFormat_RGBA32 ?
+        PixelFormat::RGBA8Unorm : PixelFormat::R8Unorm;
+    /* Will be an unsized format on GLES2 for setImage() */
+    const GL::TextureFormat textureFormat = GL::textureFormat(pixelFormat);
+
     GL::Texture2D glTexture;
     glTexture
         .setMinificationFilter(SamplerFilter::Linear)
         .setMagnificationFilter(SamplerFilter::Linear)
         .setWrapping(GL::SamplerWrapping::ClampToEdge)
-        .setStorage(1, GL::TextureFormat::RGBA8, size);
+        #ifndef MAGNUM_TARGET_GLES2
+        .setStorage(1, textureFormat, size)
+        #else
+        .setImage(0, textureFormat, ImageView2D{pixelFormat, size})
+        #endif
+        ;
+
+    #if !(defined(MAGNUM_TARGET_GLES2) || defined(MAGNUM_TARGET_WEBGL))
+    if(texture.Format == ImTextureFormat_Alpha8)
+        glTexture.setSwizzle<'1', '1', '1', 'r'>();
+    #endif
+
     const ImTextureID id = ImTextureID(glTexture.release());
     texture.SetTexID(id);
 
@@ -118,7 +142,9 @@ void updateTexture(ImTextureData& texture, const Range2Di& rect) {
     #endif
 
     const auto data = Containers::arrayView(texture.GetPixels(), texture.GetSizeInBytes());
-    const ImageView2D imageView{storage, PixelFormat::RGBA8Unorm, size, data};
+    const PixelFormat pixelFormat = texture.Format == ImTextureFormat_RGBA32 ?
+        PixelFormat::RGBA8Unorm : PixelFormat::R8Unorm;
+    const ImageView2D imageView{storage, pixelFormat, size, data};
 
     GL::Texture2D glTexture = GL::Texture2D::wrap(GLuint(texture.GetTexID()), GL::ObjectFlag::Created);
     glTexture.setSubImage(0, offset, imageView);
