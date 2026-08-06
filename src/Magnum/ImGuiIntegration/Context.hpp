@@ -11,7 +11,7 @@
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2019 Guillaume Jacquemin <williamjcm@users.noreply.github.com>
     Copyright © 2019 Marco Melorio <m.melorio@icloud.com>
-    Copyright © 2022, 2024, 2025 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2022, 2024, 2025, 2026 Pablo Escobar <mail@rvrs.in>
     Copyright © 2022 Stanislaw Halik <sthalik@misaki.pl>
     Copyright © 2023 Jordan Peck <jordan.me2@gmail.com>
 
