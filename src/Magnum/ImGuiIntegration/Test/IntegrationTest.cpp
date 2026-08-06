@@ -33,6 +33,7 @@
 #define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 #include <Corrade/TestSuite/Tester.h>
+#include <Corrade/TestSuite/Compare/Numeric.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Math/Color.h>
 
@@ -71,10 +72,10 @@ void IntegrationTest::stringView() {
     ImStrv imStrv{"Hello ImGui!"};
 
     /* ImStrv -> StringView */
-    StringView fromImStrv(imStrv);
-    CORRADE_COMPARE(fromImStrv.begin(), imStrv.Begin);
-    CORRADE_COMPARE(fromImStrv.end(), imStrv.End);
-    CORRADE_COMPARE(fromImStrv.size(), imStrv.length());
+    StringView viewFromImStrv(imStrv);
+    CORRADE_COMPARE(viewFromImStrv.begin(), imStrv.Begin);
+    CORRADE_COMPARE(viewFromImStrv.end(), imStrv.End);
+    CORRADE_COMPARE(viewFromImStrv.size(), imStrv.length());
 
     /* StringView -> ImStrv */
     ImStrv fromStringView(stringView);
@@ -94,6 +95,22 @@ void IntegrationTest::stringView() {
        is_convertible to catch also accidental explicit conversions. */
     CORRADE_VERIFY(std::is_constructible<StringView, ImStrv>::value);
     CORRADE_VERIFY(!std::is_constructible<MutableStringView, ImStrv>::value);
+
+    /* String -> ImStrv */
+    String string{"Hello String!"};
+    ImStrv fromString(string);
+    CORRADE_COMPARE(fromString.Begin, string.begin());
+    CORRADE_COMPARE(fromString.End, string.end());
+    CORRADE_COMPARE(fromString.length(), string.size());
+
+    /* ImStrv -> String (data copy) */
+    String stringFromImStrv(imStrv);
+    CORRADE_COMPARE(stringFromImStrv, StringView{imStrv});
+    /* Copy, not a non-owned view */
+    CORRADE_COMPARE_AS(stringFromImStrv.begin(), imStrv.Begin,
+        TestSuite::Compare::NotEqual);
+    CORRADE_COMPARE_AS(stringFromImStrv.end(), imStrv.End,
+        TestSuite::Compare::NotEqual);
 }
 #endif
 
