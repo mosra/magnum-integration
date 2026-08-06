@@ -61,6 +61,7 @@ Example usage:
 
 #include <imgui.h>
 #ifdef IMGUI_HAS_IMSTR
+#include <Corrade/Containers/String.h>
 #include <Corrade/Containers/StringView.h>
 #endif
 #include <Magnum/Types.h>
@@ -72,6 +73,15 @@ Example usage:
 /* Currently present only in the features/string_view branch of ImGui */
 #ifdef IMGUI_HAS_IMSTR
 namespace Corrade { namespace Containers { namespace Implementation {
+
+template<> struct StringConverter<ImStrv> {
+    static String from(ImStrv other) {
+        return String{other.Begin, std::size_t(other.length())};
+    }
+    static ImStrv to(const String& other) {
+        return ImStrv{other.begin(), other.end()};
+    }
+};
 
 template<> struct StringViewConverter<const char, ImStrv> {
     static StringView from(const ImStrv& other) {
