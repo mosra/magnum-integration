@@ -13,6 +13,7 @@
     Copyright © 2019 Marco Melorio <m.melorio@icloud.com>
     Copyright © 2022, 2024 Pablo Escobar <mail@rvrs.in>
     Copyright © 2022 Stanislaw Halik <sthalik@misaki.pl>
+    Copyright © 2023 Jordan Peck <jordan.me2@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),

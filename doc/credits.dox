@@ -55,8 +55,8 @@ namespace Magnum {
 -   **Jonathan Hale** ([\@Squareys](https://github.com/Squareys)) --- the
     @ref OvrIntegration library, improvements to Bullet integration
     and the migration of magnum-imgui to @ref ImGuiIntegration library
--   **Jordan Peck** ([\@Auburns](https://github.com/Auburns)) --- improvements
-    to the @ref ImGuiIntegration library
+-   **Jordan Peck** ([\@Auburn](https://github.com/Auburn)) --- improvements to
+    the @ref ImGuiIntegration library
 -   **Juanpe Bolívar** ([\@arximboldi](https://github.com/arximboldi)) ---
     draw list user callbacks in the @ref ImGuiIntegration library
 -   **[\@kolbbond](https://github.com/kolbbond)** --- @ref ImGuiIntegration
