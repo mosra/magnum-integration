@@ -54,6 +54,10 @@ namespace Magnum {
     expose @ref Platform::Sdl2Application::clipboardText() "Platform::*Application::clipboardText()"
     and @ref Platform::Sdl2Application::setClipboardText() "Platform::*Application::setClipboardText()"
     to ImGui
+-   @ref ImGuiIntegration/Integration.h now supports conversion of `ImStrv` to
+    and from Corrade string and string view types (see
+    [mosra/magnum-integration#96](https://github.com/mosra/magnum-integration/pull/96)
+    and [mosra/magnum-integration#122](https://github.com/mosra/magnum-integration/pull/122))
 
 @subsection changelog-integration-latest-changes Changes and improvements
 
