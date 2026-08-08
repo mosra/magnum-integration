@@ -46,6 +46,12 @@
 
 #include "Magnum/ImGuiIntegration/visibility.h"
 
+/* On non-deprecated builds we need to check IMGUI_HAS_TEXTURES to know whether
+   to remove atlasTexture() */
+#ifndef MAGNUM_BUILD_DEPRECATED
+#include <imgui.h>
+#endif
+
 #ifndef DOXYGEN_GENERATING_OUTPUT
 struct ImGuiContext;
 #endif
@@ -486,16 +492,23 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
          */
         ImGuiContext* release();
 
+        #if !defined(IMGUI_HAS_TEXTURES) || defined(MAGNUM_BUILD_DEPRECATED)
         /**
          * @brief Font texture used in `ImFontAtlas`
          * @m_since_{integration,2020,06}
+         * @m_deprecated_since_latest There is no global font atlas texture in
+         *     ImGui 1.92 and up.
          *
          * Returns the underlying texture for the ImGui font atlas. ImGui
-         * versions 1.92 and later create and destroy textures dynamically, on
-         * those versions this function returns an empty, default-constructed
-         * texture.
+         * versions 1.92 and up create and destroy textures dynamically, on
+         * those versions this function returns an empty,
+         * @ref Magnum::NoCreate "NoCreate"-d texture.
          */
+        #if defined(IMGUI_HAS_TEXTURES)
+        CORRADE_DEPRECATED("There is no global font atlas texture in ImGui 1.92 and up")
+        #endif
         GL::Texture2D& atlasTexture() { return _texture; }
+        #endif
 
         /**
          * @brief Relayout the context
@@ -752,7 +765,6 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
 
         ImGuiContext* _context;
         Shaders::FlatGL2D _shader;
-        GL::Texture2D _texture{NoCreate};
         GL::Buffer _vertexBuffer{GL::Buffer::TargetHint::Array};
         GL::Buffer _indexBuffer{GL::Buffer::TargetHint::ElementArray};
         Timeline _timeline;
@@ -762,6 +774,12 @@ class MAGNUM_IMGUIINTEGRATION_EXPORT Context {
         /* Optionally used by connectApplicationClipboard() */
         void* _application;
         Containers::String _lastClipboardText;
+
+        /* Texture atlas, created dynamically on 1.92 and up. On deprecated
+           builds we still need a reference to return in atlasTexture(). */
+        #if !defined(IMGUI_HAS_TEXTURES) || defined(MAGNUM_BUILD_DEPRECATED)
+        GL::Texture2D _texture{NoCreate};
+        #endif
 
     private:
         template<class KeyEvent> bool handleKeyEvent(KeyEvent& event, bool value);

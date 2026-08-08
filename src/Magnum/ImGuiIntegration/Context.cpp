@@ -241,9 +241,17 @@ Context::Context(ImGuiContext& context, const Vector2& size, const Vector2i& win
 
 Context::Context(ImGuiContext& context, const Vector2i& size): Context{context, Vector2{size}, size, size} {}
 
-Context::Context(NoCreateT) noexcept: _context{nullptr}, _shader{NoCreate}, _texture{NoCreate}, _vertexBuffer{NoCreate}, _indexBuffer{NoCreate}, _mesh{NoCreate} {}
+Context::Context(NoCreateT) noexcept: _context{nullptr}, _shader{NoCreate}, _vertexBuffer{NoCreate}, _indexBuffer{NoCreate}, _mesh{NoCreate}
+#if !defined(IMGUI_HAS_TEXTURES) || defined(MAGNUM_BUILD_DEPRECATED)
+, _texture{NoCreate}
+#endif
+{}
 
-Context::Context(Context&& other) noexcept: _context{other._context}, _shader{Utility::move(other._shader)}, _texture{Utility::move(other._texture)}, _vertexBuffer{Utility::move(other._vertexBuffer)}, _indexBuffer{Utility::move(other._indexBuffer)}, _timeline{Utility::move(other._timeline)}, _mesh{Utility::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling} {
+Context::Context(Context&& other) noexcept: _context{other._context}, _shader{Utility::move(other._shader)}, _vertexBuffer{Utility::move(other._vertexBuffer)}, _indexBuffer{Utility::move(other._indexBuffer)}, _timeline{Utility::move(other._timeline)}, _mesh{Utility::move(other._mesh)}, _supersamplingRatio{other._supersamplingRatio}, _eventScaling{other._eventScaling}
+#if !defined(IMGUI_HAS_TEXTURES) || defined(MAGNUM_BUILD_DEPRECATED)
+, _texture{Utility::move(other._texture)}
+#endif
+{
     other._context = nullptr;
 }
 
@@ -267,13 +275,15 @@ Context& Context::operator=(Context&& other) noexcept {
     using Utility::swap;
     swap(_context, other._context);
     swap(_shader, other._shader);
-    swap(_texture, other._texture);
     swap(_vertexBuffer, other._vertexBuffer);
     swap(_indexBuffer, other._indexBuffer);
     swap(_timeline, other._timeline);
     swap(_mesh, other._mesh);
     swap(_supersamplingRatio, other._supersamplingRatio);
     swap(_eventScaling, other._eventScaling);
+    #if !defined(IMGUI_HAS_TEXTURES) || defined(MAGNUM_BUILD_DEPRECATED)
+    swap(_texture, other._texture);
+    #endif
     return *this;
 }
 

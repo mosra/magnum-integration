@@ -486,9 +486,7 @@ void ContextGLTest::constructMove() {
     /* The texture ID used to be a pointer that had to be relocated. Now it's
        just the underlying OpenGL ID that doesn't need to be, nevertheless
        let's still check that it's what is expected. */
-    #if IMGUI_VERSION_NUM >= 19200
-    CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexRef.GetTexID());
-    #else
+    #if IMGUI_VERSION_NUM < 19200
     CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexID);
     #endif
     CORRADE_COMPARE(ImGui::GetCurrentContext(), context);
@@ -502,15 +500,11 @@ void ContextGLTest::constructMove() {
     /* The texture ID used to be a pointer that had to be relocated. Now it's
        just the underlying OpenGL ID that doesn't need to be, nevertheless
        let's still check that it's what is expected. */
-    #if IMGUI_VERSION_NUM >= 19200
-    CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexRef.GetTexID());
-    #else
+    #if IMGUI_VERSION_NUM < 19200
     CORRADE_COMPARE(textureId(b.atlasTexture()), ImGui::GetIO().Fonts->TexID);
     #endif
     ImGui::SetCurrentContext(c.context());
-    #if IMGUI_VERSION_NUM >= 19200
-    CORRADE_COMPARE(textureId(c.atlasTexture()), ImGui::GetIO().Fonts->TexRef.GetTexID());
-    #else
+    #if IMGUI_VERSION_NUM < 19200
     CORRADE_COMPARE(textureId(c.atlasTexture()), ImGui::GetIO().Fonts->TexID);
     #endif
 
