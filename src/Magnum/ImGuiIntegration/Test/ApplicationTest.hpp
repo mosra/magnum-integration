@@ -10,6 +10,7 @@
     Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2018 Natesh Narain <nnaraindev@gmail.com>
+    Copyright © 2026 Pablo Escobar <mail@rvrs.in>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -142,10 +143,17 @@ ApplicationTest::ApplicationTest(const Arguments& arguments):
         #endif
     }
 {
-    _imgui = ImGuiIntegration::Context(Vector2{windowSize()}/dpiScaling(),
-        windowSize(), framebufferSize());
+    _imgui = ImGuiIntegration::Context(Vector2{windowSize()}/dpiScaling(), *this);
     #if !defined(CORRADE_TARGET_EMSCRIPTEN) && !defined(CORRADE_TARGET_ANDROID)
     _imgui.connectApplicationClipboard(*this);
+    #endif
+
+    /* Allow testing keyboard navigation and mouse pos update */
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    #if IMGUI_VERSION_NUM < 19140
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+    #else
+    ImGui::GetIO().ConfigNavMoveSetMousePos = true;
     #endif
 
     GL::Renderer::enable(GL::Renderer::Feature::Blending);
