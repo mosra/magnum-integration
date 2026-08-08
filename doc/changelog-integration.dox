@@ -98,6 +98,11 @@ namespace Magnum {
     with the new application pointer events now propagate also the event
     source to ImGui 1.89.5+, describing whether it's a mouse, touch input or a
     pen
+-   @ref ImGuiIntegration::Context::updateApplicationCursor() now supports
+    setting the mouse cursor position when constructed with the new templated
+    constructors and passing an application instance that supports
+    @ref Platform::Sdl2Application::setCursor() "Platform::*Application::setCursor()"
+    (see [mosra/magnum-integration#102](https://github.com/mosra/magnum-integration/pull/102))
 
 @subsection changelog-integration-latest-buildsystem Build system
 
