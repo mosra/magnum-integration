@@ -116,6 +116,7 @@ export CORRADE_TEST_COLOR=ON
 ctest -V -E GLBenchmark
 if [ "$TARGET_GLES2" == "ON" ]; then
     MAGNUM_DISABLE_EXTENSIONS="OES_vertex_array_object" ctest -V -R GLTest
+    MAGNUM_DISABLE_EXTENSIONS="GL_EXT_unpack_subimage" ctest -V -R GLTest
 fi
 
 # Test install, after running the tests as for them it shouldn't be needed
