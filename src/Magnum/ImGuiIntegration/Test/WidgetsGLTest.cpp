@@ -5,7 +5,7 @@
                 2020, 2021, 2022, 2023, 2024, 2025, 2026
               Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
-    Copyright © 2024 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2024, 2025, 2026 Pablo Escobar <mail@rvrs.in>
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),

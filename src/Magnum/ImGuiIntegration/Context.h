@@ -10,7 +10,7 @@
     Copyright © 2018 Tomáš Skřivan <skrivantomas@seznam.cz>
     Copyright © 2018 Jonathan Hale <squareys@googlemail.com>
     Copyright © 2019 bowling-allie <allie.smith.epic@gmail.com>
-    Copyright © 2022, 2024, 2026 Pablo Escobar <mail@rvrs.in>
+    Copyright © 2022, 2024, 2025, 2026 Pablo Escobar <mail@rvrs.in>
     Copyright © 2023 Jordan Peck <jordan.me2@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a
