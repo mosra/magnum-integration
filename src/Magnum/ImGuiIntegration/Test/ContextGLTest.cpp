@@ -265,7 +265,7 @@ struct ContextGLTest: GL::OpenGLTester {
     void clipboardNoOp();
     void clipboard();
     void clipboardOwnedString();
-    void clipboardMultipleContexts();
+    template<class T> void clipboardMultipleContexts();
 
     void multipleContexts();
 
@@ -326,7 +326,8 @@ ContextGLTest::ContextGLTest() {
 
               &ContextGLTest::clipboardNoOp,
               &ContextGLTest::clipboard,
-              &ContextGLTest::clipboardMultipleContexts,
+              &ContextGLTest::clipboardMultipleContexts<Containers::StringView>,
+              &ContextGLTest::clipboardMultipleContexts<Containers::String>,
               &ContextGLTest::clipboardOwnedString});
 
     addTests({&ContextGLTest::multipleContexts,
@@ -1288,9 +1289,11 @@ void ContextGLTest::clipboardOwnedString() {
     CORRADE_COMPARE(ImGui::GetClipboardText(), "hello!!"_s);
 }
 
-void ContextGLTest::clipboardMultipleContexts() {
+template<class T> void ContextGLTest::clipboardMultipleContexts() {
+    setTestCaseTemplateName(std::is_same<T, Containers::String>::value ? "Containers::String" : "Containers::StringView");
+
     struct {
-        Containers::StringView clipboardText() { return clipboard; }
+        T clipboardText() { return clipboard; }
         void setClipboardText(Containers::StringView text) { clipboard = text; }
 
         Containers::String clipboard;
@@ -1298,8 +1301,14 @@ void ContextGLTest::clipboardMultipleContexts() {
 
     Context c1{{}};
     Context c2{{}};
+
+    /* The current context shouldn't get silently changed after calling this
+       function */
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), c2.context());
     c1.connectApplicationClipboard(app1);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), c2.context());
     c2.connectApplicationClipboard(app2);
+    CORRADE_COMPARE(ImGui::GetCurrentContext(), c2.context());
 
     ImGui::SetCurrentContext(c1.context());
     ImGui::SetClipboardText("hello");
