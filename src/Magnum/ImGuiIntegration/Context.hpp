@@ -41,7 +41,6 @@
 #include "Magnum/ImGuiIntegration/visibility.h" /* defines IMGUI_API */
 
 #include <imgui.h>
-#include <imgui_internal.h> /* ImGuiContext, GetPlatformIO(ImGuiContext*) */
 #include <Corrade/Containers/Optional.h>
 #include <Corrade/Utility/Resource.h>
 
@@ -522,21 +521,38 @@ template<class Application, class> struct ApplicationClipboard {
    be freed, such as GlfwApplication */
 template<class Application> struct ApplicationClipboard<Application, typename std::enable_if<std::is_same<decltype(std::declval<Application>().clipboardText()), Containers::StringView>::value>::type> {
     static void connect(Context& context, Application& application) {
+        /* There's ImGui::GetCurrentContext(ImGuiContext*) in imgui_internal.h
+           to make sure we're the PlatformIO matches given context, but that's
+           only since 1.91.9 (while the Platform_Clipboard is in 1.91.1), plus
+           use of imgui_internal.h is discouraged and may result in errors like
+            Please '#define IMGUI_DEFINE_MATH_OPERATORS' _BEFORE_ including imgui.h!
+           So instead we're setting the current context, querying its
+           PlatformIO and then reverting it back after. It's not enough to just
+           assert that the current context matches what's expected, as that'd
+           break the ContextGLTest::clipboardMultipleContexts() test. OTOH, in
+           the callbacks themselves the assertion should be enough. */
+        ImGuiContext* const previousContext = ImGui::GetCurrentContext();
+        ImGui::SetCurrentContext(context.context());
         #if IMGUI_VERSION_NUM >= 19110
-        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO(context.context());
+        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
         platformIO.Platform_GetClipboardTextFn = [](ImGuiContext* ctx) {
-            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
-            Containers::StringView out = static_cast<Application*>(state)->clipboardText();
+            CORRADE_INTERNAL_ASSERT(ImGui::GetCurrentContext() == ctx);
+            Containers::StringView out = static_cast<Application*>(ImGui::GetPlatformIO().Platform_ClipboardUserData)->clipboardText();
             CORRADE_INTERNAL_ASSERT(out.flags() & Containers::StringViewFlag::NullTerminated);
             return out.data();
         };
         platformIO.Platform_SetClipboardTextFn = [](ImGuiContext* ctx, const char* text) {
-            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
-            static_cast<Application*>(state)->setClipboardText(text);
+            CORRADE_INTERNAL_ASSERT(ImGui::GetCurrentContext() == ctx);
+            static_cast<Application*>(ImGui::GetPlatformIO().Platform_ClipboardUserData)->setClipboardText(text);
         };
         platformIO.Platform_ClipboardUserData = &application;
         #else
-        ImGuiIO& io = context.context()->IO;
+        /* Similarly here, we could use `context.context()->IO` without setting
+           current context but that also requires imgui_internal.h so we again
+           query the current IO *after* setting the context. No assertions are
+           needed in the callbacks this time as the state pointer is passed as
+           it should be. */
+        ImGuiIO& io = ImGui::GetIO();
         io.GetClipboardTextFn = [](void* state) {
             Containers::StringView out = static_cast<Application*>(state)->clipboardText();
             CORRADE_INTERNAL_ASSERT(out.flags() & Containers::StringViewFlag::NullTerminated);
@@ -547,6 +563,7 @@ template<class Application> struct ApplicationClipboard<Application, typename st
         };
         io.ClipboardUserData = &application;
         #endif
+        ImGui::SetCurrentContext(previousContext);
     }
 };
 
@@ -556,23 +573,31 @@ template<class Application> struct ApplicationClipboard<Application, typename st
    another clipboard text is queried. */
 template<class Application> struct ApplicationClipboard<Application, typename std::enable_if<std::is_same<decltype(std::declval<Application>().clipboardText()), Containers::String>::value>::type> {
     static void connect(Context& context, Application& application) {
+        /* See the connect() variant above for explanation of this messy code,
+           and the assertions in callbacks below. */
+        ImGuiContext* const previousContext = ImGui::GetCurrentContext();
+        ImGui::SetCurrentContext(context.context());
         #if IMGUI_VERSION_NUM >= 19110
-        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO(context.context());
-        platformIO.Platform_GetClipboardTextFn = [](ImGuiContext* ctx) -> const char* {
-            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
-            Context& context = *static_cast<Context*>(state);
+        ImGuiPlatformIO& platformIO = ImGui::GetPlatformIO();
+        platformIO.Platform_GetClipboardTextFn = [](ImGuiContext*
+            #ifndef CORRADE_NO_ASSERT
+            ctx
+            #endif
+        ) -> const char* {
+            CORRADE_INTERNAL_ASSERT(ImGui::GetCurrentContext() == ctx);
+            Context& context = *static_cast<Context*>(ImGui::GetPlatformIO().Platform_ClipboardUserData);
             context._lastClipboardText = static_cast<Application*>(context._application)->clipboardText();
             /* Containers::String is always null-terminated, so no assert here
                compared to above */
             return context._lastClipboardText.data();
         };
         platformIO.Platform_SetClipboardTextFn = [](ImGuiContext* ctx, const char* text) {
-            void* state = ImGui::GetPlatformIO(ctx).Platform_ClipboardUserData;
-            static_cast<Application*>(static_cast<Context*>(state)->_application)->setClipboardText(text);
+            CORRADE_INTERNAL_ASSERT(ImGui::GetCurrentContext() == ctx);
+            static_cast<Application*>(static_cast<Context*>(ImGui::GetPlatformIO().Platform_ClipboardUserData)->_application)->setClipboardText(text);
         };
         platformIO.Platform_ClipboardUserData = &context;
         #else
-        ImGuiIO& io = context.context()->IO;
+        ImGuiIO& io = ImGui::GetIO();
         io.GetClipboardTextFn = [](void* state) -> const char* {
             Context& context = *static_cast<Context*>(state);
             context._lastClipboardText = static_cast<Application*>(context._application)->clipboardText();
@@ -586,6 +611,7 @@ template<class Application> struct ApplicationClipboard<Application, typename st
         io.ClipboardUserData = &context;
         #endif
         context._application = &application;
+        ImGui::SetCurrentContext(previousContext);
     }
 };
 
