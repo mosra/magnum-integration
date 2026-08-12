@@ -67,6 +67,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/versionIntegration.h.cmake
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/versionIntegration.h DESTINATION ${MAGNUM_INCLUDE_INSTALL_DIR})
 
+if(MAGNUM_WITH_JOLTINTEGRATION)
+    add_subdirectory(JoltIntegration)
+endif()
+
 if(MAGNUM_WITH_BULLETINTEGRATION)
     add_subdirectory(BulletIntegration)
 endif()
