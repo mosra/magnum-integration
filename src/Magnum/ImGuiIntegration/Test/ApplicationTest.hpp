@@ -129,7 +129,7 @@ ApplicationTest::ApplicationTest(const Arguments& arguments):
     Platform::Application{arguments, Configuration{}
         .setTitle("Magnum ImGui Application Test")
         #ifndef CORRADE_TARGET_ANDROID
-        .setWindowFlags(Configuration::WindowFlag::Resizable)
+        .addWindowFlags(WindowFlag::Resizable)
         #endif
     }
 {
