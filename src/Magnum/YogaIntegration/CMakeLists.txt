@@ -114,9 +114,11 @@ if(MAGNUM_BUILD_TESTS)
     target_include_directories(MagnumYogaIntegrationTestLib PUBLIC
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_BINARY_DIR}/src)
+    target_compile_definitions(MagnumYogaIntegrationTestLib PRIVATE "CORRADE_GRACEFUL_ASSERT")
     set_target_properties(MagnumYogaIntegrationTestLib PROPERTIES DEBUG_POSTFIX "-d")
-    target_compile_definitions(MagnumYogaIntegrationTestLib PRIVATE
-        "CORRADE_GRACEFUL_ASSERT" "MagnumYogaIntegration_EXPORTS")
+    if(NOT MAGNUM_YOGAINTEGRATION_BUILD_STATIC)
+        set_target_properties(MagnumYogaIntegrationTestLib PROPERTIES DEFINE_SYMBOL "MagnumYogaIntegration_EXPORTS")
+    endif()
     if(MAGNUM_BUILD_STATIC_PIC)
         set_target_properties(MagnumYogaIntegrationTestLib PROPERTIES POSITION_INDEPENDENT_CODE ON)
     endif()

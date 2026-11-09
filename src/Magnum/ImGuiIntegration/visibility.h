@@ -35,7 +35,7 @@
 
 #ifndef DOXYGEN_GENERATING_OUTPUT
 #ifndef MAGNUM_IMGUIINTEGRATION_BUILD_STATIC
-    #if defined(MagnumImGuiIntegration_EXPORTS) || defined(MagnumImGuiIntegrationTestLib_EXPORTS)
+    #ifdef MagnumImGuiIntegration_EXPORTS
         #define MAGNUM_IMGUIINTEGRATION_EXPORT CORRADE_VISIBILITY_EXPORT
         /* From imconfig.h to export ImGui symbols. If already defined (for
            example by our FindImGui.cmake), use that definition instead, which
